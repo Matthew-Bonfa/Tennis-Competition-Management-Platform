@@ -1,0 +1,22 @@
+/* file created by Rex Kelly */
+
+.ribbon-link {
+    text-decoration: none;
+    color: inherit;
+    border: 2px solid #000;
+    border-radius: 6px;
+    padding: 20px 15px;
+    font-size: 2rem;
+}
+
+.ribbon-link:visited {
+    color:inherit
+}
+
+
+nav {
+    display: flex;
+    gap: 5px;
+    width: fit-content;
+    margin: 20px auto
+}
