@@ -97,7 +97,17 @@ model Season {
 model Section {
   id       Int    @id @default(autoincrement())
   seasonId Int
-  name     String 
+  name     String
+
+  // Match format and points rules, so the validator and ladder read
+  // this instead of assuming standard best-of-three tennis.
+  rubbersPerMatch       Int
+  setsToWin             Int      // 2 = best of three
+  gamesPerSet           Int      // 6, or 4 for Fast4
+  tiebreakAtGames       Int?     // null = advantage set
+  finalSetMatchTiebreak Boolean  @default(false)
+  pointsPerRubber       Int      @default(1)
+  forfeitScoreline      String   @default("6-0 6-0")
 
   season   Season  @relation(fields: [seasonId], references: [id])
   teams    Team[]
@@ -135,56 +145,96 @@ model TeamPlayer {
 // MATCH PLAY & SCORING
 // ==========================================
 
+enum match_status {
+  @@type("pg/text@1")
+  Scheduled = "scheduled"
+  Completed = "completed"
+  Washout   = "washout"
+  Forfeit   = "forfeit"
+  Bye       = "bye"
+}
+
+enum rubber_type {
+  @@type("pg/text@1")
+  Singles      = "singles"
+  Doubles      = "doubles"
+  MixedDoubles = "mixed_doubles"
+}
+
+enum outcome_type {
+  @@type("pg/text@1")
+  Normal    = "normal"
+  Retired   = "retired"
+  Walkover  = "walkover"
+}
+
 model Match {
   id                  String       @id @default(uuid())
   sectionId           Int
   homeTeamId          Int
   awayTeamId          Int
-  matchDate           DateTime  
-  matchStatus         String    
+  roundNumber         Int
+  matchDate           DateTime
+  matchStatus         match_status
   enteredByPersonId   String?
+  enteredAt           DateTime?
   confirmedByPersonId String?
+  confirmedAt         DateTime?
 
   section             Section @relation(fields: [sectionId], references: [id])
   homeTeam            Team    @relation("HomeTeam", fields: [homeTeamId], references: [id])
   awayTeam            Team    @relation("AwayTeam", fields: [awayTeamId], references: [id])
   enteredBy           Person? @relation("MatchEnteredBy", fields: [enteredByPersonId], references: [id])
   confirmedBy         Person? @relation("MatchConfirmedBy", fields: [confirmedByPersonId], references: [id])
-  
+
   rubbers             Rubber[]
+
+  @@unique([sectionId, roundNumber, homeTeamId])
+  @@check(expression: "\"homeTeamId\" <> \"awayTeamId\"", name: "match_distinct_teams")
+  @@index([sectionId, matchDate])
 }
 
 model Rubber {
-  id            Int     @id @default(autoincrement())
-  matchId       String 
-  rubberType    String  
+  id            Int          @id @default(autoincrement())
+  matchId       String
+  rubberNumber  Int          // 1..N, the order on the paper sheet
+  rubberType    rubber_type
   winningTeamId Int?
-  outcomeType   String  
+  outcomeType   outcome_type
 
   match         Match   @relation(fields: [matchId], references: [id])
   winningTeam   Team?   @relation("WinningTeam", fields: [winningTeamId], references: [id])
-  
+
   sets          RubberSet[]
   players       RubberPlayer[]
+
+  @@unique([matchId, rubberNumber])
 }
 
 model RubberSet {
-  id          Int @id @default(autoincrement())
-  rubberId    Int
-  setNumber   Int
-  homeGames   Int
-  awayGames   Int
+  id                 Int     @id @default(autoincrement())
+  rubberId           Int
+  setNumber          Int
+  homeGames          Int
+  awayGames          Int
+  homeTiebreakPoints Int?
+  awayTiebreakPoints Int?
+  isMatchTiebreak    Boolean @default(false)
 
   rubber      Rubber @relation(fields: [rubberId], references: [id])
+
+  @@unique([rubberId, setNumber])
 }
 
 model RubberPlayer {
   id       Int @id @default(autoincrement())
   rubberId Int
   teamId   Int
-  personId String 
+  personId String
 
   rubber   Rubber @relation(fields: [rubberId], references: [id])
   team     Team   @relation(fields: [teamId], references: [id])
   person   Person @relation(fields: [personId], references: [id])
+
+  @@unique([rubberId, personId])
 }

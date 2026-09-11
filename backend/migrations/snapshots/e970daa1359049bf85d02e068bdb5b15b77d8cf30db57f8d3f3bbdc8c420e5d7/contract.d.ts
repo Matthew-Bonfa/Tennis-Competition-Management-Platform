@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'7db1ff6f979881eb4a3bd4bc8f42313f39939e19194871b949f0003c629f46bf'>;
+  StorageHashBase<'e970daa1359049bf85d02e068bdb5b15b77d8cf30db57f8d3f3bbdc8c420e5d7'>;
 export type ExecutionHash =
   ExecutionHashBase<'20214ed9f542f9da76e8cca8beb2125f15a84936772b15e1794b7230911986fe'>;
 export type ProfileHash =
@@ -302,9 +302,9 @@ export type FieldOutputTypes = {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly matchId: CodecTypes['pg/text@1']['output'];
       readonly rubberNumber: CodecTypes['pg/int4@1']['output'];
-      readonly rubberType: 'singles' | 'doubles' | 'mixed_doubles';
+      readonly rubberType: 'singles' | 'doubles';
       readonly winningTeamId: CodecTypes['pg/int4@1']['output'] | null;
-      readonly outcomeType: 'normal' | 'retired' | 'walkover';
+      readonly outcomeType: 'normal' | 'retired' | 'walkover' | 'defaulted';
     };
     readonly RubberPlayer: {
       readonly id: CodecTypes['pg/int4@1']['output'];
@@ -417,9 +417,9 @@ export type FieldInputTypes = {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly matchId: CodecTypes['pg/text@1']['input'];
       readonly rubberNumber: CodecTypes['pg/int4@1']['input'];
-      readonly rubberType: 'singles' | 'doubles' | 'mixed_doubles';
+      readonly rubberType: 'singles' | 'doubles';
       readonly winningTeamId: CodecTypes['pg/int4@1']['input'] | null;
-      readonly outcomeType: 'normal' | 'retired' | 'walkover';
+      readonly outcomeType: 'normal' | 'retired' | 'walkover' | 'defaulted';
     };
     readonly RubberPlayer: {
       readonly id: CodecTypes['pg/int4@1']['input'];
@@ -531,9 +531,9 @@ export type StorageColumnTypes = {
     readonly rubber: {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly matchId: CodecTypes['pg/text@1']['output'];
-      readonly outcomeType: 'normal' | 'retired' | 'walkover';
+      readonly outcomeType: 'normal' | 'retired' | 'walkover' | 'defaulted';
       readonly rubberNumber: CodecTypes['pg/int4@1']['output'];
-      readonly rubberType: 'singles' | 'doubles' | 'mixed_doubles';
+      readonly rubberType: 'singles' | 'doubles';
       readonly winningTeamId: CodecTypes['pg/int4@1']['output'] | null;
     };
     readonly rubberPlayer: {
@@ -646,9 +646,9 @@ export type StorageColumnInputTypes = {
     readonly rubber: {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly matchId: CodecTypes['pg/text@1']['input'];
-      readonly outcomeType: 'normal' | 'retired' | 'walkover';
+      readonly outcomeType: 'normal' | 'retired' | 'walkover' | 'defaulted';
       readonly rubberNumber: CodecTypes['pg/int4@1']['input'];
-      readonly rubberType: 'singles' | 'doubles' | 'mixed_doubles';
+      readonly rubberType: 'singles' | 'doubles';
       readonly winningTeamId: CodecTypes['pg/int4@1']['input'] | null;
     };
     readonly rubberPlayer: {
@@ -1824,11 +1824,11 @@ type ContractBase = Omit<
             };
             readonly outcome_type: {
               readonly kind: 'valueSet';
-              readonly values: readonly ['normal', 'retired', 'walkover'];
+              readonly values: readonly ['normal', 'retired', 'walkover', 'defaulted'];
             };
             readonly rubber_type: {
               readonly kind: 'valueSet';
-              readonly values: readonly ['singles', 'doubles', 'mixed_doubles'];
+              readonly values: readonly ['singles', 'doubles'];
             };
           };
         };
@@ -3060,7 +3060,6 @@ type ContractBase = Omit<
             readonly members: readonly [
               { readonly name: 'Singles'; readonly value: 'singles' },
               { readonly name: 'Doubles'; readonly value: 'doubles' },
-              { readonly name: 'MixedDoubles'; readonly value: 'mixed_doubles' },
             ];
           };
           readonly outcome_type: {
@@ -3069,6 +3068,7 @@ type ContractBase = Omit<
               { readonly name: 'Normal'; readonly value: 'normal' },
               { readonly name: 'Retired'; readonly value: 'retired' },
               { readonly name: 'Walkover'; readonly value: 'walkover' },
+              { readonly name: 'Defaulted'; readonly value: 'defaulted' },
             ];
           };
         };
