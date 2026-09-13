@@ -26,10 +26,10 @@ function isLegalSetScore(format: RubberFormat, set: SetScore): boolean {
         return true;
     }
 
-    if (set.homeGames === format.tiebreakAtGames + 1 && set.awayGames === format.tiebreakAtGames && isLegalTiebreakScore(set.homeTiebreakPoints, set.awayTiebreakPoints)) {
+    if (format.tiebreakAtGames !== null && set.homeTiebreakPoints != null && set.awayTiebreakPoints != null && set.homeGames === format.tiebreakAtGames + 1 && set.awayGames === format.tiebreakAtGames && isLegalTiebreakScore(set.homeTiebreakPoints, set.awayTiebreakPoints)) {
         return true;
     }
-    if (set.awayGames === format.tiebreakAtGames + 1 && set.homeGames === format.tiebreakAtGames && isLegalTiebreakScore(set.awayTiebreakPoints, set.homeTiebreakPoints)) {
+    if (format.tiebreakAtGames !== null && set.awayTiebreakPoints != null && set.homeTiebreakPoints != null && set.awayGames === format.tiebreakAtGames + 1 && set.homeGames === format.tiebreakAtGames && isLegalTiebreakScore(set.awayTiebreakPoints, set.homeTiebreakPoints)) {
         return true;
     }
 
