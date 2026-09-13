@@ -21,4 +21,7 @@ export interface RubberScore {
     awayGamesWon: number;
 }
 
-export type ValidationResult = string[];
+export interface ValidationResult {
+    isValid: boolean;
+    errors: string[];
+}
