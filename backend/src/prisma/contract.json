@@ -1599,6 +1599,13 @@
                   "kind": "scalar"
                 }
               },
+              "pointsPerMatchWin": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
               "pointsPerRubber": {
                 "nullable": false,
                 "type": {
@@ -1698,6 +1705,9 @@
                 },
                 "name": {
                   "column": "name"
+                },
+                "pointsPerMatchWin": {
+                  "column": "pointsPerMatchWin"
                 },
                 "pointsPerRubber": {
                   "column": "pointsPerRubber"
@@ -3118,6 +3128,15 @@
                   "nativeType": "text",
                   "nullable": false
                 },
+                "pointsPerMatchWin": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": 0
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
                 "pointsPerRubber": {
                   "codecId": "pg/int4@1",
                   "default": {
@@ -3384,7 +3403,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "7db1ff6f979881eb4a3bd4bc8f42313f39939e19194871b949f0003c629f46bf"
+    "storageHash": "d3b3d7d11b086a715a075571a491a8739d9d316c9f32e40f4616c82c8958dabf"
   },
   "execution": {
     "executionHash": "20214ed9f542f9da76e8cca8beb2125f15a84936772b15e1794b7230911986fe",

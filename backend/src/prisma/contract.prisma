@@ -107,6 +107,7 @@ model Section {
   tiebreakAtGames       Int?     // null = advantage set
   finalSetMatchTiebreak Boolean  @default(false)
   pointsPerRubber       Int      @default(1)
+  pointsPerMatchWin     Int      @default(0)
   forfeitScoreline      String   @default("6-0 6-0")
 
   season   Season  @relation(fields: [seasonId], references: [id])
