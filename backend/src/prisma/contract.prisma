@@ -1,21 +1,190 @@
-// use prisma-next
+model Person {
+  id                    String    @id @default(uuid())
+  personCode            String    
+  firstName             String    
+  lastName              String    
+  dateOfBirth           DateTime? 
+  utrId                 String?   
+  tennisAustraliaNumber String?   
 
-model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  username  String?
-  name      String?
-  posts     Post[]
-  createdAt TimestamptzString @default(now())
-  updatedAt temporal.updatedAtString()
+  // Relations
+  associationContacts   Association[]    @relation("AssociationContact")
+  clubContacts          Club[]           @relation("ClubContact")
+  clubMemberships       ClubMembership[]
+  roles                 PersonRole[]
+  teamMemberships       TeamPlayer[]
+  enteredMatches        Match[]          @relation("MatchEnteredBy")
+  confirmedMatches      Match[]          @relation("MatchConfirmedBy")
+  rubberParticipations  RubberPlayer[]
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  title     String
-  content   String?
-  author    User     @relation(fields: [authorId], references: [id])
-  authorId  Int
-  createdAt TimestamptzString @default(now())
-  updatedAt temporal.updatedAtString()
+model Association {
+  id              String     @id @default(uuid())
+  name            String  
+  contactPersonId String?
+  
+  contactPerson   Person? @relation("AssociationContact", fields: [contactPersonId], references: [id])
+  clubs           AssociationClub[]
+  roles           PersonRole[]
+  competitions    Competition[]
+}
+
+model Club {
+  id                String     @id @default(uuid())
+  name              String  
+  isFinancialMember Boolean 
+  contactPersonId   String?
+
+  contactPerson     Person? @relation("ClubContact", fields: [contactPersonId], references: [id])
+  associations      AssociationClub[]
+  memberships       ClubMembership[]
+  roles             PersonRole[]
+  teams             Team[]
+}
+
+model AssociationClub {
+  id            Int @id @default(autoincrement())
+  associationId String 
+  clubId        String 
+
+  association   Association @relation(fields: [associationId], references: [id])
+  club          Club        @relation(fields: [clubId], references: [id])
+}
+
+model ClubMembership {
+  id                String     @id @default(uuid())
+  personId          String 
+  clubId            String 
+  isPrimaryClub     Boolean
+  isFinancialMember Boolean
+
+  person            Person  @relation(fields: [personId], references: [id])
+  club              Club    @relation(fields: [clubId], references: [id])
+}
+
+model PersonRole {
+  id            Int     @id @default(autoincrement())
+  personId      String 
+  role          String  
+  clubId        String?
+  associationId String?
+
+  person        Person       @relation(fields: [personId], references: [id])
+  club          Club?        @relation(fields: [clubId], references: [id])
+  association   Association? @relation(fields: [associationId], references: [id])
+}
+
+model Competition {
+  id            String    @id @default(uuid())
+  associationId String 
+  name          String 
+
+  association   Association @relation(fields: [associationId], references: [id])
+  seasons       Season[]
+}
+
+model Season {
+  id            Int      @id @default(autoincrement())
+  competitionId String 
+  name          String   
+  startDate     DateTime 
+  endDate       DateTime 
+
+  competition   Competition @relation(fields: [competitionId], references: [id])
+  sections      Section[]
+}
+
+model Section {
+  id       Int    @id @default(autoincrement())
+  seasonId Int
+  name     String 
+
+  season   Season  @relation(fields: [seasonId], references: [id])
+  teams    Team[]
+  matches  Match[]
+}
+
+model Team {
+  id        Int    @id @default(autoincrement())
+  clubId    String 
+  sectionId Int
+  name      String 
+
+  club      Club    @relation(fields: [clubId], references: [id])
+  section   Section @relation(fields: [sectionId], references: [id])
+  
+  players   TeamPlayer[]
+  
+  // A team can play as home or away
+  homeMatches Match[] @relation("HomeTeam")
+  awayMatches Match[] @relation("AwayTeam")
+  wonRubbers  Rubber[] @relation("WinningTeam")
+  rubberParticipations RubberPlayer[]
+}
+
+model TeamPlayer {
+  id       Int @id @default(autoincrement())
+  teamId   Int
+  personId String 
+
+  team     Team   @relation(fields: [teamId], references: [id])
+  person   Person @relation(fields: [personId], references: [id])
+}
+
+// ==========================================
+// MATCH PLAY & SCORING
+// ==========================================
+
+model Match {
+  id                  String       @id @default(uuid())
+  sectionId           Int
+  homeTeamId          Int
+  awayTeamId          Int
+  matchDate           DateTime  
+  matchStatus         String    
+  enteredByPersonId   String?
+  confirmedByPersonId String?
+
+  section             Section @relation(fields: [sectionId], references: [id])
+  homeTeam            Team    @relation("HomeTeam", fields: [homeTeamId], references: [id])
+  awayTeam            Team    @relation("AwayTeam", fields: [awayTeamId], references: [id])
+  enteredBy           Person? @relation("MatchEnteredBy", fields: [enteredByPersonId], references: [id])
+  confirmedBy         Person? @relation("MatchConfirmedBy", fields: [confirmedByPersonId], references: [id])
+  
+  rubbers             Rubber[]
+}
+
+model Rubber {
+  id            Int     @id @default(autoincrement())
+  matchId       String 
+  rubberType    String  
+  winningTeamId Int?
+  outcomeType   String  
+
+  match         Match   @relation(fields: [matchId], references: [id])
+  winningTeam   Team?   @relation("WinningTeam", fields: [winningTeamId], references: [id])
+  
+  sets          RubberSet[]
+  players       RubberPlayer[]
+}
+
+model RubberSet {
+  id          Int @id @default(autoincrement())
+  rubberId    Int
+  setNumber   Int
+  homeGames   Int
+  awayGames   Int
+
+  rubber      Rubber @relation(fields: [rubberId], references: [id])
+}
+
+model RubberPlayer {
+  id       Int @id @default(autoincrement())
+  rubberId Int
+  teamId   Int
+  personId String 
+
+  rubber   Rubber @relation(fields: [rubberId], references: [id])
+  team     Team   @relation(fields: [teamId], references: [id])
+  person   Person @relation(fields: [personId], references: [id])
 }
