@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'d3b3d7d11b086a715a075571a491a8739d9d316c9f32e40f4616c82c8958dabf'>;
+  StorageHashBase<'7db1ff6f979881eb4a3bd4bc8f42313f39939e19194871b949f0003c629f46bf'>;
 export type ExecutionHash =
   ExecutionHashBase<'20214ed9f542f9da76e8cca8beb2125f15a84936772b15e1794b7230911986fe'>;
 export type ProfileHash =
@@ -339,7 +339,6 @@ export type FieldOutputTypes = {
       readonly tiebreakAtGames: CodecTypes['pg/int4@1']['output'] | null;
       readonly finalSetMatchTiebreak: CodecTypes['pg/bool@1']['output'];
       readonly pointsPerRubber: CodecTypes['pg/int4@1']['output'];
-      readonly pointsPerMatchWin: CodecTypes['pg/int4@1']['output'];
       readonly forfeitScoreline: CodecTypes['pg/text@1']['output'];
     };
     readonly Team: {
@@ -455,7 +454,6 @@ export type FieldInputTypes = {
       readonly tiebreakAtGames: CodecTypes['pg/int4@1']['input'] | null;
       readonly finalSetMatchTiebreak: CodecTypes['pg/bool@1']['input'];
       readonly pointsPerRubber: CodecTypes['pg/int4@1']['input'];
-      readonly pointsPerMatchWin: CodecTypes['pg/int4@1']['input'];
       readonly forfeitScoreline: CodecTypes['pg/text@1']['input'];
     };
     readonly Team: {
@@ -567,7 +565,6 @@ export type StorageColumnTypes = {
       readonly gamesPerSet: CodecTypes['pg/int4@1']['output'];
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly name: CodecTypes['pg/text@1']['output'];
-      readonly pointsPerMatchWin: CodecTypes['pg/int4@1']['output'];
       readonly pointsPerRubber: CodecTypes['pg/int4@1']['output'];
       readonly rubbersPerMatch: CodecTypes['pg/int4@1']['output'];
       readonly seasonId: CodecTypes['pg/int4@1']['output'];
@@ -683,7 +680,6 @@ export type StorageColumnInputTypes = {
       readonly gamesPerSet: CodecTypes['pg/int4@1']['input'];
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly name: CodecTypes['pg/text@1']['input'];
-      readonly pointsPerMatchWin: CodecTypes['pg/int4@1']['input'];
       readonly pointsPerRubber: CodecTypes['pg/int4@1']['input'];
       readonly rubbersPerMatch: CodecTypes['pg/int4@1']['input'];
       readonly seasonId: CodecTypes['pg/int4@1']['input'];
@@ -1648,15 +1644,6 @@ type ContractBase = Omit<
                   readonly default: {
                     readonly kind: 'literal';
                     readonly value: DefaultLiteralValue<'pg/int4@1', 1>;
-                  };
-                };
-                readonly pointsPerMatchWin: {
-                  readonly nativeType: 'int4';
-                  readonly codecId: 'pg/int4@1';
-                  readonly nullable: false;
-                  readonly default: {
-                    readonly kind: 'literal';
-                    readonly value: DefaultLiteralValue<'pg/int4@1', 0>;
                   };
                 };
                 readonly forfeitScoreline: {
@@ -2850,10 +2837,6 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
               };
-              readonly pointsPerMatchWin: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
-              };
               readonly forfeitScoreline: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
@@ -2904,7 +2887,6 @@ type ContractBase = Omit<
                 readonly tiebreakAtGames: { readonly column: 'tiebreakAtGames' };
                 readonly finalSetMatchTiebreak: { readonly column: 'finalSetMatchTiebreak' };
                 readonly pointsPerRubber: { readonly column: 'pointsPerRubber' };
-                readonly pointsPerMatchWin: { readonly column: 'pointsPerMatchWin' };
                 readonly forfeitScoreline: { readonly column: 'forfeitScoreline' };
               };
             };

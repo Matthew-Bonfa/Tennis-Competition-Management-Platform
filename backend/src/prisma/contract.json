@@ -68,6 +68,67 @@
   "domain": {
     "namespaces": {
       "public": {
+        "enum": {
+          "match_status": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "Scheduled",
+                "value": "scheduled"
+              },
+              {
+                "name": "Completed",
+                "value": "completed"
+              },
+              {
+                "name": "Washout",
+                "value": "washout"
+              },
+              {
+                "name": "Forfeit",
+                "value": "forfeit"
+              },
+              {
+                "name": "Bye",
+                "value": "bye"
+              }
+            ]
+          },
+          "outcome_type": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "Normal",
+                "value": "normal"
+              },
+              {
+                "name": "Retired",
+                "value": "retired"
+              },
+              {
+                "name": "Walkover",
+                "value": "walkover"
+              }
+            ]
+          },
+          "rubber_type": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "Singles",
+                "value": "singles"
+              },
+              {
+                "name": "Doubles",
+                "value": "doubles"
+              },
+              {
+                "name": "MixedDoubles",
+                "value": "mixed_doubles"
+              }
+            ]
+          }
+        },
         "models": {
           "Association": {
             "fields": {
@@ -543,10 +604,24 @@
                   "kind": "scalar"
                 }
               },
+              "confirmedAt": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              },
               "confirmedByPersonId": {
                 "nullable": true,
                 "type": {
                   "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "enteredAt": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
                   "kind": "scalar"
                 }
               },
@@ -582,6 +657,19 @@
                 "nullable": false,
                 "type": {
                   "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "match_status",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
+              "roundNumber": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
                   "kind": "scalar"
                 }
               },
@@ -690,8 +778,14 @@
                 "awayTeamId": {
                   "column": "awayTeamId"
                 },
+                "confirmedAt": {
+                  "column": "confirmedAt"
+                },
                 "confirmedByPersonId": {
                   "column": "confirmedByPersonId"
+                },
+                "enteredAt": {
+                  "column": "enteredAt"
                 },
                 "enteredByPersonId": {
                   "column": "enteredByPersonId"
@@ -707,6 +801,9 @@
                 },
                 "matchStatus": {
                   "column": "matchStatus"
+                },
+                "roundNumber": {
+                  "column": "roundNumber"
                 },
                 "sectionId": {
                   "column": "sectionId"
@@ -1046,6 +1143,19 @@
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "outcome_type",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
+              "rubberNumber": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
                 }
               },
               "rubberType": {
@@ -1053,6 +1163,12 @@
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "rubber_type",
+                  "namespaceId": "public",
+                  "plane": "domain"
                 }
               },
               "winningTeamId": {
@@ -1135,6 +1251,9 @@
                 },
                 "outcomeType": {
                   "column": "outcomeType"
+                },
+                "rubberNumber": {
+                  "column": "rubberNumber"
                 },
                 "rubberType": {
                   "column": "rubberType"
@@ -1253,8 +1372,22 @@
                   "kind": "scalar"
                 }
               },
+              "awayTiebreakPoints": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
               "homeGames": {
                 "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "homeTiebreakPoints": {
+                "nullable": true,
                 "type": {
                   "codecId": "pg/int4@1",
                   "kind": "scalar"
@@ -1264,6 +1397,13 @@
                 "nullable": false,
                 "type": {
                   "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "isMatchTiebreak": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
                   "kind": "scalar"
                 }
               },
@@ -1304,11 +1444,20 @@
                 "awayGames": {
                   "column": "awayGames"
                 },
+                "awayTiebreakPoints": {
+                  "column": "awayTiebreakPoints"
+                },
                 "homeGames": {
                   "column": "homeGames"
                 },
+                "homeTiebreakPoints": {
+                  "column": "homeTiebreakPoints"
+                },
                 "id": {
                   "column": "id"
+                },
+                "isMatchTiebreak": {
+                  "column": "isMatchTiebreak"
                 },
                 "rubberId": {
                   "column": "rubberId"
@@ -1415,6 +1564,27 @@
           },
           "Section": {
             "fields": {
+              "finalSetMatchTiebreak": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "forfeitScoreline": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "gamesPerSet": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
               "id": {
                 "nullable": false,
                 "type": {
@@ -1429,8 +1599,43 @@
                   "kind": "scalar"
                 }
               },
+              "pointsPerMatchWin": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "pointsPerRubber": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "rubbersPerMatch": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
               "seasonId": {
                 "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "setsToWin": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "tiebreakAtGames": {
+                "nullable": true,
                 "type": {
                   "codecId": "pg/int4@1",
                   "kind": "scalar"
@@ -1486,14 +1691,38 @@
             },
             "storage": {
               "fields": {
+                "finalSetMatchTiebreak": {
+                  "column": "finalSetMatchTiebreak"
+                },
+                "forfeitScoreline": {
+                  "column": "forfeitScoreline"
+                },
+                "gamesPerSet": {
+                  "column": "gamesPerSet"
+                },
                 "id": {
                   "column": "id"
                 },
                 "name": {
                   "column": "name"
                 },
+                "pointsPerMatchWin": {
+                  "column": "pointsPerMatchWin"
+                },
+                "pointsPerRubber": {
+                  "column": "pointsPerRubber"
+                },
+                "rubbersPerMatch": {
+                  "column": "rubbersPerMatch"
+                },
                 "seasonId": {
                   "column": "seasonId"
+                },
+                "setsToWin": {
+                  "column": "setsToWin"
+                },
+                "tiebreakAtGames": {
+                  "column": "tiebreakAtGames"
                 }
               },
               "namespaceId": "public",
@@ -2071,15 +2300,37 @@
               "uniques": []
             },
             "match": {
+              "checks": [
+                {
+                  "expression": "\"homeTeamId\" <> \"awayTeamId\"",
+                  "name": "match_distinct_teams_ac4c3213",
+                  "prefix": "match_distinct_teams"
+                },
+                {
+                  "expression": "\"matchStatus\" IN ('scheduled', 'completed', 'washout', 'forfeit', 'bye')",
+                  "name": "match_matchStatus_check_21c8ad8e",
+                  "prefix": "match_matchStatus_check"
+                }
+              ],
               "columns": {
                 "awayTeamId": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
                   "nullable": false
                 },
+                "confirmedAt": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "nativeType": "timestamptz",
+                  "nullable": true
+                },
                 "confirmedByPersonId": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
+                  "nullable": true
+                },
+                "enteredAt": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "nativeType": "timestamptz",
                   "nullable": true
                 },
                 "enteredByPersonId": {
@@ -2105,6 +2356,17 @@
                 "matchStatus": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "match_status",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
+                "roundNumber": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
                   "nullable": false
                 },
                 "sectionId": {
@@ -2235,6 +2497,15 @@
                   "name": "match_sectionId_idx_5d1ea56b",
                   "prefix": "match_sectionId_idx",
                   "unique": false
+                },
+                {
+                  "columns": [
+                    "sectionId",
+                    "matchDate"
+                  ],
+                  "name": "match_sectionId_matchDate_idx_6d5b940c",
+                  "prefix": "match_sectionId_matchDate_idx",
+                  "unique": false
                 }
               ],
               "primaryKey": {
@@ -2242,7 +2513,15 @@
                   "id"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "sectionId",
+                    "roundNumber",
+                    "homeTeamId"
+                  ]
+                }
+              ]
             },
             "person": {
               "columns": {
@@ -2407,6 +2686,18 @@
               "uniques": []
             },
             "rubber": {
+              "checks": [
+                {
+                  "expression": "\"outcomeType\" IN ('normal', 'retired', 'walkover')",
+                  "name": "rubber_outcomeType_check_bd80204a",
+                  "prefix": "rubber_outcomeType_check"
+                },
+                {
+                  "expression": "\"rubberType\" IN ('singles', 'doubles', 'mixed_doubles')",
+                  "name": "rubber_rubberType_check_94ac6fcc",
+                  "prefix": "rubber_rubberType_check"
+                }
+              ],
               "columns": {
                 "id": {
                   "codecId": "pg/int4@1",
@@ -2425,12 +2716,29 @@
                 "outcomeType": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "outcome_type",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
+                "rubberNumber": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
                   "nullable": false
                 },
                 "rubberType": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
-                  "nullable": false
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "rubber_type",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
                 },
                 "winningTeamId": {
                   "codecId": "pg/int4@1",
@@ -2495,7 +2803,14 @@
                   "id"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "matchId",
+                    "rubberNumber"
+                  ]
+                }
+              ]
             },
             "rubberPlayer": {
               "columns": {
@@ -2605,7 +2920,14 @@
                   "id"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "rubberId",
+                    "personId"
+                  ]
+                }
+              ]
             },
             "rubberSet": {
               "columns": {
@@ -2614,10 +2936,20 @@
                   "nativeType": "int4",
                   "nullable": false
                 },
+                "awayTiebreakPoints": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
                 "homeGames": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
                   "nullable": false
+                },
+                "homeTiebreakPoints": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
                 },
                 "id": {
                   "codecId": "pg/int4@1",
@@ -2626,6 +2958,15 @@
                     "kind": "function"
                   },
                   "nativeType": "int4",
+                  "nullable": false
+                },
+                "isMatchTiebreak": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "nativeType": "bool",
                   "nullable": false
                 },
                 "rubberId": {
@@ -2672,7 +3013,14 @@
                   "id"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "rubberId",
+                    "setNumber"
+                  ]
+                }
+              ]
             },
             "season": {
               "columns": {
@@ -2743,6 +3091,29 @@
             },
             "section": {
               "columns": {
+                "finalSetMatchTiebreak": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
+                "forfeitScoreline": {
+                  "codecId": "pg/text@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "6-0 6-0"
+                  },
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "gamesPerSet": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
                 "id": {
                   "codecId": "pg/int4@1",
                   "default": {
@@ -2757,10 +3128,43 @@
                   "nativeType": "text",
                   "nullable": false
                 },
+                "pointsPerMatchWin": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": 0
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "pointsPerRubber": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": 1
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "rubbersPerMatch": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
                 "seasonId": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
                   "nullable": false
+                },
+                "setsToWin": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "tiebreakAtGames": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
                 }
               },
               "foreignKeys": [
@@ -2965,13 +3369,41 @@
               },
               "uniques": []
             }
+          },
+          "valueSet": {
+            "match_status": {
+              "kind": "valueSet",
+              "values": [
+                "scheduled",
+                "completed",
+                "washout",
+                "forfeit",
+                "bye"
+              ]
+            },
+            "outcome_type": {
+              "kind": "valueSet",
+              "values": [
+                "normal",
+                "retired",
+                "walkover"
+              ]
+            },
+            "rubber_type": {
+              "kind": "valueSet",
+              "values": [
+                "singles",
+                "doubles",
+                "mixed_doubles"
+              ]
+            }
           }
         },
         "id": "public",
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "0edc6d6c036f68de17808305b1572c961a12bd6278681104e993c50b9407f037"
+    "storageHash": "d3b3d7d11b086a715a075571a491a8739d9d316c9f32e40f4616c82c8958dabf"
   },
   "execution": {
     "executionHash": "20214ed9f542f9da76e8cca8beb2125f15a84936772b15e1794b7230911986fe",
