@@ -6,9 +6,10 @@ import { PrismaModule } from './prisma/prisma.module.js';
 import { MatchesModule } from './matches/matches.module.js';
 import { SectionsModule } from './sections/sections.module.js';
 import { CompetitionsModule } from './competitions/competitions.module.js';
+import { TeamsModule } from './teams/teams.module.js';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), PrismaModule, MatchesModule, SectionsModule, CompetitionsModule],
+  imports: [ConfigModule.forRoot({ isGlobal: true }), PrismaModule, MatchesModule, SectionsModule, TeamsModule, CompetitionsModule],
   controllers: [AppController],
   providers: [AppService],
 })

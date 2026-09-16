@@ -1,18 +1,21 @@
 #!/usr/bin/env -S node
-import type { Contract as End } from '../../snapshots/0edc6d6c036f68de17808305b1572c961a12bd6278681104e993c50b9407f037/contract';
-import endContract from '../../snapshots/0edc6d6c036f68de17808305b1572c961a12bd6278681104e993c50b9407f037/contract.json' with { type: 'json' };
-import type { Contract as Start } from '../../snapshots/1e8412e162dbbe69f4bb3bf8d07f0280ae67eaab15c34dcf201e67468315428d/contract';
-import startContract from '../../snapshots/1e8412e162dbbe69f4bb3bf8d07f0280ae67eaab15c34dcf201e67468315428d/contract.json' with { type: 'json' };
-import { Migration, MigrationCLI, col, primaryKey } from '@prisma/orm-postgres/migration';
+import type { Contract as End } from '../../snapshots/bb0c1d04b30671c579b6145f68d3061fda55d5f7839ba0f1b02f568ac4b161a2/contract';
+import endContract from '../../snapshots/bb0c1d04b30671c579b6145f68d3061fda55d5f7839ba0f1b02f568ac4b161a2/contract.json' with { type: 'json' };
+import {
+  Migration,
+  MigrationCLI,
+  checkExpression,
+  col,
+  lit,
+  primaryKey,
+} from '@prisma/orm-postgres/migration';
 
-export default class M extends Migration<Start, End> {
-  override readonly startContractJson = startContract;
+export default class M extends Migration<never, End> {
   override readonly endContractJson = endContract;
 
   override get operations() {
     return [
-      this.dropTable({ schema: 'public', table: 'post' }),
-      this.dropTable({ schema: 'public', table: 'user' }),
+      this.createSchema({ schema: 'public' }),
       this.createTable({
         schema: 'public',
         table: 'association',
@@ -71,7 +74,9 @@ export default class M extends Migration<Start, End> {
         table: 'match',
         columns: [
           col('awayTeamId', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
+          col('confirmedAt', 'timestamptz', { codecRef: { codecId: 'pg/timestamptz-temporal@1' } }),
           col('confirmedByPersonId', 'text', { codecRef: { codecId: 'pg/text@1' } }),
+          col('enteredAt', 'timestamptz', { codecRef: { codecId: 'pg/timestamptz-temporal@1' } }),
           col('enteredByPersonId', 'text', { codecRef: { codecId: 'pg/text@1' } }),
           col('homeTeamId', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
           col('id', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
@@ -80,9 +85,16 @@ export default class M extends Migration<Start, End> {
             codecRef: { codecId: 'pg/timestamptz-temporal@1' },
           }),
           col('matchStatus', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
+          col('roundNumber', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
           col('sectionId', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
         ],
-        constraints: [primaryKey(['id'])],
+        constraints: [
+          primaryKey(['id']),
+          checkExpression(
+            'match_matchStatus_check_21c8ad8e',
+            "\"matchStatus\" IN ('scheduled', 'completed', 'washout', 'forfeit', 'bye')",
+          ),
+        ],
       }),
       this.createTable({
         schema: 'public',
@@ -117,10 +129,21 @@ export default class M extends Migration<Start, End> {
           col('id', 'SERIAL', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
           col('matchId', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
           col('outcomeType', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
+          col('rubberNumber', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
           col('rubberType', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
           col('winningTeamId', 'int4', { codecRef: { codecId: 'pg/int4@1' } }),
         ],
-        constraints: [primaryKey(['id'])],
+        constraints: [
+          primaryKey(['id']),
+          checkExpression(
+            'rubber_outcomeType_check_bd80204a',
+            "\"outcomeType\" IN ('normal', 'retired', 'walkover')",
+          ),
+          checkExpression(
+            'rubber_rubberType_check_94ac6fcc',
+            "\"rubberType\" IN ('singles', 'doubles', 'mixed_doubles')",
+          ),
+        ],
       }),
       this.createTable({
         schema: 'public',
@@ -138,8 +161,15 @@ export default class M extends Migration<Start, End> {
         table: 'rubberSet',
         columns: [
           col('awayGames', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
+          col('awayTiebreakPoints', 'int4', { codecRef: { codecId: 'pg/int4@1' } }),
           col('homeGames', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
+          col('homeTiebreakPoints', 'int4', { codecRef: { codecId: 'pg/int4@1' } }),
           col('id', 'SERIAL', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
+          col('isMatchTiebreak', 'bool', {
+            notNull: true,
+            default: lit(false),
+            codecRef: { codecId: 'pg/bool@1' },
+          }),
           col('rubberId', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
           col('setNumber', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
         ],
@@ -167,9 +197,33 @@ export default class M extends Migration<Start, End> {
         schema: 'public',
         table: 'section',
         columns: [
+          col('finalSetMatchTiebreak', 'bool', {
+            notNull: true,
+            default: lit(false),
+            codecRef: { codecId: 'pg/bool@1' },
+          }),
+          col('forfeitScoreline', 'text', {
+            notNull: true,
+            default: lit('6-0 6-0'),
+            codecRef: { codecId: 'pg/text@1' },
+          }),
+          col('gamesPerSet', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
           col('id', 'SERIAL', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
           col('name', 'text', { notNull: true, codecRef: { codecId: 'pg/text@1' } }),
+          col('pointsPerMatchWin', 'int4', {
+            notNull: true,
+            default: lit(0),
+            codecRef: { codecId: 'pg/int4@1' },
+          }),
+          col('pointsPerRubber', 'int4', {
+            notNull: true,
+            default: lit(1),
+            codecRef: { codecId: 'pg/int4@1' },
+          }),
+          col('rubbersPerMatch', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
           col('seasonId', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
+          col('setsToWin', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
+          col('tiebreakAtGames', 'int4', { codecRef: { codecId: 'pg/int4@1' } }),
         ],
         constraints: [primaryKey(['id'])],
       }),
@@ -193,6 +247,30 @@ export default class M extends Migration<Start, End> {
           col('teamId', 'int4', { notNull: true, codecRef: { codecId: 'pg/int4@1' } }),
         ],
         constraints: [primaryKey(['id'])],
+      }),
+      this.addUnique({
+        schema: 'public',
+        table: 'match',
+        constraint: 'match_sectionId_roundNumber_homeTeamId_key',
+        columns: ['sectionId', 'roundNumber', 'homeTeamId'],
+      }),
+      this.addUnique({
+        schema: 'public',
+        table: 'rubber',
+        constraint: 'rubber_matchId_rubberNumber_key',
+        columns: ['matchId', 'rubberNumber'],
+      }),
+      this.addUnique({
+        schema: 'public',
+        table: 'rubberPlayer',
+        constraint: 'rubberPlayer_rubberId_personId_key',
+        columns: ['rubberId', 'personId'],
+      }),
+      this.addUnique({
+        schema: 'public',
+        table: 'rubberSet',
+        constraint: 'rubberSet_rubberId_setNumber_key',
+        columns: ['rubberId', 'setNumber'],
       }),
       this.createIndex({
         schema: 'public',
@@ -265,6 +343,12 @@ export default class M extends Migration<Start, End> {
         table: 'match',
         index: 'match_sectionId_idx_5d1ea56b',
         columns: ['sectionId'],
+      }),
+      this.createIndex({
+        schema: 'public',
+        table: 'match',
+        index: 'match_sectionId_matchDate_idx_6d5b940c',
+        columns: ['sectionId', 'matchDate'],
       }),
       this.createIndex({
         schema: 'public',

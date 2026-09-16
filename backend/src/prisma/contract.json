@@ -73,23 +73,23 @@
             "codecId": "pg/text@1",
             "members": [
               {
-                "name": "Scheduled",
+                "name": "scheduled",
                 "value": "scheduled"
               },
               {
-                "name": "Completed",
+                "name": "completed",
                 "value": "completed"
               },
               {
-                "name": "Washout",
+                "name": "washout",
                 "value": "washout"
               },
               {
-                "name": "Forfeit",
+                "name": "forfeit",
                 "value": "forfeit"
               },
               {
-                "name": "Bye",
+                "name": "bye",
                 "value": "bye"
               }
             ]
@@ -98,15 +98,15 @@
             "codecId": "pg/text@1",
             "members": [
               {
-                "name": "Normal",
+                "name": "normal",
                 "value": "normal"
               },
               {
-                "name": "Retired",
+                "name": "retired",
                 "value": "retired"
               },
               {
-                "name": "Walkover",
+                "name": "walkover",
                 "value": "walkover"
               }
             ]
@@ -115,15 +115,15 @@
             "codecId": "pg/text@1",
             "members": [
               {
-                "name": "Singles",
+                "name": "singles",
                 "value": "singles"
               },
               {
-                "name": "Doubles",
+                "name": "doubles",
                 "value": "doubles"
               },
               {
-                "name": "MixedDoubles",
+                "name": "mixed_doubles",
                 "value": "mixed_doubles"
               }
             ]
@@ -2302,11 +2302,6 @@
             "match": {
               "checks": [
                 {
-                  "expression": "\"homeTeamId\" <> \"awayTeamId\"",
-                  "name": "match_distinct_teams_ac4c3213",
-                  "prefix": "match_distinct_teams"
-                },
-                {
                   "expression": "\"matchStatus\" IN ('scheduled', 'completed', 'washout', 'forfeit', 'bye')",
                   "name": "match_matchStatus_check_21c8ad8e",
                   "prefix": "match_matchStatus_check"
@@ -3403,7 +3398,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "d3b3d7d11b086a715a075571a491a8739d9d316c9f32e40f4616c82c8958dabf"
+    "storageHash": "bb0c1d04b30671c579b6145f68d3061fda55d5f7839ba0f1b02f568ac4b161a2"
   },
   "execution": {
     "executionHash": "20214ed9f542f9da76e8cca8beb2125f15a84936772b15e1794b7230911986fe",
