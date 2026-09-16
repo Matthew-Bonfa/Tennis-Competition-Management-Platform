@@ -4,6 +4,11 @@ on:
   pull_request:
     branches: [ main, dev ]
 
+    push:
+    branches: [ main, dev ]
+
+    workflow_dispatch:
+
 jobs:
   validate-and-test:
     name: Lint, Test & E2E
