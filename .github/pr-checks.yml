@@ -1,0 +1,41 @@
+name: PR Checks
+
+# This workflow runs every time a PR is opened or updated against the main branch
+on:
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate-and-test:
+    name: Lint & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Grab the code from the PR
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # 2. Setup Node.js (Matching your local v24)
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
+
+      # 3. Install all dependencies across the monorepo
+      - name: Install Dependencies
+        run: npm ci
+
+      # 4. Generate Prisma Client (Required before NestJS can build/test)
+      - name: Generate Prisma Client
+        run: npm run contract:emit --workspace=backend
+
+      # 5. Run Linters to ensure code style is perfect
+      - name: Lint Code
+        run: |
+          npm run lint --workspace=backend
+          npm run lint --workspace=frontend
+
+      # 6. Run Backend Unit Tests & Check Coverage
+      - name: Run Backend Tests
+        run: npm run test:cov --workspace=backend
