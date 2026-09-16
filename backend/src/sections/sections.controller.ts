@@ -1,5 +1,5 @@
 import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
-import { SectionsService } from './sections.service';
+import { SectionsService } from './sections.service.js';
 
 @Controller('sections')
 export class SectionsController {
