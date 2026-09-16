@@ -1,41 +1,67 @@
 name: PR Checks
 
-# This workflow runs every time a PR is opened or updated against the main branch
 on:
   pull_request:
     branches: [ main ]
 
 jobs:
   validate-and-test:
-    name: Lint & Test
+    name: Lint, Test & E2E
     runs-on: ubuntu-latest
 
+    # 1. Ephemeral PostgreSQL service container
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: testpassword
+          POSTGRES_DB: tennis_test_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    # 2. Point all Prisma/Nest commands to the service container
+    env:
+      DATABASE_URL: postgresql://postgres:testpassword@localhost:5432/tennis_test_db?schema=public
+
     steps:
-      # 1. Grab the code from the PR
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # 2. Setup Node.js (Matching your local v24)
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '24'
           cache: 'npm'
 
-      # 3. Install all dependencies across the monorepo
       - name: Install Dependencies
         run: npm ci
 
-      # 4. Generate Prisma Client (Required before NestJS can build/test)
-      - name: Generate Prisma Client
+      - name: Generate Prisma Contract
         run: npm run contract:emit --workspace=backend
 
-      # 5. Run Linters to ensure code style is perfect
       - name: Lint Code
         run: |
           npm run lint --workspace=backend
           npm run lint --workspace=frontend
 
-      # 6. Run Backend Unit Tests & Check Coverage
-      - name: Run Backend Tests
+      - name: Run Unit Tests & Coverage
         run: npm run test:cov --workspace=backend
+
+      # 3. Apply migrations to the CI database
+      - name: Run Database Migrations
+        run: npx prisma db migrate --advance-ref db
+        working-directory: ./backend
+
+      # 4. Populate test fixtures for E2E tests
+      - name: Seed Database
+        run: npm run seed --workspace=backend
+
+      # 5. Run full end-to-end tests
+      - name: Run E2E Tests
+        run: npm run test:e2e --workspace=backend
