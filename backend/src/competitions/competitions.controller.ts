@@ -27,5 +27,4 @@ export class CompetitionsController {
         return this.competitionsService.findOne(id)
     }
 
-
 }
