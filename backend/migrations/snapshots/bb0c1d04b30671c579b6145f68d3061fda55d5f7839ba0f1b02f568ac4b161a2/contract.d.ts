@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'e970daa1359049bf85d02e068bdb5b15b77d8cf30db57f8d3f3bbdc8c420e5d7'>;
+  StorageHashBase<'bb0c1d04b30671c579b6145f68d3061fda55d5f7839ba0f1b02f568ac4b161a2'>;
 export type ExecutionHash =
   ExecutionHashBase<'20214ed9f542f9da76e8cca8beb2125f15a84936772b15e1794b7230911986fe'>;
 export type ProfileHash =
@@ -302,9 +302,9 @@ export type FieldOutputTypes = {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly matchId: CodecTypes['pg/text@1']['output'];
       readonly rubberNumber: CodecTypes['pg/int4@1']['output'];
-      readonly rubberType: 'singles' | 'doubles';
+      readonly rubberType: 'singles' | 'doubles' | 'mixed_doubles';
       readonly winningTeamId: CodecTypes['pg/int4@1']['output'] | null;
-      readonly outcomeType: 'normal' | 'retired' | 'walkover' | 'defaulted';
+      readonly outcomeType: 'normal' | 'retired' | 'walkover';
     };
     readonly RubberPlayer: {
       readonly id: CodecTypes['pg/int4@1']['output'];
@@ -339,6 +339,7 @@ export type FieldOutputTypes = {
       readonly tiebreakAtGames: CodecTypes['pg/int4@1']['output'] | null;
       readonly finalSetMatchTiebreak: CodecTypes['pg/bool@1']['output'];
       readonly pointsPerRubber: CodecTypes['pg/int4@1']['output'];
+      readonly pointsPerMatchWin: CodecTypes['pg/int4@1']['output'];
       readonly forfeitScoreline: CodecTypes['pg/text@1']['output'];
     };
     readonly Team: {
@@ -417,9 +418,9 @@ export type FieldInputTypes = {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly matchId: CodecTypes['pg/text@1']['input'];
       readonly rubberNumber: CodecTypes['pg/int4@1']['input'];
-      readonly rubberType: 'singles' | 'doubles';
+      readonly rubberType: 'singles' | 'doubles' | 'mixed_doubles';
       readonly winningTeamId: CodecTypes['pg/int4@1']['input'] | null;
-      readonly outcomeType: 'normal' | 'retired' | 'walkover' | 'defaulted';
+      readonly outcomeType: 'normal' | 'retired' | 'walkover';
     };
     readonly RubberPlayer: {
       readonly id: CodecTypes['pg/int4@1']['input'];
@@ -454,6 +455,7 @@ export type FieldInputTypes = {
       readonly tiebreakAtGames: CodecTypes['pg/int4@1']['input'] | null;
       readonly finalSetMatchTiebreak: CodecTypes['pg/bool@1']['input'];
       readonly pointsPerRubber: CodecTypes['pg/int4@1']['input'];
+      readonly pointsPerMatchWin: CodecTypes['pg/int4@1']['input'];
       readonly forfeitScoreline: CodecTypes['pg/text@1']['input'];
     };
     readonly Team: {
@@ -531,9 +533,9 @@ export type StorageColumnTypes = {
     readonly rubber: {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly matchId: CodecTypes['pg/text@1']['output'];
-      readonly outcomeType: 'normal' | 'retired' | 'walkover' | 'defaulted';
+      readonly outcomeType: 'normal' | 'retired' | 'walkover';
       readonly rubberNumber: CodecTypes['pg/int4@1']['output'];
-      readonly rubberType: 'singles' | 'doubles';
+      readonly rubberType: 'singles' | 'doubles' | 'mixed_doubles';
       readonly winningTeamId: CodecTypes['pg/int4@1']['output'] | null;
     };
     readonly rubberPlayer: {
@@ -565,6 +567,7 @@ export type StorageColumnTypes = {
       readonly gamesPerSet: CodecTypes['pg/int4@1']['output'];
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly name: CodecTypes['pg/text@1']['output'];
+      readonly pointsPerMatchWin: CodecTypes['pg/int4@1']['output'];
       readonly pointsPerRubber: CodecTypes['pg/int4@1']['output'];
       readonly rubbersPerMatch: CodecTypes['pg/int4@1']['output'];
       readonly seasonId: CodecTypes['pg/int4@1']['output'];
@@ -646,9 +649,9 @@ export type StorageColumnInputTypes = {
     readonly rubber: {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly matchId: CodecTypes['pg/text@1']['input'];
-      readonly outcomeType: 'normal' | 'retired' | 'walkover' | 'defaulted';
+      readonly outcomeType: 'normal' | 'retired' | 'walkover';
       readonly rubberNumber: CodecTypes['pg/int4@1']['input'];
-      readonly rubberType: 'singles' | 'doubles';
+      readonly rubberType: 'singles' | 'doubles' | 'mixed_doubles';
       readonly winningTeamId: CodecTypes['pg/int4@1']['input'] | null;
     };
     readonly rubberPlayer: {
@@ -680,6 +683,7 @@ export type StorageColumnInputTypes = {
       readonly gamesPerSet: CodecTypes['pg/int4@1']['input'];
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly name: CodecTypes['pg/text@1']['input'];
+      readonly pointsPerMatchWin: CodecTypes['pg/int4@1']['input'];
       readonly pointsPerRubber: CodecTypes['pg/int4@1']['input'];
       readonly rubbersPerMatch: CodecTypes['pg/int4@1']['input'];
       readonly seasonId: CodecTypes['pg/int4@1']['input'];
@@ -1646,6 +1650,15 @@ type ContractBase = Omit<
                     readonly value: DefaultLiteralValue<'pg/int4@1', 1>;
                   };
                 };
+                readonly pointsPerMatchWin: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/int4@1', 0>;
+                  };
+                };
                 readonly forfeitScoreline: {
                   readonly nativeType: 'text';
                   readonly codecId: 'pg/text@1';
@@ -1824,11 +1837,11 @@ type ContractBase = Omit<
             };
             readonly outcome_type: {
               readonly kind: 'valueSet';
-              readonly values: readonly ['normal', 'retired', 'walkover', 'defaulted'];
+              readonly values: readonly ['normal', 'retired', 'walkover'];
             };
             readonly rubber_type: {
               readonly kind: 'valueSet';
-              readonly values: readonly ['singles', 'doubles'];
+              readonly values: readonly ['singles', 'doubles', 'mixed_doubles'];
             };
           };
         };
@@ -2837,6 +2850,10 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
               };
+              readonly pointsPerMatchWin: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
               readonly forfeitScoreline: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
@@ -2887,6 +2904,7 @@ type ContractBase = Omit<
                 readonly tiebreakAtGames: { readonly column: 'tiebreakAtGames' };
                 readonly finalSetMatchTiebreak: { readonly column: 'finalSetMatchTiebreak' };
                 readonly pointsPerRubber: { readonly column: 'pointsPerRubber' };
+                readonly pointsPerMatchWin: { readonly column: 'pointsPerMatchWin' };
                 readonly forfeitScoreline: { readonly column: 'forfeitScoreline' };
               };
             };
@@ -3048,27 +3066,27 @@ type ContractBase = Omit<
           readonly match_status: {
             readonly codecId: 'pg/text@1';
             readonly members: readonly [
-              { readonly name: 'Scheduled'; readonly value: 'scheduled' },
-              { readonly name: 'Completed'; readonly value: 'completed' },
-              { readonly name: 'Washout'; readonly value: 'washout' },
-              { readonly name: 'Forfeit'; readonly value: 'forfeit' },
-              { readonly name: 'Bye'; readonly value: 'bye' },
+              { readonly name: 'scheduled'; readonly value: 'scheduled' },
+              { readonly name: 'completed'; readonly value: 'completed' },
+              { readonly name: 'washout'; readonly value: 'washout' },
+              { readonly name: 'forfeit'; readonly value: 'forfeit' },
+              { readonly name: 'bye'; readonly value: 'bye' },
             ];
           };
           readonly rubber_type: {
             readonly codecId: 'pg/text@1';
             readonly members: readonly [
-              { readonly name: 'Singles'; readonly value: 'singles' },
-              { readonly name: 'Doubles'; readonly value: 'doubles' },
+              { readonly name: 'singles'; readonly value: 'singles' },
+              { readonly name: 'doubles'; readonly value: 'doubles' },
+              { readonly name: 'mixed_doubles'; readonly value: 'mixed_doubles' },
             ];
           };
           readonly outcome_type: {
             readonly codecId: 'pg/text@1';
             readonly members: readonly [
-              { readonly name: 'Normal'; readonly value: 'normal' },
-              { readonly name: 'Retired'; readonly value: 'retired' },
-              { readonly name: 'Walkover'; readonly value: 'walkover' },
-              { readonly name: 'Defaulted'; readonly value: 'defaulted' },
+              { readonly name: 'normal'; readonly value: 'normal' },
+              { readonly name: 'retired'; readonly value: 'retired' },
+              { readonly name: 'walkover'; readonly value: 'walkover' },
             ];
           };
         };
