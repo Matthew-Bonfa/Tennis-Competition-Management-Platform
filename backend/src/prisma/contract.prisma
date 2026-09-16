@@ -147,26 +147,23 @@ model TeamPlayer {
 // ==========================================
 
 enum match_status {
-  @@type("pg/text@1")
-  Scheduled = "scheduled"
-  Completed = "completed"
-  Washout   = "washout"
-  Forfeit   = "forfeit"
-  Bye       = "bye"
+  scheduled
+  completed
+  washout
+  forfeit
+  bye
 }
 
 enum rubber_type {
-  @@type("pg/text@1")
-  Singles      = "singles"
-  Doubles      = "doubles"
-  MixedDoubles = "mixed_doubles"
+  singles
+  doubles
+  mixed_doubles
 }
 
 enum outcome_type {
-  @@type("pg/text@1")
-  Normal    = "normal"
-  Retired   = "retired"
-  Walkover  = "walkover"
+  normal
+  retired
+  walkover
 }
 
 model Match {
@@ -191,7 +188,6 @@ model Match {
   rubbers             Rubber[]
 
   @@unique([sectionId, roundNumber, homeTeamId])
-  @@check(expression: "\"homeTeamId\" <> \"awayTeamId\"", name: "match_distinct_teams")
   @@index([sectionId, matchDate])
 }
 

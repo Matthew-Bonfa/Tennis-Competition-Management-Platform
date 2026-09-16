@@ -1,77 +1,20 @@
 [
   {
-    "id": "dropTable.post",
-    "label": "Drop table \"post\"",
-    "operationClass": "destructive",
+    "id": "schema.public",
+    "label": "Create schema \"public\"",
+    "operationClass": "additive",
     "target": {
-      "id": "postgres",
-      "details": {
-        "schema": "public",
-        "objectType": "table",
-        "name": "post"
-      }
+      "id": "postgres"
     },
-    "precheck": [
-      {
-        "description": "ensure table \"post\" exists",
-        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
-        "params": [
-          "\"public\".\"post\""
-        ]
-      }
-    ],
+    "precheck": [],
     "execute": [
       {
-        "description": "drop table \"post\"",
-        "sql": "DROP TABLE \"public\".\"post\""
+        "description": "Create schema \"public\"",
+        "sql": "CREATE SCHEMA IF NOT EXISTS \"public\"",
+        "params": []
       }
     ],
-    "postcheck": [
-      {
-        "description": "verify table \"post\" does not exist",
-        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
-        "params": [
-          "\"public\".\"post\""
-        ]
-      }
-    ]
-  },
-  {
-    "id": "dropTable.user",
-    "label": "Drop table \"user\"",
-    "operationClass": "destructive",
-    "target": {
-      "id": "postgres",
-      "details": {
-        "schema": "public",
-        "objectType": "table",
-        "name": "user"
-      }
-    },
-    "precheck": [
-      {
-        "description": "ensure table \"user\" exists",
-        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
-        "params": [
-          "\"public\".\"user\""
-        ]
-      }
-    ],
-    "execute": [
-      {
-        "description": "drop table \"user\"",
-        "sql": "DROP TABLE \"public\".\"user\""
-      }
-    ],
-    "postcheck": [
-      {
-        "description": "verify table \"user\" does not exist",
-        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
-        "params": [
-          "\"public\".\"user\""
-        ]
-      }
-    ]
+    "postcheck": []
   },
   {
     "id": "table.association",
@@ -293,7 +236,7 @@
     "execute": [
       {
         "description": "create table \"match\"",
-        "sql": "CREATE TABLE \"public\".\"match\" (\n  \"awayTeamId\" int4 NOT NULL,\n  \"confirmedByPersonId\" text,\n  \"enteredByPersonId\" text,\n  \"homeTeamId\" int4 NOT NULL,\n  \"id\" text NOT NULL,\n  \"matchDate\" timestamptz NOT NULL,\n  \"matchStatus\" text NOT NULL,\n  \"sectionId\" int4 NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "sql": "CREATE TABLE \"public\".\"match\" (\n  \"awayTeamId\" int4 NOT NULL,\n  \"confirmedAt\" timestamptz,\n  \"confirmedByPersonId\" text,\n  \"enteredAt\" timestamptz,\n  \"enteredByPersonId\" text,\n  \"homeTeamId\" int4 NOT NULL,\n  \"id\" text NOT NULL,\n  \"matchDate\" timestamptz NOT NULL,\n  \"matchStatus\" text NOT NULL,\n  \"roundNumber\" int4 NOT NULL,\n  \"sectionId\" int4 NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"match_matchStatus_check_21c8ad8e\" CHECK (\"matchStatus\" IN ('scheduled', 'completed', 'washout', 'forfeit', 'bye'))\n)",
         "params": []
       }
     ],
@@ -410,7 +353,7 @@
     "execute": [
       {
         "description": "create table \"rubber\"",
-        "sql": "CREATE TABLE \"public\".\"rubber\" (\n  \"id\" SERIAL NOT NULL,\n  \"matchId\" text NOT NULL,\n  \"outcomeType\" text NOT NULL,\n  \"rubberType\" text NOT NULL,\n  \"winningTeamId\" int4,\n  PRIMARY KEY (\"id\")\n)",
+        "sql": "CREATE TABLE \"public\".\"rubber\" (\n  \"id\" SERIAL NOT NULL,\n  \"matchId\" text NOT NULL,\n  \"outcomeType\" text NOT NULL,\n  \"rubberNumber\" int4 NOT NULL,\n  \"rubberType\" text NOT NULL,\n  \"winningTeamId\" int4,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"rubber_outcomeType_check_bd80204a\" CHECK (\"outcomeType\" IN ('normal', 'retired', 'walkover')),\n  CONSTRAINT \"rubber_rubberType_check_94ac6fcc\" CHECK (\"rubberType\" IN ('singles', 'doubles', 'mixed_doubles'))\n)",
         "params": []
       }
     ],
@@ -488,7 +431,7 @@
     "execute": [
       {
         "description": "create table \"rubberSet\"",
-        "sql": "CREATE TABLE \"public\".\"rubberSet\" (\n  \"awayGames\" int4 NOT NULL,\n  \"homeGames\" int4 NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"rubberId\" int4 NOT NULL,\n  \"setNumber\" int4 NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "sql": "CREATE TABLE \"public\".\"rubberSet\" (\n  \"awayGames\" int4 NOT NULL,\n  \"awayTiebreakPoints\" int4,\n  \"homeGames\" int4 NOT NULL,\n  \"homeTiebreakPoints\" int4,\n  \"id\" SERIAL NOT NULL,\n  \"isMatchTiebreak\" bool DEFAULT false NOT NULL,\n  \"rubberId\" int4 NOT NULL,\n  \"setNumber\" int4 NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
         "params": []
       }
     ],
@@ -566,7 +509,7 @@
     "execute": [
       {
         "description": "create table \"section\"",
-        "sql": "CREATE TABLE \"public\".\"section\" (\n  \"id\" SERIAL NOT NULL,\n  \"name\" text NOT NULL,\n  \"seasonId\" int4 NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "sql": "CREATE TABLE \"public\".\"section\" (\n  \"finalSetMatchTiebreak\" bool DEFAULT false NOT NULL,\n  \"forfeitScoreline\" text DEFAULT '6-0 6-0' NOT NULL,\n  \"gamesPerSet\" int4 NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"name\" text NOT NULL,\n  \"pointsPerMatchWin\" int4 DEFAULT 0 NOT NULL,\n  \"pointsPerRubber\" int4 DEFAULT 1 NOT NULL,\n  \"rubbersPerMatch\" int4 NOT NULL,\n  \"seasonId\" int4 NOT NULL,\n  \"setsToWin\" int4 NOT NULL,\n  \"tiebreakAtGames\" int4,\n  PRIMARY KEY (\"id\")\n)",
         "params": []
       }
     ],
@@ -654,6 +597,174 @@
         "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
         "params": [
           "\"public\".\"teamPlayer\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.match.match_sectionId_roundNumber_homeTeamId_key",
+    "label": "Add unique constraint on \"match\" (sectionId, roundNumber, homeTeamId)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "match_sectionId_roundNumber_homeTeamId_key",
+        "table": "match"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"match_sectionId_roundNumber_homeTeamId_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "match_sectionId_roundNumber_homeTeamId_key",
+          "public",
+          "\"public\".\"match\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"match_sectionId_roundNumber_homeTeamId_key\"",
+        "sql": "ALTER TABLE \"public\".\"match\" ADD CONSTRAINT \"match_sectionId_roundNumber_homeTeamId_key\" UNIQUE (\"sectionId\", \"roundNumber\", \"homeTeamId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"match_sectionId_roundNumber_homeTeamId_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "match_sectionId_roundNumber_homeTeamId_key",
+          "public",
+          "\"public\".\"match\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.rubber.rubber_matchId_rubberNumber_key",
+    "label": "Add unique constraint on \"rubber\" (matchId, rubberNumber)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "rubber_matchId_rubberNumber_key",
+        "table": "rubber"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"rubber_matchId_rubberNumber_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "rubber_matchId_rubberNumber_key",
+          "public",
+          "\"public\".\"rubber\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"rubber_matchId_rubberNumber_key\"",
+        "sql": "ALTER TABLE \"public\".\"rubber\" ADD CONSTRAINT \"rubber_matchId_rubberNumber_key\" UNIQUE (\"matchId\", \"rubberNumber\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"rubber_matchId_rubberNumber_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "rubber_matchId_rubberNumber_key",
+          "public",
+          "\"public\".\"rubber\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.rubberPlayer.rubberPlayer_rubberId_personId_key",
+    "label": "Add unique constraint on \"rubberPlayer\" (rubberId, personId)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "rubberPlayer_rubberId_personId_key",
+        "table": "rubberPlayer"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"rubberPlayer_rubberId_personId_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "rubberPlayer_rubberId_personId_key",
+          "public",
+          "\"public\".\"rubberPlayer\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"rubberPlayer_rubberId_personId_key\"",
+        "sql": "ALTER TABLE \"public\".\"rubberPlayer\" ADD CONSTRAINT \"rubberPlayer_rubberId_personId_key\" UNIQUE (\"rubberId\", \"personId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"rubberPlayer_rubberId_personId_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "rubberPlayer_rubberId_personId_key",
+          "public",
+          "\"public\".\"rubberPlayer\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.rubberSet.rubberSet_rubberId_setNumber_key",
+    "label": "Add unique constraint on \"rubberSet\" (rubberId, setNumber)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "rubberSet_rubberId_setNumber_key",
+        "table": "rubberSet"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"rubberSet_rubberId_setNumber_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "rubberSet_rubberId_setNumber_key",
+          "public",
+          "\"public\".\"rubberSet\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"rubberSet_rubberId_setNumber_key\"",
+        "sql": "ALTER TABLE \"public\".\"rubberSet\" ADD CONSTRAINT \"rubberSet_rubberId_setNumber_key\" UNIQUE (\"rubberId\", \"setNumber\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"rubberSet_rubberId_setNumber_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "rubberSet_rubberId_setNumber_key",
+          "public",
+          "\"public\".\"rubberSet\""
         ]
       }
     ]
@@ -1122,6 +1233,45 @@
         "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
         "params": [
           "\"public\".\"match_sectionId_idx_5d1ea56b\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.match.match_sectionId_matchDate_idx_6d5b940c",
+    "label": "Create index \"match_sectionId_matchDate_idx_6d5b940c\" on \"match\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "match_sectionId_matchDate_idx_6d5b940c",
+        "table": "match"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"match_sectionId_matchDate_idx_6d5b940c\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"match_sectionId_matchDate_idx_6d5b940c\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"match_sectionId_matchDate_idx_6d5b940c\"",
+        "sql": "CREATE INDEX \"match_sectionId_matchDate_idx_6d5b940c\" ON \"public\".\"match\" (\"sectionId\", \"matchDate\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"match_sectionId_matchDate_idx_6d5b940c\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"match_sectionId_matchDate_idx_6d5b940c\""
         ]
       }
     ]
