@@ -1,11 +1,5 @@
-// Writes a small, known set of rows so the fixtures and results views have
-// something real to render. Not a full round-robin draw — one played match
-// with a scored rubber, and one scheduled match with no result yet.
-//
-// Run with: node scripts/sample-data.ts (from backend/)
-
-import { db } from '../src/prisma/db.ts';
-import { toInstant } from '../src/common/temporal.ts';
+import { db } from '../src/prisma/db.js';
+import { toInstant } from '../src/common/temporal.js';
 
 const association = await db.orm.public.Association.create({
   name: 'Metro Tennis Association',

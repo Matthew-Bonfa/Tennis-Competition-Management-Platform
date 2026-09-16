@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'d3b3d7d11b086a715a075571a491a8739d9d316c9f32e40f4616c82c8958dabf'>;
+  StorageHashBase<'bb0c1d04b30671c579b6145f68d3061fda55d5f7839ba0f1b02f568ac4b161a2'>;
 export type ExecutionHash =
   ExecutionHashBase<'20214ed9f542f9da76e8cca8beb2125f15a84936772b15e1794b7230911986fe'>;
 export type ProfileHash =
@@ -3066,27 +3066,27 @@ type ContractBase = Omit<
           readonly match_status: {
             readonly codecId: 'pg/text@1';
             readonly members: readonly [
-              { readonly name: 'Scheduled'; readonly value: 'scheduled' },
-              { readonly name: 'Completed'; readonly value: 'completed' },
-              { readonly name: 'Washout'; readonly value: 'washout' },
-              { readonly name: 'Forfeit'; readonly value: 'forfeit' },
-              { readonly name: 'Bye'; readonly value: 'bye' },
+              { readonly name: 'scheduled'; readonly value: 'scheduled' },
+              { readonly name: 'completed'; readonly value: 'completed' },
+              { readonly name: 'washout'; readonly value: 'washout' },
+              { readonly name: 'forfeit'; readonly value: 'forfeit' },
+              { readonly name: 'bye'; readonly value: 'bye' },
             ];
           };
           readonly rubber_type: {
             readonly codecId: 'pg/text@1';
             readonly members: readonly [
-              { readonly name: 'Singles'; readonly value: 'singles' },
-              { readonly name: 'Doubles'; readonly value: 'doubles' },
-              { readonly name: 'MixedDoubles'; readonly value: 'mixed_doubles' },
+              { readonly name: 'singles'; readonly value: 'singles' },
+              { readonly name: 'doubles'; readonly value: 'doubles' },
+              { readonly name: 'mixed_doubles'; readonly value: 'mixed_doubles' },
             ];
           };
           readonly outcome_type: {
             readonly codecId: 'pg/text@1';
             readonly members: readonly [
-              { readonly name: 'Normal'; readonly value: 'normal' },
-              { readonly name: 'Retired'; readonly value: 'retired' },
-              { readonly name: 'Walkover'; readonly value: 'walkover' },
+              { readonly name: 'normal'; readonly value: 'normal' },
+              { readonly name: 'retired'; readonly value: 'retired' },
+              { readonly name: 'walkover'; readonly value: 'walkover' },
             ];
           };
         };
