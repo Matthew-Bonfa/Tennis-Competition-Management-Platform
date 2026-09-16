@@ -2,7 +2,7 @@ import {Injectable} from '@nestjs/common'
 import {PrismaService} from '../prisma/prisma.service.js'
 
 @Injectable()
-export class AssociationsService {
+class AssociationsService {
 
     constructor(private prisma: PrismaService){}
 
@@ -21,8 +21,8 @@ export class AssociationsService {
         console.log("getting " + id);
         
         const response = await this.prisma.client.orm.public.Association
-            .where('id', '=', id)
-            .execute();
+            .where({id: id})
+            .first();
         console.log(response);
         return response;
 
@@ -32,5 +32,5 @@ export class AssociationsService {
 }
 
 
-
+export default AssociationsService;
 

@@ -1,20 +1,20 @@
-import {Controller, Get} from '@nestjs/common'
+import {Controller, Get, Param} from '@nestjs/common'
 
 import AssociationsService from './associations.service.js'
 
 @Controller('associations')
 class AssociationsController {
     
-    constructor(private associationService: AssociationsService){}
+    constructor(private associationsService: AssociationsService){}
 
     @Get()
     getAllAssociations() {
-        return this.associationService.getAll();
+        return this.associationsService.getAll();
     }
 
     @Get('/:id')
     getAssociation(@Param('id') id: string) {
-        return this.associaitonService.getAssociation(id);
+        return this.associationsService.getAssociation(id);
     }
 }
 
