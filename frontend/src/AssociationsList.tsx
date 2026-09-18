@@ -15,11 +15,9 @@ function AssociationsList(){
             let data = await fetchApi("/associations");
 
             console.log(data);
-            // extract what you want from the json
-            // coming back to this after i actually make the json
 
             setAssociations(data);
-            setLoading(false)
+            setLoading(false);
             
         }
 
@@ -32,11 +30,10 @@ function AssociationsList(){
     if (loading){
         return <p>Loading...</p>;
     } else {
-        // fix the to= part later
         return <div className="grid gap-6 md:grid-cols-3">
                 {associations.map((assoc) => (
                 <Link 
-                    key={assoc.id} 
+                    key={assoc.id}
                     to={`/associations/` + assoc.id}
                     className="block bg-white border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow"
                 >
