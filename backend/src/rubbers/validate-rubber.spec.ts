@@ -9,9 +9,6 @@ const bestOfThree: RubberFormat = {
     finalSetMatchTiebreak: false,
 };
 
-// Fast4: races to four games, no advantage, tiebreak triggers at 3-3
-// rather than 6-6. Worth double-checking against your association's
-// exact rules when the tiebreak-set logic is built.
 const fast4: RubberFormat = {
     setsToWin: 2,
     gamesPerSet: 4,
