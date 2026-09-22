@@ -9,8 +9,14 @@ import { ClubDetail } from './types.js';
 export class ClubsService {
     constructor(private readonly prisma: PrismaService) {}
 
-    async findAllClubs() : Promise<ClubSummary[]> {
+    async findAllClubs(associationId?: string) : Promise<ClubSummary[]> {
+        let association: any = {};
+        if (association){
+            association.associationId = associationId;
+        }
+
         return this.prisma.client.orm.public.Club
+            .where(association)
             .include('teams', (t) => t.count())
             .include('memberships', (m) => m.count())
             .all()
