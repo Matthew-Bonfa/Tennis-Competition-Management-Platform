@@ -1,12 +1,6 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { CompetitionsService } from './competitions.service.js';
 
-@Controller('competitions')
-export class CompetitionsController {
-
-    // injects into controller (singleton)
-    constructor(private readonly competitionsService: CompetitionsService) {}
-
     /* 
     describes the routes (functions ?) undertaken for competitions
         get all users
@@ -16,6 +10,12 @@ export class CompetitionsController {
         delete a user
     */
 
+@Controller('competitions')
+export class CompetitionsController {
+
+    // injects into controller (singleton)
+    constructor(private readonly competitionsService: CompetitionsService) {}
+
     // returns a lists of all competitions, can filter by association
     @Get()
     findAll(@Query('associationId') associationId?: string){
@@ -23,7 +23,7 @@ export class CompetitionsController {
     }
 
     @Get(':id')
-    findOne(@Param('id') id: string){  // all params are strings -> if want as a string use unary (+) or parseInt
+    findOne(@Param('id') id: string){  // all params are strings -> if want nums a string use unary (+) or parseInt
         return this.competitionsService.findOne(id)
     }
 

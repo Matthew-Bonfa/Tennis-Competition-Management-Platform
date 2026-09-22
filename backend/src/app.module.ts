@@ -8,9 +8,10 @@ import { SectionsModule } from './sections/sections.module.js';
 import { CompetitionsModule } from './competitions/competitions.module.js';
 import { TeamsModule } from './teams/teams.module.js';
 import { SeasonsModule } from './seasons/seasons.module.js';
+import { AssociationsModule } from './associations/associations.module.js';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), PrismaModule, MatchesModule, SectionsModule, TeamsModule, CompetitionsModule, SeasonsModule],
+  imports: [ConfigModule.forRoot({ isGlobal: true }), PrismaModule, MatchesModule, SectionsModule, TeamsModule, CompetitionsModule, SeasonsModule, AssociationsModule],
   controllers: [AppController],
   providers: [AppService],
 })
