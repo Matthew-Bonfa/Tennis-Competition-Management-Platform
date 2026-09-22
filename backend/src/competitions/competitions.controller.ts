@@ -19,12 +19,12 @@ export class CompetitionsController {
     // returns a lists of all competitions, can filter by association
     @Get()
     findAll(@Query('associationId') associationId?: string){
-        return this.competitionsService.findAll(associationId)
+        return this.competitionsService.findAll(associationId);
     }
 
     @Get(':id')
     findOne(@Param('id') id: string){  // all params are strings -> if want nums a string use unary (+) or parseInt
-        return this.competitionsService.findOne(id)
+        return this.competitionsService.findOne(id);
     }
 
 }

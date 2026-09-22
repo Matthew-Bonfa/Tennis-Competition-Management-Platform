@@ -4,6 +4,7 @@ import { AssociationsService } from './associations.service.js';
 
 @Module({
   controllers: [AssociationsController],
-  providers: [AssociationsService]
+  providers: [AssociationsService],
+  exports: [AssociationsService]
 })
 export class AssociationsModule {}

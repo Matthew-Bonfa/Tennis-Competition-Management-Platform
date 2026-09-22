@@ -6,7 +6,43 @@ import { NotFoundException } from '@nestjs/common';
 @Injectable()
 export class SectionsService {
     constructor(private readonly prisma: PrismaService) {}
+    
+    // get all sections for a season
+    async findAll(seasonId: number){
+        const sections = await this.prisma.client.orm.public.Section
+        .where({ seasonId })
+        .all();
 
+        return sections.map((section) => ({
+            id: section.id,
+            name: section.name
+        }))
+    }
+
+    // NEED TO ADD GETTING ONE SECTION DETAILS
+    async findOne(id: number){
+        const section = await this.prisma.client.orm.public.Section
+        .where({ id })
+        .first();
+
+        // if nothing was found, send back a proper "404 not found" error
+        if (!section) {
+            throw new NotFoundException(`Section ${id} not found`);
+        }
+
+        const ladder = await this.calculateLadder(id);
+
+        // NEED TO ADD FIXTURE HERE ONCE ZACH COMPLETES
+
+        return{
+            id: section.id,
+            name: section.name,
+            ladder: ladder
+            // add fixture here
+        };
+    }
+
+    
     async retrieveCompletedMatches(sectionId: number): Promise<any> {
         return this.prisma.client.orm.public.Match
             .where({ sectionId, matchStatus: 'completed' })

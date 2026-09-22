@@ -11,6 +11,11 @@ export class SeasonsController {
         return this.seasonsService.findAll(competitionId)
     }
     
+    @Get(':id')
+    findOne(id: number){
+        return this.seasonsService.findOne(id);
+    }
+
 }
 
 

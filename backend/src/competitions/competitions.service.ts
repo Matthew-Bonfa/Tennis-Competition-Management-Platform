@@ -20,7 +20,7 @@ export class CompetitionsService {
       .all();
 
     // get every association to look up names
-    const associations = await this.associationsService.findAll()
+    const associations = await this.associationsService.findAll();
 
     // return association and competition -> relevant details
     return competitions.map((competition) => {
@@ -29,7 +29,7 @@ export class CompetitionsService {
       return {
         id: competition.id,
         name: competition.name,
-        association: association ? { id: association.id, name: association.name } : null, // limit to specific fields of association
+        association: association ?? null,
       };
     });
   }
