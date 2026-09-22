@@ -22,6 +22,7 @@ class AssociationsService {
         
         const response = await this.prisma.client.orm.public.Association
             .where({id: id})
+            .include('contactPerson', (p) => p.select('id', 'firstName', 'lastName'))
             .first();
         console.log(response);
         return response;
