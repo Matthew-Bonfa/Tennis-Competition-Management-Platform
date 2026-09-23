@@ -7,6 +7,8 @@ import { MatchesModule } from './matches/matches.module.js';
 import { SectionsModule } from './sections/sections.module.js';
 import { TeamsModule } from './teams/teams.module.js';
 import { FixturesModule } from './fixtures/fixtures.module.js';
+import { AssociationsModule } from "./associations/associations.module.js"
+import { ClubsModule } from "./clubs/clubs.module.js"
 
 @Module({
   imports: [
@@ -16,6 +18,8 @@ import { FixturesModule } from './fixtures/fixtures.module.js';
     SectionsModule,
     TeamsModule,
     FixturesModule,
+    AssociationsModule,
+    ClubsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
