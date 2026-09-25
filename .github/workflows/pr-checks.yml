@@ -35,20 +35,20 @@ jobs:
       DATABASE_URL: postgresql://postgres:testpassword@localhost:5432/tennis_test_db?schema=public
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '24'
           cache: 'npm'
+          cache-dependency-path: package-lock.json
 
       - name: Install Dependencies
-        run: npm ci
-
-      - name: Generate Prisma Contract
-        run: npm run contract:emit --workspace=backend
+        working-directory: .
+        run: |
+          test -f package-lock.json
+          npm ci --workspaces --include-workspace-root
+            - name: Generate Prisma Contract
+              run: npm run contract:emit --workspace=backend
 
       - name: Lint Code
         run: |
