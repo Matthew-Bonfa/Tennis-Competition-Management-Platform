@@ -7,40 +7,36 @@ import { AppModule } from '../src/app.module.js';
 describe('Teams Feature (e2e)', () => {
   let app: INestApplication;
 
-  // 1. Setup Phase: Spin up the entire NestJS application before running tests
+  // Sets everything up
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule], // Loads your entire app (Controllers, Services, Prisma)
+      imports: [AppModule],
     }).compile();
 
     app = moduleFixture.createNestApplication();
-
-    // IMPORTANT: Apply the same global prefix you use in your main.ts!
     app.setGlobalPrefix('api');
 
     await app.init();
   });
 
-  // 2. Teardown Phase: Close the app and database connections when finished
+  // Close connection after testing is finished
   afterAll(async () => {
     await app.close();
   });
 
-  // =========================================================
-  // THE TESTS
-  // =========================================================
+  // Actual end to end tests
 
   it('GET /api/teams -> should return an array of teams', async () => {
-    // Use Supertest to fire a fake HTTP GET request
+    // End point is active
     const response = await request(app.getHttpServer())
       .get('/api/teams')
-      .expect(200); // Asserts that we get an HTTP 200 OK status
+      .expect(200);
 
-    // Vitest assertions to check the actual data returned
+    // Checks for a non empty array
     expect(Array.isArray(response.body)).toBeTruthy();
     expect(response.body.length).toBeGreaterThan(0);
 
-    // Because we used .include('club') in the service, we can verify relationships work
+    // Checks if
     expect(response.body[0]).toHaveProperty('club');
   });
 
