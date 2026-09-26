@@ -1,3 +1,5 @@
+// use prisma-8
+
 model Person {
   id                    String    @id @default(uuid())
   personCode            String    
@@ -147,23 +149,26 @@ model TeamPlayer {
 // ==========================================
 
 enum match_status {
-  scheduled
-  completed
-  washout
-  forfeit
-  bye
+  @@type("pg/text@1")
+  Scheduled = "scheduled"
+  Completed = "completed"
+  Washout   = "washout"
+  Forfeit   = "forfeit"
+  Bye       = "bye"
 }
 
 enum rubber_type {
-  singles
-  doubles
-  mixed_doubles
+  @@type("pg/text@1")
+  Singles      = "singles"
+  Doubles      = "doubles"
+  MixedDoubles = "mixed_doubles"
 }
 
 enum outcome_type {
-  normal
-  retired
-  walkover
+  @@type("pg/text@1")
+  Normal   = "normal"
+  Retired  = "retired"
+  Walkover = "walkover"
 }
 
 model Match {

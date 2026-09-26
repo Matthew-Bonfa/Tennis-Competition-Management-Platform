@@ -35,38 +35,36 @@ jobs:
       DATABASE_URL: postgresql://postgres:testpassword@localhost:5432/tennis_test_db?schema=public
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
+    - name: Checkout Code
+      uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '24'
-          cache: 'npm'
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '24'
+        cache: npm
+        cache-dependency-path: package-lock.json
 
-      - name: Install Dependencies
-        run: npm ci
+    - name: Install Dependencies
+      run: npm ci
 
-      - name: Generate Prisma Contract
-        run: npm run contract:emit --workspace=backend
+    - name: Lint Code
+      run: |
+        npm run lint --workspace=backend
+        npm run lint --workspace=frontend
 
-      - name: Lint Code
-        run: |
-          npm run lint --workspace=backend
-          npm run lint --workspace=frontend
+    - name: Run Unit Tests & Coverage
+      run: npm run test:cov --workspace=backend
 
-      - name: Run Unit Tests & Coverage
-        run: npm run test:cov --workspace=backend
+    # 3. Apply migrations to the CI database
+    - name: Run Database Migrations
+      run: npx prisma db migrate --advance-ref db
+      working-directory: ./backend
 
-      # 3. Apply migrations to the CI database
-      - name: Run Database Migrations
-        run: npx prisma db migrate --advance-ref db
-        working-directory: ./backend
+    # 4. Populate test fixtures for E2E tests
+    - name: Seed Database
+      run: npm run seed --workspace=backend
 
-      # 4. Populate test fixtures for E2E tests
-      - name: Seed Database
-        run: npm run seed --workspace=backend
-
-      # 5. Run full end-to-end tests
-      - name: Run E2E Tests
-        run: npm run test:e2e --workspace=backend
+    # 5. Run full end-to-end tests
+    - name: Run E2E Tests
+      run: npm run test:e2e --workspace=backend
