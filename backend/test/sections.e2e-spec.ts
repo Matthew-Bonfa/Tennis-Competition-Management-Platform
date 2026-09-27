@@ -31,7 +31,7 @@ describe('Sections Feature (e2e)', () => {
 
     // Checks for non empty array
     expect(Array.isArray(response.body)).toBeTruthy();
-    expect(response.body).toBeGreaterThan(0);
+    expect(response.body.length).toBeGreaterThan(0);
 
     // Ensures the types line up
     expect(response.body).toEqual(

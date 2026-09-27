@@ -30,7 +30,7 @@ describe('Matches Feature (e2e)', () => {
       .expect(200);
 
     expect(Array.isArray(response.body)).toBeTruthy();
-    expect(response.body).toBeGreaterThan(0);
+    expect(response.body.length).toBeGreaterThan(0);
 
     // Verify data has correct typing
     expect(response.body[0]).toEqual(
