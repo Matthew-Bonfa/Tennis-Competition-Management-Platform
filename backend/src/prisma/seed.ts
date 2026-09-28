@@ -378,16 +378,58 @@ async function main() {
   );
 
   // =========================================================
-  // UPCOMING MATCH
+  // REMAINING SEASON FIXTURES
   // =========================================================
-  await db.orm.public.Match.create({
-    sectionId: section.id,
-    homeTeamId: kilsythTeam.id,
-    awayTeamId: croydonTeam.id,
-    roundNumber: 2,
-    matchDate: Temporal.Instant.from('2026-10-17T13:00:00Z'),
-    matchStatus: 'scheduled',
-  });
+  // Round 1's Kilsyth vs Ringwood fixture is already seeded above with a
+  // full scoreline. The rest below are plain scheduled fixtures spread
+  // across a few more rounds so there's something for the round selector
+  // and ladder to page through beyond a single played match.
+  await Promise.all(
+    [
+      // Round 1's other fixture
+      {
+        homeTeamId: croydonTeam.id,
+        awayTeamId: lilydaleTeam.id,
+        roundNumber: 1,
+        matchDate: Temporal.Instant.from('2026-10-10T13:00:00Z'),
+      },
+      // Round 2
+      {
+        homeTeamId: kilsythTeam.id,
+        awayTeamId: croydonTeam.id,
+        roundNumber: 2,
+        matchDate: Temporal.Instant.from('2026-10-17T13:00:00Z'),
+      },
+      {
+        homeTeamId: ringwoodTeam.id,
+        awayTeamId: lilydaleTeam.id,
+        roundNumber: 2,
+        matchDate: Temporal.Instant.from('2026-10-17T13:00:00Z'),
+      },
+      // Round 3
+      {
+        homeTeamId: lilydaleTeam.id,
+        awayTeamId: kilsythTeam.id,
+        roundNumber: 3,
+        matchDate: Temporal.Instant.from('2026-10-24T13:00:00Z'),
+      },
+      {
+        homeTeamId: croydonTeam.id,
+        awayTeamId: ringwoodTeam.id,
+        roundNumber: 3,
+        matchDate: Temporal.Instant.from('2026-10-24T13:00:00Z'),
+      },
+    ].map((data) =>
+      db.orm.public.Match.create({
+        sectionId: section.id,
+        homeTeamId: data.homeTeamId,
+        awayTeamId: data.awayTeamId,
+        roundNumber: data.roundNumber,
+        matchDate: data.matchDate,
+        matchStatus: 'scheduled',
+      }),
+    ),
+  );
 
   console.log('Database seeded successfully.');
 }
