@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { summariseRubber } from '../rubbers/summarise-rubber.js';
 import { NotFoundException } from '@nestjs/common';
+import { groupIntoRounds } from './group-rounds.js';
+import type { RoundSummary } from './types.js';
 
 @Injectable()
 export class SectionsService {
@@ -96,6 +98,20 @@ export class SectionsService {
         }
 
         return Array.from(ladder.values()).sort((a, b) => b.points - a.points);
+    }
+
+    async getRounds(sectionId: number): Promise<RoundSummary[]> {
+        const section = await this.prisma.client.orm.public.Section.where({ id: sectionId }).first();
+        if (!section) {
+            throw new NotFoundException(`Section ${sectionId} not found`);
+        }
+
+        const matches = await this.prisma.client.orm.public.Match
+            .where({ sectionId })
+            .select('roundNumber', 'matchDate', 'matchStatus')
+            .all();
+
+        return groupIntoRounds(matches);
     }
 }
 
