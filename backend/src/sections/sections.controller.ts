@@ -9,5 +9,10 @@ export class SectionsController {
   getLadder(@Param('id', ParseIntPipe) id: number) {
     return this.sectionsService.calculateLadder(id);
   }
+
+  @Get(':id/rounds')
+  getRounds(@Param('id', ParseIntPipe) id: number) {
+    return this.sectionsService.getRounds(id);
+  }
 }
 

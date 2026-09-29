@@ -12,16 +12,10 @@ import type { Fixture, FixtureQuery } from './types.js';
 export class FixturesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll({
-    teamId,
-    sectionId,
-    status,
-  }: FixtureQuery): Promise<Fixture[]> {
-    if (teamId === undefined && sectionId === undefined) {
-      throw new BadRequestException(
-        'Need to provide teamId, sectionId, or both',
-      );
-    }
+    async findAll({ teamId, sectionId, status, round }: FixtureQuery): Promise<Fixture[]> {
+        if (teamId === undefined && sectionId === undefined) {
+            throw new BadRequestException('Need to provide teamId, sectionId, or both');
+        }
 
     let matches = this.prisma.client.orm.public.Match;
 
@@ -57,16 +51,16 @@ export class FixturesService {
       matches = matches.where((m) => m.matchStatus.neq('scheduled'));
     }
 
-    const rows = await matches
-      .orderBy([(m) => m.matchDate.asc(), (m) => m.roundNumber.asc()])
-      .include('homeTeam', (t) =>
-        t.select('id', 'name').include('club', (c) => c.select('id', 'name')),
-      )
-      .include('awayTeam', (t) =>
-        t.select('id', 'name').include('club', (c) => c.select('id', 'name')),
-      )
-      .include('rubbers', (r) => r.select('winningTeamId'))
-      .all();
+        if (round !== undefined) {
+            matches = matches.where({ roundNumber: round });
+        }
+
+        const rows = await matches
+            .orderBy([(m) => m.matchDate.asc(), (m) => m.roundNumber.asc()])
+            .include('homeTeam', (t) => t.select('id', 'name').include('club', (c) => c.select('id', 'name')))
+            .include('awayTeam', (t) => t.select('id', 'name').include('club', (c) => c.select('id', 'name')))
+            .include('rubbers', (r) => r.select('winningTeamId'))
+            .all();
 
     return rows.map((row) => toFixture(row as any));
   }
