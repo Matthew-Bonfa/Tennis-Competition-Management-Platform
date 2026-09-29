@@ -9,3 +9,11 @@ export interface LadderRow {
     gamesWon: number;
     gamesLost: number;
 }
+
+export interface RoundSummary {
+    roundNumber: number;
+    label: string; // "R1", "R2", etc.
+    matchCount: number;
+    firstMatchDate: string | null;
+    allComplete: boolean;
+}

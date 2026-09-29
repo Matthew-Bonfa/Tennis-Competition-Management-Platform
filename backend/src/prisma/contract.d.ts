@@ -22,7 +22,6 @@ import type {
 
 import type {
   ContractWithTypeMaps,
-  RelationKeys,
   TypeMaps as TypeMapsType,
 } from '@prisma/orm-postgres/family-contract/types';
 import type {

@@ -12,7 +12,8 @@ export class FixturesController {
         @Query('teamId', new ParseIntPipe({ optional: true })) teamId: number | undefined,
         @Query('sectionId', new ParseIntPipe({ optional: true })) sectionId: number | undefined,
         @Query('status', new DefaultValuePipe(FixtureStatusFilter.all), new ParseEnumPipe(FixtureStatusFilter)) status: FixtureStatusFilter,
+        @Query('round', new ParseIntPipe({ optional: true })) round: number | undefined,
     ): Promise<Fixture[]> {
-        return this.fixturesService.findAll({ teamId, sectionId, status });
+        return this.fixturesService.findAll({ teamId, sectionId, status, round });
     }
 }
