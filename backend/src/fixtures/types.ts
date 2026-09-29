@@ -9,6 +9,7 @@ export interface FixtureQuery {
     teamId?: number;
     sectionId?: number;
     status: FixtureStatusFilter;
+    round?: number;
 }
 
 export type MatchStatus = 'scheduled' | 'completed' | 'washout' | 'forfeit' | 'bye';

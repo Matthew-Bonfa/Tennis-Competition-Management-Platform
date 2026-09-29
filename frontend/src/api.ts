@@ -12,17 +12,21 @@ export class ApiError extends Error {
     }
 }
 
-async function fetchApi(endpoint) {
-    const response: Response = await fetch(baseURL + endpoint);
+async function fetchApi(endpoint: string, options: RequestInit = {}) {
+    const response: Response = await fetch(baseURL + endpoint, options);
 
     if (!response.ok) {
         let body: unknown = null;
         try {
             body = await response.json();
         } catch {
-            // error response had no JSON body
+            // error response had no JSON body — leave body as null
         }
         throw new ApiError(response.status, body);
+    }
+
+    if (response.status === 204) {
+        return null;
     }
 
     return response.json();

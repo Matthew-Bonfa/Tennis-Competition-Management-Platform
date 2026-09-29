@@ -8,7 +8,7 @@ import type { Fixture, FixtureQuery } from './types.js'
 export class FixturesService {
     constructor(private readonly prisma: PrismaService) {}
 
-    async findAll({ teamId, sectionId, status }: FixtureQuery): Promise<Fixture[]> {
+    async findAll({ teamId, sectionId, status, round }: FixtureQuery): Promise<Fixture[]> {
         if (teamId === undefined && sectionId === undefined) {
             throw new BadRequestException('Need to provide teamId, sectionId, or both');
         }
@@ -39,6 +39,10 @@ export class FixturesService {
             matches = matches.where({ matchStatus: 'scheduled' });
         } else if (status === 'results') {
             matches = matches.where((m) => m.matchStatus.neq('scheduled'));
+        }
+
+        if (round !== undefined) {
+            matches = matches.where({ roundNumber: round });
         }
 
         const rows = await matches
