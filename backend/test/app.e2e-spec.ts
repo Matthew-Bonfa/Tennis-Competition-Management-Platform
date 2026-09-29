@@ -13,8 +13,6 @@ describe('AppController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
-
-    // 1. Add the global prefix so routes match production
     app.setGlobalPrefix('api');
 
     await app.init();
