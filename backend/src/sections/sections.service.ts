@@ -2,6 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { summariseRubber } from '../rubbers/summarise-rubber.js';
 import { NotFoundException } from '@nestjs/common';
+import { rankLadderRows } from './rank-ladder.js';
+import type { LadderAccumulator } from './rank-ladder.js';
+import type { LadderRow } from './types.js';
 import { groupIntoRounds } from './group-rounds.js';
 import type { RoundSummary } from './types.js';
 
@@ -22,7 +25,7 @@ export class SectionsService {
             .all();
     }
 
-    async calculateLadder(sectionId: number) {
+    async calculateLadder(sectionId: number): Promise<LadderRow[]> {
         const section = await this.prisma.client.orm.public.Section.where({ id: sectionId }).first();
         if (!section) {
             throw new NotFoundException(`Section ${sectionId} not found`);
@@ -34,10 +37,10 @@ export class SectionsService {
             .all();
 
         const matches = await this.retrieveCompletedMatches(sectionId);
-        const ladder = new Map<number, { teamId: number; teamName: string; matchesPlayed: number; matchesWon: number; rubbersWon: number; rubbersLost: number; setsWon: number; setsLost: number; gamesWon: number; gamesLost: number; points: number }>();
+        const ladder = new Map<number, LadderAccumulator>();
 
         for (const team of teams) {
-            ladder.set(team.id, { teamId: team.id, teamName: team.name, matchesPlayed: 0, matchesWon: 0, rubbersWon: 0, rubbersLost: 0, setsWon: 0, setsLost: 0, gamesWon: 0, gamesLost: 0, points: 0 });
+            ladder.set(team.id, { teamId: team.id, teamName: team.name, matchesPlayed: 0, matchesWon: 0, matchesDrawn: 0, matchesLost: 0, rubbersWon: 0, rubbersLost: 0, setsWon: 0, setsLost: 0, gamesWon: 0, gamesLost: 0, points: 0 });
         }
         
         for (const match of matches) {
@@ -77,13 +80,17 @@ export class SectionsService {
 
             if (homeRubbersWon > awayRubbersWon) {
                 homeStats.matchesWon++;
+                awayStats.matchesLost++;
                 homeStats.points += section.pointsPerMatchWin;
             }
             else if (awayRubbersWon > homeRubbersWon) {
                 awayStats.matchesWon++;
+                homeStats.matchesLost++;
                 awayStats.points += section.pointsPerMatchWin;
             }
             else {
+                homeStats.matchesDrawn++;
+                awayStats.matchesDrawn++;
                 homeStats.points += section.pointsPerMatchWin / 2;
                 awayStats.points += section.pointsPerMatchWin / 2;
             }
@@ -97,7 +104,7 @@ export class SectionsService {
             awayStats.rubbersLost += homeRubbersWon;
         }
 
-        return Array.from(ladder.values()).sort((a, b) => b.points - a.points);
+        return rankLadderRows(Array.from(ladder.values()));
     }
 
     async getRounds(sectionId: number): Promise<RoundSummary[]> {

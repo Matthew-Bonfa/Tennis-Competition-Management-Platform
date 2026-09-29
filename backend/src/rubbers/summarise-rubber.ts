@@ -8,8 +8,11 @@ export function summariseRubber(sets: SetScore[]) : RubberScore {
     for (const set of sets) {
         if (set.homeGames > set.awayGames) {
             homeSetsWon++;
-        } else {
+        } else if (set.awayGames > set.homeGames) {
             awaySetsWon++;
+        }
+        else {
+            continue;
         }
         homeGamesWon += set.homeGames;
         awayGamesWon += set.awayGames;
