@@ -5,6 +5,8 @@ import { NotFoundException } from '@nestjs/common';
 import { rankLadderRows } from './rank-ladder.js';
 import type { LadderAccumulator } from './rank-ladder.js';
 import type { LadderRow } from './types.js';
+import { groupIntoRounds } from './group-rounds.js';
+import type { RoundSummary } from './types.js';
 
 @Injectable()
 export class SectionsService {
@@ -103,6 +105,20 @@ export class SectionsService {
         }
 
         return rankLadderRows(Array.from(ladder.values()));
+    }
+
+    async getRounds(sectionId: number): Promise<RoundSummary[]> {
+        const section = await this.prisma.client.orm.public.Section.where({ id: sectionId }).first();
+        if (!section) {
+            throw new NotFoundException(`Section ${sectionId} not found`);
+        }
+
+        const matches = await this.prisma.client.orm.public.Match
+            .where({ sectionId })
+            .select('roundNumber', 'matchDate', 'matchStatus')
+            .all();
+
+        return groupIntoRounds(matches);
     }
 }
 
