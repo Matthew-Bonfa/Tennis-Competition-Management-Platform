@@ -9,10 +9,6 @@ import {ASSOCIATIONS} from './mock-data/MockAssociations'
 import {ALL_CLUBS} from './mock-data/MockClubs'
 import ClubProfile from './ClubProfile'
 
-
-
-
-
 function ClubsPage() {
   const [searchTerm, setSearchTerm] = useState('');
 

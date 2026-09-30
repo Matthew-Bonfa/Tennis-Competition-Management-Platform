@@ -1,5 +1,5 @@
 // file created by Rex Kelly
-// AI was used in writing this file (Gemini)
+// AI was used in writing this file (Gemini, Claude)
 
 import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route, Link, useParams } from 'react-router-dom';
@@ -15,8 +15,6 @@ import CompetitionsPage from './CompetitionsPage'
 import Home from './Home'
 import PlayersPage from './PlayersPage'
 import Ribbon from './Ribbon'
-
-
 
 // --- MAIN APP ROUTING ---
 export default function App() {
@@ -35,6 +33,9 @@ export default function App() {
 
             <Route path="/clubs/:id" element={<ClubProfile />} />
             <Route path="/competitions/:id" element={<CompetitionProfile />} />
+            {/* ADDED: route for section links from CompetitionProfile — SectionProfile
+                doesn't exist yet, this is a placeholder until it's built */}
+            {/* <Route path="/sections/:id" element={<SectionProfile />} /> */}
           </Routes>
         </main>
       </div>

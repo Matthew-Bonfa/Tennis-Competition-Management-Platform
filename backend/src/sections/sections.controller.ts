@@ -12,12 +12,12 @@ export class SectionsController {
 
   //get all sections based on season ID
   @Get()
-  findAll(@Query('seasonId') seasonId: number){
+  findAll(@Query('seasonId', ParseIntPipe) seasonId: number){
     return this.sectionsService.findAll(seasonId);
   }
 
   @Get(':id')
-    findOne(id: number){
+    findOne(@Param('id', ParseIntPipe) id: number){
         return this.sectionsService.findOne(id);
     }
 }
