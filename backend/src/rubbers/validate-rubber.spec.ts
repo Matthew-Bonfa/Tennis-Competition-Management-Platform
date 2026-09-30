@@ -9,9 +9,6 @@ const bestOfThree: RubberFormat = {
     finalSetMatchTiebreak: false,
 };
 
-// Fast4: races to four games, no advantage, tiebreak triggers at 3-3
-// rather than 6-6. Worth double-checking against your association's
-// exact rules when the tiebreak-set logic is built.
 const fast4: RubberFormat = {
     setsToWin: 2,
     gamesPerSet: 4,
@@ -24,7 +21,7 @@ describe('validateRubber', () => {
         const result = validateRubber(bestOfThree, [
             { setNumber: 1, homeGames: 6, awayGames: 4, homeTiebreakPoints: null, awayTiebreakPoints: null, isMatchTiebreak: false },
             { setNumber: 2, homeGames: 6, awayGames: 3, homeTiebreakPoints: null, awayTiebreakPoints: null, isMatchTiebreak: false },
-        ]);
+        ], 'normal');
 
         expect(result.isValid).toBe(true);
         expect(result.errors).toEqual([]);
@@ -33,7 +30,7 @@ describe('validateRubber', () => {
     it('invalidates a rubber with an illegal set score', () => {
         const result = validateRubber(bestOfThree, [
             { setNumber: 1, homeGames: 8, awayGames: 2, homeTiebreakPoints: null, awayTiebreakPoints: null, isMatchTiebreak: false },
-        ]);
+        ], 'normal');
 
         expect(result.isValid).toBe(false);
         expect(result.errors).not.toEqual([]);
@@ -44,7 +41,7 @@ describe('validateRubber', () => {
             { setNumber: 1, homeGames: 6, awayGames: 4, homeTiebreakPoints: null, awayTiebreakPoints: null, isMatchTiebreak: false },
             { setNumber: 2, homeGames: 6, awayGames: 3, homeTiebreakPoints: null, awayTiebreakPoints: null, isMatchTiebreak: false },
             { setNumber: 3, homeGames: 6, awayGames: 0, homeTiebreakPoints: null, awayTiebreakPoints: null, isMatchTiebreak: false },
-        ]);
+        ], 'normal');
 
         expect(result.isValid).toBe(false);
         expect(result.errors).not.toEqual([]);
@@ -54,7 +51,32 @@ describe('validateRubber', () => {
         const result = validateRubber(fast4, [
             { setNumber: 1, homeGames: 4, awayGames: 1, homeTiebreakPoints: null, awayTiebreakPoints: null, isMatchTiebreak: false },
             { setNumber: 2, homeGames: 4, awayGames: 2, homeTiebreakPoints: null, awayTiebreakPoints: null, isMatchTiebreak: false },
-        ]);
+        ], 'normal');
+
+        expect(result.isValid).toBe(true);
+        expect(result.errors).toEqual([]);
+    });
+
+    it('validates a retirement with an incomplete set count', () => {
+        const result = validateRubber(bestOfThree, [
+            { setNumber: 1, homeGames: 3, awayGames: 2, homeTiebreakPoints: null, awayTiebreakPoints: null, isMatchTiebreak: false },
+        ], 'retired');
+
+        expect(result.isValid).toBe(true);
+        expect(result.errors).toEqual([]);
+    });
+
+    it('validates a walkover with no sets at all', () => {
+        const result = validateRubber(bestOfThree, [], 'walkover');
+
+        expect(result.isValid).toBe(true);
+        expect(result.errors).toEqual([]);
+    });
+
+    it('validates a retirement even with an illegal set score', () => {
+        const result = validateRubber(bestOfThree, [
+            { setNumber: 1, homeGames: 9, awayGames: 1, homeTiebreakPoints: null, awayTiebreakPoints: null, isMatchTiebreak: false },
+        ], 'retired');
 
         expect(result.isValid).toBe(true);
         expect(result.errors).toEqual([]);

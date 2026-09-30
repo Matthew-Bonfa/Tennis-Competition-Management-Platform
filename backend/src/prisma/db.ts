@@ -14,6 +14,7 @@ import postgres from '@prisma/orm-postgres/runtime';
 import type { Contract } from './contract.d';
 import contractJson from './contract.json' with { type: 'json' };
 
+// @ts-ignore - Prisma 8 RC nested dependency type mismatch workaround
 export const db = postgres<Contract>({
   contractJson,
   url: process.env['DATABASE_URL']!,

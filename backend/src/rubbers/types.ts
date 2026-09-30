@@ -25,3 +25,5 @@ export interface ValidationResult {
     isValid: boolean;
     errors: string[];
 }
+
+export type OutcomeType = 'normal' | 'retired' | 'walkover';

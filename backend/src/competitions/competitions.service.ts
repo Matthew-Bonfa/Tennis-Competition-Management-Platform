@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
-import { AssociationsService } from '../associations/associations.service.js'
+import AssociationsService from '../associations/associations.service.js'
 import { SeasonsService } from '../seasons/seasons.service.js';
 
 @Injectable()
@@ -20,7 +20,7 @@ export class CompetitionsService {
       .all();
 
     // get every association to look up names
-    const associations = await this.associationsService.findAll();
+    const associations = await this.associationsService.getAll();
 
     // return association and competition -> relevant details
     return competitions.map((competition) => {
@@ -47,7 +47,7 @@ export class CompetitionsService {
     }
 
     // look up the association this competition belongs to
-    const association = await this.associationsService.findOne(competition.associationId)
+    const association = await this.associationsService.getAssociation(competition.associationId)
 
     // get every season that belongs to this competition
     const seasons = await this.seasonsService.findAll(id)

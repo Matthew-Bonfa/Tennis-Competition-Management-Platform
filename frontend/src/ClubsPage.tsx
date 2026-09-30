@@ -1,27 +1,40 @@
 // file created by Rex Kelly
 // AI was used in writing this file (Gemini)
+// file updated by Zach Ranson
 
-import {useState} from 'react';
-import {Search, MapPin} from 'lucide-react';
-import {Link} from 'react-router-dom';
+import { useState, useEffect } from 'react'
+import { Search } from 'lucide-react'
+import { Link } from 'react-router-dom'
 
-import {ASSOCIATIONS} from './mock-data/MockAssociations'
-import {ALL_CLUBS} from './mock-data/MockClubs'
-import ClubProfile from './ClubProfile'
+import fetchApi from './api'
 
 function ClubsPage() {
+  const [clubs, setClubs] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Filter clubs dynamically based on name or location
-  const filteredClubs = ALL_CLUBS.filter(club => 
-    club.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    club.location.toLowerCase().includes(searchTerm.toLowerCase())
+  useEffect(() => {
+    async function fetchClubs() {
+      const data = await fetchApi("/clubs");
+      setClubs(data);
+      setLoading(false);
+    }
+
+    fetchClubs();
+  }, []);
+
+  const filteredClubs = clubs.filter(club =>
+    club.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold text-gray-900 mb-6">Clubs Directory</h1>
-      
+
       {/* Search Bar */}
       <div className="relative mb-8">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -29,7 +42,7 @@ function ClubsPage() {
         </div>
         <input
           type="text"
-          placeholder="Search clubs by name or location..."
+          placeholder="Search clubs by name..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="block w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
@@ -48,15 +61,14 @@ function ClubsPage() {
             >
               <div>
                 <h3 className="text-xl font-semibold text-emerald-800 mb-2">{club.name}</h3>
-                <p className="text-sm text-gray-600 flex items-center gap-1">
-                  <MapPin className="h-4 w-4 text-emerald-600 shrink-0" />
-                  {club.location}
+                <p className="text-sm text-gray-600">
+                  {club.isFinancialMember ? 'Financial Member' : 'Non-Financial Member'}
                 </p>
                 <div className="mt-3 text-xs bg-gray-100 text-gray-600 px-2.5 py-1 rounded inline-block">
-                  {club.courts} {club.courts === 1 ? 'Court' : 'Courts'} Available
+                  {club.teamCount} {club.teamCount === 1 ? 'Team' : 'Teams'} · {club.memberCount} {club.memberCount === 1 ? 'Member' : 'Members'}
                 </div>
               </div>
-              
+
               <div className="mt-6 text-emerald-600 text-sm font-medium flex items-center">
                 View Club Profile &rarr;
               </div>

@@ -1,5 +1,5 @@
 import { summariseRubber } from './summarise-rubber.js';
-import type { SetScore, RubberFormat, ValidationResult } from './types.js';
+import type { OutcomeType, SetScore, RubberFormat, ValidationResult } from './types.js';
 
 function isLegalTiebreakScore(winnerPoints: number, loserPoints: number): boolean {
     if (winnerPoints === 7) {
@@ -36,8 +36,15 @@ function isLegalSetScore(format: RubberFormat, set: SetScore): boolean {
     return false;
 }
 
-export function validateRubber(format: RubberFormat, sets: SetScore[]): ValidationResult {
+export function validateRubber(format: RubberFormat, sets: SetScore[], outcome: OutcomeType): ValidationResult {
     const errors: string[] = [];
+
+    // A retirement or walkover doesn't need to satisfy the normal set-count
+    // or per-set legality rules — the match ended early, or never started,
+    // so there's nothing to validate beyond the outcome itself.
+    if (outcome !== 'normal') {
+        return { isValid: true, errors: [] };
+    }
 
     if (sets.length > format.setsToWin * 2 - 1) {
         errors.push('Too many sets');

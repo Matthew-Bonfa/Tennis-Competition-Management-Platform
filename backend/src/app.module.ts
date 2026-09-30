@@ -8,10 +8,23 @@ import { SectionsModule } from './sections/sections.module.js';
 import { CompetitionsModule } from './competitions/competitions.module.js';
 import { TeamsModule } from './teams/teams.module.js';
 import { SeasonsModule } from './seasons/seasons.module.js';
+import { FixturesModule } from './fixtures/fixtures.module.js';
 import { AssociationsModule } from './associations/associations.module.js';
+import { ClubsModule } from './clubs/clubs.module.js';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true }), PrismaModule, MatchesModule, SectionsModule, TeamsModule, CompetitionsModule, SeasonsModule, AssociationsModule],
+  imports: [
+    ConfigModule.forRoot({ isGlobal: true }),
+    PrismaModule,
+    MatchesModule,
+    SectionsModule,
+    TeamsModule,
+    CompetitionsModule,
+    SeasonsModule,
+    FixturesModule,
+    AssociationsModule,
+    ClubsModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

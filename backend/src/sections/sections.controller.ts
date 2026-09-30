@@ -17,8 +17,13 @@ export class SectionsController {
   }
 
   @Get(':id')
-    findOne(@Param('id', ParseIntPipe) id: number){
-        return this.sectionsService.findOne(id);
-    }
+  findOne(@Param('id', ParseIntPipe) id: number){
+      return this.sectionsService.findOne(id);
+  }
+  
+  @Get(':id/rounds')
+  getRounds(@Param('id', ParseIntPipe) id: number) {
+    return this.sectionsService.getRounds(id);
+  }
 }
 

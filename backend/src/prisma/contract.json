@@ -73,23 +73,23 @@
             "codecId": "pg/text@1",
             "members": [
               {
-                "name": "scheduled",
+                "name": "Scheduled",
                 "value": "scheduled"
               },
               {
-                "name": "completed",
+                "name": "Completed",
                 "value": "completed"
               },
               {
-                "name": "washout",
+                "name": "Washout",
                 "value": "washout"
               },
               {
-                "name": "forfeit",
+                "name": "Forfeit",
                 "value": "forfeit"
               },
               {
-                "name": "bye",
+                "name": "Bye",
                 "value": "bye"
               }
             ]
@@ -98,15 +98,15 @@
             "codecId": "pg/text@1",
             "members": [
               {
-                "name": "normal",
+                "name": "Normal",
                 "value": "normal"
               },
               {
-                "name": "retired",
+                "name": "Retired",
                 "value": "retired"
               },
               {
-                "name": "walkover",
+                "name": "Walkover",
                 "value": "walkover"
               }
             ]
@@ -115,15 +115,15 @@
             "codecId": "pg/text@1",
             "members": [
               {
-                "name": "singles",
+                "name": "Singles",
                 "value": "singles"
               },
               {
-                "name": "doubles",
+                "name": "Doubles",
                 "value": "doubles"
               },
               {
-                "name": "mixed_doubles",
+                "name": "MixedDoubles",
                 "value": "mixed_doubles"
               }
             ]
