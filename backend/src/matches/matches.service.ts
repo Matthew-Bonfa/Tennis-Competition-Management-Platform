@@ -23,7 +23,7 @@ export class MatchesService {
             .include('rubbers', (rubber) => rubber
                 .orderBy((r) => r.rubberNumber.asc())
                 .include('sets', (set) => set.orderBy((s) => s.setNumber.asc()))
-                .include('players', (player) => player.select('personId', 'teamId'))
+                .include('players', (player) => player.select('personId', 'teamId').include('person', (p) => p.select('firstName', 'lastName')))
             )
             .first();
 

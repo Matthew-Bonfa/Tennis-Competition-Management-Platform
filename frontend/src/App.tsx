@@ -15,6 +15,8 @@ import CompetitionsPage from './CompetitionsPage'
 import Home from './Home'
 import PlayersPage from './PlayersPage'
 import Ribbon from './Ribbon'
+import SectionPage from './SectionPage'
+import MatchResultsPage from './MatchResultsPage'
 
 // --- MAIN APP ROUTING ---
 export default function App() {
@@ -33,9 +35,9 @@ export default function App() {
 
             <Route path="/clubs/:id" element={<ClubProfile />} />
             <Route path="/competitions/:id" element={<CompetitionProfile />} />
-            {/* ADDED: route for section links from CompetitionProfile — SectionProfile
-                doesn't exist yet, this is a placeholder until it's built */}
-            {/* <Route path="/sections/:id" element={<SectionProfile />} /> */}
+
+            <Route path="/sections/:sectionId" element={<SectionPage />} />
+            <Route path="/matches/:matchId" element={<MatchResultsPage />} />
           </Routes>
         </main>
       </div>
