@@ -1,9 +1,9 @@
 import { Controller, Get, Param } from '@nestjs/common';
 
-import AssociationsService from './associations.service.js';
+import { AssociationsService } from './associations.service.js';
 
 @Controller('associations')
-class AssociationsController {
+export class AssociationsController {
   constructor(private associationsService: AssociationsService) {}
 
   @Get()
@@ -16,5 +16,3 @@ class AssociationsController {
     return this.associationsService.getAssociation(id);
   }
 }
-
-export default AssociationsController;

@@ -5,10 +5,12 @@ import { AppService } from './app.service.js';
 import { PrismaModule } from './prisma/prisma.module.js';
 import { MatchesModule } from './matches/matches.module.js';
 import { SectionsModule } from './sections/sections.module.js';
+import { CompetitionsModule } from './competitions/competitions.module.js';
 import { TeamsModule } from './teams/teams.module.js';
+import { SeasonsModule } from './seasons/seasons.module.js';
 import { FixturesModule } from './fixtures/fixtures.module.js';
-import { AssociationsModule } from "./associations/associations.module.js"
-import { ClubsModule } from "./clubs/clubs.module.js"
+import { AssociationsModule } from './associations/associations.module.js';
+import { ClubsModule } from './clubs/clubs.module.js';
 
 @Module({
   imports: [
@@ -17,6 +19,8 @@ import { ClubsModule } from "./clubs/clubs.module.js"
     MatchesModule,
     SectionsModule,
     TeamsModule,
+    CompetitionsModule,
+    SeasonsModule,
     FixturesModule,
     AssociationsModule,
     ClubsModule,
