@@ -11,6 +11,7 @@ import { SeasonsModule } from './seasons/seasons.module.js';
 import { FixturesModule } from './fixtures/fixtures.module.js';
 import { AssociationsModule } from './associations/associations.module.js';
 import { ClubsModule } from './clubs/clubs.module.js';
+import { PlayersModule } from './players/players.module.js';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ClubsModule } from './clubs/clubs.module.js';
     FixturesModule,
     AssociationsModule,
     ClubsModule,
+    PlayersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
