@@ -98,4 +98,40 @@ describe('Fixtures Feature (e2e)', () => {
 
     expect(response.body.message).toContain('Section with ID 9999 not found');
   });
+
+  // CSV export
+  it('GET /api/fixtures/export?sectionId=1 -> should return a CSV attachment', async () => {
+    const response = await request(app.getHttpServer())
+      .get('/api/fixtures/export?sectionId=1')
+      .expect(200)
+      .expect('Content-Type', /text\/csv/);
+
+    expect(response.headers['content-disposition']).toBe(
+      'attachment; filename="fixtures-section-1-all.csv"',
+    );
+
+    const text = (response.text as string).replace(/^﻿/, '');
+    const lines = text.split('\r\n');
+
+    expect(lines[0]).toBe(
+      'Round,Date,Time,Status,Home Team,Away Team,Home Rubbers,Away Rubbers,Outcome,Section ID,Match ID',
+    );
+    // One data row per fixture returned by the JSON endpoint
+    const jsonResponse = await request(app.getHttpServer())
+      .get('/api/fixtures?sectionId=1')
+      .expect(200);
+    expect(lines.length).toBe(jsonResponse.body.length + 1);
+  });
+
+  it('GET /api/fixtures/export -> should return 400 Bad Request if neither teamId nor sectionId are provided', async () => {
+    await request(app.getHttpServer())
+      .get('/api/fixtures/export')
+      .expect(400);
+  });
+
+  it('GET /api/fixtures/export?sectionId=9999 -> should return 404 Not Found for non-existent section', async () => {
+    await request(app.getHttpServer())
+      .get('/api/fixtures/export?sectionId=9999')
+      .expect(404);
+  });
 });
