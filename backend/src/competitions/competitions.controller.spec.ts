@@ -7,7 +7,8 @@ describe('CompetitionsController', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [CompetitionsController, PrismaService],
+      controllers: [CompetitionsController],
+      providers: [PrismaService]
     }).compile();
 
     controller = module.get<CompetitionsController>(CompetitionsController);
