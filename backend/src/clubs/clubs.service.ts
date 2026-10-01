@@ -8,14 +8,17 @@ import { ClubDetail } from './types.js';
 @Injectable()
 export class ClubsService {
   constructor(private readonly prisma: PrismaService) {}
+  
+  async findAllClubs(associationId?: string) {
+    let query = this.prisma.client.orm.public.Club;
 
-  async findAllClubs(associationId?: string): Promise<ClubSummary[]> {
-    let association: any = {};
-    if (association) {
-      association.associationId = associationId;
+    if (associationId) {
+      query = query.where((club) =>
+        club.associations.some((ac) => ac.associationId.eq(associationId)),
+      );
     }
 
-    return this.prisma.client.orm.public.Club.where(association)
+    return query
       .include('teams', (t) => t.count())
       .include('memberships', (m) => m.count())
       .all()

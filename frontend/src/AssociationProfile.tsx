@@ -32,9 +32,12 @@ function AssociationProfile() {
 
 
   useEffect(() => {
+    if (!association){
+      return;
+    }
     async function fetchClubs(){
       console.log("gonna ask for all the clubs");
-      let data = await fetchApi("/clubs");
+      let data = await fetchApi("/clubs?associationId=" + association.id);
       console.log("asked for all clubs");
       console.log(data);
 
@@ -42,7 +45,7 @@ function AssociationProfile() {
     }
 
     fetchClubs();
-  }, []);
+  }, [association]);
   
   
 
@@ -57,7 +60,7 @@ function AssociationProfile() {
         <h2>Back to Associations</h2>
       </Link>
       <h1>{association.name}</h1>
-      <p>Contact Person: {association.contactPerson.firstName} {association.contactPerson.lastName}</p>
+      <p>Contact Person: {association.contactPerson ? association.contactPerson.firstName + " " + association.contactPerson.lastName : "No contact person assigned"}</p>
       <p>Still need to connect to competitions and maybe contact person (if they get a page)</p>
 
       <div className="split">
