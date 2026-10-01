@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
-import AssociationsService from '../associations/associations.service.js'
+import { AssociationsService } from '../associations/associations.service.js'
 import { SeasonsService } from '../seasons/seasons.service.js';
 
 @Injectable()

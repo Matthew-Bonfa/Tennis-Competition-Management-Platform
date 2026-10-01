@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
 
 @Injectable()
-class AssociationsService {
+export class AssociationsService {
   constructor(private prisma: PrismaService) {}
 
   async getAll() {
@@ -29,5 +29,3 @@ class AssociationsService {
     return response;
   }
 }
-
-export default AssociationsService;
