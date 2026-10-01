@@ -431,6 +431,61 @@ async function main() {
     ),
   );
 
+  // =========================================================
+  // SECOND COMPETITION
+  // =========================================================
+  // A separate competition in the same association, with its own season,
+  // section and teams — Jack and Oliver each get a second team membership
+  // here on top of their Saturday Open Pennant team above, so there's a
+  // player in the seed data who belongs to more than one competition
+  // (exercises the "multiple competitions" case on the player profile).
+  const midweekCompetition = await db.orm.public.Competition.create({
+    associationId: association.id,
+    name: 'Midweek Mixed Doubles',
+  });
+  const midweekSeason = await db.orm.public.Season.create({
+    competitionId: midweekCompetition.id,
+    name: 'Spring 2026',
+    startDate: Temporal.Instant.from('2026-09-01T00:00:00Z'),
+    endDate: Temporal.Instant.from('2026-12-15T00:00:00Z'),
+  });
+  const midweekSection = await db.orm.public.Section.create({
+    seasonId: midweekSeason.id,
+    name: 'Division 1',
+    rubbersPerMatch: 4,
+    setsToWin: 2,
+    gamesPerSet: 6,
+  });
+
+  const kilsythMidweekTeam = await db.orm.public.Team.create({
+    clubId: kilsyth.id,
+    sectionId: midweekSection.id,
+    name: 'Kilsyth Midweek',
+  });
+  const ringwoodMidweekTeam = await db.orm.public.Team.create({
+    clubId: ringwood.id,
+    sectionId: midweekSection.id,
+    name: 'Ringwood Midweek',
+  });
+
+  await Promise.all(
+    [
+      { teamId: kilsythMidweekTeam.id, personId: jack.id },
+      { teamId: ringwoodMidweekTeam.id, personId: oliver.id },
+    ].map((data) => db.orm.public.TeamPlayer.create(data)),
+  );
+
+  // A scheduled fixture so this second competition also shows up in the
+  // player profile's "upcoming matches" row, not just the competitions list.
+  await db.orm.public.Match.create({
+    sectionId: midweekSection.id,
+    homeTeamId: kilsythMidweekTeam.id,
+    awayTeamId: ringwoodMidweekTeam.id,
+    roundNumber: 1,
+    matchDate: Temporal.Instant.from('2026-10-14T18:00:00Z'),
+    matchStatus: 'scheduled',
+  });
+
   console.log('Database seeded successfully.');
 }
 

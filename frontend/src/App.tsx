@@ -13,6 +13,7 @@ import ClubsPage from './ClubsPage'
 import CompetitionProfile from './CompetitionProfile'
 import CompetitionsPage from './CompetitionsPage'
 import Home from './Home'
+import PlayerProfile from './PlayerProfile'
 import PlayersPage from './PlayersPage'
 import Ribbon from './Ribbon'
 import SectionPage from './SectionPage'
@@ -35,6 +36,7 @@ export default function App() {
 
             <Route path="/clubs/:id" element={<ClubProfile />} />
             <Route path="/competitions/:id" element={<CompetitionProfile />} />
+            <Route path="/players/:id" element={<PlayerProfile />} />
 
             <Route path="/sections/:sectionId" element={<SectionPage />} />
             <Route path="/matches/:matchId" element={<MatchResultsPage />} />

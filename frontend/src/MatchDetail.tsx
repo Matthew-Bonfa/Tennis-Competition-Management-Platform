@@ -1,15 +1,24 @@
 import { Fragment } from 'react';
+import { Link } from 'react-router-dom';
 
 interface MatchDetailProps {
     match: any;
 }
 
 function MatchDetail({ match }: MatchDetailProps) {
+    // Renders each player on this side of the rubber as a link to their
+    // profile, joined by " / " for doubles. Returns JSX (not a string) so
+    // each name is independently clickable.
     function sidePlayers(rubber: any, teamId: number) {
-        return rubber.players
-            .filter((p: any) => p.teamId === teamId)
-            .map((p: any) => `${p.person.firstName[0]}. ${p.person.lastName}`)
-            .join(' / ');
+        const players = rubber.players.filter((p: any) => p.teamId === teamId);
+        return players.map((p: any, index: number) => (
+            <Fragment key={p.personId}>
+                {index > 0 && ' / '}
+                <Link to={`/players/${p.personId}`} className="hover:underline hover:text-emerald-600">
+                    {p.person.firstName[0]}. {p.person.lastName}
+                </Link>
+            </Fragment>
+        ));
     }
 
     return (
