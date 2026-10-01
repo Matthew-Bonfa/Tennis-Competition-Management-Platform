@@ -52,4 +52,34 @@ describe('Sections Feature (e2e)', () => {
       .get('/api/sections/9999/ladder')
       .expect(404);
   });
+
+  // CSV export
+  it('GET /api/sections/1/ladder/export -> should return a CSV attachment', async () => {
+    const response = await request(app.getHttpServer())
+      .get('/api/sections/1/ladder/export')
+      .expect(200)
+      .expect('Content-Type', /text\/csv/);
+
+    expect(response.headers['content-disposition']).toBe(
+      'attachment; filename="ladder-section-1.csv"',
+    );
+
+    const text = (response.text as string).replace(/^﻿/, '');
+    const lines = text.split('\r\n');
+
+    expect(lines[0]).toBe(
+      'Position,Team,Played,Won,Drawn,Lost,Rubbers For,Rubbers Against,Sets For,Sets Against,Games For,Games Against,Percentage,Points',
+    );
+
+    const jsonResponse = await request(app.getHttpServer())
+      .get('/api/sections/1/ladder')
+      .expect(200);
+    expect(lines.length).toBe(jsonResponse.body.length + 1);
+  });
+
+  it('GET /api/sections/9999/ladder/export -> should return 404 Not Found for non-existent section', async () => {
+    await request(app.getHttpServer())
+      .get('/api/sections/9999/ladder/export')
+      .expect(404);
+  });
 });
