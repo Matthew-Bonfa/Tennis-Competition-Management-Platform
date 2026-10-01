@@ -33,3 +33,17 @@ async function fetchApi(endpoint: string, options: RequestInit = {}) {
 }
 
 export default fetchApi;
+
+
+export async function postApi(endpoint: string, data: unknown, options: RequestInit = {}) {
+    const headers = new Headers(options.headers);
+    
+    headers.set('Content-Type', 'application/json');
+
+    return fetchApi(endpoint, {
+        ...options,
+        method: 'POST',
+        headers,
+        body: JSON.stringify(data),
+    });
+}

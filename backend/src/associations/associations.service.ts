@@ -28,4 +28,12 @@ export class AssociationsService {
     }
     return response;
   }
+
+
+  async insertAssociation(data: {name: string, contactId?: string}){
+    return await this.prisma.client.orm.public.Association.create(data);
+  }
+
+
+
 }

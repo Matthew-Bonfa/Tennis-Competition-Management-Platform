@@ -20,6 +20,7 @@ function Ribbon() {
       <Link to="/players" className="ribbon-link">Players</Link>
       <Link to="/associations" className="ribbon-link">Associations</Link>
       <Link to="/clubs" className="ribbon-link">Clubs</Link>
+      <Link to="/admin" className="ribbon-link">Admin</Link>
     </nav>
   );
 }
