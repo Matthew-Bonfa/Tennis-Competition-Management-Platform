@@ -8,6 +8,9 @@ async function bootstrap() {
   app.enableCors({
     origin: 'http://localhost:5173',
     methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+    // Without this, the browser can read a CSV export's body but not its
+    // filename, so a downloaded file loses its name.
+    exposedHeaders: ['Content-Disposition'],
   })
 
   app.setGlobalPrefix('api');
