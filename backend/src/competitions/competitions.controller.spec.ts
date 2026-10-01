@@ -1,12 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CompetitionsController } from './competitions.controller.js';
+import { PrismaService } from '../prisma/prisma.service.js';
 
 describe('CompetitionsController', () => {
   let controller: CompetitionsController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [CompetitionsController],
+      controllers: [CompetitionsController, PrismaService],
     }).compile();
 
     controller = module.get<CompetitionsController>(CompetitionsController);

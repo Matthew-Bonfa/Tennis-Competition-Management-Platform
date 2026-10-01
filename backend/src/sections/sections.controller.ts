@@ -16,11 +16,13 @@ export class SectionsController {
     return this.sectionsService.findAll(seasonId);
   }
 
+  // gets a specific section based on the season id
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number){
       return this.sectionsService.findOne(id);
   }
   
+  // gets the rounds in the section
   @Get(':id/rounds')
   getRounds(@Param('id', ParseIntPipe) id: number) {
     return this.sectionsService.getRounds(id);
