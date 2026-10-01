@@ -1,5 +1,5 @@
 // file created by Rex Kelly
-// AI was used in writing this file (Gemini)
+// AI was used in writing this file (Gemini, Claude)
 
 import React, { useState } from 'react';
 import { BrowserRouter, Routes, Route, Link, useParams } from 'react-router-dom';
@@ -17,8 +17,6 @@ import PlayersPage from './PlayersPage'
 import Ribbon from './Ribbon'
 import SectionPage from './SectionPage'
 import MatchResultsPage from './MatchResultsPage'
-
-
 
 // --- MAIN APP ROUTING ---
 export default function App() {

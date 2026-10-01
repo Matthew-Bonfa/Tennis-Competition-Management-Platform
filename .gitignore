@@ -3,3 +3,4 @@ docker-compose.yml
 package-lock.json
 backend/*.tsbuildinfo
 *.tsbuildinfo
+*.tsbuildinfo

@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
 
 @Injectable()
-class AssociationsService {
+export class AssociationsService {
   constructor(private prisma: PrismaService) {}
 
   async getAll() {
@@ -10,7 +10,7 @@ class AssociationsService {
       'id',
       'name',
     )
-      .orderBy((u) => u.name.desc())
+      .orderBy((u) => u.name.asc())
       .all();
 
     return response;
@@ -24,10 +24,8 @@ class AssociationsService {
       .first();
 
     if (!response) {
-      throw new NotFoundException(`Club ${id} not found`);
+      throw new NotFoundException(`Association ${id} not found`);
     }
     return response;
   }
 }
-
-export default AssociationsService;

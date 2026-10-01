@@ -1,4 +1,4 @@
-import { Controller, Get, Param, ParseIntPipe, Res } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe, Res, Query } from '@nestjs/common';
 import type { Response } from 'express';
 import { csvFilename } from '../common/csv-filename.js';
 import { toCsv } from '../common/csv.js';
@@ -30,6 +30,19 @@ export class SectionsController {
     return this.sectionsService.calculateLadder(id);
   }
 
+  //get all sections based on season ID
+  @Get()
+  findAll(@Query('seasonId', ParseIntPipe) seasonId: number){
+    return this.sectionsService.findAll(seasonId);
+  }
+
+  // gets a specific section based on the season id
+  @Get(':id')
+  findOne(@Param('id', ParseIntPipe) id: number){
+      return this.sectionsService.findOne(id);
+  }
+  
+  // gets the rounds in the section
   @Get(':id/rounds')
   getRounds(@Param('id', ParseIntPipe) id: number) {
     return this.sectionsService.getRounds(id);
