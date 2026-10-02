@@ -36,9 +36,9 @@ function PlayersPage() {
 
   const filteredPlayers = players.filter((player) => {
     const term = searchTerm.toLowerCase();
+    const fullName = `${player.firstName} ${player.lastName}`.toLowerCase();
     return (
-      player.firstName.toLowerCase().includes(term) ||
-      player.lastName.toLowerCase().includes(term) ||
+      fullName.includes(term) ||
       player.personCode.toLowerCase().includes(term)
     );
   });
