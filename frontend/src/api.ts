@@ -1,5 +1,8 @@
 // should this be an environment variable?
-const baseURL: string = "http://localhost:3000/api"
+// Exported so other modules (e.g. CSV export links, which bypass fetchApi
+// since they're plain browser downloads, not JSON requests) can build full
+// API URLs without duplicating this constant.
+export const baseURL: string = "http://localhost:3000/api"
 
 export class ApiError extends Error {
     status: number;

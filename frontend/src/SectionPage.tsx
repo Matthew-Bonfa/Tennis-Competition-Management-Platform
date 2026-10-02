@@ -5,6 +5,8 @@ import fetchApi, { ApiError } from './api'
 import RoundSelector from './RoundSelector'
 import FixtureList from './FixtureList'
 import LadderTable from './LadderTable'
+import ExportFixturesControl from './ExportFixturesControl'
+import { ladderExportUrl } from './exportLinks'
 
 function SectionPage() {
     const { sectionId } = useParams();
@@ -93,9 +95,22 @@ function SectionPage() {
                 <>
                     <RoundSelector rounds={rounds} activeRound={activeRound} onChange={selectRound} />
                     <FixtureList sectionId={sectionId} round={activeRound} />
+                    {/* Exports the full season (not just the active round), scoped by team */}
+                    <ExportFixturesControl sectionId={sectionId!} />
                 </>
             ) : (
-                <LadderTable sectionId={sectionId} />
+                <>
+                    <LadderTable sectionId={sectionId} />
+                    <div className="px-4 pb-8">
+                        <a
+                            href={ladderExportUrl(sectionId!)}
+                            download
+                            className="text-sm font-semibold text-blue-600 hover:text-blue-800"
+                        >
+                            Export Ladder (CSV)
+                        </a>
+                    </div>
+                </>
             )}
         </div>
     );
