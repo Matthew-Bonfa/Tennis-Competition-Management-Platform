@@ -24,13 +24,100 @@ model Person {
 
 model Association {
   id              String     @id @default(uuid())
-  name            String  
+  name            String
   contactPersonId String?
-  
+
   contactPerson   Person? @relation("AssociationContact", fields: [contactPersonId], references: [id])
   clubs           AssociationClub[]
   roles           PersonRole[]
   competitions    Competition[]
+  formats         Format[]
+}
+
+// ==========================================
+// FORMATS
+// ==========================================
+// An association-level catalog of play formats (Junior Triples, President's
+// Cup, ...), reused across competitions and seasons rather than redefined
+// per section. A Competition offers a subset of these (CompetitionFormat);
+// a Section picks exactly one to play under.
+
+enum day_of_week {
+  @@type("pg/text@1")
+  Monday    = "monday"
+  Tuesday   = "tuesday"
+  Wednesday = "wednesday"
+  Thursday  = "thursday"
+  Friday    = "friday"
+  Saturday  = "saturday"
+  Sunday    = "sunday"
+}
+
+enum team_gender {
+  @@type("pg/text@1")
+  Boys  = "boys"
+  Girls = "girls"
+  Open  = "open"
+}
+
+enum winner_rule {
+  @@type("pg/text@1")
+  SetsThenGames   = "sets_then_games"     // "Most sets; if tied -> games"
+  RubbersThenSets = "rubbers_then_sets"   // "Majority of rubbers; if tied -> sets -> games"
+  LadderPosition  = "ladder_position"     // "Highest team on the ladder"
+}
+
+model Format {
+  id            String       @id @default(uuid())
+  associationId String
+  name          String
+  dayOfWeek     day_of_week?
+
+  // Team Composition
+  minPlayers Int
+  maxPlayers Int
+  minAge     Int?
+  maxAge     Int?
+
+  // Match Format + Scoring
+  rubbersPerMatch       Int
+  setsToWin             Int
+  gamesPerSet           Int
+  tiebreakAtGames       Int?
+  finalSetMatchTiebreak Boolean     @default(false)
+  pointsPerRubber       Int         @default(1)
+  pointsPerMatchWin     Int         @default(0)
+  forfeitScoreline      String      @default("6-0 6-0")
+  winnerDeterminedBy    winner_rule
+  minCourts             Int
+
+  association      Association         @relation(fields: [associationId], references: [id])
+  permittedGenders FormatTeamGender[]
+  competitions     CompetitionFormat[]
+  sections         Section[]
+}
+
+// The set of team genders a format permits
+model FormatTeamGender {
+  id       Int         @id @default(autoincrement())
+  formatId String
+  gender   team_gender
+
+  format Format @relation(fields: [formatId], references: [id])
+
+  @@unique([formatId, gender])
+}
+
+// Which formats a competition offers
+model CompetitionFormat {
+  id            Int    @id @default(autoincrement())
+  competitionId String
+  formatId      String
+
+  competition Competition @relation(fields: [competitionId], references: [id])
+  format      Format      @relation(fields: [formatId], references: [id])
+
+  @@unique([competitionId, formatId])
 }
 
 model Club {
@@ -85,6 +172,7 @@ model Competition {
 
   association   Association @relation(fields: [associationId], references: [id])
   seasons       Season[]
+  formats       CompetitionFormat[]
 }
 
 model Season {
@@ -99,35 +187,31 @@ model Season {
 }
 
 model Section {
-  id       Int    @id @default(autoincrement())
-  seasonId Int
-  name     String
+  id         Int     @id @default(autoincrement())
+  seasonId   Int
+  formatId   String
+  name       String
+  gradeLabel String?
 
-  // Match format and points rules, so the validator and ladder read
-  // this instead of assuming standard best-of-three tennis.
-  rubbersPerMatch       Int
-  setsToWin             Int      // 2 = best of three
-  gamesPerSet           Int      // 6, or 4 for Fast4
-  tiebreakAtGames       Int?     // null = advantage set
-  finalSetMatchTiebreak Boolean  @default(false)
-  pointsPerRubber       Int      @default(1)
-  pointsPerMatchWin     Int      @default(0)
-  forfeitScoreline      String   @default("6-0 6-0")
+  // Match format and points rules now live on Format (see above) — shared
+  // by every section playing that format, rather than re-entered per grade.
 
   season   Season  @relation(fields: [seasonId], references: [id])
+  format   Format  @relation(fields: [formatId], references: [id])
   teams    Team[]
   matches  Match[]
 }
 
 model Team {
-  id        Int    @id @default(autoincrement())
-  clubId    String 
-  sectionId Int
-  name      String 
+  id         Int          @id @default(autoincrement())
+  clubId     String
+  sectionId  Int
+  name       String
+  teamGender team_gender?
 
   club      Club    @relation(fields: [clubId], references: [id])
   section   Section @relation(fields: [sectionId], references: [id])
-  
+
   players   TeamPlayer[]
   
   // A team can play as home or away
