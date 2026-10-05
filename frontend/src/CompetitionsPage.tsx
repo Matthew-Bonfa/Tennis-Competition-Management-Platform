@@ -85,7 +85,7 @@ function CompetitionsPage() {
             placeholder="Search competitions by name or association..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="block w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            className="block w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-sky-500"
           />
         </div>
 
@@ -93,7 +93,7 @@ function CompetitionsPage() {
         <select
           value={selectedAssociationId}
           onChange={(e) => setSelectedAssociationId(e.target.value)}
-          className="border border-gray-300 rounded-lg shadow-sm bg-white text-gray-900 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+          className="border border-gray-300 rounded-lg shadow-sm bg-white text-gray-900 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sky-500"
         >
           <option value="">All Associations</option>
           {associations.map(assoc => (
@@ -113,8 +113,8 @@ function CompetitionsPage() {
             >
               <div>
                 <div className="flex items-center gap-2 mb-2">
-                  <Trophy className="h-5 w-5 text-emerald-600 shrink-0" />
-                  <h3 className="text-xl font-semibold text-emerald-800">{comp.name}</h3>
+                  <Trophy className="h-5 w-5 text-sky-600 shrink-0" />
+                  <h3 className="text-xl font-semibold text-sky-800">{comp.name}</h3>
                 </div>
                 {/* CHANGED: was comp.associationName */}
                 {comp.association?.name && (
@@ -125,7 +125,7 @@ function CompetitionsPage() {
                 )}
               </div>
 
-              <div className="mt-6 text-emerald-600 text-sm font-medium flex items-center">
+              <div className="mt-6 text-sky-600 text-sm font-medium flex items-center">
                 View Competition Profile &rarr;
               </div>
             </Link>

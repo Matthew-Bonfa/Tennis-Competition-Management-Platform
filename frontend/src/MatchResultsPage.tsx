@@ -67,7 +67,7 @@ function MatchResultsPage() {
         <div className="max-w-3xl mx-auto px-4 py-8">
             <Link
                 to={`/sections/${match.sectionId}`}
-                className="inline-flex items-center gap-1 text-sm text-gray-600 hover:text-emerald-600 mb-6 transition-colors"
+                className="inline-flex items-center gap-1 text-sm text-gray-600 hover:text-sky-600 mb-6 transition-colors"
             >
                 <ArrowLeft className="h-4 w-4" /> Back to Fixtures
             </Link>

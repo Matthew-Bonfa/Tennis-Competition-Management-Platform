@@ -41,7 +41,7 @@ function FixtureCard({ fixture }: FixtureCardProps) {
             return (
                 <>
                     {winner !== 'draw' && (
-                        <span className="font-semibold text-emerald-700">{winnerName} WON</span>
+                        <span className="font-semibold text-sky-700">{winnerName} WON</span>
                     )}
                     <span className="bg-gray-100 text-gray-900 font-semibold px-3 py-1 rounded-full text-sm">
                         {homeRubbersWon}–{awayRubbersWon}
