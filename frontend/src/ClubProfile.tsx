@@ -41,7 +41,7 @@ function ClubProfile() {
     return (
       <div className="max-w-7xl mx-auto px-4 py-12 text-center">
         <p className="text-gray-600 mb-4">Club not found.</p>
-        <Link to="/clubs" className="text-emerald-600 hover:underline inline-flex items-center gap-1">
+        <Link to="/clubs" className="text-sky-600 hover:underline inline-flex items-center gap-1">
           <ArrowLeft className="h-4 w-4" /> Back to Clubs Directory
         </Link>
       </div>
@@ -53,7 +53,7 @@ function ClubProfile() {
       {/* Back Button */}
       <Link
         to="/clubs"
-        className="inline-flex items-center gap-1 text-sm text-gray-600 hover:text-emerald-600 mb-6 transition-colors"
+        className="inline-flex items-center gap-1 text-sm text-gray-600 hover:text-sky-600 mb-6 transition-colors"
       >
         <ArrowLeft className="h-4 w-4" /> Back to Clubs
       </Link>
@@ -69,7 +69,7 @@ function ClubProfile() {
               </p>
             )}
           </div>
-          <div className="self-start md:self-center bg-emerald-50 text-emerald-700 font-semibold px-4 py-2 rounded-full text-sm border border-emerald-200">
+          <div className="self-start md:self-center bg-sky-50 text-sky-700 font-semibold px-4 py-2 rounded-full text-sm border border-sky-200">
             {club.isFinancialMember ? 'Financial Member' : 'Non-Financial Member'}
           </div>
         </div>
@@ -84,7 +84,7 @@ function ClubProfile() {
               <ul>
                 {club.associations.map((a: any) => (
                   <li key={a.id}>
-                    <Link to={`/associations/${a.id}`} className="text-emerald-700 hover:underline">
+                    <Link to={`/associations/${a.id}`} className="text-sky-700 hover:underline">
                       {a.name}
                     </Link>
                   </li>
@@ -103,7 +103,7 @@ function ClubProfile() {
               <ul>
                 {club.teams.map((t: any) => (
                   <li key={t.id} className="flex items-center gap-2">
-                    <Building2 className="h-4 w-4 text-emerald-600" />
+                    <Building2 className="h-4 w-4 text-sky-600" />
                     {t.name} — {t.sectionName}
                   </li>
                 ))}

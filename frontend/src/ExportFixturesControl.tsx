@@ -48,7 +48,7 @@ function ExportFixturesControl({ sectionId }: ExportFixturesControlProps) {
             <select
                 value={selectedTeamId}
                 onChange={(e) => setSelectedTeamId(e.target.value)}
-                className="border border-gray-300 rounded-lg shadow-sm bg-white text-gray-900 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                className="border border-gray-300 rounded-lg shadow-sm bg-white text-gray-900 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
             >
                 <option value="">All Teams</option>
                 {teams.map((team) => (

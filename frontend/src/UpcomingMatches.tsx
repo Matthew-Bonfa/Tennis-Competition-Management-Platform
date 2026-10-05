@@ -84,9 +84,9 @@ function UpcomingMatches({ teams }: UpcomingMatchesProps) {
             {loading ? (
               <p className="text-gray-400 text-sm">Loading...</p>
             ) : fixture ? (
-              <Link to={`/matches/${fixture.matchId}`} className="block hover:text-emerald-600">
+              <Link to={`/matches/${fixture.matchId}`} className="block hover:text-sky-600">
                 <div className="flex items-center justify-center gap-1.5 text-gray-900 font-semibold">
-                  <CalendarClock className="h-4 w-4 text-emerald-600 shrink-0" />
+                  <CalendarClock className="h-4 w-4 text-sky-600 shrink-0" />
                   vs {opponent}
                 </div>
                 <p className="text-sm text-gray-500 mt-1">

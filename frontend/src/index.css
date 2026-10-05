@@ -1,22 +1,25 @@
 /*  file created by Rex Kelly
     AI was used in writing this file (Gemini) */
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
 
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
+  --text: #1a2a3a;
+  --text-h: #0a1628;
   --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
+  --border: #d6e4f0;
+  --code-bg: #eef5fb;
+  --accent: #0ea5e9;
+  --accent-bg: rgba(14, 165, 233, 0.1);
+  --accent-border: rgba(14, 165, 233, 0.5);
   --social-bg: rgba(244, 243, 236, 0.5);
+  --navy: #3a4f85;
+  --navy-dark: #29375d;
   --shadow:
     rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --sans: system-ui, 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
+  --heading: system-ui, 'Kanit', system-ui, 'Segoe UI', Roboto, sans-serif;
   --mono: ui-monospace, Consolas, monospace;
 
   font: 18px/145% var(--sans);

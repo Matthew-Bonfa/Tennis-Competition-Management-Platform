@@ -98,7 +98,7 @@ function PlayerProfile() {
     return (
       <div className="max-w-7xl mx-auto px-4 py-12 text-center">
         <p className="text-gray-600 mb-4">Player not found.</p>
-        <Link to="/players" className="text-emerald-600 hover:underline inline-flex items-center gap-1">
+        <Link to="/players" className="text-sky-600 hover:underline inline-flex items-center gap-1">
           <ArrowLeft className="h-4 w-4" /> Back to Players
         </Link>
       </div>
@@ -117,7 +117,7 @@ function PlayerProfile() {
     <div className="max-w-7xl mx-auto px-4 py-8">
       <Link
         to="/players"
-        className="inline-flex items-center gap-1 text-sm text-gray-600 hover:text-emerald-600 mb-6 transition-colors"
+        className="inline-flex items-center gap-1 text-sm text-gray-600 hover:text-sky-600 mb-6 transition-colors"
       >
         <ArrowLeft className="h-4 w-4" /> Back to Players
       </Link>
@@ -138,13 +138,13 @@ function PlayerProfile() {
           {/* Clubs */}
           <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
             <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center justify-center gap-2">
-              <Building2 className="h-5 w-5 text-emerald-600" /> Clubs
+              <Building2 className="h-5 w-5 text-sky-600" /> Clubs
             </h2>
             {player.clubs.length > 0 ? (
               <ul className="space-y-2">
                 {player.clubs.map((club) => (
                   <li key={club.id} className="flex items-center justify-between gap-2">
-                    <Link to={`/clubs/${club.id}`} className="text-emerald-700 hover:underline font-medium">
+                    <Link to={`/clubs/${club.id}`} className="text-sky-700 hover:underline font-medium">
                       {club.name}
                     </Link>
                     {club.isPrimaryClub && (
@@ -163,7 +163,7 @@ function PlayerProfile() {
           {/* Competitions */}
           <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
             <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center justify-center gap-2">
-              <Trophy className="h-5 w-5 text-emerald-600" /> Competitions
+              <Trophy className="h-5 w-5 text-sky-600" /> Competitions
             </h2>
             {competitionsById.size > 0 ? (
               <ul className="space-y-4">
@@ -171,7 +171,7 @@ function PlayerProfile() {
                   <li key={competitionId} className="pb-4 border-b border-gray-100 last:border-0 last:pb-0">
                     <Link
                       to={`/competitions/${competitionId}`}
-                      className="text-emerald-700 hover:underline font-semibold"
+                      className="text-sky-700 hover:underline font-semibold"
                     >
                       {entries[0].competitionName}
                     </Link>
@@ -179,7 +179,7 @@ function PlayerProfile() {
                       {entries.map((entry) => (
                         <li key={entry.teamId} className="text-sm text-gray-600">
                           {entry.seasonName} &middot;{' '}
-                          <Link to={`/sections/${entry.sectionId}`} className="hover:underline hover:text-emerald-600">
+                          <Link to={`/sections/${entry.sectionId}`} className="hover:underline hover:text-sky-600">
                             {entry.sectionName}
                           </Link>{' '}
                           &middot; {entry.teamName}
