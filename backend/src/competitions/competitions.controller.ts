@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query, Post, Body, Patch, Delete } from '@nestjs/common';
 import { CompetitionsService } from './competitions.service.js';
 
     /* 
@@ -22,9 +22,30 @@ export class CompetitionsController {
         return this.competitionsService.findAll(associationId);
     }
 
+    // returns one competition by its ID
     @Get(':id')
     findOne(@Param('id') id: string){  // all params are strings -> if want nums a string use unary (+) or parseInt
         return this.competitionsService.findOne(id);
+    }
+
+    // create a new competition
+    @Post()
+    create(@Body() competition: {}){
+        return competition
+    } 
+
+    // updates a competition
+    @Patch(':id')
+    update(@Param('id') id: string, @Body() competitionUpdate: {}){
+        // NEED WAY TO STORE HISTORICAL CHANGES
+        return {id, ...competitionUpdate}
+    }
+
+    // deletes a competition
+    @Delete('id')
+    delete(@Param('id') id: string){
+        // NEED WAY TO STORE HISTORICAL COMPETITONS
+        return { id }
     }
 
 }

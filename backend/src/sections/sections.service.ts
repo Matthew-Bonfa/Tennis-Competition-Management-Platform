@@ -114,7 +114,12 @@ export class SectionsService {
                 awayStats.setsWon += rubber.sets.filter((set: any) => set.awayGames > set.homeGames).length;
                 awayStats.setsLost += rubber.sets.filter((set: any) => set.awayGames < set.homeGames).length;
                 awayStats.gamesWon += awayGames;
-                awayStats.gamesLost += homeGames;
+                awayStats.gamesLost += homeGames;  
+            }
+
+            // checks whether section format has been populated
+            if (!section.format) {
+                throw new NotFoundException(`Format ${section.formatId} not found`);
             }
 
             if (homeRubbersWon > awayRubbersWon) {
