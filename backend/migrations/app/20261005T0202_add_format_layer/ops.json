@@ -1,0 +1,1191 @@
+[
+  {
+    "id": "dropColumn.section.finalSetMatchTiebreak",
+    "label": "Drop column \"finalSetMatchTiebreak\" from \"section\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "finalSetMatchTiebreak",
+        "table": "section"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"finalSetMatchTiebreak\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "section",
+          "finalSetMatchTiebreak"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"finalSetMatchTiebreak\"",
+        "sql": "ALTER TABLE \"public\".\"section\" DROP COLUMN \"finalSetMatchTiebreak\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"finalSetMatchTiebreak\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "section",
+          "finalSetMatchTiebreak"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.section.forfeitScoreline",
+    "label": "Drop column \"forfeitScoreline\" from \"section\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "forfeitScoreline",
+        "table": "section"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"forfeitScoreline\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "section",
+          "forfeitScoreline"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"forfeitScoreline\"",
+        "sql": "ALTER TABLE \"public\".\"section\" DROP COLUMN \"forfeitScoreline\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"forfeitScoreline\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "section",
+          "forfeitScoreline"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.section.gamesPerSet",
+    "label": "Drop column \"gamesPerSet\" from \"section\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "gamesPerSet",
+        "table": "section"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"gamesPerSet\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "section",
+          "gamesPerSet"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"gamesPerSet\"",
+        "sql": "ALTER TABLE \"public\".\"section\" DROP COLUMN \"gamesPerSet\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"gamesPerSet\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "section",
+          "gamesPerSet"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.section.pointsPerMatchWin",
+    "label": "Drop column \"pointsPerMatchWin\" from \"section\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "pointsPerMatchWin",
+        "table": "section"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"pointsPerMatchWin\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "section",
+          "pointsPerMatchWin"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"pointsPerMatchWin\"",
+        "sql": "ALTER TABLE \"public\".\"section\" DROP COLUMN \"pointsPerMatchWin\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"pointsPerMatchWin\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "section",
+          "pointsPerMatchWin"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.section.pointsPerRubber",
+    "label": "Drop column \"pointsPerRubber\" from \"section\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "pointsPerRubber",
+        "table": "section"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"pointsPerRubber\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "section",
+          "pointsPerRubber"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"pointsPerRubber\"",
+        "sql": "ALTER TABLE \"public\".\"section\" DROP COLUMN \"pointsPerRubber\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"pointsPerRubber\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "section",
+          "pointsPerRubber"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.section.rubbersPerMatch",
+    "label": "Drop column \"rubbersPerMatch\" from \"section\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "rubbersPerMatch",
+        "table": "section"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"rubbersPerMatch\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "section",
+          "rubbersPerMatch"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"rubbersPerMatch\"",
+        "sql": "ALTER TABLE \"public\".\"section\" DROP COLUMN \"rubbersPerMatch\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"rubbersPerMatch\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "section",
+          "rubbersPerMatch"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.section.setsToWin",
+    "label": "Drop column \"setsToWin\" from \"section\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "setsToWin",
+        "table": "section"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"setsToWin\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "section",
+          "setsToWin"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"setsToWin\"",
+        "sql": "ALTER TABLE \"public\".\"section\" DROP COLUMN \"setsToWin\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"setsToWin\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "section",
+          "setsToWin"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.section.tiebreakAtGames",
+    "label": "Drop column \"tiebreakAtGames\" from \"section\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "tiebreakAtGames",
+        "table": "section"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"tiebreakAtGames\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "section",
+          "tiebreakAtGames"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"tiebreakAtGames\"",
+        "sql": "ALTER TABLE \"public\".\"section\" DROP COLUMN \"tiebreakAtGames\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"tiebreakAtGames\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "section",
+          "tiebreakAtGames"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.competitionFormat",
+    "label": "Create table \"competitionFormat\"",
+    "summary": "Creates table \"competitionFormat\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "competitionFormat"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"competitionFormat\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"competitionFormat\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"competitionFormat\"",
+        "sql": "CREATE TABLE \"public\".\"competitionFormat\" (\n  \"competitionId\" text NOT NULL,\n  \"formatId\" text NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"competitionFormat\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"competitionFormat\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.format",
+    "label": "Create table \"format\"",
+    "summary": "Creates table \"format\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "format"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"format\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"format\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"format\"",
+        "sql": "CREATE TABLE \"public\".\"format\" (\n  \"associationId\" text NOT NULL,\n  \"dayOfWeek\" text,\n  \"finalSetMatchTiebreak\" bool DEFAULT false NOT NULL,\n  \"forfeitScoreline\" text DEFAULT '6-0 6-0' NOT NULL,\n  \"gamesPerSet\" int4 NOT NULL,\n  \"id\" text NOT NULL,\n  \"maxAge\" int4,\n  \"maxPlayers\" int4 NOT NULL,\n  \"minAge\" int4,\n  \"minCourts\" int4 NOT NULL,\n  \"minPlayers\" int4 NOT NULL,\n  \"name\" text NOT NULL,\n  \"pointsPerMatchWin\" int4 DEFAULT 0 NOT NULL,\n  \"pointsPerRubber\" int4 DEFAULT 1 NOT NULL,\n  \"rubbersPerMatch\" int4 NOT NULL,\n  \"setsToWin\" int4 NOT NULL,\n  \"tiebreakAtGames\" int4,\n  \"winnerDeterminedBy\" text NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"format_dayOfWeek_check_96b6ba98\" CHECK (\"dayOfWeek\" IN ('monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday')),\n  CONSTRAINT \"format_winnerDeterminedBy_check_6967c1aa\" CHECK (\"winnerDeterminedBy\" IN ('sets_then_games', 'rubbers_then_sets', 'ladder_position'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"format\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"format\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.formatTeamGender",
+    "label": "Create table \"formatTeamGender\"",
+    "summary": "Creates table \"formatTeamGender\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "formatTeamGender"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"formatTeamGender\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"formatTeamGender\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"formatTeamGender\"",
+        "sql": "CREATE TABLE \"public\".\"formatTeamGender\" (\n  \"formatId\" text NOT NULL,\n  \"gender\" text NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"formatTeamGender_gender_check_03a0b75b\" CHECK (\"gender\" IN ('boys', 'girls', 'open'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"formatTeamGender\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"formatTeamGender\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.section.gradeLabel",
+    "label": "Add column \"gradeLabel\" to \"section\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "gradeLabel",
+        "table": "section"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"gradeLabel\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "section",
+          "gradeLabel"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"gradeLabel\"",
+        "sql": "ALTER TABLE \"public\".\"section\" ADD COLUMN \"gradeLabel\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"gradeLabel\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "section",
+          "gradeLabel"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.team.teamGender",
+    "label": "Add column \"teamGender\" to \"team\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "teamGender",
+        "table": "team"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"teamGender\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "team",
+          "teamGender"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"teamGender\"",
+        "sql": "ALTER TABLE \"public\".\"team\" ADD COLUMN \"teamGender\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"teamGender\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "team",
+          "teamGender"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.section.formatId",
+    "label": "Add column \"formatId\" to \"section\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "formatId",
+        "table": "section"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"formatId\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "section",
+          "formatId"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"formatId\"",
+        "sql": "ALTER TABLE \"public\".\"section\" ADD COLUMN \"formatId\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"formatId\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "section",
+          "formatId"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "data_migration.backfill-section-formatId",
+    "label": "Data transform: backfill-section-formatId",
+    "operationClass": "data",
+    "target": {
+      "id": "postgres"
+    },
+    "precheck": [
+      {
+        "description": "Check backfill-section-formatId has work to do",
+        "sql": "SELECT EXISTS (SELECT \"id\" AS \"id\" FROM \"public\".\"section\" WHERE \"formatId\" IS NULL LIMIT 1) AS ok",
+        "params": []
+      }
+    ],
+    "execute": [
+      {
+        "description": "Run backfill-section-formatId",
+        "sql": "UPDATE \"public\".\"section\" SET \"formatId\" = $1 WHERE \"formatId\" IS NULL",
+        "params": [
+          "00000000-0000-0000-0000-000000000000"
+        ]
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "Verify backfill-section-formatId resolved all violations",
+        "sql": "SELECT NOT EXISTS (SELECT \"id\" AS \"id\" FROM \"public\".\"section\" WHERE \"formatId\" IS NULL LIMIT 1) AS ok",
+        "params": []
+      }
+    ]
+  },
+  {
+    "id": "alterNullability.setNotNull.section.formatId",
+    "label": "Set NOT NULL on \"section\".\"formatId\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "formatId",
+        "table": "section"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"formatId\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "section",
+          "formatId"
+        ]
+      },
+      {
+        "description": "ensure no NULL values in \"formatId\"",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"section\" WHERE \"formatId\" IS NULL) AS \"result\"",
+        "params": []
+      }
+    ],
+    "execute": [
+      {
+        "description": "set NOT NULL on \"formatId\"",
+        "sql": "ALTER TABLE \"public\".\"section\" ALTER COLUMN \"formatId\" SET NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"formatId\" is NOT NULL",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3 AND \"is_nullable\" = $4)) AS \"result\"",
+        "params": [
+          "public",
+          "section",
+          "formatId",
+          "NO"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.competitionFormat.competitionFormat_competitionId_formatId_key",
+    "label": "Add unique constraint on \"competitionFormat\" (competitionId, formatId)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "competitionFormat_competitionId_formatId_key",
+        "table": "competitionFormat"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"competitionFormat_competitionId_formatId_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "competitionFormat_competitionId_formatId_key",
+          "public",
+          "\"public\".\"competitionFormat\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"competitionFormat_competitionId_formatId_key\"",
+        "sql": "ALTER TABLE \"public\".\"competitionFormat\" ADD CONSTRAINT \"competitionFormat_competitionId_formatId_key\" UNIQUE (\"competitionId\", \"formatId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"competitionFormat_competitionId_formatId_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "competitionFormat_competitionId_formatId_key",
+          "public",
+          "\"public\".\"competitionFormat\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.formatTeamGender.formatTeamGender_formatId_gender_key",
+    "label": "Add unique constraint on \"formatTeamGender\" (formatId, gender)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "formatTeamGender_formatId_gender_key",
+        "table": "formatTeamGender"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"formatTeamGender_formatId_gender_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "formatTeamGender_formatId_gender_key",
+          "public",
+          "\"public\".\"formatTeamGender\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"formatTeamGender_formatId_gender_key\"",
+        "sql": "ALTER TABLE \"public\".\"formatTeamGender\" ADD CONSTRAINT \"formatTeamGender_formatId_gender_key\" UNIQUE (\"formatId\", \"gender\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"formatTeamGender_formatId_gender_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "formatTeamGender_formatId_gender_key",
+          "public",
+          "\"public\".\"formatTeamGender\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.team.team_teamGender_check_94975ab4",
+    "label": "Add check constraint \"team_teamGender_check_94975ab4\" on \"team\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "team_teamGender_check_94975ab4",
+        "table": "team"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"team_teamGender_check_94975ab4\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "team_teamGender_check_94975ab4",
+          "public",
+          "\"public\".\"team\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"team_teamGender_check_94975ab4\"",
+        "sql": "ALTER TABLE \"public\".\"team\" ADD CONSTRAINT \"team_teamGender_check_94975ab4\" CHECK (\"teamGender\" IN ('boys', 'girls', 'open'))"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"team_teamGender_check_94975ab4\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "team_teamGender_check_94975ab4",
+          "public",
+          "\"public\".\"team\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.competitionFormat.competitionFormat_competitionId_idx_53fccd3b",
+    "label": "Create index \"competitionFormat_competitionId_idx_53fccd3b\" on \"competitionFormat\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "competitionFormat_competitionId_idx_53fccd3b",
+        "table": "competitionFormat"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"competitionFormat_competitionId_idx_53fccd3b\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"competitionFormat_competitionId_idx_53fccd3b\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"competitionFormat_competitionId_idx_53fccd3b\"",
+        "sql": "CREATE INDEX \"competitionFormat_competitionId_idx_53fccd3b\" ON \"public\".\"competitionFormat\" (\"competitionId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"competitionFormat_competitionId_idx_53fccd3b\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"competitionFormat_competitionId_idx_53fccd3b\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.competitionFormat.competitionFormat_formatId_idx_306abbe2",
+    "label": "Create index \"competitionFormat_formatId_idx_306abbe2\" on \"competitionFormat\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "competitionFormat_formatId_idx_306abbe2",
+        "table": "competitionFormat"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"competitionFormat_formatId_idx_306abbe2\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"competitionFormat_formatId_idx_306abbe2\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"competitionFormat_formatId_idx_306abbe2\"",
+        "sql": "CREATE INDEX \"competitionFormat_formatId_idx_306abbe2\" ON \"public\".\"competitionFormat\" (\"formatId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"competitionFormat_formatId_idx_306abbe2\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"competitionFormat_formatId_idx_306abbe2\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.format.format_associationId_idx_54f3505c",
+    "label": "Create index \"format_associationId_idx_54f3505c\" on \"format\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "format_associationId_idx_54f3505c",
+        "table": "format"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"format_associationId_idx_54f3505c\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"format_associationId_idx_54f3505c\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"format_associationId_idx_54f3505c\"",
+        "sql": "CREATE INDEX \"format_associationId_idx_54f3505c\" ON \"public\".\"format\" (\"associationId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"format_associationId_idx_54f3505c\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"format_associationId_idx_54f3505c\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.formatTeamGender.formatTeamGender_formatId_idx_306abbe2",
+    "label": "Create index \"formatTeamGender_formatId_idx_306abbe2\" on \"formatTeamGender\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "formatTeamGender_formatId_idx_306abbe2",
+        "table": "formatTeamGender"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"formatTeamGender_formatId_idx_306abbe2\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"formatTeamGender_formatId_idx_306abbe2\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"formatTeamGender_formatId_idx_306abbe2\"",
+        "sql": "CREATE INDEX \"formatTeamGender_formatId_idx_306abbe2\" ON \"public\".\"formatTeamGender\" (\"formatId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"formatTeamGender_formatId_idx_306abbe2\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"formatTeamGender_formatId_idx_306abbe2\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.section.section_formatId_idx_306abbe2",
+    "label": "Create index \"section_formatId_idx_306abbe2\" on \"section\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "section_formatId_idx_306abbe2",
+        "table": "section"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"section_formatId_idx_306abbe2\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"section_formatId_idx_306abbe2\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"section_formatId_idx_306abbe2\"",
+        "sql": "CREATE INDEX \"section_formatId_idx_306abbe2\" ON \"public\".\"section\" (\"formatId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"section_formatId_idx_306abbe2\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"section_formatId_idx_306abbe2\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.competitionFormat.competitionFormat_competitionId_fkey",
+    "label": "Add foreign key \"competitionFormat_competitionId_fkey\" on \"competitionFormat\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "competitionFormat_competitionId_fkey",
+        "table": "competitionFormat"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"competitionFormat_competitionId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "competitionFormat_competitionId_fkey",
+          "public",
+          "\"public\".\"competitionFormat\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"competitionFormat_competitionId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"competitionFormat\"\nADD CONSTRAINT \"competitionFormat_competitionId_fkey\"\nFOREIGN KEY (\"competitionId\")\nREFERENCES \"public\".\"competition\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"competitionFormat_competitionId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "competitionFormat_competitionId_fkey",
+          "public",
+          "\"public\".\"competitionFormat\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.competitionFormat.competitionFormat_formatId_fkey",
+    "label": "Add foreign key \"competitionFormat_formatId_fkey\" on \"competitionFormat\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "competitionFormat_formatId_fkey",
+        "table": "competitionFormat"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"competitionFormat_formatId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "competitionFormat_formatId_fkey",
+          "public",
+          "\"public\".\"competitionFormat\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"competitionFormat_formatId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"competitionFormat\"\nADD CONSTRAINT \"competitionFormat_formatId_fkey\"\nFOREIGN KEY (\"formatId\")\nREFERENCES \"public\".\"format\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"competitionFormat_formatId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "competitionFormat_formatId_fkey",
+          "public",
+          "\"public\".\"competitionFormat\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.format.format_associationId_fkey",
+    "label": "Add foreign key \"format_associationId_fkey\" on \"format\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "format_associationId_fkey",
+        "table": "format"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"format_associationId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "format_associationId_fkey",
+          "public",
+          "\"public\".\"format\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"format_associationId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"format\"\nADD CONSTRAINT \"format_associationId_fkey\"\nFOREIGN KEY (\"associationId\")\nREFERENCES \"public\".\"association\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"format_associationId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "format_associationId_fkey",
+          "public",
+          "\"public\".\"format\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.formatTeamGender.formatTeamGender_formatId_fkey",
+    "label": "Add foreign key \"formatTeamGender_formatId_fkey\" on \"formatTeamGender\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "formatTeamGender_formatId_fkey",
+        "table": "formatTeamGender"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"formatTeamGender_formatId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "formatTeamGender_formatId_fkey",
+          "public",
+          "\"public\".\"formatTeamGender\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"formatTeamGender_formatId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"formatTeamGender\"\nADD CONSTRAINT \"formatTeamGender_formatId_fkey\"\nFOREIGN KEY (\"formatId\")\nREFERENCES \"public\".\"format\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"formatTeamGender_formatId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "formatTeamGender_formatId_fkey",
+          "public",
+          "\"public\".\"formatTeamGender\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.section.section_formatId_fkey",
+    "label": "Add foreign key \"section_formatId_fkey\" on \"section\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "section_formatId_fkey",
+        "table": "section"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"section_formatId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "section_formatId_fkey",
+          "public",
+          "\"public\".\"section\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"section_formatId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"section\"\nADD CONSTRAINT \"section_formatId_fkey\"\nFOREIGN KEY (\"formatId\")\nREFERENCES \"public\".\"format\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"section_formatId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "section_formatId_fkey",
+          "public",
+          "\"public\".\"section\""
+        ]
+      }
+    ]
+  }
+]

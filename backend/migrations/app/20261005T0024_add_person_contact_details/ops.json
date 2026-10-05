@@ -1,0 +1,86 @@
+[
+  {
+    "id": "column.public.person.email",
+    "label": "Add column \"email\" to \"person\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "email",
+        "table": "person"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"email\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "person",
+          "email"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"email\"",
+        "sql": "ALTER TABLE \"public\".\"person\" ADD COLUMN \"email\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"email\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "person",
+          "email"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.person.phone",
+    "label": "Add column \"phone\" to \"person\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "phone",
+        "table": "person"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"phone\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "person",
+          "phone"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"phone\"",
+        "sql": "ALTER TABLE \"public\".\"person\" ADD COLUMN \"phone\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"phone\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "person",
+          "phone"
+        ]
+      }
+    ]
+  }
+]

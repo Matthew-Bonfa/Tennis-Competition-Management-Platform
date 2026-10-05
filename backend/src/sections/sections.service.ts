@@ -62,7 +62,10 @@ export class SectionsService {
     }
 
     async calculateLadder(sectionId: number): Promise<LadderRow[]> {
-        const section = await this.prisma.client.orm.public.Section.where({ id: sectionId }).first();
+        const section = await this.prisma.client.orm.public.Section
+            .where({ id: sectionId })
+            .include('format', (format) => format.select('pointsPerMatchWin', 'pointsPerRubber'))
+            .first();
         if (!section) {
             throw new NotFoundException(`Section ${sectionId} not found`);
         }
@@ -117,22 +120,22 @@ export class SectionsService {
             if (homeRubbersWon > awayRubbersWon) {
                 homeStats.matchesWon++;
                 awayStats.matchesLost++;
-                homeStats.points += section.pointsPerMatchWin;
+                homeStats.points += section.format.pointsPerMatchWin;
             }
             else if (awayRubbersWon > homeRubbersWon) {
                 awayStats.matchesWon++;
                 homeStats.matchesLost++;
-                awayStats.points += section.pointsPerMatchWin;
+                awayStats.points += section.format.pointsPerMatchWin;
             }
             else {
                 homeStats.matchesDrawn++;
                 awayStats.matchesDrawn++;
-                homeStats.points += section.pointsPerMatchWin / 2;
-                awayStats.points += section.pointsPerMatchWin / 2;
+                homeStats.points += section.format.pointsPerMatchWin / 2;
+                awayStats.points += section.format.pointsPerMatchWin / 2;
             }
 
-            homeStats.points += homeRubbersWon * section.pointsPerRubber;
-            awayStats.points += awayRubbersWon * section.pointsPerRubber;
+            homeStats.points += homeRubbersWon * section.format.pointsPerRubber;
+            awayStats.points += awayRubbersWon * section.format.pointsPerRubber;
 
             homeStats.rubbersWon += homeRubbersWon;
             homeStats.rubbersLost += awayRubbersWon;
