@@ -822,6 +822,13 @@
                   "kind": "scalar"
                 }
               },
+              "email": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "firstName": {
                 "nullable": false,
                 "type": {
@@ -845,6 +852,13 @@
               },
               "personCode": {
                 "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "phone": {
+                "nullable": true,
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
@@ -992,6 +1006,9 @@
                 "dateOfBirth": {
                   "column": "dateOfBirth"
                 },
+                "email": {
+                  "column": "email"
+                },
                 "firstName": {
                   "column": "firstName"
                 },
@@ -1003,6 +1020,9 @@
                 },
                 "personCode": {
                   "column": "personCode"
+                },
+                "phone": {
+                  "column": "phone"
                 },
                 "tennisAustraliaNumber": {
                   "column": "tennisAustraliaNumber"
@@ -2525,6 +2545,11 @@
                   "nativeType": "timestamptz",
                   "nullable": true
                 },
+                "email": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
                 "firstName": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
@@ -2544,6 +2569,11 @@
                   "codecId": "pg/text@1",
                   "nativeType": "text",
                   "nullable": false
+                },
+                "phone": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
                 },
                 "tennisAustraliaNumber": {
                   "codecId": "pg/text@1",
@@ -3398,7 +3428,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "bb0c1d04b30671c579b6145f68d3061fda55d5f7839ba0f1b02f568ac4b161a2"
+    "storageHash": "c7f06c9080279cb55c92c6d28954168a5448f6810582a1dba37577db832c4623"
   },
   "execution": {
     "executionHash": "20214ed9f542f9da76e8cca8beb2125f15a84936772b15e1794b7230911986fe",

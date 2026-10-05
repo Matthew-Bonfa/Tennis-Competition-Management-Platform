@@ -2,11 +2,15 @@ import type { ClubDetail } from './types.js';
 
 type PersonRef = { id: string; firstName: string; lastName: string };
 
+// Contact-person-only: carries email/phone, which must not leak onto
+// memberships[].person or roles[].person
+type ContactPersonRef = PersonRef & { email: string | null; phone: string | null };
+
 type ClubRow = {
     id: string;
     name: string;
     isFinancialMember: boolean;
-    contactPerson: PersonRef | null;
+    contactPerson: ContactPersonRef | null;
     associations: { association: { id: string; name: string } }[];
     teams: { id: number; name: string; section: { id: number; name: string } }[];
     memberships: { person: PersonRef; isPrimaryClub: boolean; isFinancialMember: boolean }[];

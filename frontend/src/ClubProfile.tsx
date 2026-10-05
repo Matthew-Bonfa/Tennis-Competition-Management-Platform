@@ -60,18 +60,11 @@ function ClubProfile() {
 
       {/* Main Profile Card */}
       <div className="bg-white border border-gray-200 rounded-lg p-8 shadow-sm">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-100 pb-6 mb-6">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">{club.name}</h1>
-            {club.contactPerson && (
-              <p className="text-lg text-gray-600">
-                Contact: {club.contactPerson.firstName} {club.contactPerson.lastName}
-              </p>
-            )}
-          </div>
-          <div className="self-start md:self-center bg-emerald-50 text-emerald-700 font-semibold px-4 py-2 rounded-full text-sm border border-emerald-200">
+        <div className="relative text-center border-b border-gray-100 pb-6 mb-6">
+          <div className="bg-emerald-50 text-emerald-700 font-semibold px-4 py-2 rounded-full text-sm border border-emerald-200 absolute top-0 right-0">
             {club.isFinancialMember ? 'Financial Member' : 'Non-Financial Member'}
           </div>
+          <h1 className="text-3xl font-bold text-gray-900 pr-28 sm:pr-0">{club.name}</h1>
         </div>
 
         {/* Associations & Teams */}
@@ -114,8 +107,8 @@ function ClubProfile() {
           </div>
         </div>
 
-        {/* Officials */}
-        <div className="mt-6">
+        {/* Officials & Contact */}
+        <div className="grid md:grid-cols-2 gap-6 mt-6">
           <div className="bg-gray-50 border border-gray-100 rounded-lg p-5">
             <span className="text-xs uppercase tracking-wider text-gray-500 font-semibold block mb-1">
               Officials
@@ -132,6 +125,31 @@ function ClubProfile() {
               <p className="text-gray-500">No officials</p>
             )}
           </div>
+
+          {club.contactPerson && (
+            <div className="bg-gray-50 border border-gray-100 rounded-lg p-5 text-left">
+              <span className="text-xs uppercase tracking-wider text-gray-500 font-semibold block mb-1">
+                Contact
+              </span>
+              <p>{club.contactPerson.firstName} {club.contactPerson.lastName}</p>
+              {club.contactPerson.phone && (
+                <p>
+                  Phone:{' '}
+                  <a href={`tel:${club.contactPerson.phone}`} className="text-emerald-600 hover:underline">
+                    {club.contactPerson.phone}
+                  </a>
+                </p>
+              )}
+              {club.contactPerson.email && (
+                <p>
+                  Email:{' '}
+                  <a href={`mailto:${club.contactPerson.email}`} className="text-emerald-600 hover:underline">
+                    {club.contactPerson.email}
+                  </a>
+                </p>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>

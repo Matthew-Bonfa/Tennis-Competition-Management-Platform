@@ -15,6 +15,8 @@ async function main() {
       dateOfBirth: Temporal.Instant.from('2001-03-15T00:00:00Z'),
       utrId: 'UTR100001',
       tennisAustraliaNumber: 'TA100001',
+      email: 'jack.thompson@example.com',
+      phone: '0400 000 001',
     }),
     db.orm.public.Person.create({
       personCode: 'P002',
@@ -23,6 +25,8 @@ async function main() {
       dateOfBirth: Temporal.Instant.from('1999-07-21T00:00:00Z'),
       utrId: 'UTR100002',
       tennisAustraliaNumber: 'TA100002',
+      email: 'daniel.wilson@example.com',
+      phone: '0400 000 002',
     }),
     db.orm.public.Person.create({
       personCode: 'P003',
@@ -31,6 +35,8 @@ async function main() {
       dateOfBirth: Temporal.Instant.from('2002-11-04T00:00:00Z'),
       utrId: 'UTR100003',
       tennisAustraliaNumber: 'TA100003',
+      email: 'oliver.smith@example.com',
+      phone: '0400 000 003',
     }),
     db.orm.public.Person.create({
       personCode: 'P004',
@@ -39,6 +45,8 @@ async function main() {
       dateOfBirth: Temporal.Instant.from('2000-06-18T00:00:00Z'),
       utrId: 'UTR100004',
       tennisAustraliaNumber: 'TA100004',
+      email: 'noah.brown@example.com',
+      phone: '0400 000 004',
     }),
     db.orm.public.Person.create({
       personCode: 'P005',
@@ -47,6 +55,8 @@ async function main() {
       dateOfBirth: Temporal.Instant.from('2003-02-10T00:00:00Z'),
       utrId: 'UTR100005',
       tennisAustraliaNumber: 'TA100005',
+      email: 'ethan.taylor@example.com',
+      phone: '0400 000 005',
     }),
     db.orm.public.Person.create({
       personCode: 'P006',
@@ -55,6 +65,8 @@ async function main() {
       dateOfBirth: Temporal.Instant.from('1998-09-27T00:00:00Z'),
       utrId: 'UTR100006',
       tennisAustraliaNumber: 'TA100006',
+      email: 'liam.anderson@example.com',
+      phone: '0400 000 006',
     }),
     db.orm.public.Person.create({
       personCode: 'P007',
@@ -63,6 +75,8 @@ async function main() {
       dateOfBirth: Temporal.Instant.from('2001-12-01T00:00:00Z'),
       utrId: 'UTR100007',
       tennisAustraliaNumber: 'TA100007',
+      email: 'henry.martin@example.com',
+      phone: '0400 000 007',
     }),
     db.orm.public.Person.create({
       personCode: 'P008',
@@ -71,6 +85,8 @@ async function main() {
       dateOfBirth: Temporal.Instant.from('2002-05-13T00:00:00Z'),
       utrId: 'UTR100008',
       tennisAustraliaNumber: 'TA100008',
+      email: 'thomas.clark@example.com',
+      phone: '0400 000 008',
     }),
     db.orm.public.Person.create({
       personCode: 'P009',
@@ -78,6 +94,8 @@ async function main() {
       lastName: 'Williams',
       dateOfBirth: Temporal.Instant.from('1995-04-12T00:00:00Z'),
       tennisAustraliaNumber: 'TA100009',
+      email: 'sophie.williams@example.com',
+      phone: '0400 000 009',
     }),
     db.orm.public.Person.create({
       personCode: 'P010',
@@ -85,18 +103,24 @@ async function main() {
       lastName: 'Davis',
       dateOfBirth: Temporal.Instant.from('1993-08-29T00:00:00Z'),
       tennisAustraliaNumber: 'TA100010',
+      email: 'emily.davis@example.com',
+      phone: '0400 000 010',
     }),
     db.orm.public.Person.create({
       personCode: 'P011',
       firstName: 'Michael',
       lastName: 'Evans',
       dateOfBirth: Temporal.Instant.from('1985-01-19T00:00:00Z'),
+      email: 'michael.evans@example.com',
+      phone: '0400 000 011',
     }),
     db.orm.public.Person.create({
       personCode: 'P012',
       firstName: 'Sarah',
       lastName: 'Johnson',
       dateOfBirth: Temporal.Instant.from('1988-10-07T00:00:00Z'),
+      email: 'sarah.johnson@example.com',
+      phone: '0400 000 012',
     }),
   ]);
 

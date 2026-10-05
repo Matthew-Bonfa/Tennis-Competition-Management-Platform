@@ -10,6 +10,8 @@ export interface ClubContact {
     id: string;
     firstName: string;
     lastName: string;
+    email: string | null;
+    phone: string | null;
 }
 
 export interface ClubAssociation {

@@ -7,7 +7,9 @@ model Person {
   lastName              String    
   dateOfBirth           DateTime? 
   utrId                 String?   
-  tennisAustraliaNumber String?   
+  tennisAustraliaNumber String?
+  email                 String?
+  phone                 String?
 
   // Relations
   associationContacts   Association[]    @relation("AssociationContact")
