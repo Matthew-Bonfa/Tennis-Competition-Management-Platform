@@ -14,7 +14,7 @@ function MatchDetail({ match }: MatchDetailProps) {
         return players.map((p: any, index: number) => (
             <Fragment key={p.personId}>
                 {index > 0 && ' / '}
-                <Link to={`/players/${p.personId}`} className="hover:underline hover:text-emerald-600">
+                <Link to={`/players/${p.personId}`} className="hover:underline hover:text-sky-600">
                     {p.person.firstName[0]}. {p.person.lastName}
                 </Link>
             </Fragment>

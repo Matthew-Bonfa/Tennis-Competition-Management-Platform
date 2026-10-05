@@ -32,7 +32,7 @@ function PlayerStats({ record }: PlayerStatsProps) {
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
       <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center justify-center gap-2">
-        <BarChart3 className="h-5 w-5 text-emerald-600" /> Win/Loss Record
+        <BarChart3 className="h-5 w-5 text-sky-600" /> Win/Loss Record
       </h2>
 
       {/* Filter row: year dropdown + match type segmented control */}
@@ -40,7 +40,7 @@ function PlayerStats({ record }: PlayerStatsProps) {
         <select
           value={year}
           onChange={(e) => setYear(e.target.value === 'all' ? 'all' : Number(e.target.value))}
-          className="border border-gray-300 rounded-lg text-sm px-3 py-1.5 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+          className="border border-gray-300 rounded-lg text-sm px-3 py-1.5 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-sky-500"
         >
           <option value="all">All years</option>
           {record.years.map((y) => (
@@ -56,7 +56,7 @@ function PlayerStats({ record }: PlayerStatsProps) {
           <div className="inline-flex rounded-lg border border-gray-300 overflow-hidden text-sm">
             <button
               onClick={() => setMatchType('all')}
-              className={`px-3 py-1.5 font-medium ${matchType === 'all' ? 'bg-emerald-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
+              className={`px-3 py-1.5 font-medium ${matchType === 'all' ? 'bg-sky-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
             >
               All
             </button>
@@ -64,7 +64,7 @@ function PlayerStats({ record }: PlayerStatsProps) {
               <button
                 key={type}
                 onClick={() => setMatchType(type)}
-                className={`px-3 py-1.5 font-medium border-l border-gray-300 ${matchType === type ? 'bg-emerald-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
+                className={`px-3 py-1.5 font-medium border-l border-gray-300 ${matchType === type ? 'bg-sky-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
               >
                 {RUBBER_TYPE_LABELS[type]}
               </button>
@@ -87,7 +87,7 @@ function PlayerStats({ record }: PlayerStatsProps) {
               </div>
               <div className="text-xs uppercase tracking-wider text-gray-500 mt-1">Won&ndash;Lost</div>
             </div>
-            <div className="bg-emerald-50 text-emerald-700 font-semibold px-4 py-2 rounded-full text-sm border border-emerald-200 mb-1">
+            <div className="bg-sky-50 text-sky-700 font-semibold px-4 py-2 rounded-full text-sm border border-sky-200 mb-1">
               {percentage}% win rate
             </div>
           </div>

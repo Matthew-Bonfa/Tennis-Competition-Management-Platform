@@ -41,7 +41,7 @@ function ClubProfile() {
     return (
       <div className="max-w-7xl mx-auto px-4 py-12 text-center">
         <p className="text-gray-600 mb-4">Club not found.</p>
-        <Link to="/clubs" className="text-emerald-600 hover:underline inline-flex items-center gap-1">
+        <Link to="/clubs" className="text-sky-600 hover:underline inline-flex items-center gap-1">
           <ArrowLeft className="h-4 w-4" /> Back to Clubs Directory
         </Link>
       </div>
@@ -53,7 +53,7 @@ function ClubProfile() {
       {/* Back Button */}
       <Link
         to="/clubs"
-        className="inline-flex items-center gap-1 text-sm text-gray-600 hover:text-emerald-600 mb-6 transition-colors"
+        className="inline-flex items-center gap-1 text-sm text-gray-600 hover:text-sky-600 mb-6 transition-colors"
       >
         <ArrowLeft className="h-4 w-4" /> Back to Clubs
       </Link>
@@ -61,7 +61,7 @@ function ClubProfile() {
       {/* Main Profile Card */}
       <div className="bg-white border border-gray-200 rounded-lg p-8 shadow-sm">
         <div className="relative text-center border-b border-gray-100 pb-6 mb-6">
-          <div className="bg-emerald-50 text-emerald-700 font-semibold px-4 py-2 rounded-full text-sm border border-emerald-200 absolute top-0 right-0">
+          <div className="bg-sky-50 text-sky-700 font-semibold px-4 py-2 rounded-full text-sm border border-sky-200 absolute top-0 right-0">
             {club.isFinancialMember ? 'Financial Member' : 'Non-Financial Member'}
           </div>
           <h1 className="text-3xl font-bold text-gray-900 pr-28 sm:pr-0">{club.name}</h1>
@@ -77,7 +77,7 @@ function ClubProfile() {
               <ul>
                 {club.associations.map((a: any) => (
                   <li key={a.id}>
-                    <Link to={`/associations/${a.id}`} className="text-emerald-700 hover:underline">
+                    <Link to={`/associations/${a.id}`} className="text-sky-700 hover:underline">
                       {a.name}
                     </Link>
                   </li>
@@ -96,7 +96,7 @@ function ClubProfile() {
               <ul>
                 {club.teams.map((t: any) => (
                   <li key={t.id} className="flex items-center gap-2">
-                    <Building2 className="h-4 w-4 text-emerald-600" />
+                    <Building2 className="h-4 w-4 text-sky-600" />
                     {t.name} — {t.sectionName}
                   </li>
                 ))}
@@ -135,7 +135,7 @@ function ClubProfile() {
               {club.contactPerson.phone && (
                 <p>
                   Phone:{' '}
-                  <a href={`tel:${club.contactPerson.phone}`} className="text-emerald-600 hover:underline">
+                  <a href={`tel:${club.contactPerson.phone}`} className="text-sky-600 hover:underline">
                     {club.contactPerson.phone}
                   </a>
                 </p>
@@ -143,7 +143,7 @@ function ClubProfile() {
               {club.contactPerson.email && (
                 <p>
                   Email:{' '}
-                  <a href={`mailto:${club.contactPerson.email}`} className="text-emerald-600 hover:underline">
+                  <a href={`mailto:${club.contactPerson.email}`} className="text-sky-600 hover:underline">
                     {club.contactPerson.email}
                   </a>
                 </p>

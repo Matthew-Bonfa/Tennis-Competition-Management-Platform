@@ -1,22 +1,42 @@
 /* file created by Rex Kelly */
 
 .ribbon-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     text-decoration: none;
-    color: inherit;
-    border: 2px solid #000;
+    color: #fff;
     border-radius: 6px;
     padding: 20px 15px;
     font-size: 2rem;
+    transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .ribbon-link:visited {
-    color:inherit
+    color: #fff;
+}
+
+.ribbon-link:hover {
+    background-color: var(--navy-dark);
+    color: #fff;
+}
+
+.ribbon-link--logo {
+    padding: 8px 15px;
+}
+
+.ribbon-logo {
+    height: 48px;
+    width: auto;
+    display: block;
 }
 
 
 nav {
     display: flex;
     gap: 5px;
-    width: fit-content;
-    margin: 20px auto
+    width: 100%;
+    justify-content: center;
+    margin: 0;
+    background-color: var(--navy);
 }

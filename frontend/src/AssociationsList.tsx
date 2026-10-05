@@ -37,8 +37,8 @@ function AssociationsList(){
                     to={`/associations/` + assoc.id}
                     className="block bg-white border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow"
                 >
-                    <h2 className="text-xl font-semibold text-emerald-800 mb-2">{assoc.name}</h2>
-                    <div className="mt-4 text-emerald-600 text-sm font-medium flex items-center">
+                    <h2 className="text-xl font-semibold text-sky-800 mb-2">{assoc.name}</h2>
+                    <div className="mt-4 text-sky-600 text-sm font-medium flex items-center">
                         View Association Profile &rarr;
                     </div>
                 </Link>

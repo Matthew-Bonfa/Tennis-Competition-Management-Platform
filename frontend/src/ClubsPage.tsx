@@ -45,7 +45,7 @@ function ClubsPage() {
           placeholder="Search clubs by name..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="block w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+          className="block w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-sky-500"
         />
       </div>
 
@@ -60,7 +60,7 @@ function ClubsPage() {
               className="block bg-white border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between"
             >
               <div>
-                <h3 className="text-xl font-semibold text-emerald-800 mb-2 text-center">{club.name}</h3>
+                <h3 className="text-xl font-semibold text-sky-800 mb-2 text-center">{club.name}</h3>
                 <p className="text-sm text-gray-600">
                   {club.isFinancialMember ? 'Financial Member' : 'Non-Financial Member'}
                 </p>
@@ -69,7 +69,7 @@ function ClubsPage() {
                 </div>
               </div>
 
-              <div className="mt-6 text-emerald-600 text-sm font-medium flex items-center">
+              <div className="mt-6 text-sky-600 text-sm font-medium flex items-center">
                 View Club Profile &rarr;
               </div>
             </Link>

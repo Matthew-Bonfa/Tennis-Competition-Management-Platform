@@ -61,7 +61,7 @@ function PlayersPage() {
           placeholder="Search players by name or player code..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="block w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+          className="block w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-sky-500"
         />
       </div>
 
@@ -75,8 +75,8 @@ function PlayersPage() {
               className="block bg-white border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow"
             >
               <div className="flex items-center gap-2 mb-2">
-                <User className="h-5 w-5 text-emerald-600 shrink-0" />
-                <h3 className="text-xl font-semibold text-emerald-800">
+                <User className="h-5 w-5 text-sky-600 shrink-0" />
+                <h3 className="text-xl font-semibold text-sky-800">
                   {player.firstName} {player.lastName}
                 </h3>
               </div>
@@ -84,7 +84,7 @@ function PlayersPage() {
               <div className="mt-3 text-xs bg-gray-100 text-gray-600 px-2.5 py-1 rounded inline-block">
                 {player.personCode}
               </div>
-              <div className="mt-6 text-emerald-600 text-sm font-medium flex items-center">
+              <div className="mt-6 text-sky-600 text-sm font-medium flex items-center">
                 View Player Profile &rarr;
               </div>
             </Link>
