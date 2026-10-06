@@ -1,5 +1,6 @@
 import { db } from './db.js';
 import { Temporal } from '@js-temporal/polyfill';
+import bcrypt from 'bcrypt';
 
 async function main() {
   console.log('Starting database seed...');
@@ -501,6 +502,33 @@ async function main() {
       { personId: thomas.id, role: 'PLAYER', clubId: lilydale.id },
     ].map((data) => db.orm.public.PersonRole.create(data)),
   );
+
+  // =========================================================
+  // ACCOUNTS (FOR RBAC TESTING)
+  // =========================================================
+  // Hash the mock password exactly as our auth service will expect
+  const passwordHash = await bcrypt.hash('password123', 10);
+
+  await Promise.all([
+    // Michael is an ASSOCIATION_ADMIN
+    db.orm.public.Account.create({
+      personId: michael.id,
+      email: 'admin@tennis.com',
+      passwordHash,
+    }),
+    // Sophie is a CLUB_ADMIN
+    db.orm.public.Account.create({
+      personId: sophie.id,
+      email: 'club@tennis.com',
+      passwordHash,
+    }),
+    // Jack is just a PLAYER (volunteer/public access level)
+    db.orm.public.Account.create({
+      personId: jack.id,
+      email: 'volunteer@tennis.com',
+      passwordHash,
+    }),
+  ]);
 
   // =========================================================
   // COMPETITION, SEASON & SECTION

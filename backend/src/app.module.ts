@@ -12,6 +12,10 @@ import { FixturesModule } from './fixtures/fixtures.module.js';
 import { AssociationsModule } from './associations/associations.module.js';
 import { ClubsModule } from './clubs/clubs.module.js';
 import { PlayersModule } from './players/players.module.js';
+import { AuthModule } from './auth/auth.module.js';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './auth/guards/jwt-auth.guard.js';
+import { RolesGuard } from './auth/guards/roles.guard.js';
 
 @Module({
   imports: [
@@ -26,8 +30,21 @@ import { PlayersModule } from './players/players.module.js';
     AssociationsModule,
     ClubsModule,
     PlayersModule,
+    AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    // Enforces JWT authentication on every route globally
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+    // Verifies the valid user has the correct permissions
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+  ],
 })
 export class AppModule {}

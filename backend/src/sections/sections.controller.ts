@@ -1,9 +1,17 @@
-import { Controller, Get, Param, ParseIntPipe, Res, Query } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Res,
+  Query,
+} from '@nestjs/common';
 import type { Response } from 'express';
 import { csvFilename } from '../common/csv-filename.js';
 import { toCsv } from '../common/csv.js';
 import { SectionsService } from './sections.service.js';
 import { LADDER_CSV_COLUMNS, toLadderCsvRow } from './to-ladder-csv-row.js';
+import { Public } from '../auth/decorators/public.decorator.js';
 
 @Controller('sections')
 export class SectionsController {
@@ -12,8 +20,12 @@ export class SectionsController {
   // Declared above ':id/ladder' as a matter of habit: it shares the
   // '/ladder' prefix rather than colliding on it, but the export/static
   // route stays ahead of any parameterised sibling to avoid surprises.
+  @Public()
   @Get(':id/ladder/export')
-  async exportLadderCsv(@Param('id', ParseIntPipe) id: number, @Res({ passthrough: true }) res: Response): Promise<string> {
+  async exportLadderCsv(
+    @Param('id', ParseIntPipe) id: number,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<string> {
     const ladder = await this.sectionsService.calculateLadder(id);
     const filename = csvFilename(['ladder', 'section', id]);
 
@@ -25,24 +37,28 @@ export class SectionsController {
     return '﻿' + toCsv(ladder.map(toLadderCsvRow), LADDER_CSV_COLUMNS);
   }
 
+  @Public()
   @Get(':id/ladder')
   getLadder(@Param('id', ParseIntPipe) id: number) {
     return this.sectionsService.calculateLadder(id);
   }
 
   //get all sections based on season ID
+  @Public()
   @Get()
-  findAll(@Query('seasonId', ParseIntPipe) seasonId: number){
+  findAll(@Query('seasonId', ParseIntPipe) seasonId: number) {
     return this.sectionsService.findAll(seasonId);
   }
 
   // gets a specific section based on the season id
+  @Public()
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number){
-      return this.sectionsService.findOne(id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.sectionsService.findOne(id);
   }
-  
+
   // gets the rounds in the section
+  @Public()
   @Get(':id/rounds')
   getRounds(@Param('id', ParseIntPipe) id: number) {
     return this.sectionsService.getRounds(id);

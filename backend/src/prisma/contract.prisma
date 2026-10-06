@@ -20,6 +20,19 @@ model Person {
   enteredMatches        Match[]          @relation("MatchEnteredBy")
   confirmedMatches      Match[]          @relation("MatchConfirmedBy")
   rubberParticipations  RubberPlayer[]
+
+  account Account?
+}
+
+// Accounts for roll based access
+model Account {
+  id           String   @id @default(uuid())
+  personId     String   @unique
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+
+  person       Person   @relation(fields: [personId], references: [id])
 }
 
 model Association {
