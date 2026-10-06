@@ -6,10 +6,7 @@ export class AssociationsService {
   constructor(private prisma: PrismaService) {}
 
   async getAll() {
-    const response = await this.prisma.client.orm.public.Association.select(
-      'id',
-      'name',
-    )
+    const response = await this.prisma.client.orm.public.Association
       .orderBy((u) => u.name.asc())
       .all();
 
@@ -30,10 +27,21 @@ export class AssociationsService {
   }
 
 
-  async insertAssociation(data: {name: string, contactId?: string}){
+  async insertAssociation(data: {name: string}){
     return await this.prisma.client.orm.public.Association.create(data);
   }
 
+  async updateAssociation(id: string, data: {name: string}){
+    try {
+      return await this.prisma.client.orm.public.Association.where({id}).update(data);
+    } catch (error: any) {
+      if (error?.code === 'P2025') {
+        throw new NotFoundException(`Association with ID "${id}" not found`);
+      }
+      throw error;
+    }
+ 
+  }
 
 
 }
