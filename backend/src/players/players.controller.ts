@@ -1,8 +1,19 @@
-import { Body, Controller, Get, Param, ParseEnumPipe, ParseIntPipe, Patch, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseEnumPipe,
+  ParseIntPipe,
+  Patch,
+  Query,
+} from '@nestjs/common';
 import { UpdatePlayerDto } from './dto/update-player.dto.js';
 import { PlayersService } from './players.service.js';
 import { RubberTypeValues } from './types.js';
 import type { RubberType } from './types.js';
+import { Public } from '../auth/decorators/public.decorator.js';
+import { Roles } from '../auth/decorators/roles.decorator.js';
 
 @Controller('players')
 export class PlayersController {
@@ -10,6 +21,7 @@ export class PlayersController {
 
   // GET /players?search=&clubId=
   // Player search list. Both query params are optional.
+  @Public()
   @Get()
   findAll(@Query('search') search?: string, @Query('clubId') clubId?: string) {
     return this.playersService.findAllPlayers(search, clubId);
@@ -17,6 +29,7 @@ export class PlayersController {
 
   // GET /players/:id
   // Full profile: identity, clubs, and the competitions/teams they play in.
+  @Public()
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.playersService.findOnePlayer(id);
@@ -24,11 +37,16 @@ export class PlayersController {
 
   // GET /players/:id/record?year=&rubberType=
   // Win/loss record, bucketed by year and discipline
+  @Public()
   @Get(':id/record')
   findRecord(
     @Param('id') id: string,
     @Query('year', new ParseIntPipe({ optional: true })) year?: number,
-    @Query('rubberType', new ParseEnumPipe(RubberTypeValues, { optional: true })) rubberType?: RubberType,
+    @Query(
+      'rubberType',
+      new ParseEnumPipe(RubberTypeValues, { optional: true }),
+    )
+    rubberType?: RubberType,
   ) {
     return this.playersService.findPlayerRecord(id, year, rubberType);
   }
@@ -37,6 +55,7 @@ export class PlayersController {
   // Partial edit of a player's identity fields (name, date of birth, UTR
   // id, Tennis Australia number, email, phone). Returns the updated
   // profile in the same shape as GET /players/:id.
+  @Roles('ASSOCIATION_ADMIN', 'CLUB_ADMIN')
   @Patch(':id')
   update(@Param('id') id: string, @Body() updatePlayerDto: UpdatePlayerDto) {
     return this.playersService.updatePlayer(id, updatePlayerDto);
