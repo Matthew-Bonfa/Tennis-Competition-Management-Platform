@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import request from 'supertest';
 import { describe, beforeAll, afterAll, it, expect } from 'vitest';
 import { AppModule } from '../src/app.module.js';
@@ -17,6 +17,13 @@ describe('Players Feature (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     app.setGlobalPrefix('api');
+    app.useGlobalPipes(
+      new ValidationPipe({
+        whitelist: true,
+        transform: true,
+        forbidNonWhitelisted: true,
+      }),
+    );
     await app.init();
   });
 
@@ -113,5 +120,78 @@ describe('Players Feature (e2e)', () => {
       .expect(404);
 
     expect(response.body.message).toContain('not found');
+  });
+
+  // Editing a player's own identity fields
+  describe('PATCH /api/players/:id', () => {
+    it('updates the supplied fields and returns the full profile', async () => {
+      expect(savedPlayerId).toBeDefined();
+
+      const before = await request(app.getHttpServer()).get(`/api/players/${savedPlayerId}`).expect(200);
+      const originalPhone = before.body.phone;
+
+      const response = await request(app.getHttpServer())
+        .patch(`/api/players/${savedPlayerId}`)
+        .send({ phone: '0400 123 456' })
+        .expect(200);
+
+      expect(response.body).toEqual(
+        expect.objectContaining({
+          id: savedPlayerId,
+          phone: '0400 123 456',
+          firstName: before.body.firstName,
+          lastName: before.body.lastName,
+        }),
+      );
+
+      await request(app.getHttpServer())
+        .patch(`/api/players/${savedPlayerId}`)
+        .send({ phone: originalPhone })
+        .expect(200);
+    });
+
+    it('returns 404 Not Found for a non-existent UUID', async () => {
+      const fakeUuid = '123e4567-e89b-12d3-a456-426614174000';
+
+      const response = await request(app.getHttpServer())
+        .patch(`/api/players/${fakeUuid}`)
+        .send({ phone: '0400 000 000' })
+        .expect(404);
+
+      expect(response.body.message).toContain('not found');
+    });
+
+    it('returns 400 Bad Request for a field that is not editable', async () => {
+      expect(savedPlayerId).toBeDefined();
+
+      await request(app.getHttpServer())
+        .patch(`/api/players/${savedPlayerId}`)
+        .send({ personCode: 'P999' })
+        .expect(400);
+    });
+
+    it('returns 400 Bad Request for an invalid email', async () => {
+      expect(savedPlayerId).toBeDefined();
+
+      await request(app.getHttpServer())
+        .patch(`/api/players/${savedPlayerId}`)
+        .send({ email: 'not-an-email' })
+        .expect(400);
+    });
+
+    it('returns 400 Bad Request for a null non-nullable field', async () => {
+      expect(savedPlayerId).toBeDefined();
+
+      await request(app.getHttpServer())
+        .patch(`/api/players/${savedPlayerId}`)
+        .send({ firstName: null })
+        .expect(400);
+    });
+
+    it('returns 400 Bad Request for an empty body', async () => {
+      expect(savedPlayerId).toBeDefined();
+
+      await request(app.getHttpServer()).patch(`/api/players/${savedPlayerId}`).send({}).expect(400);
+    });
   });
 });

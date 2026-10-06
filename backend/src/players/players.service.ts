@@ -2,8 +2,10 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { or } from '@prisma/orm-postgres/orm-client';
 import { fromInstant } from '../common/temporal.js';
 import { PrismaService } from '../prisma/prisma.service.js';
+import type { UpdatePlayerDto } from './dto/update-player.dto.js';
 import { summarisePlayerRecord } from './summarise-player-record.js';
 import type { PlayerRubberRow } from './summarise-player-record.js';
+import { toPersonUpdate } from './to-person-update.js';
 import { toPlayerDetail } from './to-player-detail.js';
 import { toPlayerSummary } from './to-player-summary.js';
 import type { PlayerDetail, PlayerRecord, PlayerSummary, RubberType } from './types.js';
@@ -138,5 +140,18 @@ export class PlayersService {
     }
 
     return { buckets, years, rubberTypes };
+  }
+
+  // edit form
+  async updatePlayer(id: string, dto: UpdatePlayerDto): Promise<PlayerDetail> {
+    const data = toPersonUpdate(dto);
+
+    const updated = await this.prisma.client.orm.public.Person.where({ id }).select('id').update(data);
+
+    if (!updated) {
+      throw new NotFoundException(`Player ${id} not found`);
+    }
+
+    return this.findOnePlayer(id);
   }
 }
