@@ -2,6 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { AssociationsService } from '../associations/associations.service.js'
 import { SeasonsService } from '../seasons/seasons.service.js';
+import { CreateCompetitionDto } from './dto/create-competition.dto.js';
+import { UpdateCompetitionDto } from './dto/update-competition.dto.js';
 
 @Injectable()
 export class CompetitionsService {
@@ -64,4 +66,20 @@ export class CompetitionsService {
       })),
     };
   }
+
+  // create new competition
+  async create(createCompetitionDto: CreateCompetitionDto){
+    return this.prisma.client.orm.public.Competition.create({
+      name: createCompetitionDto.name,
+      associationId: createCompetitionDto.associationId,
+    });
+  }
+
+  // update competition
+  async update(id: string, updateCompetitionDto: UpdateCompetitionDto) {
+  return this.prisma.client.orm.public.Competition
+    .where({ id })
+    .update({ name: updateCompetitionDto.name });
+  }
+
 }

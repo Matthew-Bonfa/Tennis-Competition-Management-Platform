@@ -1,6 +1,7 @@
 import { Controller, Get, Param, Query, Post, Body, Patch, Delete } from '@nestjs/common';
 import { CompetitionsService } from './competitions.service.js';
-
+import { CreateCompetitionDto } from './dto/create-competition.dto.js';
+import { UpdateCompetitionDto } from './dto/update-competition.dto.js';
     /* 
     describes the routes (functions ?) undertaken for competitions
         get all users
@@ -30,17 +31,20 @@ export class CompetitionsController {
 
     // create a new competition
     @Post()
-    create(@Body() competition: {}){
-        return competition
+    create(@Body() createCompetitionDto: CreateCompetitionDto){
+        return this.competitionsService.create(createCompetitionDto)
     } 
 
     // updates a competition
     @Patch(':id')
-    update(@Param('id') id: string, @Body() competitionUpdate: {}){
+    update(
+        @Param('id') id: string,
+        @Body() updateCompetitionDto: UpdateCompetitionDto,
+    ) {
         // NEED WAY TO STORE HISTORICAL CHANGES
-        return {id, ...competitionUpdate}
+        return this.competitionsService.update(id, updateCompetitionDto);
     }
-
+ 
     // deletes a competition
     @Delete('id')
     delete(@Param('id') id: string){
