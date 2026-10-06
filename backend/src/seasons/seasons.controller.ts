@@ -1,6 +1,7 @@
-import { Controller, Get, Query, Post, Body } from '@nestjs/common';
+import { Controller, Get, Query, Post, Body, Patch, Param, ParseIntPipe } from '@nestjs/common';
 import { SeasonsService } from './seasons.service.js';
 import { CreateSeasonDto } from './dto/create-season.dto.js';
+import { UpdateSeasonDto } from './dto/update-season.dto.js';
 
 @Controller('seasons')
 export class SeasonsController {
@@ -20,6 +21,14 @@ export class SeasonsController {
     @Post()
     create(@Body() createSeasonDto: CreateSeasonDto) {
         return this.seasonsService.create(createSeasonDto);
+    }
+
+    @Patch(':id')
+    update(
+        @Param('id', ParseIntPipe) id: number,
+        @Body() updateSeasonDto: UpdateSeasonDto,
+    ) {
+        return this.seasonsService.update(id, updateSeasonDto);
     }
 
 }
