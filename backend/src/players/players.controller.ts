@@ -1,4 +1,5 @@
-import { Controller, Get, Param, ParseEnumPipe, ParseIntPipe, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseEnumPipe, ParseIntPipe, Patch, Query } from '@nestjs/common';
+import { UpdatePlayerDto } from './dto/update-player.dto.js';
 import { PlayersService } from './players.service.js';
 import { RubberTypeValues } from './types.js';
 import type { RubberType } from './types.js';
@@ -22,9 +23,7 @@ export class PlayersController {
   }
 
   // GET /players/:id/record?year=&rubberType=
-  // Win/loss record, bucketed by year and discipline. year/rubberType are
-  // optional pre-filters; the frontend normally fetches the full set of
-  // buckets once and filters client-side instead of calling this per toggle.
+  // Win/loss record, bucketed by year and discipline
   @Get(':id/record')
   findRecord(
     @Param('id') id: string,
@@ -32,5 +31,14 @@ export class PlayersController {
     @Query('rubberType', new ParseEnumPipe(RubberTypeValues, { optional: true })) rubberType?: RubberType,
   ) {
     return this.playersService.findPlayerRecord(id, year, rubberType);
+  }
+
+  // PATCH /players/:id
+  // Partial edit of a player's identity fields (name, date of birth, UTR
+  // id, Tennis Australia number, email, phone). Returns the updated
+  // profile in the same shape as GET /players/:id.
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updatePlayerDto: UpdatePlayerDto) {
+    return this.playersService.updatePlayer(id, updatePlayerDto);
   }
 }
