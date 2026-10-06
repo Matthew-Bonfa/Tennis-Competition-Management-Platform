@@ -12,6 +12,7 @@ import { FixturesModule } from './fixtures/fixtures.module.js';
 import { AssociationsModule } from './associations/associations.module.js';
 import { ClubsModule } from './clubs/clubs.module.js';
 import { PlayersModule } from './players/players.module.js';
+import { AuthModule } from './auth/auth.module.js';
 
 @Module({
   imports: [
@@ -26,8 +27,10 @@ import { PlayersModule } from './players/players.module.js';
     AssociationsModule,
     ClubsModule,
     PlayersModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
 export class AppModule {}
+
