@@ -22,6 +22,8 @@ import MatchResultsPage from './MatchResultsPage'
 import RegisterTeamPage from './register-team/RegisterTeamPage'
 import ManageAssociationsPage from './manage-associations/ManageAssociationsPage';
 import CreateAssociationPage from './manage-associations/CreateAssociationPage';
+import ManagePlayersPage from './manage-players/ManagePlayersPage';
+import EditPlayerPage from './manage-players/EditPlayerPage';
 
 // --- MAIN APP ROUTING ---
 export default function App() {
@@ -49,6 +51,8 @@ export default function App() {
             <Route path="/register-team" element={<RegisterTeamPage />} />
             <Route path="/manage-associations" element={<ManageAssociationsPage />} />
             <Route path="/manage-associations/create-new-association" element={<CreateAssociationPage />} />
+            <Route path="/manage-players" element={<ManagePlayersPage />} />
+            <Route path="/manage-players/:id" element={<EditPlayerPage />} />
           </Routes>
         </main>
       </div>

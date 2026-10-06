@@ -40,6 +40,8 @@ interface PlayerDetail {
   tennisAustraliaNumber: string | null;
   clubs: PlayerClub[];
   competitions: PlayerCompetition[];
+  email: string | null;
+  phone: string | null;
 }
 
 function PlayerProfile() {
