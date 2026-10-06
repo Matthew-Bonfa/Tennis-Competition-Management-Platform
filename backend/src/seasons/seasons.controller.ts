@@ -1,5 +1,6 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, Post, Body } from '@nestjs/common';
 import { SeasonsService } from './seasons.service.js';
+import { CreateSeasonDto } from './dto/create-season.dto.js';
 
 @Controller('seasons')
 export class SeasonsController {
@@ -14,6 +15,11 @@ export class SeasonsController {
     @Get(':id')
     findOne(id: number){
         return this.seasonsService.findOne(id);
+    }
+
+    @Post()
+    create(@Body() createSeasonDto: CreateSeasonDto) {
+        return this.seasonsService.create(createSeasonDto);
     }
 
 }
