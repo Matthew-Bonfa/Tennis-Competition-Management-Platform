@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { summariseRubber } from '../rubbers/summarise-rubber.js';
 import { NotFoundException } from '@nestjs/common';
@@ -7,6 +7,8 @@ import type { LadderAccumulator } from './rank-ladder.js';
 import type { LadderRow } from './types.js';
 import { groupIntoRounds } from './group-rounds.js';
 import type { RoundSummary } from './types.js';
+import { CreateSectionDto } from './dto/create-section.dto.js';
+import { UpdateSectionDto } from './dto/update-section.dto.js';
 
 @Injectable()
 export class SectionsService {
@@ -163,6 +165,40 @@ export class SectionsService {
             .all();
 
         return groupIntoRounds(matches);
+    }
+
+    // create a section
+    async create(createSectionDto: CreateSectionDto) {
+        return this.prisma.client.orm.public.Section.create({
+            name: createSectionDto.name,
+            seasonId: createSectionDto.seasonId,
+            formatId: createSectionDto.formatId,
+            gradeLabel: createSectionDto.gradeLabel ?? null,
+        });
+    }
+
+    async update(id: number, updateSectionDto: UpdateSectionDto) {
+        // quick existence check (since findOne also calculates the ladder, which we don't need here)
+        const existing = await this.prisma.client.orm.public.Section
+            .where({ id })
+            .first();
+        if (!existing) {
+            throw new NotFoundException(`Section ${id} not found`);
+        }
+
+        const data: any = {};
+        if (updateSectionDto.name !== undefined) {
+            data.name = updateSectionDto.name;
+        }
+        if (updateSectionDto.gradeLabel !== undefined) {
+            data.gradeLabel = updateSectionDto.gradeLabel;
+        }
+
+        if (Object.keys(data).length === 0) {
+            throw new BadRequestException('Nothing to update');
+        }
+
+        return this.prisma.client.orm.public.Section.where({ id }).update(data);
     }
 }
 
