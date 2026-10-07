@@ -24,6 +24,8 @@ import ManageAssociationsPage from './manage-associations/ManageAssociationsPage
 import CreateAssociationPage from './manage-associations/CreateAssociationPage';
 import ManageCompetitionsPage from './manage-competitions/ManageCompetitionsPage';
 import CreateCompetitionPage from './manage-competitions/CreateCompetitionPage';
+import ManageCompetitionPage from './manage-competitions/ManageCompetitionPage';
+import CreateSeasonPage from './manage-competitions/CreateSeasonPage';
 
 // --- MAIN APP ROUTING ---
 export default function App() {
@@ -54,6 +56,8 @@ export default function App() {
 
             <Route path="/manage-competitions" element={<ManageCompetitionsPage />} />
             <Route path="/manage-competitions/create-new-competition" element={<CreateCompetitionPage />} />
+            <Route path="/manage-competitions/:id" element={<ManageCompetitionPage />} />
+            <Route path="/manage-competitions/:id/create-new-season" element={<CreateSeasonPage />} />
           </Routes>
         </main>
       </div>

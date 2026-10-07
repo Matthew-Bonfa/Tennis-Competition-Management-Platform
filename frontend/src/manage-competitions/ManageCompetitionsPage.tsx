@@ -3,7 +3,16 @@
 
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import fetchApi from '../api';
+import fetchApi, { ApiError } from '../api';
+
+// local helper: fetchApi accepts any method, so PATCH doesn't need a shared helper
+function patchApi(endpoint: string, data: unknown) {
+  return fetchApi(endpoint, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data),
+  });
+}
 
 function ManageCompetitionsPage() {
   const [competitions, setCompetitions] = useState<any[]>([]);
@@ -42,7 +51,7 @@ function ManageCompetitionsPage() {
           {competitions.map(comp => (
             <Link
               key={comp.id}
-              to={`/competitions/${comp.id}`}
+              to={`/manage-competitions/${comp.id}`}
               className="block bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow"
             >
               <p className="font-semibold text-sky-800">{comp.name}</p>
