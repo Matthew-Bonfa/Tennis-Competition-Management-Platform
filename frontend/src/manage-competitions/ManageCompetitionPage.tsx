@@ -170,15 +170,23 @@ function ManageCompetitionPage() {
         ) : (
           <>
             <div className="flex items-center justify-between mb-4">
-              <select
-                value={selectedSeasonId ?? ''}
-                onChange={(e) => setSelectedSeasonId(Number(e.target.value))}
-                className="border border-gray-300 rounded-lg text-sm px-3 py-2 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-sky-500"
-              >
-                {sortedSeasons.map((season: any) => (
-                  <option key={season.id} value={season.id}>{season.name}</option>
-                ))}
-              </select>
+              <div className="flex items-center gap-3">
+                <select
+                  value={selectedSeasonId ?? ''}
+                  onChange={(e) => setSelectedSeasonId(Number(e.target.value))}
+                  className="border border-gray-300 rounded-lg text-sm px-3 py-2 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                >
+                  {sortedSeasons.map((season: any) => (
+                    <option key={season.id} value={season.id}>{season.name}</option>
+                  ))}
+                </select>
+                <Link
+                  to={`/manage-competitions/${id}/seasons/${selectedSeasonId}`}
+                  className="text-sm text-gray-600 hover:text-sky-600"
+                >
+                  Edit season
+                </Link>
+              </div>
 
               <Link
                 to={`/manage-competitions/${id}/create-new-season`}
