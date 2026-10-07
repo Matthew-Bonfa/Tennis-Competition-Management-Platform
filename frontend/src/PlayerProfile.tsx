@@ -184,7 +184,10 @@ function PlayerProfile() {
                           <Link to={`/sections/${entry.sectionId}`} className="hover:underline hover:text-sky-600">
                             {entry.sectionName}
                           </Link>{' '}
-                          &middot; {entry.teamName}
+                          &middot;{' '}
+                          <Link to={`/teams/${entry.teamId}`} className="hover:underline hover:text-sky-600">
+                            {entry.teamName}
+                          </Link>
                         </li>
                       ))}
                     </ul>
