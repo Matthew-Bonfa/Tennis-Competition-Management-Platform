@@ -29,6 +29,8 @@ import CreateSeasonPage from './manage-competitions/CreateSeasonPage';
 import CreateSectionPage from './manage-competitions/CreateSectionPage';
 import ManageSectionPage from './manage-competitions/ManageSectionPage';
 import ManageSeasonPage from './manage-competitions/ManageSeasonPage';
+import ManagePlayersPage from './manage-players/ManagePlayersPage';
+import EditPlayerPage from './manage-players/EditPlayerPage';
 
 // --- MAIN APP ROUTING ---
 export default function App() {
@@ -64,6 +66,8 @@ export default function App() {
             <Route path="/manage-competitions/:id/create-new-section" element={<CreateSectionPage />} />
             <Route path="/manage-competitions/:id/sections/:sectionId" element={<ManageSectionPage />} />
             <Route path="/manage-competitions/:id/seasons/:seasonId" element={<ManageSeasonPage />} />
+            <Route path="/manage-players" element={<ManagePlayersPage />} />
+            <Route path="/manage-players/:id" element={<EditPlayerPage />} />
           </Routes>
         </main>
       </div>

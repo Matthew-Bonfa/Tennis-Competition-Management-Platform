@@ -21,6 +21,8 @@ type PersonRow = {
   dateOfBirth: Temporal.Instant | null;
   utrId: string | null;
   tennisAustraliaNumber: string | null;
+  email: string | null;
+  phone: string | null;
   clubMemberships: ClubMembershipRow[];
   teamMemberships: TeamMembershipRow[];
 };
@@ -39,6 +41,8 @@ export function toPlayerDetail(person: PersonRow): PlayerDetail {
     dateOfBirth: person.dateOfBirth ? fromInstant(person.dateOfBirth).toISOString() : null,
     utrId: person.utrId,
     tennisAustraliaNumber: person.tennisAustraliaNumber,
+    email: person.email,
+    phone: person.phone,
     clubs: person.clubMemberships.map(toPlayerClub),
     competitions: person.teamMemberships.map((membership) => toPlayerCompetition(membership.team)),
   };

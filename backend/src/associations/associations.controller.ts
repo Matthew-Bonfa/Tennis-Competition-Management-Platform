@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Param, Body } from '@nestjs/common';
+import { Controller, Get, Post, Put, Param, Body } from '@nestjs/common';
 
 import { AssociationsService } from './associations.service.js';
 
@@ -7,8 +7,10 @@ export class AssociationsController {
   constructor(private associationsService: AssociationsService) {}
 
   @Get()
-  getAllAssociations() {
-    return this.associationsService.getAll();
+  async getAllAssociations() {
+    const response = await this.associationsService.getAll();
+    console.log(response);
+    return response;
   }
 
   @Get('/:id')
@@ -17,12 +19,16 @@ export class AssociationsController {
   }
 
   @Post()
-  async insertAssociation(@Body() body: {name: string, contactId?: string}){
+  async insertAssociation(@Body() body: {name: string}){
     const newAssociation = await this.associationsService.insertAssociation(body);
     return newAssociation;
   }
   
-  
+  @Put(':id')
+  async updateAssociation(@Param('id') id: string, @Body() body: {name: string}){
+  const updatedAssociation = await this.associationsService.updateAssociation(id, body);
+  return updatedAssociation;
+}
 
 
 

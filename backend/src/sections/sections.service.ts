@@ -12,18 +12,29 @@ import { UpdateSectionDto } from './dto/update-section.dto.js';
 
 @Injectable()
 export class SectionsService {
-    constructor(private readonly prisma: PrismaService) {}
-    
-    // get all sections for a season
-    async findAll(seasonId: number){
-        const sections = await this.prisma.client.orm.public.Section
-        .where({ seasonId })
-        .all();
+  constructor(private readonly prisma: PrismaService) {}
 
-        return sections.map((section) => ({
-            id: section.id,
-            name: section.name
-        }))
+  // get all sections for a season
+  async findAll(seasonId: number) {
+    const sections = await this.prisma.client.orm.public.Section.where({
+      seasonId,
+    }).all();
+
+    return sections.map((section) => ({
+      id: section.id,
+      name: section.name,
+    }));
+  }
+
+  // NEED TO ADD GETTING ONE SECTION DETAILS
+  async findOne(id: number) {
+    const section = await this.prisma.client.orm.public.Section.where({
+      id,
+    }).first();
+
+    // if nothing was found, send back a proper "404 not found" error
+    if (!section) {
+      throw new NotFoundException(`Section ${id} not found`);
     }
 
     // NEED TO ADD GETTING ONE SECTION DETAILS
@@ -49,38 +60,72 @@ export class SectionsService {
             ladder: ladder
             // add fixture here
         };
-    }
-
+    }  
     
-    async retrieveCompletedMatches(sectionId: number): Promise<any> {
-        return this.prisma.client.orm.public.Match
-            .where({ sectionId, matchStatus: 'completed' })
-            .include('homeTeam', (team) => team.select('id', 'name'))
-            .include('awayTeam', (team) => team.select('id', 'name'))
-            .include('rubbers', (rubber) => rubber
-                .orderBy((r) => r.rubberNumber.asc())
-                .include('sets', (set) => set.orderBy((s) => s.setNumber.asc()))
-                .include('players', (player) => player.select('personId', 'teamId'))
-            )
-            .all();
+  async retrieveCompletedMatches(sectionId: number): Promise<any> {
+    return this.prisma.client.orm.public.Match.where({
+      sectionId,
+      matchStatus: 'completed',
+    })
+      .include('homeTeam', (team) => team.select('id', 'name'))
+      .include('awayTeam', (team) => team.select('id', 'name'))
+      .include('rubbers', (rubber) =>
+        rubber
+          .orderBy((r) => r.rubberNumber.asc())
+          .include('sets', (set) => set.orderBy((s) => s.setNumber.asc()))
+          .include('players', (player) => player.select('personId', 'teamId')),
+      )
+      .all();
+  }
+
+  async calculateLadder(sectionId: number): Promise<LadderRow[]> {
+    const section = await this.prisma.client.orm.public.Section.where({
+      id: sectionId,
+    })
+      .include('format', (format) =>
+        format.select('pointsPerMatchWin', 'pointsPerRubber'),
+      )
+      .first();
+    if (!section) {
+      throw new NotFoundException(`Section ${sectionId} not found`);
     }
 
-    async calculateLadder(sectionId: number): Promise<LadderRow[]> {
-        const section = await this.prisma.client.orm.public.Section
-            .where({ id: sectionId })
-            .include('format', (format) => format.select('pointsPerMatchWin', 'pointsPerRubber'))
-            .first();
-        if (!section) {
-            throw new NotFoundException(`Section ${sectionId} not found`);
-        }
+    const teams = await this.prisma.client.orm.public.Team.where({ sectionId })
+      .select('id', 'name')
+      .all();
 
-        const teams = await this.prisma.client.orm.public.Team
-            .where({ sectionId })
-            .select('id', 'name')
-            .all();
+    const matches = await this.retrieveCompletedMatches(sectionId);
+    const ladder = new Map<number, LadderAccumulator>();
 
-        const matches = await this.retrieveCompletedMatches(sectionId);
-        const ladder = new Map<number, LadderAccumulator>();
+    for (const team of teams) {
+      ladder.set(team.id, {
+        teamId: team.id,
+        teamName: team.name,
+        matchesPlayed: 0,
+        matchesWon: 0,
+        matchesDrawn: 0,
+        matchesLost: 0,
+        rubbersWon: 0,
+        rubbersLost: 0,
+        setsWon: 0,
+        setsLost: 0,
+        gamesWon: 0,
+        gamesLost: 0,
+        points: 0,
+      });
+    }
+
+    for (const match of matches) {
+      const homeTeam = match.homeTeam;
+      const awayTeam = match.awayTeam;
+      const homeStats = ladder.get(homeTeam.id)!;
+      const awayStats = ladder.get(awayTeam.id)!;
+
+      homeStats.matchesPlayed++;
+      awayStats.matchesPlayed++;
+
+      let homeRubbersWon = 0;
+      let awayRubbersWon = 0;
 
         for (const team of teams) {
             ladder.set(team.id, { teamId: team.id, teamName: team.name, matchesPlayed: 0, matchesWon: 0, matchesDrawn: 0, matchesLost: 0, rubbersWon: 0, rubbersLost: 0, setsWon: 0, setsLost: 0, gamesWon: 0, gamesLost: 0, points: 0 });
@@ -152,21 +197,58 @@ export class SectionsService {
             awayStats.rubbersLost += homeRubbersWon;
         }
 
-        return rankLadderRows(Array.from(ladder.values()));
+        homeStats.setsWon += rubber.sets.filter(
+          (set: any) => set.homeGames > set.awayGames,
+        ).length;
+        homeStats.setsLost += rubber.sets.filter(
+          (set: any) => set.homeGames < set.awayGames,
+        ).length;
+        homeStats.gamesWon += homeGames;
+        homeStats.gamesLost += awayGames;
+
+        awayStats.setsWon += rubber.sets.filter(
+          (set: any) => set.awayGames > set.homeGames,
+        ).length;
+        awayStats.setsLost += rubber.sets.filter(
+          (set: any) => set.awayGames < set.homeGames,
+        ).length;
+        awayStats.gamesWon += awayGames;
+        awayStats.gamesLost += homeGames;
+      }
+
+      if (homeRubbersWon > awayRubbersWon) {
+        homeStats.matchesWon++;
+        awayStats.matchesLost++;
+        homeStats.points += section.format!.pointsPerMatchWin;
+      } else if (awayRubbersWon > homeRubbersWon) {
+        awayStats.matchesWon++;
+        homeStats.matchesLost++;
+        awayStats.points += section.format!.pointsPerMatchWin;
+      } else {
+        homeStats.matchesDrawn++;
+        awayStats.matchesDrawn++;
+        homeStats.points += section.format!.pointsPerMatchWin / 2;
+        awayStats.points += section.format!.pointsPerMatchWin / 2;
+      }
+
+      homeStats.points += homeRubbersWon * section.format!.pointsPerRubber;
+      awayStats.points += awayRubbersWon * section.format!.pointsPerRubber;
+
+      homeStats.rubbersWon += homeRubbersWon;
+      homeStats.rubbersLost += awayRubbersWon;
+      awayStats.rubbersWon += awayRubbersWon;
+      awayStats.rubbersLost += homeRubbersWon;
     }
 
-    async getRounds(sectionId: number): Promise<RoundSummary[]> {
-        const section = await this.prisma.client.orm.public.Section.where({ id: sectionId }).first();
-        if (!section) {
-            throw new NotFoundException(`Section ${sectionId} not found`);
-        }
+    return rankLadderRows(Array.from(ladder.values()));
+  }
 
-        const matches = await this.prisma.client.orm.public.Match
-            .where({ sectionId })
-            .select('roundNumber', 'matchDate', 'matchStatus')
-            .all();
-
-        return groupIntoRounds(matches);
+  async getRounds(sectionId: number): Promise<RoundSummary[]> {
+    const section = await this.prisma.client.orm.public.Section.where({
+      id: sectionId,
+    }).first();
+    if (!section) {
+      throw new NotFoundException(`Section ${sectionId} not found`);
     }
 
     // create a section
@@ -204,3 +286,12 @@ export class SectionsService {
     }
 }
 
+    const matches = await this.prisma.client.orm.public.Match.where({
+      sectionId,
+    })
+      .select('roundNumber', 'matchDate', 'matchStatus')
+      .all();
+
+    return groupIntoRounds(matches);
+  }
+}
