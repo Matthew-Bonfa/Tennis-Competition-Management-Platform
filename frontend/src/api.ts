@@ -50,9 +50,6 @@ export async function postApi(endpoint: string, data: unknown, options: RequestI
 
 export async function putApi(endpoint: string, data: unknown, options: RequestInit = {}) {
     const headers = new Headers(options.headers);
-    
-export async function patchApi(endpoint: string, data:unknown, options: RequestInit = {}) {
-    const headers = new Headers(options.headers);
     headers.set('Content-Type', 'application/json');
 
     return fetchApi(endpoint, {
@@ -62,6 +59,13 @@ export async function patchApi(endpoint: string, data:unknown, options: RequestI
         body: JSON.stringify(data),
     });
 }
+    
+export async function patchApi(endpoint: string, data:unknown, options: RequestInit = {}) {
+    const headers = new Headers(options.headers);
+    headers.set('Content-Type', 'application/json');
+
+    return fetchApi(endpoint, {
+        ...options,
         method: 'PATCH',
         headers,
         body: JSON.stringify(data),
