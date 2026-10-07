@@ -37,31 +37,20 @@ export class SectionsService {
       throw new NotFoundException(`Section ${id} not found`);
     }
 
-    // NEED TO ADD GETTING ONE SECTION DETAILS
-    async findOne(id: number){
-        const section = await this.prisma.client.orm.public.Section
-        .where({ id })
-        .first();
+    const ladder = await this.calculateLadder(id);
 
-        // if nothing was found, send back a proper "404 not found" error
-        if (!section) {
-            throw new NotFoundException(`Section ${id} not found`);
-        }
+    // NEED TO ADD FIXTURE HERE ONCE ZACH COMPLETES
 
-        const ladder = await this.calculateLadder(id);
+    return {
+      id: section.id,
+      name: section.name,
+      seasonId: section.seasonId,
+      gradeLabel: section.gradeLabel,
+      ladder: ladder,
+      // add fixture here
+    };
+  }
 
-        // NEED TO ADD FIXTURE HERE ONCE ZACH COMPLETES
-
-        return {
-            id: section.id,
-            name: section.name,
-            seasonId: section.seasonId,
-            gradeLabel: section.gradeLabel,
-            ladder: ladder
-            // add fixture here
-        };
-    }  
-    
   async retrieveCompletedMatches(sectionId: number): Promise<any> {
     return this.prisma.client.orm.public.Match.where({
       sectionId,
@@ -127,74 +116,15 @@ export class SectionsService {
       let homeRubbersWon = 0;
       let awayRubbersWon = 0;
 
-        for (const team of teams) {
-            ladder.set(team.id, { teamId: team.id, teamName: team.name, matchesPlayed: 0, matchesWon: 0, matchesDrawn: 0, matchesLost: 0, rubbersWon: 0, rubbersLost: 0, setsWon: 0, setsLost: 0, gamesWon: 0, gamesLost: 0, points: 0 });
-        }
-        
-        for (const match of matches) {
-            const homeTeam = match.homeTeam;
-            const awayTeam = match.awayTeam;
-            const homeStats = ladder.get(homeTeam.id)!;
-            const awayStats = ladder.get(awayTeam.id)!;
+      for (const rubber of match.rubbers) {
+        const rubberSummary = summariseRubber(rubber.sets);
+        const homeGames = rubberSummary.homeGamesWon;
+        const awayGames = rubberSummary.awayGamesWon;
 
-            homeStats.matchesPlayed++;
-            awayStats.matchesPlayed++;
-
-            let homeRubbersWon = 0;
-            let awayRubbersWon = 0;
-
-            for (const rubber of match.rubbers) {
-                const rubberSummary = summariseRubber(rubber.sets);
-                const homeGames = rubberSummary.homeGamesWon;
-                const awayGames = rubberSummary.awayGamesWon;
-
-                if (rubber.winningTeamId === homeTeam.id) {
-                    homeRubbersWon++;
-                } 
-                else if (rubber.winningTeamId === awayTeam.id) {
-                    awayRubbersWon++;
-                }
-
-                homeStats.setsWon += rubber.sets.filter((set: any) => set.homeGames > set.awayGames).length;
-                homeStats.setsLost += rubber.sets.filter((set: any) => set.homeGames < set.awayGames).length;
-                homeStats.gamesWon += homeGames;
-                homeStats.gamesLost += awayGames;
-
-                awayStats.setsWon += rubber.sets.filter((set: any) => set.awayGames > set.homeGames).length;
-                awayStats.setsLost += rubber.sets.filter((set: any) => set.awayGames < set.homeGames).length;
-                awayStats.gamesWon += awayGames;
-                awayStats.gamesLost += homeGames;  
-            }
-
-            // checks whether section format has been populated
-            if (!section.format) {
-                throw new NotFoundException(`Format ${section.formatId} not found`);
-            }
-
-            if (homeRubbersWon > awayRubbersWon) {
-                homeStats.matchesWon++;
-                awayStats.matchesLost++;
-                homeStats.points += section.format.pointsPerMatchWin;
-            }
-            else if (awayRubbersWon > homeRubbersWon) {
-                awayStats.matchesWon++;
-                homeStats.matchesLost++;
-                awayStats.points += section.format.pointsPerMatchWin;
-            }
-            else {
-                homeStats.matchesDrawn++;
-                awayStats.matchesDrawn++;
-                homeStats.points += section.format.pointsPerMatchWin / 2;
-                awayStats.points += section.format.pointsPerMatchWin / 2;
-            }
-
-            homeStats.points += homeRubbersWon * section.format.pointsPerRubber;
-            awayStats.points += awayRubbersWon * section.format.pointsPerRubber;
-
-            homeStats.rubbersWon += homeRubbersWon;
-            homeStats.rubbersLost += awayRubbersWon;
-            awayStats.rubbersWon += awayRubbersWon;
-            awayStats.rubbersLost += homeRubbersWon;
+        if (rubber.winningTeamId === homeTeam.id) {
+          homeRubbersWon++;
+        } else if (rubber.winningTeamId === awayTeam.id) {
+          awayRubbersWon++;
         }
 
         homeStats.setsWon += rubber.sets.filter(
@@ -216,23 +146,28 @@ export class SectionsService {
         awayStats.gamesLost += homeGames;
       }
 
+      // checks whether section format has been populated
+      if (!section.format) {
+        throw new NotFoundException(`Format ${section.formatId} not found`);
+      }
+
       if (homeRubbersWon > awayRubbersWon) {
         homeStats.matchesWon++;
         awayStats.matchesLost++;
-        homeStats.points += section.format!.pointsPerMatchWin;
+        homeStats.points += section.format.pointsPerMatchWin;
       } else if (awayRubbersWon > homeRubbersWon) {
         awayStats.matchesWon++;
         homeStats.matchesLost++;
-        awayStats.points += section.format!.pointsPerMatchWin;
+        awayStats.points += section.format.pointsPerMatchWin;
       } else {
         homeStats.matchesDrawn++;
         awayStats.matchesDrawn++;
-        homeStats.points += section.format!.pointsPerMatchWin / 2;
-        awayStats.points += section.format!.pointsPerMatchWin / 2;
+        homeStats.points += section.format.pointsPerMatchWin / 2;
+        awayStats.points += section.format.pointsPerMatchWin / 2;
       }
 
-      homeStats.points += homeRubbersWon * section.format!.pointsPerRubber;
-      awayStats.points += awayRubbersWon * section.format!.pointsPerRubber;
+      homeStats.points += homeRubbersWon * section.format.pointsPerRubber;
+      awayStats.points += awayRubbersWon * section.format.pointsPerRubber;
 
       homeStats.rubbersWon += homeRubbersWon;
       homeStats.rubbersLost += awayRubbersWon;
@@ -251,41 +186,6 @@ export class SectionsService {
       throw new NotFoundException(`Section ${sectionId} not found`);
     }
 
-    // create a section
-    async create(createSectionDto: CreateSectionDto) {
-        return this.prisma.client.orm.public.Section.create({
-            name: createSectionDto.name,
-            seasonId: createSectionDto.seasonId,
-            formatId: createSectionDto.formatId,
-            gradeLabel: createSectionDto.gradeLabel ?? null,
-        });
-    }
-
-    async update(id: number, updateSectionDto: UpdateSectionDto) {
-        // quick existence check (since findOne also calculates the ladder, which we don't need here)
-        const existing = await this.prisma.client.orm.public.Section
-            .where({ id })
-            .first();
-        if (!existing) {
-            throw new NotFoundException(`Section ${id} not found`);
-        }
-
-        const data: any = {};
-        if (updateSectionDto.name !== undefined) {
-            data.name = updateSectionDto.name;
-        }
-        if (updateSectionDto.gradeLabel !== undefined) {
-            data.gradeLabel = updateSectionDto.gradeLabel;
-        }
-
-        if (Object.keys(data).length === 0) {
-            throw new BadRequestException('Nothing to update');
-        }
-
-        return this.prisma.client.orm.public.Section.where({ id }).update(data);
-    }
-}
-
     const matches = await this.prisma.client.orm.public.Match.where({
       sectionId,
     })
@@ -293,5 +193,39 @@ export class SectionsService {
       .all();
 
     return groupIntoRounds(matches);
+  }
+
+  // create a section
+  async create(createSectionDto: CreateSectionDto) {
+    return this.prisma.client.orm.public.Section.create({
+      name: createSectionDto.name,
+      seasonId: createSectionDto.seasonId,
+      formatId: createSectionDto.formatId,
+      gradeLabel: createSectionDto.gradeLabel ?? null,
+    });
+  }
+
+  async update(id: number, updateSectionDto: UpdateSectionDto) {
+    // quick existence check (since findOne also calculates the ladder, which we don't need here)
+    const existing = await this.prisma.client.orm.public.Section.where({
+      id,
+    }).first();
+    if (!existing) {
+      throw new NotFoundException(`Section ${id} not found`);
+    }
+
+    const data: any = {};
+    if (updateSectionDto.name !== undefined) {
+      data.name = updateSectionDto.name;
+    }
+    if (updateSectionDto.gradeLabel !== undefined) {
+      data.gradeLabel = updateSectionDto.gradeLabel;
+    }
+
+    if (Object.keys(data).length === 0) {
+      throw new BadRequestException('Nothing to update');
+    }
+
+    return this.prisma.client.orm.public.Section.where({ id }).update(data);
   }
 }
