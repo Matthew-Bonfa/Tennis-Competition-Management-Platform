@@ -207,12 +207,18 @@ function ManageCompetitionPage() {
             {!sectionsLoading && sections.length > 0 && (
               <ul className="space-y-2">
                 {sections.map((section: any) => (
-                  <li key={section.id}>
+                  <li key={section.id} className="flex items-center justify-between">
                     <Link
                       to={`/sections/${section.id}`}
                       className="text-sky-600 hover:underline text-sm font-medium"
                     >
                       {section.name}
+                    </Link>
+                    <Link
+                      to={`/manage-competitions/${id}/sections/${section.id}`}
+                      className="text-sm text-gray-600 hover:text-sky-600"
+                    >
+                      Edit
                     </Link>
                   </li>
                 ))}
