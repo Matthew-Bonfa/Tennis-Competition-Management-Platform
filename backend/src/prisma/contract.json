@@ -266,7 +266,6 @@
               },
               "contactPerson": {
                 "cardinality": "N:1",
-                "nullable": true,
                 "on": {
                   "localFields": [
                     "contactPersonId"
@@ -354,7 +353,6 @@
             "relations": {
               "association": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "associationId"
@@ -370,7 +368,6 @@
               },
               "club": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "clubId"
@@ -450,7 +447,6 @@
               },
               "contactPerson": {
                 "cardinality": "N:1",
-                "nullable": true,
                 "on": {
                   "localFields": [
                     "contactPersonId"
@@ -570,7 +566,6 @@
             "relations": {
               "club": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "clubId"
@@ -586,7 +581,6 @@
               },
               "person": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "personId"
@@ -650,7 +644,6 @@
             "relations": {
               "association": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "associationId"
@@ -738,7 +731,6 @@
             "relations": {
               "competition": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "competitionId"
@@ -754,7 +746,6 @@
               },
               "format": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "formatId"
@@ -929,7 +920,6 @@
             "relations": {
               "association": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "associationId"
@@ -1083,7 +1073,6 @@
             "relations": {
               "format": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "formatId"
@@ -1203,7 +1192,6 @@
             "relations": {
               "awayTeam": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "awayTeamId"
@@ -1219,7 +1207,6 @@
               },
               "confirmedBy": {
                 "cardinality": "N:1",
-                "nullable": true,
                 "on": {
                   "localFields": [
                     "confirmedByPersonId"
@@ -1235,7 +1222,6 @@
               },
               "enteredBy": {
                 "cardinality": "N:1",
-                "nullable": true,
                 "on": {
                   "localFields": [
                     "enteredByPersonId"
@@ -1251,7 +1237,6 @@
               },
               "homeTeam": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "homeTeamId"
@@ -1282,7 +1267,6 @@
               },
               "section": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "sectionId"
@@ -1600,7 +1584,6 @@
             "relations": {
               "association": {
                 "cardinality": "N:1",
-                "nullable": true,
                 "on": {
                   "localFields": [
                     "associationId"
@@ -1616,7 +1599,6 @@
               },
               "club": {
                 "cardinality": "N:1",
-                "nullable": true,
                 "on": {
                   "localFields": [
                     "clubId"
@@ -1632,7 +1614,6 @@
               },
               "person": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "personId"
@@ -1729,7 +1710,6 @@
             "relations": {
               "match": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "matchId"
@@ -1775,7 +1755,6 @@
               },
               "winningTeam": {
                 "cardinality": "N:1",
-                "nullable": true,
                 "on": {
                   "localFields": [
                     "winningTeamId"
@@ -1849,7 +1828,6 @@
             "relations": {
               "person": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "personId"
@@ -1865,7 +1843,6 @@
               },
               "rubber": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "rubberId"
@@ -1881,7 +1858,6 @@
               },
               "team": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "teamId"
@@ -1977,7 +1953,6 @@
             "relations": {
               "rubber": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "rubberId"
@@ -2064,7 +2039,6 @@
             "relations": {
               "competition": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "competitionId"
@@ -2157,7 +2131,6 @@
             "relations": {
               "format": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "formatId"
@@ -2188,7 +2161,6 @@
               },
               "season": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "seasonId"
@@ -2302,7 +2274,6 @@
               },
               "club": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "clubId"
@@ -2363,7 +2334,6 @@
               },
               "section": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "sectionId"
@@ -2442,7 +2412,6 @@
             "relations": {
               "person": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "personId"
@@ -2458,7 +2427,6 @@
               },
               "team": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "teamId"
