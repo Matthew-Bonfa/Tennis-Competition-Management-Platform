@@ -2,12 +2,13 @@ import { useState } from "react";
 
 import {putApi} from "../api"
 
-export function EditAssociation({association, setAssociation}) {
+export function EditAssociation({association}) {
 
   const [name, setName] = useState(association.name || "");
   const [msg, setMsg] = useState("");
 
-  const isChanged = name.trim() !== (association.name || "").trim();
+  const [savedName, setSavedName] = useState(association.name);
+  const isChanged = name.trim() !== (savedName || "").trim();
 
   if (!association) return;
 
@@ -22,9 +23,7 @@ export function EditAssociation({association, setAssociation}) {
 
     try {
       await putApi("/associations/" + association.id, data);
-      const associationCopy = {...association};
-      associationCopy.name = trimmedName;
-      setAssociation(associationCopy);
+      setSavedName(trimmedName);
       setMsg("Saved!");
     } catch (error) {
       console.error("Something went wrong.", error);

@@ -11,7 +11,6 @@ function ManageAssociationsPage() {
 
   const [selectedAssociationId, setSelectedAssociationId] = useState();
 
-
  
   // get every association for the dropdown
   useEffect(() => {
@@ -62,7 +61,7 @@ function ManageAssociationsPage() {
         </Link>
       </div>
 
-      <EditAssociation key={selectedAssociationId} association={associations.find(a => a.id === selectedAssociationId)} setAssociation={(a) => setAssociation(a)} />
+      <EditAssociation key={selectedAssociationId} association={associations.find(a => a.id === selectedAssociationId)} />
     </div>
   );
 }
