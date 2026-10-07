@@ -4,6 +4,8 @@ import { SectionsService } from './sections.service.js';
 
 @Module({
   controllers: [SectionsController],
-  providers: [SectionsService]
+  providers: [SectionsService],
+  // TeamsService reads a team's win/loss record out of calculateLadder.
+  exports: [SectionsService],
 })
 export class SectionsModule {}
