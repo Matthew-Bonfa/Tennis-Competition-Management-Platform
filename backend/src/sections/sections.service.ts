@@ -41,9 +41,11 @@ export class SectionsService {
 
         // NEED TO ADD FIXTURE HERE ONCE ZACH COMPLETES
 
-        return{
+        return {
             id: section.id,
             name: section.name,
+            seasonId: section.seasonId,
+            gradeLabel: section.gradeLabel,
             ladder: ladder
             // add fixture here
         };
