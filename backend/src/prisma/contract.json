@@ -24,6 +24,18 @@
       "model": "Competition",
       "namespace": "public"
     },
+    "competitionFormat": {
+      "model": "CompetitionFormat",
+      "namespace": "public"
+    },
+    "format": {
+      "model": "Format",
+      "namespace": "public"
+    },
+    "formatTeamGender": {
+      "model": "FormatTeamGender",
+      "namespace": "public"
+    },
     "match": {
       "model": "Match",
       "namespace": "public"
@@ -69,6 +81,39 @@
     "namespaces": {
       "public": {
         "enum": {
+          "day_of_week": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "Monday",
+                "value": "monday"
+              },
+              {
+                "name": "Tuesday",
+                "value": "tuesday"
+              },
+              {
+                "name": "Wednesday",
+                "value": "wednesday"
+              },
+              {
+                "name": "Thursday",
+                "value": "thursday"
+              },
+              {
+                "name": "Friday",
+                "value": "friday"
+              },
+              {
+                "name": "Saturday",
+                "value": "saturday"
+              },
+              {
+                "name": "Sunday",
+                "value": "sunday"
+              }
+            ]
+          },
           "match_status": {
             "codecId": "pg/text@1",
             "members": [
@@ -125,6 +170,40 @@
               {
                 "name": "MixedDoubles",
                 "value": "mixed_doubles"
+              }
+            ]
+          },
+          "team_gender": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "Boys",
+                "value": "boys"
+              },
+              {
+                "name": "Girls",
+                "value": "girls"
+              },
+              {
+                "name": "Open",
+                "value": "open"
+              }
+            ]
+          },
+          "winner_rule": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "SetsThenGames",
+                "value": "sets_then_games"
+              },
+              {
+                "name": "RubbersThenSets",
+                "value": "rubbers_then_sets"
+              },
+              {
+                "name": "LadderPosition",
+                "value": "ladder_position"
               }
             ]
           }
@@ -187,6 +266,7 @@
               },
               "contactPerson": {
                 "cardinality": "N:1",
+                "nullable": true,
                 "on": {
                   "localFields": [
                     "contactPersonId"
@@ -197,6 +277,21 @@
                 },
                 "to": {
                   "model": "Person",
+                  "namespace": "public"
+                }
+              },
+              "formats": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "associationId"
+                  ]
+                },
+                "to": {
+                  "model": "Format",
                   "namespace": "public"
                 }
               },
@@ -259,6 +354,7 @@
             "relations": {
               "association": {
                 "cardinality": "N:1",
+                "nullable": false,
                 "on": {
                   "localFields": [
                     "associationId"
@@ -274,6 +370,7 @@
               },
               "club": {
                 "cardinality": "N:1",
+                "nullable": false,
                 "on": {
                   "localFields": [
                     "clubId"
@@ -353,6 +450,7 @@
               },
               "contactPerson": {
                 "cardinality": "N:1",
+                "nullable": true,
                 "on": {
                   "localFields": [
                     "contactPersonId"
@@ -472,6 +570,7 @@
             "relations": {
               "club": {
                 "cardinality": "N:1",
+                "nullable": false,
                 "on": {
                   "localFields": [
                     "clubId"
@@ -487,6 +586,7 @@
               },
               "person": {
                 "cardinality": "N:1",
+                "nullable": false,
                 "on": {
                   "localFields": [
                     "personId"
@@ -550,6 +650,7 @@
             "relations": {
               "association": {
                 "cardinality": "N:1",
+                "nullable": false,
                 "on": {
                   "localFields": [
                     "associationId"
@@ -560,6 +661,21 @@
                 },
                 "to": {
                   "model": "Association",
+                  "namespace": "public"
+                }
+              },
+              "formats": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "competitionId"
+                  ]
+                },
+                "to": {
+                  "model": "CompetitionFormat",
                   "namespace": "public"
                 }
               },
@@ -593,6 +709,409 @@
               },
               "namespaceId": "public",
               "table": "competition"
+            }
+          },
+          "CompetitionFormat": {
+            "fields": {
+              "competitionId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "formatId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "competition": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "competitionId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Competition",
+                  "namespace": "public"
+                }
+              },
+              "format": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "formatId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Format",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "competitionId": {
+                  "column": "competitionId"
+                },
+                "formatId": {
+                  "column": "formatId"
+                },
+                "id": {
+                  "column": "id"
+                }
+              },
+              "namespaceId": "public",
+              "table": "competitionFormat"
+            }
+          },
+          "Format": {
+            "fields": {
+              "associationId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "dayOfWeek": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "day_of_week",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
+              "finalSetMatchTiebreak": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "forfeitScoreline": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "gamesPerSet": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "maxAge": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "maxPlayers": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "minAge": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "minCourts": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "minPlayers": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "name": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "pointsPerMatchWin": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "pointsPerRubber": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "rubbersPerMatch": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "setsToWin": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "tiebreakAtGames": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "winnerDeterminedBy": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "winner_rule",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              }
+            },
+            "relations": {
+              "association": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "associationId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Association",
+                  "namespace": "public"
+                }
+              },
+              "competitions": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "formatId"
+                  ]
+                },
+                "to": {
+                  "model": "CompetitionFormat",
+                  "namespace": "public"
+                }
+              },
+              "permittedGenders": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "formatId"
+                  ]
+                },
+                "to": {
+                  "model": "FormatTeamGender",
+                  "namespace": "public"
+                }
+              },
+              "sections": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "formatId"
+                  ]
+                },
+                "to": {
+                  "model": "Section",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "associationId": {
+                  "column": "associationId"
+                },
+                "dayOfWeek": {
+                  "column": "dayOfWeek"
+                },
+                "finalSetMatchTiebreak": {
+                  "column": "finalSetMatchTiebreak"
+                },
+                "forfeitScoreline": {
+                  "column": "forfeitScoreline"
+                },
+                "gamesPerSet": {
+                  "column": "gamesPerSet"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "maxAge": {
+                  "column": "maxAge"
+                },
+                "maxPlayers": {
+                  "column": "maxPlayers"
+                },
+                "minAge": {
+                  "column": "minAge"
+                },
+                "minCourts": {
+                  "column": "minCourts"
+                },
+                "minPlayers": {
+                  "column": "minPlayers"
+                },
+                "name": {
+                  "column": "name"
+                },
+                "pointsPerMatchWin": {
+                  "column": "pointsPerMatchWin"
+                },
+                "pointsPerRubber": {
+                  "column": "pointsPerRubber"
+                },
+                "rubbersPerMatch": {
+                  "column": "rubbersPerMatch"
+                },
+                "setsToWin": {
+                  "column": "setsToWin"
+                },
+                "tiebreakAtGames": {
+                  "column": "tiebreakAtGames"
+                },
+                "winnerDeterminedBy": {
+                  "column": "winnerDeterminedBy"
+                }
+              },
+              "namespaceId": "public",
+              "table": "format"
+            }
+          },
+          "FormatTeamGender": {
+            "fields": {
+              "formatId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "gender": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "team_gender",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "format": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "formatId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Format",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "formatId": {
+                  "column": "formatId"
+                },
+                "gender": {
+                  "column": "gender"
+                },
+                "id": {
+                  "column": "id"
+                }
+              },
+              "namespaceId": "public",
+              "table": "formatTeamGender"
             }
           },
           "Match": {
@@ -684,6 +1203,7 @@
             "relations": {
               "awayTeam": {
                 "cardinality": "N:1",
+                "nullable": false,
                 "on": {
                   "localFields": [
                     "awayTeamId"
@@ -699,6 +1219,7 @@
               },
               "confirmedBy": {
                 "cardinality": "N:1",
+                "nullable": true,
                 "on": {
                   "localFields": [
                     "confirmedByPersonId"
@@ -714,6 +1235,7 @@
               },
               "enteredBy": {
                 "cardinality": "N:1",
+                "nullable": true,
                 "on": {
                   "localFields": [
                     "enteredByPersonId"
@@ -729,6 +1251,7 @@
               },
               "homeTeam": {
                 "cardinality": "N:1",
+                "nullable": false,
                 "on": {
                   "localFields": [
                     "homeTeamId"
@@ -759,6 +1282,7 @@
               },
               "section": {
                 "cardinality": "N:1",
+                "nullable": false,
                 "on": {
                   "localFields": [
                     "sectionId"
@@ -822,6 +1346,13 @@
                   "kind": "scalar"
                 }
               },
+              "email": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "firstName": {
                 "nullable": false,
                 "type": {
@@ -845,6 +1376,13 @@
               },
               "personCode": {
                 "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "phone": {
+                "nullable": true,
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
@@ -992,6 +1530,9 @@
                 "dateOfBirth": {
                   "column": "dateOfBirth"
                 },
+                "email": {
+                  "column": "email"
+                },
                 "firstName": {
                   "column": "firstName"
                 },
@@ -1003,6 +1544,9 @@
                 },
                 "personCode": {
                   "column": "personCode"
+                },
+                "phone": {
+                  "column": "phone"
                 },
                 "tennisAustraliaNumber": {
                   "column": "tennisAustraliaNumber"
@@ -1056,6 +1600,7 @@
             "relations": {
               "association": {
                 "cardinality": "N:1",
+                "nullable": true,
                 "on": {
                   "localFields": [
                     "associationId"
@@ -1071,6 +1616,7 @@
               },
               "club": {
                 "cardinality": "N:1",
+                "nullable": true,
                 "on": {
                   "localFields": [
                     "clubId"
@@ -1086,6 +1632,7 @@
               },
               "person": {
                 "cardinality": "N:1",
+                "nullable": false,
                 "on": {
                   "localFields": [
                     "personId"
@@ -1182,6 +1729,7 @@
             "relations": {
               "match": {
                 "cardinality": "N:1",
+                "nullable": false,
                 "on": {
                   "localFields": [
                     "matchId"
@@ -1227,6 +1775,7 @@
               },
               "winningTeam": {
                 "cardinality": "N:1",
+                "nullable": true,
                 "on": {
                   "localFields": [
                     "winningTeamId"
@@ -1300,6 +1849,7 @@
             "relations": {
               "person": {
                 "cardinality": "N:1",
+                "nullable": false,
                 "on": {
                   "localFields": [
                     "personId"
@@ -1315,6 +1865,7 @@
               },
               "rubber": {
                 "cardinality": "N:1",
+                "nullable": false,
                 "on": {
                   "localFields": [
                     "rubberId"
@@ -1330,6 +1881,7 @@
               },
               "team": {
                 "cardinality": "N:1",
+                "nullable": false,
                 "on": {
                   "localFields": [
                     "teamId"
@@ -1425,6 +1977,7 @@
             "relations": {
               "rubber": {
                 "cardinality": "N:1",
+                "nullable": false,
                 "on": {
                   "localFields": [
                     "rubberId"
@@ -1511,6 +2064,7 @@
             "relations": {
               "competition": {
                 "cardinality": "N:1",
+                "nullable": false,
                 "on": {
                   "localFields": [
                     "competitionId"
@@ -1564,24 +2118,17 @@
           },
           "Section": {
             "fields": {
-              "finalSetMatchTiebreak": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/bool@1",
-                  "kind": "scalar"
-                }
-              },
-              "forfeitScoreline": {
+              "formatId": {
                 "nullable": false,
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
               },
-              "gamesPerSet": {
-                "nullable": false,
+              "gradeLabel": {
+                "nullable": true,
                 "type": {
-                  "codecId": "pg/int4@1",
+                  "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
               },
@@ -1599,43 +2146,8 @@
                   "kind": "scalar"
                 }
               },
-              "pointsPerMatchWin": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/int4@1",
-                  "kind": "scalar"
-                }
-              },
-              "pointsPerRubber": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/int4@1",
-                  "kind": "scalar"
-                }
-              },
-              "rubbersPerMatch": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/int4@1",
-                  "kind": "scalar"
-                }
-              },
               "seasonId": {
                 "nullable": false,
-                "type": {
-                  "codecId": "pg/int4@1",
-                  "kind": "scalar"
-                }
-              },
-              "setsToWin": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/int4@1",
-                  "kind": "scalar"
-                }
-              },
-              "tiebreakAtGames": {
-                "nullable": true,
                 "type": {
                   "codecId": "pg/int4@1",
                   "kind": "scalar"
@@ -1643,6 +2155,22 @@
               }
             },
             "relations": {
+              "format": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "formatId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Format",
+                  "namespace": "public"
+                }
+              },
               "matches": {
                 "cardinality": "1:N",
                 "on": {
@@ -1660,6 +2188,7 @@
               },
               "season": {
                 "cardinality": "N:1",
+                "nullable": false,
                 "on": {
                   "localFields": [
                     "seasonId"
@@ -1691,14 +2220,11 @@
             },
             "storage": {
               "fields": {
-                "finalSetMatchTiebreak": {
-                  "column": "finalSetMatchTiebreak"
+                "formatId": {
+                  "column": "formatId"
                 },
-                "forfeitScoreline": {
-                  "column": "forfeitScoreline"
-                },
-                "gamesPerSet": {
-                  "column": "gamesPerSet"
+                "gradeLabel": {
+                  "column": "gradeLabel"
                 },
                 "id": {
                   "column": "id"
@@ -1706,23 +2232,8 @@
                 "name": {
                   "column": "name"
                 },
-                "pointsPerMatchWin": {
-                  "column": "pointsPerMatchWin"
-                },
-                "pointsPerRubber": {
-                  "column": "pointsPerRubber"
-                },
-                "rubbersPerMatch": {
-                  "column": "rubbersPerMatch"
-                },
                 "seasonId": {
                   "column": "seasonId"
-                },
-                "setsToWin": {
-                  "column": "setsToWin"
-                },
-                "tiebreakAtGames": {
-                  "column": "tiebreakAtGames"
                 }
               },
               "namespaceId": "public",
@@ -1758,6 +2269,19 @@
                   "codecId": "pg/int4@1",
                   "kind": "scalar"
                 }
+              },
+              "teamGender": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "team_gender",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
               }
             },
             "relations": {
@@ -1778,6 +2302,7 @@
               },
               "club": {
                 "cardinality": "N:1",
+                "nullable": false,
                 "on": {
                   "localFields": [
                     "clubId"
@@ -1838,6 +2363,7 @@
               },
               "section": {
                 "cardinality": "N:1",
+                "nullable": false,
                 "on": {
                   "localFields": [
                     "sectionId"
@@ -1880,6 +2406,9 @@
                 },
                 "sectionId": {
                   "column": "sectionId"
+                },
+                "teamGender": {
+                  "column": "teamGender"
                 }
               },
               "namespaceId": "public",
@@ -1913,6 +2442,7 @@
             "relations": {
               "person": {
                 "cardinality": "N:1",
+                "nullable": false,
                 "on": {
                   "localFields": [
                     "personId"
@@ -1928,6 +2458,7 @@
               },
               "team": {
                 "cardinality": "N:1",
+                "nullable": false,
                 "on": {
                   "localFields": [
                     "teamId"
@@ -2299,6 +2830,339 @@
               },
               "uniques": []
             },
+            "competitionFormat": {
+              "columns": {
+                "competitionId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "formatId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "competitionId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "competitionFormat"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "competition"
+                  }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "formatId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "competitionFormat"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "format"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "competitionId"
+                  ],
+                  "name": "competitionFormat_competitionId_idx_53fccd3b",
+                  "prefix": "competitionFormat_competitionId_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "formatId"
+                  ],
+                  "name": "competitionFormat_formatId_idx_306abbe2",
+                  "prefix": "competitionFormat_formatId_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "competitionId",
+                    "formatId"
+                  ]
+                }
+              ]
+            },
+            "format": {
+              "checks": [
+                {
+                  "expression": "\"dayOfWeek\" IN ('monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday')",
+                  "name": "format_dayOfWeek_check_96b6ba98",
+                  "prefix": "format_dayOfWeek_check"
+                },
+                {
+                  "expression": "\"winnerDeterminedBy\" IN ('sets_then_games', 'rubbers_then_sets', 'ladder_position')",
+                  "name": "format_winnerDeterminedBy_check_6967c1aa",
+                  "prefix": "format_winnerDeterminedBy_check"
+                }
+              ],
+              "columns": {
+                "associationId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "dayOfWeek": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "day_of_week",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
+                "finalSetMatchTiebreak": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": false
+                  },
+                  "nativeType": "bool",
+                  "nullable": false
+                },
+                "forfeitScoreline": {
+                  "codecId": "pg/text@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": "6-0 6-0"
+                  },
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "gamesPerSet": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "maxAge": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "maxPlayers": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "minAge": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "minCourts": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "minPlayers": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "name": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "pointsPerMatchWin": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": 0
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "pointsPerRubber": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": 1
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "rubbersPerMatch": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "setsToWin": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "tiebreakAtGames": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                },
+                "winnerDeterminedBy": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "winner_rule",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                }
+              },
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "associationId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "format"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "association"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "associationId"
+                  ],
+                  "name": "format_associationId_idx_54f3505c",
+                  "prefix": "format_associationId_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
+            },
+            "formatTeamGender": {
+              "checks": [
+                {
+                  "expression": "\"gender\" IN ('boys', 'girls', 'open')",
+                  "name": "formatTeamGender_gender_check_03a0b75b",
+                  "prefix": "formatTeamGender_gender_check"
+                }
+              ],
+              "columns": {
+                "formatId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "gender": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "team_gender",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "formatId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "formatTeamGender"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "format"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "formatId"
+                  ],
+                  "name": "formatTeamGender_formatId_idx_306abbe2",
+                  "prefix": "formatTeamGender_formatId_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "formatId",
+                    "gender"
+                  ]
+                }
+              ]
+            },
             "match": {
               "checks": [
                 {
@@ -2525,6 +3389,11 @@
                   "nativeType": "timestamptz",
                   "nullable": true
                 },
+                "email": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
                 "firstName": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
@@ -2544,6 +3413,11 @@
                   "codecId": "pg/text@1",
                   "nativeType": "text",
                   "nullable": false
+                },
+                "phone": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
                 },
                 "tennisAustraliaNumber": {
                   "codecId": "pg/text@1",
@@ -3086,28 +3960,15 @@
             },
             "section": {
               "columns": {
-                "finalSetMatchTiebreak": {
-                  "codecId": "pg/bool@1",
-                  "default": {
-                    "kind": "literal",
-                    "value": false
-                  },
-                  "nativeType": "bool",
-                  "nullable": false
-                },
-                "forfeitScoreline": {
+                "formatId": {
                   "codecId": "pg/text@1",
-                  "default": {
-                    "kind": "literal",
-                    "value": "6-0 6-0"
-                  },
                   "nativeType": "text",
                   "nullable": false
                 },
-                "gamesPerSet": {
-                  "codecId": "pg/int4@1",
-                  "nativeType": "int4",
-                  "nullable": false
+                "gradeLabel": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
                 },
                 "id": {
                   "codecId": "pg/int4@1",
@@ -3123,43 +3984,10 @@
                   "nativeType": "text",
                   "nullable": false
                 },
-                "pointsPerMatchWin": {
-                  "codecId": "pg/int4@1",
-                  "default": {
-                    "kind": "literal",
-                    "value": 0
-                  },
-                  "nativeType": "int4",
-                  "nullable": false
-                },
-                "pointsPerRubber": {
-                  "codecId": "pg/int4@1",
-                  "default": {
-                    "kind": "literal",
-                    "value": 1
-                  },
-                  "nativeType": "int4",
-                  "nullable": false
-                },
-                "rubbersPerMatch": {
-                  "codecId": "pg/int4@1",
-                  "nativeType": "int4",
-                  "nullable": false
-                },
                 "seasonId": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
                   "nullable": false
-                },
-                "setsToWin": {
-                  "codecId": "pg/int4@1",
-                  "nativeType": "int4",
-                  "nullable": false
-                },
-                "tiebreakAtGames": {
-                  "codecId": "pg/int4@1",
-                  "nativeType": "int4",
-                  "nullable": true
                 }
               },
               "foreignKeys": [
@@ -3178,9 +4006,33 @@
                     "namespaceId": "public",
                     "tableName": "season"
                   }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "formatId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "section"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "format"
+                  }
                 }
               ],
               "indexes": [
+                {
+                  "columns": [
+                    "formatId"
+                  ],
+                  "name": "section_formatId_idx_306abbe2",
+                  "prefix": "section_formatId_idx",
+                  "unique": false
+                },
                 {
                   "columns": [
                     "seasonId"
@@ -3198,6 +4050,13 @@
               "uniques": []
             },
             "team": {
+              "checks": [
+                {
+                  "expression": "\"teamGender\" IN ('boys', 'girls', 'open')",
+                  "name": "team_teamGender_check_94975ab4",
+                  "prefix": "team_teamGender_check"
+                }
+              ],
               "columns": {
                 "clubId": {
                   "codecId": "pg/text@1",
@@ -3222,6 +4081,17 @@
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
                   "nullable": false
+                },
+                "teamGender": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "team_gender",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
                 }
               },
               "foreignKeys": [
@@ -3366,6 +4236,18 @@
             }
           },
           "valueSet": {
+            "day_of_week": {
+              "kind": "valueSet",
+              "values": [
+                "monday",
+                "tuesday",
+                "wednesday",
+                "thursday",
+                "friday",
+                "saturday",
+                "sunday"
+              ]
+            },
             "match_status": {
               "kind": "valueSet",
               "values": [
@@ -3391,6 +4273,22 @@
                 "doubles",
                 "mixed_doubles"
               ]
+            },
+            "team_gender": {
+              "kind": "valueSet",
+              "values": [
+                "boys",
+                "girls",
+                "open"
+              ]
+            },
+            "winner_rule": {
+              "kind": "valueSet",
+              "values": [
+                "sets_then_games",
+                "rubbers_then_sets",
+                "ladder_position"
+              ]
             }
           }
         },
@@ -3398,10 +4296,10 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "bb0c1d04b30671c579b6145f68d3061fda55d5f7839ba0f1b02f568ac4b161a2"
+    "storageHash": "fd901b2ef0de3174f9df3f4a04a972ba587c85d84eca8f3fc149d31d0343eeef"
   },
   "execution": {
-    "executionHash": "20214ed9f542f9da76e8cca8beb2125f15a84936772b15e1794b7230911986fe",
+    "executionHash": "d7c995483302734792d95c8996b73c71d5703517a493162fb26d055741ad80f1",
     "mutations": {
       "defaults": [
         {
@@ -3446,6 +4344,17 @@
             "column": "id",
             "namespace": "public",
             "table": "competition"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "uuidv4",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "id",
+            "namespace": "public",
+            "table": "format"
           }
         },
         {

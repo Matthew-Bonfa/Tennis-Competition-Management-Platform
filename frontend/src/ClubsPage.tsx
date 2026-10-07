@@ -60,7 +60,7 @@ function ClubsPage() {
               className="block bg-white border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between"
             >
               <div>
-                <h3 className="text-xl font-semibold text-sky-800 mb-2">{club.name}</h3>
+                <h3 className="text-xl font-semibold text-sky-800 mb-2 text-center">{club.name}</h3>
                 <p className="text-sm text-gray-600">
                   {club.isFinancialMember ? 'Financial Member' : 'Non-Financial Member'}
                 </p>

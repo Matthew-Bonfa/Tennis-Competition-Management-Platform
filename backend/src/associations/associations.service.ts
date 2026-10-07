@@ -17,7 +17,7 @@ export class AssociationsService {
     const response = await this.prisma.client.orm.public.Association.where({
       id: id,
     })
-      .include('contactPerson', (p) => p.select('id', 'firstName', 'lastName'))
+      .include('contactPerson', (p) => p.select('id', 'firstName', 'lastName', 'email', 'phone'))
       .first();
 
     if (!response) {

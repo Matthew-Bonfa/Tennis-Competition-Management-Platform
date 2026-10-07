@@ -35,7 +35,7 @@ export class ClubsService {
 
   async findOneClub(id: string): Promise<ClubDetail> {
     const club = await this.prisma.client.orm.public.Club.where({ id })
-      .include('contactPerson', (p) => p.select('id', 'firstName', 'lastName'))
+      .include('contactPerson', (p) => p.select('id', 'firstName', 'lastName', 'email', 'phone'))
       .include('associations', (ac) =>
         ac.include('association', (a) => a.select('id', 'name')),
       )

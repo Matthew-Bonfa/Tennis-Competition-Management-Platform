@@ -60,7 +60,19 @@ function AssociationProfile() {
         <h2>Back to Associations</h2>
       </Link>
       <h1>{association.name}</h1>
-      <p>Contact Person: {association.contactPerson ? association.contactPerson.firstName + " " + association.contactPerson.lastName : "No contact person assigned"}</p>
+      {association.contactPerson ? (
+        <div>
+          <p>Contact Person: {association.contactPerson.firstName} {association.contactPerson.lastName}</p>
+          {association.contactPerson.phone && (
+            <p>Phone: <a href={`tel:${association.contactPerson.phone}`}>{association.contactPerson.phone}</a></p>
+          )}
+          {association.contactPerson.email && (
+            <p>Email: <a href={`mailto:${association.contactPerson.email}`}>{association.contactPerson.email}</a></p>
+          )}
+        </div>
+      ) : (
+        <p>Contact Person: No contact person assigned</p>
+      )}
       <p>Still need to connect to competitions and maybe contact person (if they get a page)</p>
 
       <div className="split">

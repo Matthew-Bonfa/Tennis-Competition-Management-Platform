@@ -22,6 +22,7 @@ import type {
 
 import type {
   ContractWithTypeMaps,
+  RelationKeys,
   TypeMaps as TypeMapsType,
 } from '@prisma/orm-postgres/family-contract/types';
 import type {
@@ -33,9 +34,9 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'bb0c1d04b30671c579b6145f68d3061fda55d5f7839ba0f1b02f568ac4b161a2'>;
+  StorageHashBase<'fd901b2ef0de3174f9df3f4a04a972ba587c85d84eca8f3fc149d31d0343eeef'>;
 export type ExecutionHash =
-  ExecutionHashBase<'20214ed9f542f9da76e8cca8beb2125f15a84936772b15e1794b7230911986fe'>;
+  ExecutionHashBase<'d7c995483302734792d95c8996b73c71d5703517a493162fb26d055741ad80f1'>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
 
@@ -269,6 +270,37 @@ export type FieldOutputTypes = {
       readonly associationId: CodecTypes['pg/text@1']['output'];
       readonly name: CodecTypes['pg/text@1']['output'];
     };
+    readonly CompetitionFormat: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly competitionId: CodecTypes['pg/text@1']['output'];
+      readonly formatId: CodecTypes['pg/text@1']['output'];
+    };
+    readonly Format: {
+      readonly id: CodecTypes['pg/text@1']['output'];
+      readonly associationId: CodecTypes['pg/text@1']['output'];
+      readonly name: CodecTypes['pg/text@1']['output'];
+      readonly dayOfWeek:
+        'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday' | null;
+      readonly minPlayers: CodecTypes['pg/int4@1']['output'];
+      readonly maxPlayers: CodecTypes['pg/int4@1']['output'];
+      readonly minAge: CodecTypes['pg/int4@1']['output'] | null;
+      readonly maxAge: CodecTypes['pg/int4@1']['output'] | null;
+      readonly rubbersPerMatch: CodecTypes['pg/int4@1']['output'];
+      readonly setsToWin: CodecTypes['pg/int4@1']['output'];
+      readonly gamesPerSet: CodecTypes['pg/int4@1']['output'];
+      readonly tiebreakAtGames: CodecTypes['pg/int4@1']['output'] | null;
+      readonly finalSetMatchTiebreak: CodecTypes['pg/bool@1']['output'];
+      readonly pointsPerRubber: CodecTypes['pg/int4@1']['output'];
+      readonly pointsPerMatchWin: CodecTypes['pg/int4@1']['output'];
+      readonly forfeitScoreline: CodecTypes['pg/text@1']['output'];
+      readonly winnerDeterminedBy: 'sets_then_games' | 'rubbers_then_sets' | 'ladder_position';
+      readonly minCourts: CodecTypes['pg/int4@1']['output'];
+    };
+    readonly FormatTeamGender: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly formatId: CodecTypes['pg/text@1']['output'];
+      readonly gender: 'boys' | 'girls' | 'open';
+    };
     readonly Match: {
       readonly id: CodecTypes['pg/text@1']['output'];
       readonly sectionId: CodecTypes['pg/int4@1']['output'];
@@ -290,6 +322,8 @@ export type FieldOutputTypes = {
       readonly dateOfBirth: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
       readonly utrId: CodecTypes['pg/text@1']['output'] | null;
       readonly tennisAustraliaNumber: CodecTypes['pg/text@1']['output'] | null;
+      readonly email: CodecTypes['pg/text@1']['output'] | null;
+      readonly phone: CodecTypes['pg/text@1']['output'] | null;
     };
     readonly PersonRole: {
       readonly id: CodecTypes['pg/int4@1']['output'];
@@ -332,21 +366,16 @@ export type FieldOutputTypes = {
     readonly Section: {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly seasonId: CodecTypes['pg/int4@1']['output'];
+      readonly formatId: CodecTypes['pg/text@1']['output'];
       readonly name: CodecTypes['pg/text@1']['output'];
-      readonly rubbersPerMatch: CodecTypes['pg/int4@1']['output'];
-      readonly setsToWin: CodecTypes['pg/int4@1']['output'];
-      readonly gamesPerSet: CodecTypes['pg/int4@1']['output'];
-      readonly tiebreakAtGames: CodecTypes['pg/int4@1']['output'] | null;
-      readonly finalSetMatchTiebreak: CodecTypes['pg/bool@1']['output'];
-      readonly pointsPerRubber: CodecTypes['pg/int4@1']['output'];
-      readonly pointsPerMatchWin: CodecTypes['pg/int4@1']['output'];
-      readonly forfeitScoreline: CodecTypes['pg/text@1']['output'];
+      readonly gradeLabel: CodecTypes['pg/text@1']['output'] | null;
     };
     readonly Team: {
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly clubId: CodecTypes['pg/text@1']['output'];
       readonly sectionId: CodecTypes['pg/int4@1']['output'];
       readonly name: CodecTypes['pg/text@1']['output'];
+      readonly teamGender: 'boys' | 'girls' | 'open' | null;
     };
     readonly TeamPlayer: {
       readonly id: CodecTypes['pg/int4@1']['output'];
@@ -385,6 +414,37 @@ export type FieldInputTypes = {
       readonly associationId: CodecTypes['pg/text@1']['input'];
       readonly name: CodecTypes['pg/text@1']['input'];
     };
+    readonly CompetitionFormat: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly competitionId: CodecTypes['pg/text@1']['input'];
+      readonly formatId: CodecTypes['pg/text@1']['input'];
+    };
+    readonly Format: {
+      readonly id: CodecTypes['pg/text@1']['input'];
+      readonly associationId: CodecTypes['pg/text@1']['input'];
+      readonly name: CodecTypes['pg/text@1']['input'];
+      readonly dayOfWeek:
+        'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday' | null;
+      readonly minPlayers: CodecTypes['pg/int4@1']['input'];
+      readonly maxPlayers: CodecTypes['pg/int4@1']['input'];
+      readonly minAge: CodecTypes['pg/int4@1']['input'] | null;
+      readonly maxAge: CodecTypes['pg/int4@1']['input'] | null;
+      readonly rubbersPerMatch: CodecTypes['pg/int4@1']['input'];
+      readonly setsToWin: CodecTypes['pg/int4@1']['input'];
+      readonly gamesPerSet: CodecTypes['pg/int4@1']['input'];
+      readonly tiebreakAtGames: CodecTypes['pg/int4@1']['input'] | null;
+      readonly finalSetMatchTiebreak: CodecTypes['pg/bool@1']['input'];
+      readonly pointsPerRubber: CodecTypes['pg/int4@1']['input'];
+      readonly pointsPerMatchWin: CodecTypes['pg/int4@1']['input'];
+      readonly forfeitScoreline: CodecTypes['pg/text@1']['input'];
+      readonly winnerDeterminedBy: 'sets_then_games' | 'rubbers_then_sets' | 'ladder_position';
+      readonly minCourts: CodecTypes['pg/int4@1']['input'];
+    };
+    readonly FormatTeamGender: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly formatId: CodecTypes['pg/text@1']['input'];
+      readonly gender: 'boys' | 'girls' | 'open';
+    };
     readonly Match: {
       readonly id: CodecTypes['pg/text@1']['input'];
       readonly sectionId: CodecTypes['pg/int4@1']['input'];
@@ -406,6 +466,8 @@ export type FieldInputTypes = {
       readonly dateOfBirth: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
       readonly utrId: CodecTypes['pg/text@1']['input'] | null;
       readonly tennisAustraliaNumber: CodecTypes['pg/text@1']['input'] | null;
+      readonly email: CodecTypes['pg/text@1']['input'] | null;
+      readonly phone: CodecTypes['pg/text@1']['input'] | null;
     };
     readonly PersonRole: {
       readonly id: CodecTypes['pg/int4@1']['input'];
@@ -448,21 +510,16 @@ export type FieldInputTypes = {
     readonly Section: {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly seasonId: CodecTypes['pg/int4@1']['input'];
+      readonly formatId: CodecTypes['pg/text@1']['input'];
       readonly name: CodecTypes['pg/text@1']['input'];
-      readonly rubbersPerMatch: CodecTypes['pg/int4@1']['input'];
-      readonly setsToWin: CodecTypes['pg/int4@1']['input'];
-      readonly gamesPerSet: CodecTypes['pg/int4@1']['input'];
-      readonly tiebreakAtGames: CodecTypes['pg/int4@1']['input'] | null;
-      readonly finalSetMatchTiebreak: CodecTypes['pg/bool@1']['input'];
-      readonly pointsPerRubber: CodecTypes['pg/int4@1']['input'];
-      readonly pointsPerMatchWin: CodecTypes['pg/int4@1']['input'];
-      readonly forfeitScoreline: CodecTypes['pg/text@1']['input'];
+      readonly gradeLabel: CodecTypes['pg/text@1']['input'] | null;
     };
     readonly Team: {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly clubId: CodecTypes['pg/text@1']['input'];
       readonly sectionId: CodecTypes['pg/int4@1']['input'];
       readonly name: CodecTypes['pg/text@1']['input'];
+      readonly teamGender: 'boys' | 'girls' | 'open' | null;
     };
     readonly TeamPlayer: {
       readonly id: CodecTypes['pg/int4@1']['input'];
@@ -501,6 +558,37 @@ export type StorageColumnTypes = {
       readonly id: CodecTypes['pg/text@1']['output'];
       readonly name: CodecTypes['pg/text@1']['output'];
     };
+    readonly competitionFormat: {
+      readonly competitionId: CodecTypes['pg/text@1']['output'];
+      readonly formatId: CodecTypes['pg/text@1']['output'];
+      readonly id: CodecTypes['pg/int4@1']['output'];
+    };
+    readonly format: {
+      readonly associationId: CodecTypes['pg/text@1']['output'];
+      readonly dayOfWeek:
+        'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday' | null;
+      readonly finalSetMatchTiebreak: CodecTypes['pg/bool@1']['output'];
+      readonly forfeitScoreline: CodecTypes['pg/text@1']['output'];
+      readonly gamesPerSet: CodecTypes['pg/int4@1']['output'];
+      readonly id: CodecTypes['pg/text@1']['output'];
+      readonly maxAge: CodecTypes['pg/int4@1']['output'] | null;
+      readonly maxPlayers: CodecTypes['pg/int4@1']['output'];
+      readonly minAge: CodecTypes['pg/int4@1']['output'] | null;
+      readonly minCourts: CodecTypes['pg/int4@1']['output'];
+      readonly minPlayers: CodecTypes['pg/int4@1']['output'];
+      readonly name: CodecTypes['pg/text@1']['output'];
+      readonly pointsPerMatchWin: CodecTypes['pg/int4@1']['output'];
+      readonly pointsPerRubber: CodecTypes['pg/int4@1']['output'];
+      readonly rubbersPerMatch: CodecTypes['pg/int4@1']['output'];
+      readonly setsToWin: CodecTypes['pg/int4@1']['output'];
+      readonly tiebreakAtGames: CodecTypes['pg/int4@1']['output'] | null;
+      readonly winnerDeterminedBy: 'sets_then_games' | 'rubbers_then_sets' | 'ladder_position';
+    };
+    readonly formatTeamGender: {
+      readonly formatId: CodecTypes['pg/text@1']['output'];
+      readonly gender: 'boys' | 'girls' | 'open';
+      readonly id: CodecTypes['pg/int4@1']['output'];
+    };
     readonly match: {
       readonly awayTeamId: CodecTypes['pg/int4@1']['output'];
       readonly confirmedAt: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
@@ -516,10 +604,12 @@ export type StorageColumnTypes = {
     };
     readonly person: {
       readonly dateOfBirth: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
+      readonly email: CodecTypes['pg/text@1']['output'] | null;
       readonly firstName: CodecTypes['pg/text@1']['output'];
       readonly id: CodecTypes['pg/text@1']['output'];
       readonly lastName: CodecTypes['pg/text@1']['output'];
       readonly personCode: CodecTypes['pg/text@1']['output'];
+      readonly phone: CodecTypes['pg/text@1']['output'] | null;
       readonly tennisAustraliaNumber: CodecTypes['pg/text@1']['output'] | null;
       readonly utrId: CodecTypes['pg/text@1']['output'] | null;
     };
@@ -562,23 +652,18 @@ export type StorageColumnTypes = {
       readonly startDate: CodecTypes['pg/timestamptz-temporal@1']['output'];
     };
     readonly section: {
-      readonly finalSetMatchTiebreak: CodecTypes['pg/bool@1']['output'];
-      readonly forfeitScoreline: CodecTypes['pg/text@1']['output'];
-      readonly gamesPerSet: CodecTypes['pg/int4@1']['output'];
+      readonly formatId: CodecTypes['pg/text@1']['output'];
+      readonly gradeLabel: CodecTypes['pg/text@1']['output'] | null;
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly name: CodecTypes['pg/text@1']['output'];
-      readonly pointsPerMatchWin: CodecTypes['pg/int4@1']['output'];
-      readonly pointsPerRubber: CodecTypes['pg/int4@1']['output'];
-      readonly rubbersPerMatch: CodecTypes['pg/int4@1']['output'];
       readonly seasonId: CodecTypes['pg/int4@1']['output'];
-      readonly setsToWin: CodecTypes['pg/int4@1']['output'];
-      readonly tiebreakAtGames: CodecTypes['pg/int4@1']['output'] | null;
     };
     readonly team: {
       readonly clubId: CodecTypes['pg/text@1']['output'];
       readonly id: CodecTypes['pg/int4@1']['output'];
       readonly name: CodecTypes['pg/text@1']['output'];
       readonly sectionId: CodecTypes['pg/int4@1']['output'];
+      readonly teamGender: 'boys' | 'girls' | 'open' | null;
     };
     readonly teamPlayer: {
       readonly id: CodecTypes['pg/int4@1']['output'];
@@ -617,6 +702,37 @@ export type StorageColumnInputTypes = {
       readonly id: CodecTypes['pg/text@1']['input'];
       readonly name: CodecTypes['pg/text@1']['input'];
     };
+    readonly competitionFormat: {
+      readonly competitionId: CodecTypes['pg/text@1']['input'];
+      readonly formatId: CodecTypes['pg/text@1']['input'];
+      readonly id: CodecTypes['pg/int4@1']['input'];
+    };
+    readonly format: {
+      readonly associationId: CodecTypes['pg/text@1']['input'];
+      readonly dayOfWeek:
+        'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday' | null;
+      readonly finalSetMatchTiebreak: CodecTypes['pg/bool@1']['input'];
+      readonly forfeitScoreline: CodecTypes['pg/text@1']['input'];
+      readonly gamesPerSet: CodecTypes['pg/int4@1']['input'];
+      readonly id: CodecTypes['pg/text@1']['input'];
+      readonly maxAge: CodecTypes['pg/int4@1']['input'] | null;
+      readonly maxPlayers: CodecTypes['pg/int4@1']['input'];
+      readonly minAge: CodecTypes['pg/int4@1']['input'] | null;
+      readonly minCourts: CodecTypes['pg/int4@1']['input'];
+      readonly minPlayers: CodecTypes['pg/int4@1']['input'];
+      readonly name: CodecTypes['pg/text@1']['input'];
+      readonly pointsPerMatchWin: CodecTypes['pg/int4@1']['input'];
+      readonly pointsPerRubber: CodecTypes['pg/int4@1']['input'];
+      readonly rubbersPerMatch: CodecTypes['pg/int4@1']['input'];
+      readonly setsToWin: CodecTypes['pg/int4@1']['input'];
+      readonly tiebreakAtGames: CodecTypes['pg/int4@1']['input'] | null;
+      readonly winnerDeterminedBy: 'sets_then_games' | 'rubbers_then_sets' | 'ladder_position';
+    };
+    readonly formatTeamGender: {
+      readonly formatId: CodecTypes['pg/text@1']['input'];
+      readonly gender: 'boys' | 'girls' | 'open';
+      readonly id: CodecTypes['pg/int4@1']['input'];
+    };
     readonly match: {
       readonly awayTeamId: CodecTypes['pg/int4@1']['input'];
       readonly confirmedAt: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
@@ -632,10 +748,12 @@ export type StorageColumnInputTypes = {
     };
     readonly person: {
       readonly dateOfBirth: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
+      readonly email: CodecTypes['pg/text@1']['input'] | null;
       readonly firstName: CodecTypes['pg/text@1']['input'];
       readonly id: CodecTypes['pg/text@1']['input'];
       readonly lastName: CodecTypes['pg/text@1']['input'];
       readonly personCode: CodecTypes['pg/text@1']['input'];
+      readonly phone: CodecTypes['pg/text@1']['input'] | null;
       readonly tennisAustraliaNumber: CodecTypes['pg/text@1']['input'] | null;
       readonly utrId: CodecTypes['pg/text@1']['input'] | null;
     };
@@ -678,23 +796,18 @@ export type StorageColumnInputTypes = {
       readonly startDate: CodecTypes['pg/timestamptz-temporal@1']['input'];
     };
     readonly section: {
-      readonly finalSetMatchTiebreak: CodecTypes['pg/bool@1']['input'];
-      readonly forfeitScoreline: CodecTypes['pg/text@1']['input'];
-      readonly gamesPerSet: CodecTypes['pg/int4@1']['input'];
+      readonly formatId: CodecTypes['pg/text@1']['input'];
+      readonly gradeLabel: CodecTypes['pg/text@1']['input'] | null;
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly name: CodecTypes['pg/text@1']['input'];
-      readonly pointsPerMatchWin: CodecTypes['pg/int4@1']['input'];
-      readonly pointsPerRubber: CodecTypes['pg/int4@1']['input'];
-      readonly rubbersPerMatch: CodecTypes['pg/int4@1']['input'];
       readonly seasonId: CodecTypes['pg/int4@1']['input'];
-      readonly setsToWin: CodecTypes['pg/int4@1']['input'];
-      readonly tiebreakAtGames: CodecTypes['pg/int4@1']['input'] | null;
     };
     readonly team: {
       readonly clubId: CodecTypes['pg/text@1']['input'];
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly name: CodecTypes['pg/text@1']['input'];
       readonly sectionId: CodecTypes['pg/int4@1']['input'];
+      readonly teamGender: 'boys' | 'girls' | 'open' | null;
     };
     readonly teamPlayer: {
       readonly id: CodecTypes['pg/int4@1']['input'];
@@ -991,6 +1104,252 @@ type ContractBase = Omit<
                 },
               ];
             };
+            readonly competitionFormat: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly competitionId: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly formatId: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [{ readonly columns: readonly ['competitionId', 'formatId'] }];
+              indexes: readonly [
+                {
+                  readonly name: 'competitionFormat_competitionId_idx_53fccd3b';
+                  readonly prefix: 'competitionFormat_competitionId_idx';
+                  readonly columns: readonly ['competitionId'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'competitionFormat_formatId_idx_306abbe2';
+                  readonly prefix: 'competitionFormat_formatId_idx';
+                  readonly columns: readonly ['formatId'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'competitionFormat';
+                    readonly columns: readonly ['competitionId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'competition';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'competitionFormat';
+                    readonly columns: readonly ['formatId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'format';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
+            readonly format: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly associationId: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly name: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly dayOfWeek: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                };
+                readonly minPlayers: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly maxPlayers: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly minAge: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                };
+                readonly maxAge: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                };
+                readonly rubbersPerMatch: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly setsToWin: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly gamesPerSet: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly tiebreakAtGames: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                };
+                readonly finalSetMatchTiebreak: {
+                  readonly nativeType: 'bool';
+                  readonly codecId: 'pg/bool@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/bool@1', false>;
+                  };
+                };
+                readonly pointsPerRubber: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/int4@1', 1>;
+                  };
+                };
+                readonly pointsPerMatchWin: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/int4@1', 0>;
+                  };
+                };
+                readonly forfeitScoreline: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/text@1', '6-0 6-0'>;
+                  };
+                };
+                readonly winnerDeterminedBy: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly minCourts: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'format_associationId_idx_54f3505c';
+                  readonly prefix: 'format_associationId_idx';
+                  readonly columns: readonly ['associationId'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'format';
+                    readonly columns: readonly ['associationId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'association';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
+            readonly formatTeamGender: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly formatId: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly gender: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [{ readonly columns: readonly ['formatId', 'gender'] }];
+              indexes: readonly [
+                {
+                  readonly name: 'formatTeamGender_formatId_idx_306abbe2';
+                  readonly prefix: 'formatTeamGender_formatId_idx';
+                  readonly columns: readonly ['formatId'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'formatTeamGender';
+                    readonly columns: readonly ['formatId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'format';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
             readonly match: {
               columns: {
                 readonly id: {
@@ -1187,6 +1546,16 @@ type ContractBase = Omit<
                   readonly nullable: true;
                 };
                 readonly tennisAustraliaNumber: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                };
+                readonly email: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                };
+                readonly phone: {
                   readonly nativeType: 'text';
                   readonly codecId: 'pg/text@1';
                   readonly nullable: true;
@@ -1607,66 +1976,20 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/int4@1';
                   readonly nullable: false;
                 };
+                readonly formatId: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
                 readonly name: {
                   readonly nativeType: 'text';
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
                 };
-                readonly rubbersPerMatch: {
-                  readonly nativeType: 'int4';
-                  readonly codecId: 'pg/int4@1';
-                  readonly nullable: false;
-                };
-                readonly setsToWin: {
-                  readonly nativeType: 'int4';
-                  readonly codecId: 'pg/int4@1';
-                  readonly nullable: false;
-                };
-                readonly gamesPerSet: {
-                  readonly nativeType: 'int4';
-                  readonly codecId: 'pg/int4@1';
-                  readonly nullable: false;
-                };
-                readonly tiebreakAtGames: {
-                  readonly nativeType: 'int4';
-                  readonly codecId: 'pg/int4@1';
-                  readonly nullable: true;
-                };
-                readonly finalSetMatchTiebreak: {
-                  readonly nativeType: 'bool';
-                  readonly codecId: 'pg/bool@1';
-                  readonly nullable: false;
-                  readonly default: {
-                    readonly kind: 'literal';
-                    readonly value: DefaultLiteralValue<'pg/bool@1', false>;
-                  };
-                };
-                readonly pointsPerRubber: {
-                  readonly nativeType: 'int4';
-                  readonly codecId: 'pg/int4@1';
-                  readonly nullable: false;
-                  readonly default: {
-                    readonly kind: 'literal';
-                    readonly value: DefaultLiteralValue<'pg/int4@1', 1>;
-                  };
-                };
-                readonly pointsPerMatchWin: {
-                  readonly nativeType: 'int4';
-                  readonly codecId: 'pg/int4@1';
-                  readonly nullable: false;
-                  readonly default: {
-                    readonly kind: 'literal';
-                    readonly value: DefaultLiteralValue<'pg/int4@1', 0>;
-                  };
-                };
-                readonly forfeitScoreline: {
+                readonly gradeLabel: {
                   readonly nativeType: 'text';
                   readonly codecId: 'pg/text@1';
-                  readonly nullable: false;
-                  readonly default: {
-                    readonly kind: 'literal';
-                    readonly value: DefaultLiteralValue<'pg/text@1', '6-0 6-0'>;
-                  };
+                  readonly nullable: true;
                 };
               };
               primaryKey: { readonly columns: readonly ['id'] };
@@ -1676,6 +1999,12 @@ type ContractBase = Omit<
                   readonly name: 'section_seasonId_idx_aa50cbae';
                   readonly prefix: 'section_seasonId_idx';
                   readonly columns: readonly ['seasonId'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'section_formatId_idx_306abbe2';
+                  readonly prefix: 'section_formatId_idx';
+                  readonly columns: readonly ['formatId'];
                   readonly unique: false;
                 },
               ];
@@ -1689,6 +2018,18 @@ type ContractBase = Omit<
                   readonly target: {
                     readonly namespaceId: 'public' & NamespaceId;
                     readonly tableName: 'season';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'section';
+                    readonly columns: readonly ['formatId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'format';
                     readonly columns: readonly ['id'];
                   };
                 },
@@ -1719,6 +2060,11 @@ type ContractBase = Omit<
                   readonly nativeType: 'text';
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
+                };
+                readonly teamGender: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
                 };
               };
               primaryKey: { readonly columns: readonly ['id'] };
@@ -1831,6 +2177,18 @@ type ContractBase = Omit<
             };
           };
           readonly valueSet: {
+            readonly day_of_week: {
+              readonly kind: 'valueSet';
+              readonly values: readonly [
+                'monday',
+                'tuesday',
+                'wednesday',
+                'thursday',
+                'friday',
+                'saturday',
+                'sunday',
+              ];
+            };
             readonly match_status: {
               readonly kind: 'valueSet';
               readonly values: readonly ['scheduled', 'completed', 'washout', 'forfeit', 'bye'];
@@ -1842,6 +2200,14 @@ type ContractBase = Omit<
             readonly rubber_type: {
               readonly kind: 'valueSet';
               readonly values: readonly ['singles', 'doubles', 'mixed_doubles'];
+            };
+            readonly team_gender: {
+              readonly kind: 'valueSet';
+              readonly values: readonly ['boys', 'girls', 'open'];
+            };
+            readonly winner_rule: {
+              readonly kind: 'valueSet';
+              readonly values: readonly ['sets_then_games', 'rubbers_then_sets', 'ladder_position'];
             };
           };
         };
@@ -1858,6 +2224,15 @@ type ContractBase = Omit<
     readonly association: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'Association';
+    };
+    readonly format: { readonly namespace: 'public' & NamespaceId; readonly model: 'Format' };
+    readonly formatTeamGender: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'FormatTeamGender';
+    };
+    readonly competitionFormat: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'CompetitionFormat';
     };
     readonly club: { readonly namespace: 'public' & NamespaceId; readonly model: 'Club' };
     readonly associationClub: {
@@ -1942,6 +2317,17 @@ type ContractBase = Omit<
                 readonly on: {
                   readonly localFields: readonly ['contactPersonId'];
                   readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly formats: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Format';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['associationId'];
                 };
               };
               readonly roles: {
@@ -2179,6 +2565,17 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['id'];
                 };
               };
+              readonly formats: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'CompetitionFormat';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['competitionId'];
+                };
+              };
               readonly seasons: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
@@ -2198,6 +2595,239 @@ type ContractBase = Omit<
                 readonly id: { readonly column: 'id' };
                 readonly associationId: { readonly column: 'associationId' };
                 readonly name: { readonly column: 'name' };
+              };
+            };
+          };
+          readonly CompetitionFormat: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly competitionId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly formatId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+            };
+            readonly relations: {
+              readonly competition: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Competition';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['competitionId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly format: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Format';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['formatId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'competitionFormat';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly competitionId: { readonly column: 'competitionId' };
+                readonly formatId: { readonly column: 'formatId' };
+              };
+            };
+          };
+          readonly Format: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly associationId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly name: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly dayOfWeek: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly minPlayers: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly maxPlayers: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly minAge: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly maxAge: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly rubbersPerMatch: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly setsToWin: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly gamesPerSet: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly tiebreakAtGames: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly finalSetMatchTiebreak: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
+              };
+              readonly pointsPerRubber: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly pointsPerMatchWin: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly forfeitScoreline: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly winnerDeterminedBy: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly minCourts: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+            };
+            readonly relations: {
+              readonly association: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Association';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['associationId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly competitions: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'CompetitionFormat';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['formatId'];
+                };
+              };
+              readonly permittedGenders: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'FormatTeamGender';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['formatId'];
+                };
+              };
+              readonly sections: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Section';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['formatId'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'format';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly associationId: { readonly column: 'associationId' };
+                readonly name: { readonly column: 'name' };
+                readonly dayOfWeek: { readonly column: 'dayOfWeek' };
+                readonly minPlayers: { readonly column: 'minPlayers' };
+                readonly maxPlayers: { readonly column: 'maxPlayers' };
+                readonly minAge: { readonly column: 'minAge' };
+                readonly maxAge: { readonly column: 'maxAge' };
+                readonly rubbersPerMatch: { readonly column: 'rubbersPerMatch' };
+                readonly setsToWin: { readonly column: 'setsToWin' };
+                readonly gamesPerSet: { readonly column: 'gamesPerSet' };
+                readonly tiebreakAtGames: { readonly column: 'tiebreakAtGames' };
+                readonly finalSetMatchTiebreak: { readonly column: 'finalSetMatchTiebreak' };
+                readonly pointsPerRubber: { readonly column: 'pointsPerRubber' };
+                readonly pointsPerMatchWin: { readonly column: 'pointsPerMatchWin' };
+                readonly forfeitScoreline: { readonly column: 'forfeitScoreline' };
+                readonly winnerDeterminedBy: { readonly column: 'winnerDeterminedBy' };
+                readonly minCourts: { readonly column: 'minCourts' };
+              };
+            };
+          };
+          readonly FormatTeamGender: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly formatId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly gender: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+            };
+            readonly relations: {
+              readonly format: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Format';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['formatId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'formatTeamGender';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly formatId: { readonly column: 'formatId' };
+                readonly gender: { readonly column: 'gender' };
               };
             };
           };
@@ -2370,6 +3000,14 @@ type ContractBase = Omit<
                 readonly nullable: true;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
+              readonly email: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly phone: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
             };
             readonly relations: {
               readonly associationContacts: {
@@ -2469,6 +3107,8 @@ type ContractBase = Omit<
                 readonly dateOfBirth: { readonly column: 'dateOfBirth' };
                 readonly utrId: { readonly column: 'utrId' };
                 readonly tennisAustraliaNumber: { readonly column: 'tennisAustraliaNumber' };
+                readonly email: { readonly column: 'email' };
+                readonly phone: { readonly column: 'phone' };
               };
             };
           };
@@ -2822,44 +3462,31 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
               };
+              readonly formatId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
               readonly name: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
-              readonly rubbersPerMatch: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
-              };
-              readonly setsToWin: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
-              };
-              readonly gamesPerSet: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
-              };
-              readonly tiebreakAtGames: {
+              readonly gradeLabel: {
                 readonly nullable: true;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
-              };
-              readonly finalSetMatchTiebreak: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
-              };
-              readonly pointsPerRubber: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
-              };
-              readonly pointsPerMatchWin: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
-              };
-              readonly forfeitScoreline: {
-                readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
             };
             readonly relations: {
+              readonly format: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Format';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['formatId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
               readonly matches: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
@@ -2897,15 +3524,9 @@ type ContractBase = Omit<
               readonly fields: {
                 readonly id: { readonly column: 'id' };
                 readonly seasonId: { readonly column: 'seasonId' };
+                readonly formatId: { readonly column: 'formatId' };
                 readonly name: { readonly column: 'name' };
-                readonly rubbersPerMatch: { readonly column: 'rubbersPerMatch' };
-                readonly setsToWin: { readonly column: 'setsToWin' };
-                readonly gamesPerSet: { readonly column: 'gamesPerSet' };
-                readonly tiebreakAtGames: { readonly column: 'tiebreakAtGames' };
-                readonly finalSetMatchTiebreak: { readonly column: 'finalSetMatchTiebreak' };
-                readonly pointsPerRubber: { readonly column: 'pointsPerRubber' };
-                readonly pointsPerMatchWin: { readonly column: 'pointsPerMatchWin' };
-                readonly forfeitScoreline: { readonly column: 'forfeitScoreline' };
+                readonly gradeLabel: { readonly column: 'gradeLabel' };
               };
             };
           };
@@ -2925,6 +3546,10 @@ type ContractBase = Omit<
               };
               readonly name: {
                 readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly teamGender: {
+                readonly nullable: true;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
             };
@@ -3012,6 +3637,7 @@ type ContractBase = Omit<
                 readonly clubId: { readonly column: 'clubId' };
                 readonly sectionId: { readonly column: 'sectionId' };
                 readonly name: { readonly column: 'name' };
+                readonly teamGender: { readonly column: 'teamGender' };
               };
             };
           };
@@ -3063,6 +3689,34 @@ type ContractBase = Omit<
           };
         };
         readonly enum: {
+          readonly day_of_week: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'Monday'; readonly value: 'monday' },
+              { readonly name: 'Tuesday'; readonly value: 'tuesday' },
+              { readonly name: 'Wednesday'; readonly value: 'wednesday' },
+              { readonly name: 'Thursday'; readonly value: 'thursday' },
+              { readonly name: 'Friday'; readonly value: 'friday' },
+              { readonly name: 'Saturday'; readonly value: 'saturday' },
+              { readonly name: 'Sunday'; readonly value: 'sunday' },
+            ];
+          };
+          readonly team_gender: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'Boys'; readonly value: 'boys' },
+              { readonly name: 'Girls'; readonly value: 'girls' },
+              { readonly name: 'Open'; readonly value: 'open' },
+            ];
+          };
+          readonly winner_rule: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'SetsThenGames'; readonly value: 'sets_then_games' },
+              { readonly name: 'RubbersThenSets'; readonly value: 'rubbers_then_sets' },
+              { readonly name: 'LadderPosition'; readonly value: 'ladder_position' },
+            ];
+          };
           readonly match_status: {
             readonly codecId: 'pg/text@1';
             readonly members: readonly [
@@ -3144,6 +3798,14 @@ type ContractBase = Omit<
           readonly ref: {
             readonly namespace: 'public';
             readonly table: 'competition';
+            readonly column: 'id';
+          };
+          readonly onCreate: { readonly kind: 'generator'; readonly id: 'uuidv4' };
+        },
+        {
+          readonly ref: {
+            readonly namespace: 'public';
+            readonly table: 'format';
             readonly column: 'id';
           };
           readonly onCreate: { readonly kind: 'generator'; readonly id: 'uuidv4' };

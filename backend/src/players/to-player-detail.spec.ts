@@ -12,6 +12,8 @@ describe('toPlayerDetail', () => {
       dateOfBirth: Temporal.Instant.from('2001-03-15T00:00:00Z'),
       utrId: 'UTR100001',
       tennisAustraliaNumber: 'TA100001',
+      email: 'jack.thompson@example.com',
+      phone: '0400 000 001',
       clubMemberships: [
         { isPrimaryClub: true, isFinancialMember: true, club: { id: 'c1', name: 'Riverside Tennis Club' } },
       ],
@@ -40,6 +42,8 @@ describe('toPlayerDetail', () => {
     });
 
     expect(detail.dateOfBirth).toBe('2001-03-15T00:00:00.000Z');
+    expect(detail.email).toBe('jack.thompson@example.com');
+    expect(detail.phone).toBe('0400 000 001');
     expect(detail.primaryClubName).toBe('Riverside Tennis Club');
     expect(detail.clubs).toEqual([
       { id: 'c1', name: 'Riverside Tennis Club', isPrimaryClub: true, isFinancialMember: true },
@@ -71,11 +75,15 @@ describe('toPlayerDetail', () => {
       dateOfBirth: null,
       utrId: null,
       tennisAustraliaNumber: null,
+      email: null,
+      phone: null,
       clubMemberships: [],
       teamMemberships: [],
     });
 
     expect(detail.dateOfBirth).toBeNull();
+    expect(detail.email).toBeNull();
+    expect(detail.phone).toBeNull();
     expect(detail.primaryClubName).toBeNull();
     expect(detail.clubs).toEqual([]);
     expect(detail.competitions).toEqual([]);

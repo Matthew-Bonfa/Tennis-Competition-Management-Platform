@@ -1,7 +1,4 @@
-// should this be an environment variable?
-// Exported so other modules (e.g. CSV export links, which bypass fetchApi
-// since they're plain browser downloads, not JSON requests) can build full
-// API URLs without duplicating this constant.
+
 export const baseURL: string = "http://localhost:3000/api"
 
 export class ApiError extends Error {
@@ -37,10 +34,9 @@ async function fetchApi(endpoint: string, options: RequestInit = {}) {
 
 export default fetchApi;
 
-
 export async function postApi(endpoint: string, data: unknown, options: RequestInit = {}) {
     const headers = new Headers(options.headers);
-    
+
     headers.set('Content-Type', 'application/json');
 
     return fetchApi(endpoint, {
@@ -55,11 +51,18 @@ export async function postApi(endpoint: string, data: unknown, options: RequestI
 export async function putApi(endpoint: string, data: unknown, options: RequestInit = {}) {
     const headers = new Headers(options.headers);
     
+export async function patchApi(endpoint: string, data:unknown, options: RequestInit = {}) {
+    const headers = new Headers(options.headers);
     headers.set('Content-Type', 'application/json');
 
     return fetchApi(endpoint, {
         ...options,
         method: 'PUT',
+        headers,
+        body: JSON.stringify(data),
+    });
+}
+        method: 'PATCH',
         headers,
         body: JSON.stringify(data),
     });
