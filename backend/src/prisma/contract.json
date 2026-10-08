@@ -279,21 +279,6 @@
                   "namespace": "public"
                 }
               },
-              "formats": {
-                "cardinality": "1:N",
-                "on": {
-                  "localFields": [
-                    "id"
-                  ],
-                  "targetFields": [
-                    "associationId"
-                  ]
-                },
-                "to": {
-                  "model": "Format",
-                  "namespace": "public"
-                }
-              },
               "roles": {
                 "cardinality": "1:N",
                 "on": {
@@ -400,6 +385,13 @@
           },
           "Club": {
             "fields": {
+              "address": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "contactPersonId": {
                 "nullable": true,
                 "type": {
@@ -508,6 +500,9 @@
             },
             "storage": {
               "fields": {
+                "address": {
+                  "column": "address"
+                },
                 "contactPersonId": {
                   "column": "contactPersonId"
                 },
@@ -626,6 +621,19 @@
                   "kind": "scalar"
                 }
               },
+              "dayOfWeek": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "day_of_week",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
               "id": {
                 "nullable": false,
                 "type": {
@@ -635,6 +643,13 @@
               },
               "name": {
                 "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "startTime": {
+                "nullable": true,
                 "type": {
                   "codecId": "pg/text@1",
                   "kind": "scalar"
@@ -693,11 +708,17 @@
                 "associationId": {
                   "column": "associationId"
                 },
+                "dayOfWeek": {
+                  "column": "dayOfWeek"
+                },
                 "id": {
                   "column": "id"
                 },
                 "name": {
                   "column": "name"
+                },
+                "startTime": {
+                  "column": "startTime"
                 }
               },
               "namespaceId": "public",
@@ -778,26 +799,6 @@
           },
           "Format": {
             "fields": {
-              "associationId": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/text@1",
-                  "kind": "scalar"
-                }
-              },
-              "dayOfWeek": {
-                "nullable": true,
-                "type": {
-                  "codecId": "pg/text@1",
-                  "kind": "scalar"
-                },
-                "valueSet": {
-                  "entityKind": "enum",
-                  "entityName": "day_of_week",
-                  "namespaceId": "public",
-                  "plane": "domain"
-                }
-              },
               "finalSetMatchTiebreak": {
                 "nullable": false,
                 "type": {
@@ -962,31 +963,10 @@
                   "model": "FormatTeamGender",
                   "namespace": "public"
                 }
-              },
-              "sections": {
-                "cardinality": "1:N",
-                "on": {
-                  "localFields": [
-                    "id"
-                  ],
-                  "targetFields": [
-                    "formatId"
-                  ]
-                },
-                "to": {
-                  "model": "Section",
-                  "namespace": "public"
-                }
               }
             },
             "storage": {
               "fields": {
-                "associationId": {
-                  "column": "associationId"
-                },
-                "dayOfWeek": {
-                  "column": "dayOfWeek"
-                },
                 "finalSetMatchTiebreak": {
                   "column": "finalSetMatchTiebreak"
                 },
@@ -1154,6 +1134,13 @@
                   "kind": "scalar"
                 }
               },
+              "location": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "matchDate": {
                 "nullable": false,
                 "type": {
@@ -1303,6 +1290,9 @@
                 },
                 "id": {
                   "column": "id"
+                },
+                "location": {
+                  "column": "location"
                 },
                 "matchDate": {
                   "column": "matchDate"
@@ -2602,6 +2592,11 @@
             },
             "club": {
               "columns": {
+                "address": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
                 "contactPersonId": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
@@ -2746,11 +2741,29 @@
               "uniques": []
             },
             "competition": {
+              "checks": [
+                {
+                  "expression": "\"dayOfWeek\" IN ('monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday')",
+                  "name": "competition_dayOfWeek_check_96b6ba98",
+                  "prefix": "competition_dayOfWeek_check"
+                }
+              ],
               "columns": {
                 "associationId": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
                   "nullable": false
+                },
+                "dayOfWeek": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "day_of_week",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
                 },
                 "id": {
                   "codecId": "pg/text@1",
@@ -2761,6 +2774,11 @@
                   "codecId": "pg/text@1",
                   "nativeType": "text",
                   "nullable": false
+                },
+                "startTime": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
                 }
               },
               "foreignKeys": [
@@ -2889,33 +2907,12 @@
             "format": {
               "checks": [
                 {
-                  "expression": "\"dayOfWeek\" IN ('monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday')",
-                  "name": "format_dayOfWeek_check_96b6ba98",
-                  "prefix": "format_dayOfWeek_check"
-                },
-                {
                   "expression": "\"winnerDeterminedBy\" IN ('sets_then_games', 'rubbers_then_sets', 'ladder_position')",
                   "name": "format_winnerDeterminedBy_check_6967c1aa",
                   "prefix": "format_winnerDeterminedBy_check"
                 }
               ],
               "columns": {
-                "associationId": {
-                  "codecId": "pg/text@1",
-                  "nativeType": "text",
-                  "nullable": false
-                },
-                "dayOfWeek": {
-                  "codecId": "pg/text@1",
-                  "nativeType": "text",
-                  "nullable": true,
-                  "valueSet": {
-                    "entityKind": "valueSet",
-                    "entityName": "day_of_week",
-                    "namespaceId": "public",
-                    "plane": "storage"
-                  }
-                },
                 "finalSetMatchTiebreak": {
                   "codecId": "pg/bool@1",
                   "default": {
@@ -3019,34 +3016,8 @@
                   }
                 }
               },
-              "foreignKeys": [
-                {
-                  "source": {
-                    "columns": [
-                      "associationId"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "format"
-                  },
-                  "target": {
-                    "columns": [
-                      "id"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "association"
-                  }
-                }
-              ],
-              "indexes": [
-                {
-                  "columns": [
-                    "associationId"
-                  ],
-                  "name": "format_associationId_idx_54f3505c",
-                  "prefix": "format_associationId_idx",
-                  "unique": false
-                }
-              ],
+              "foreignKeys": [],
+              "indexes": [],
               "primaryKey": {
                 "columns": [
                   "id"
@@ -3174,6 +3145,11 @@
                   "codecId": "pg/text@1",
                   "nativeType": "text",
                   "nullable": false
+                },
+                "location": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
                 },
                 "matchDate": {
                   "codecId": "pg/timestamptz-temporal@1",
@@ -4264,7 +4240,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "fd901b2ef0de3174f9df3f4a04a972ba587c85d84eca8f3fc149d31d0343eeef"
+    "storageHash": "55f74d948d8ecc9f0614a6ea35a8d23664ae3829ba3a104523da6f54ae8be3cf"
   },
   "execution": {
     "executionHash": "d7c995483302734792d95c8996b73c71d5703517a493162fb26d055741ad80f1",

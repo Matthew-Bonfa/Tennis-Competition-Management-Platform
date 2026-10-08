@@ -1,9 +1,11 @@
-import { Controller, Get, Param, ParseIntPipe, Res, Query } from '@nestjs/common';
+import { Controller, Get, Param, ParseIntPipe, Res, Query, Post, Body, Patch } from '@nestjs/common';
 import type { Response } from 'express';
 import { csvFilename } from '../common/csv-filename.js';
 import { toCsv } from '../common/csv.js';
 import { SectionsService } from './sections.service.js';
 import { LADDER_CSV_COLUMNS, toLadderCsvRow } from './to-ladder-csv-row.js';
+import { CreateSectionDto } from './dto/create-section.dto.js';
+import { UpdateSectionDto } from './dto/update-section.dto.js';
 
 @Controller('sections')
 export class SectionsController {
@@ -46,5 +48,20 @@ export class SectionsController {
   @Get(':id/rounds')
   getRounds(@Param('id', ParseIntPipe) id: number) {
     return this.sectionsService.getRounds(id);
+  }
+
+  // create section
+  @Post()
+  create(@Body() createSectionDto: CreateSectionDto) {
+    return this.sectionsService.create(createSectionDto);
+  }
+
+  // update section
+  @Patch(':id')
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateSectionDto: UpdateSectionDto,
+  ) {
+    return this.sectionsService.update(id, updateSectionDto);
   }
 }
