@@ -21,7 +21,7 @@ export class PlayersController {
 
   // GET /players?search=&clubId=
   // Player search list. Both query params are optional.
-  @Public()
+  @Roles('ASSOCIATION_ADMIN', 'CLUB_ADMIN')
   @Get()
   findAll(@Query('search') search?: string, @Query('clubId') clubId?: string) {
     return this.playersService.findAllPlayers(search, clubId);
@@ -29,7 +29,7 @@ export class PlayersController {
 
   // GET /players/:id
   // Full profile: identity, clubs, and the competitions/teams they play in.
-  @Public()
+  @Roles('ASSOCIATION_ADMIN', 'CLUB_ADMIN')
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.playersService.findOnePlayer(id);
@@ -37,7 +37,7 @@ export class PlayersController {
 
   // GET /players/:id/record?year=&rubberType=
   // Win/loss record, bucketed by year and discipline
-  @Public()
+  @Roles('ASSOCIATION_ADMIN', 'CLUB_ADMIN')
   @Get(':id/record')
   findRecord(
     @Param('id') id: string,
