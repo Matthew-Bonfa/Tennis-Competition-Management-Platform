@@ -75,7 +75,13 @@ function MatchResultsPage() {
             <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
                 <div className="px-6 py-4 border-b border-gray-100">
                     <h1 className="text-xl font-bold text-gray-900">
-                        {match.homeTeam.name} v {match.awayTeam.name}
+                        <Link to={`/teams/${match.homeTeam.id}`} className="hover:underline hover:text-sky-600">
+                            {match.homeTeam.name}
+                        </Link>
+                        {' v '}
+                        <Link to={`/teams/${match.awayTeam.id}`} className="hover:underline hover:text-sky-600">
+                            {match.awayTeam.name}
+                        </Link>
                     </h1>
                     <p className="text-sm text-gray-500">Round {match.roundNumber}</p>
                 </div>
