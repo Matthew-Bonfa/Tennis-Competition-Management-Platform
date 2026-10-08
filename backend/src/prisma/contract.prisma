@@ -31,16 +31,15 @@ model Association {
   clubs           AssociationClub[]
   roles           PersonRole[]
   competitions    Competition[]
-  formats         Format[]
 }
 
 // ==========================================
 // FORMATS
 // ==========================================
-// An association-level catalog of play formats (Junior Triples, President's
-// Cup, ...), reused across competitions and seasons rather than redefined
-// per section. A Competition offers a subset of these (CompetitionFormat);
-// a Section picks exactly one to play under.
+// A global catalog of play formats (Junior Triples, President's Cup, ...),
+// reused across competitions and seasons rather than redefined per section.
+// A Competition offers a subset of these (CompetitionFormat); a Section picks
+// exactly one to play under.
 
 enum day_of_week {
   @@type("pg/text@1")
@@ -69,9 +68,7 @@ enum winner_rule {
 
 model Format {
   id            String       @id @default(uuid())
-  associationId String
   name          String
-  dayOfWeek     day_of_week?
 
   // Team Composition
   minPlayers Int
@@ -91,10 +88,7 @@ model Format {
   winnerDeterminedBy    winner_rule
   minCourts             Int
 
-  association      Association         @relation(fields: [associationId], references: [id])
   permittedGenders FormatTeamGender[]
-  competitions     CompetitionFormat[]
-  sections         Section[]
 }
 
 // The set of team genders a format permits
@@ -124,6 +118,7 @@ model Club {
   id                String     @id @default(uuid())
   name              String  
   isFinancialMember Boolean 
+  address           String?
   contactPersonId   String?
 
   contactPerson     Person? @relation("ClubContact", fields: [contactPersonId], references: [id])
@@ -168,10 +163,12 @@ model PersonRole {
 model Competition {
   id            String    @id @default(uuid())
   associationId String 
-  name          String 
+  name          String
+  dayOfWeek     day_of_week?
+  startTime     String?       // "HH:mm", the usual weekly start time
 
   association   Association @relation(fields: [associationId], references: [id])
-  seasons       Season[]
+  seasons      Season[]
   formats       CompetitionFormat[]
 }
 
@@ -264,7 +261,8 @@ model Match {
   awayTeamId          Int
   roundNumber         Int
   matchDate           DateTime
-  matchStatus         match_status
+  location            String?      // null = played at the home team's club
+  matchStatus        match_status
   enteredByPersonId   String?
   enteredAt           DateTime?
   confirmedByPersonId String?

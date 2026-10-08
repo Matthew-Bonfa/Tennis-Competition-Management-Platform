@@ -1,0 +1,377 @@
+[
+  {
+    "id": "dropCheckConstraint.format.format_dayOfWeek_check_96b6ba98",
+    "label": "Drop check constraint \"format_dayOfWeek_check_96b6ba98\" on \"format\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "format_dayOfWeek_check_96b6ba98",
+        "table": "format"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"format_dayOfWeek_check_96b6ba98\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "format_dayOfWeek_check_96b6ba98",
+          "public",
+          "\"public\".\"format\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop check constraint \"format_dayOfWeek_check_96b6ba98\"",
+        "sql": "ALTER TABLE \"public\".\"format\" DROP CONSTRAINT \"format_dayOfWeek_check_96b6ba98\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"format_dayOfWeek_check_96b6ba98\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "format_dayOfWeek_check_96b6ba98",
+          "public",
+          "\"public\".\"format\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.format.dayOfWeek",
+    "label": "Drop column \"dayOfWeek\" from \"format\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "dayOfWeek",
+        "table": "format"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"dayOfWeek\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "format",
+          "dayOfWeek"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"dayOfWeek\"",
+        "sql": "ALTER TABLE \"public\".\"format\" DROP COLUMN \"dayOfWeek\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"dayOfWeek\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "format",
+          "dayOfWeek"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropConstraint.format.format_associationId_fkey",
+    "label": "Drop constraint \"format_associationId_fkey\" on \"format\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "format_associationId_fkey",
+        "table": "format"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"format_associationId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "format_associationId_fkey",
+          "public",
+          "\"public\".\"format\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop constraint \"format_associationId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"format\" DROP CONSTRAINT \"format_associationId_fkey\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"format_associationId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "format_associationId_fkey",
+          "public",
+          "\"public\".\"format\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropIndex.format.format_associationId_idx_54f3505c",
+    "label": "Drop index \"format_associationId_idx_54f3505c\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "format_associationId_idx_54f3505c",
+        "table": "format"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"format_associationId_idx_54f3505c\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"format_associationId_idx_54f3505c\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop index \"format_associationId_idx_54f3505c\"",
+        "sql": "DROP INDEX \"public\".\"format_associationId_idx_54f3505c\"",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"format_associationId_idx_54f3505c\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"format_associationId_idx_54f3505c\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.format.associationId",
+    "label": "Drop column \"associationId\" from \"format\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "associationId",
+        "table": "format"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"associationId\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "format",
+          "associationId"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"associationId\"",
+        "sql": "ALTER TABLE \"public\".\"format\" DROP COLUMN \"associationId\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"associationId\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "format",
+          "associationId"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.competition.dayOfWeek",
+    "label": "Add column \"dayOfWeek\" to \"competition\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "dayOfWeek",
+        "table": "competition"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"dayOfWeek\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "competition",
+          "dayOfWeek"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"dayOfWeek\"",
+        "sql": "ALTER TABLE \"public\".\"competition\" ADD COLUMN \"dayOfWeek\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"dayOfWeek\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "competition",
+          "dayOfWeek"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.competition.startTime",
+    "label": "Add column \"startTime\" to \"competition\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "startTime",
+        "table": "competition"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"startTime\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "competition",
+          "startTime"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"startTime\"",
+        "sql": "ALTER TABLE \"public\".\"competition\" ADD COLUMN \"startTime\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"startTime\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "competition",
+          "startTime"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.public.match.location",
+    "label": "Add column \"location\" to \"match\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "location",
+        "table": "match"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"location\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "match",
+          "location"
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"location\"",
+        "sql": "ALTER TABLE \"public\".\"match\" ADD COLUMN \"location\" text"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"location\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "match",
+          "location"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.competition.competition_dayOfWeek_check_96b6ba98",
+    "label": "Add check constraint \"competition_dayOfWeek_check_96b6ba98\" on \"competition\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "competition_dayOfWeek_check_96b6ba98",
+        "table": "competition"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"competition_dayOfWeek_check_96b6ba98\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "competition_dayOfWeek_check_96b6ba98",
+          "public",
+          "\"public\".\"competition\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"competition_dayOfWeek_check_96b6ba98\"",
+        "sql": "ALTER TABLE \"public\".\"competition\" ADD CONSTRAINT \"competition_dayOfWeek_check_96b6ba98\" CHECK (\"dayOfWeek\" IN ('monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'))"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"competition_dayOfWeek_check_96b6ba98\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "competition_dayOfWeek_check_96b6ba98",
+          "public",
+          "\"public\".\"competition\""
+        ]
+      }
+    ]
+  }
+]

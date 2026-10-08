@@ -6,6 +6,7 @@ export interface FixtureCsvRow {
     round: number;
     date: string;
     time: string;
+    location: string;
     status: string;
     homeTeam: string;
     awayTeam: string;
@@ -20,6 +21,7 @@ export const FIXTURE_CSV_COLUMNS: CsvColumn<FixtureCsvRow>[] = [
     { key: 'round', header: 'Round' },
     { key: 'date', header: 'Date' },
     { key: 'time', header: 'Time' },
+    { key: 'location', header: 'Location' },
     { key: 'status', header: 'Status' },
     { key: 'homeTeam', header: 'Home Team' },
     { key: 'awayTeam', header: 'Away Team' },
@@ -46,6 +48,7 @@ export function toFixtureCsvRow(fixture: Fixture): FixtureCsvRow {
         round: fixture.roundNumber,
         date: zoned.toPlainDate().toString(),
         time: zoned.toPlainTime().toString({ smallestUnit: 'minute' }),
+        location: fixture.location ?? '',
         status: fixture.status,
         homeTeam: fixture.homeTeam.name,
         awayTeam: fixture.awayTeam.name,
