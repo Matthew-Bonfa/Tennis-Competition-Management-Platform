@@ -33,7 +33,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'55f74d948d8ecc9f0614a6ea35a8d23664ae3829ba3a104523da6f54ae8be3cf'>;
+  StorageHashBase<'f288487c576aad4c449fb63ac35d382bf1f0a142154eb60b3d1a73c1b9f2a4a0'>;
 export type ExecutionHash =
   ExecutionHashBase<'d7c995483302734792d95c8996b73c71d5703517a493162fb26d055741ad80f1'>;
 export type ProfileHash =
@@ -255,7 +255,6 @@ export type FieldOutputTypes = {
       readonly id: CodecTypes['pg/text@1']['output'];
       readonly name: CodecTypes['pg/text@1']['output'];
       readonly isFinancialMember: CodecTypes['pg/bool@1']['output'];
-      readonly address: CodecTypes['pg/text@1']['output'] | null;
       readonly contactPersonId: CodecTypes['pg/text@1']['output'] | null;
     };
     readonly ClubMembership: {
@@ -401,7 +400,6 @@ export type FieldInputTypes = {
       readonly id: CodecTypes['pg/text@1']['input'];
       readonly name: CodecTypes['pg/text@1']['input'];
       readonly isFinancialMember: CodecTypes['pg/bool@1']['input'];
-      readonly address: CodecTypes['pg/text@1']['input'] | null;
       readonly contactPersonId: CodecTypes['pg/text@1']['input'] | null;
     };
     readonly ClubMembership: {
@@ -544,7 +542,6 @@ export type StorageColumnTypes = {
       readonly id: CodecTypes['pg/int4@1']['output'];
     };
     readonly club: {
-      readonly address: CodecTypes['pg/text@1']['output'] | null;
       readonly contactPersonId: CodecTypes['pg/text@1']['output'] | null;
       readonly id: CodecTypes['pg/text@1']['output'];
       readonly isFinancialMember: CodecTypes['pg/bool@1']['output'];
@@ -690,7 +687,6 @@ export type StorageColumnInputTypes = {
       readonly id: CodecTypes['pg/int4@1']['input'];
     };
     readonly club: {
-      readonly address: CodecTypes['pg/text@1']['input'] | null;
       readonly contactPersonId: CodecTypes['pg/text@1']['input'] | null;
       readonly id: CodecTypes['pg/text@1']['input'];
       readonly isFinancialMember: CodecTypes['pg/bool@1']['input'];
@@ -965,11 +961,6 @@ type ContractBase = Omit<
                   readonly nativeType: 'bool';
                   readonly codecId: 'pg/bool@1';
                   readonly nullable: false;
-                };
-                readonly address: {
-                  readonly nativeType: 'text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: true;
                 };
                 readonly contactPersonId: {
                   readonly nativeType: 'text';
@@ -2398,10 +2389,6 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
               };
-              readonly address: {
-                readonly nullable: true;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
               readonly contactPersonId: {
                 readonly nullable: true;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
@@ -2468,7 +2455,6 @@ type ContractBase = Omit<
                 readonly id: { readonly column: 'id' };
                 readonly name: { readonly column: 'name' };
                 readonly isFinancialMember: { readonly column: 'isFinancialMember' };
-                readonly address: { readonly column: 'address' };
                 readonly contactPersonId: { readonly column: 'contactPersonId' };
               };
             };

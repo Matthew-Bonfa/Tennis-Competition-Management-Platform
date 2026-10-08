@@ -8,6 +8,7 @@ function makeMatch(overrides = {}) {
         sectionId: 1,
         roundNumber: 1,
         matchDate: Temporal.Instant.from('2026-10-10T13:00:00Z'),
+        location: null as string | null,
         matchStatus: 'completed' as const,
         homeTeam: { id: 1, name: 'Kilsyth 1', club: { id: 'c1', name: 'Kilsyth TC' } },
         awayTeam: { id: 2, name: 'Ringwood 1', club: { id: 'c2', name: 'Ringwood TC' } },
@@ -21,6 +22,18 @@ describe('toFixture', () => {
         const result = toFixture(makeMatch());
         expect(result.homeTeam).toEqual({ id: 1, name: 'Kilsyth 1', clubId: 'c1', clubName: 'Kilsyth TC' });
         expect(result.awayTeam).toEqual({ id: 2, name: 'Ringwood 1', clubId: 'c2', clubName: 'Ringwood TC' });
+    });
+
+    it('falls back to the home club name when no location is set', () => {
+        const fixture = toFixture(makeMatch());
+        expect(fixture.location).toBe('Kilsyth TC');
+        expect(fixture.locationClubId).toBe('c1');
+    });
+
+    it('uses the match location when one is set, with no club link', () => {
+        const fixture = toFixture(makeMatch({ location: 'Court 3, Albert Park' }));
+        expect(fixture.location).toBe('Court 3, Albert Park');
+        expect(fixture.locationClubId).toBeNull();
     });
 
     it('counts rubbers won by each side and reports the home winner', () => {

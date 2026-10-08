@@ -42,6 +42,7 @@ export interface ClubOfficial {
 }
 
 export interface ClubDetail extends ClubSummary {
+    address: string | null;
     contactPerson: ClubContact | null;
     associations: ClubAssociation[];
     teams: ClubTeam[];

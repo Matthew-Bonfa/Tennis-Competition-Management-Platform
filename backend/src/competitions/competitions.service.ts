@@ -57,6 +57,8 @@ export class CompetitionsService {
     return {
       id: competition.id,
       name: competition.name,
+      dayOfWeek: competition.dayOfWeek,
+      startTime: competition.startTime,
       association: association ? { id: association.id, name: association.name } : null,
       seasons: seasons.map((season) => ({
         id: season.id,

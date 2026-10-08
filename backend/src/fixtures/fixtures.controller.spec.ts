@@ -28,6 +28,8 @@ describe('FixturesController', () => {
       sectionId: 1,
       roundNumber: 2,
       matchDate: '2026-06-13T09:00:00.000Z',
+      location: 'Kilsyth',
+      locationClubId: 'club-1',
       status: 'completed',
       homeTeam: { id: 1, name: 'Kilsyth 1', clubId: 'club-1', clubName: 'Kilsyth' },
       awayTeam: { id: 2, name: 'Ringwood 1', clubId: 'club-2', clubName: 'Ringwood' },
@@ -55,7 +57,7 @@ describe('FixturesController', () => {
       expect(res.setHeader).toHaveBeenCalledWith('Content-Type', 'text/csv; charset=utf-8');
       expect(res.setHeader).toHaveBeenCalledWith('Content-Disposition', 'attachment; filename="fixtures-section-1-all.csv"');
       expect(body.startsWith('﻿')).toBe(true);
-      expect(body).toContain('Round,Date,Time,Status,Home Team,Away Team,Home Rubbers,Away Rubbers,Outcome,Section ID,Match ID');
+      expect(body).toContain('Round,Date,Time,Location,Status,Home Team,Away Team,Home Rubbers,Away Rubbers,Outcome,Section ID,Match ID');
       expect(body).toContain('Kilsyth 1');
     });
   });
