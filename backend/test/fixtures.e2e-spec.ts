@@ -114,7 +114,7 @@ describe('Fixtures Feature (e2e)', () => {
     const lines = text.split('\r\n');
 
     expect(lines[0]).toBe(
-      'Round,Date,Time,Status,Home Team,Away Team,Home Rubbers,Away Rubbers,Outcome,Section ID,Match ID',
+      'Round,Date,Time,Location,Status,Home Team,Away Team,Home Rubbers,Away Rubbers,Outcome,Section ID,Match ID',
     );
     // One data row per fixture returned by the JSON endpoint
     const jsonResponse = await request(app.getHttpServer())
