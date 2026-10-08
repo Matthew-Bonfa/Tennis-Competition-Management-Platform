@@ -919,6 +919,36 @@
               }
             },
             "relations": {
+              "association": {
+                "cardinality": "N:1",
+                "on": {
+                  "localFields": [
+                    "associationId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Association",
+                  "namespace": "public"
+                }
+              },
+              "competitions": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "formatId"
+                  ]
+                },
+                "to": {
+                  "model": "CompetitionFormat",
+                  "namespace": "public"
+                }
+              },
               "permittedGenders": {
                 "cardinality": "1:N",
                 "on": {
