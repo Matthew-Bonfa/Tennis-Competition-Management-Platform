@@ -22,6 +22,13 @@ import MatchResultsPage from './MatchResultsPage'
 import RegisterTeamPage from './register-team/RegisterTeamPage'
 import ManageAssociationsPage from './manage-associations/ManageAssociationsPage';
 import CreateAssociationPage from './manage-associations/CreateAssociationPage';
+import ManageCompetitionsPage from './manage-competitions/ManageCompetitionsPage';
+import CreateCompetitionPage from './manage-competitions/CreateCompetitionPage';
+import ManageCompetitionPage from './manage-competitions/ManageCompetitionPage';
+import CreateSeasonPage from './manage-competitions/CreateSeasonPage';
+import CreateSectionPage from './manage-competitions/CreateSectionPage';
+import ManageSectionPage from './manage-competitions/ManageSectionPage';
+import ManageSeasonPage from './manage-competitions/ManageSeasonPage';
 import ManagePlayersPage from './manage-players/ManagePlayersPage';
 import EditPlayerPage from './manage-players/EditPlayerPage';
 
@@ -51,6 +58,14 @@ export default function App() {
             <Route path="/register-team" element={<RegisterTeamPage />} />
             <Route path="/manage-associations" element={<ManageAssociationsPage />} />
             <Route path="/manage-associations/create-new-association" element={<CreateAssociationPage />} />
+
+            <Route path="/manage-competitions" element={<ManageCompetitionsPage />} />
+            <Route path="/manage-competitions/create-new-competition" element={<CreateCompetitionPage />} />
+            <Route path="/manage-competitions/:id" element={<ManageCompetitionPage />} />
+            <Route path="/manage-competitions/:id/create-new-season" element={<CreateSeasonPage />} />
+            <Route path="/manage-competitions/:id/create-new-section" element={<CreateSectionPage />} />
+            <Route path="/manage-competitions/:id/sections/:sectionId" element={<ManageSectionPage />} />
+            <Route path="/manage-competitions/:id/seasons/:seasonId" element={<ManageSeasonPage />} />
             <Route path="/manage-players" element={<ManagePlayersPage />} />
             <Route path="/manage-players/:id" element={<EditPlayerPage />} />
           </Routes>
