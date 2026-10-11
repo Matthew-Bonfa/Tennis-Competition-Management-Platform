@@ -1,6 +1,7 @@
 import { Controller, Get, Query, Post, Body, Patch, Param, ParseIntPipe } from '@nestjs/common';
 import { SeasonsService } from './seasons.service.js';
 import { Public } from '../auth/decorators/public.decorator.js';
+import { Roles } from '../auth/decorators/roles.decorator.js';
 import { CreateSeasonDto } from './dto/create-season.dto.js';
 import { UpdateSeasonDto } from './dto/update-season.dto.js';
 

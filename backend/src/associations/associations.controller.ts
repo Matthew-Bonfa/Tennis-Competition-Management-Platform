@@ -12,7 +12,6 @@ export class AssociationsController {
   @Get()
   async getAllAssociations() {
     const response = await this.associationsService.getAll();
-    console.log(response);
     return response;
   }
 
