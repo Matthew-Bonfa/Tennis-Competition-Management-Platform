@@ -142,7 +142,7 @@ describe('Associations Feature (e2e)', () => {
     const association = {name: "new association 123"};
     const response = await request(app.getHttpServer())
       .put('/api/associations/' + fakeId)
-      .set('Authorized', `Bearer ${adminToken}`)
+      .set('Authorization', `Bearer ${adminToken}`)
       .send(association)
       .expect(404);
   });
