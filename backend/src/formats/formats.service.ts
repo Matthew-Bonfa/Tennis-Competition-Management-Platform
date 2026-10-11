@@ -7,8 +7,13 @@ export class FormatsService {
 
   // list formats (optionally only one association's), for dropdowns
   async findAll(associationId?: string) {
+    let id = {};
+    if (associationId){
+      const id = {associationId};
+    }
+
     const formats = await this.prisma.client.orm.public.Format
-      .where(associationId ? { associationId } : {})
+      .where(id)
       .all();
 
     return formats.map((format) => ({

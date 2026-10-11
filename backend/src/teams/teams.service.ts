@@ -80,6 +80,9 @@ export class TeamsService {
     if (!team) {
       throw new NotFoundException(`Team with ID ${id} not found`);
     }
+    if (!team.section){
+      throw new NotFoundException(`Team's section not found`);
+    }
 
     const ladder = await this.sectionsService.calculateLadder(team.section.id);
     const row = ladder.find((ladderRow) => ladderRow.teamId === id);
