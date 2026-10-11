@@ -7,7 +7,7 @@ import { Trophy, Users, Building2, MapPin, Search } from 'lucide-react';
 
 import AssociationProfile from './AssociationProfile'
 import AssociationsPage from './AssociationsPage'
-import {ASSOCIATIONS} from './mock-data/MockAssociations'
+import { ASSOCIATIONS } from './mock-data/MockAssociations'
 import ClubProfile from './ClubProfile'
 import ClubsPage from './ClubsPage'
 import AdminPage from './AdminPage'
@@ -32,6 +32,7 @@ import ManageSectionPage from './manage-competitions/ManageSectionPage';
 import ManageSeasonPage from './manage-competitions/ManageSeasonPage';
 import ManagePlayersPage from './manage-players/ManagePlayersPage';
 import EditPlayerPage from './manage-players/EditPlayerPage';
+import Login from './Login';
 
 // --- MAIN APP ROUTING ---
 export default function App() {
@@ -70,6 +71,8 @@ export default function App() {
             <Route path="/manage-competitions/:id/seasons/:seasonId" element={<ManageSeasonPage />} />
             <Route path="/manage-players" element={<ManagePlayersPage />} />
             <Route path="/manage-players/:id" element={<EditPlayerPage />} />
+
+            <Route path="/login" element={<Login />} />
           </Routes>
         </main>
       </div>

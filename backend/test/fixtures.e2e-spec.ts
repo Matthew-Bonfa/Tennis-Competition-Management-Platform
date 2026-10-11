@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
 import request from 'supertest';
 import { describe, beforeAll, afterAll, it, expect } from 'vitest';
 import { AppModule } from '../src/app.module.js';
@@ -14,6 +14,16 @@ describe('Fixtures Feature (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     app.setGlobalPrefix('api');
+
+    // Adds stricter formatting to tests
+    app.useGlobalPipes(
+      new ValidationPipe({
+        whitelist: true,
+        forbidNonWhitelisted: true,
+        transform: true,
+      }),
+    );
+
     await app.init();
   });
 
@@ -124,9 +134,7 @@ describe('Fixtures Feature (e2e)', () => {
   });
 
   it('GET /api/fixtures/export -> should return 400 Bad Request if neither teamId nor sectionId are provided', async () => {
-    await request(app.getHttpServer())
-      .get('/api/fixtures/export')
-      .expect(400);
+    await request(app.getHttpServer()).get('/api/fixtures/export').expect(400);
   });
 
   it('GET /api/fixtures/export?sectionId=9999 -> should return 404 Not Found for non-existent section', async () => {

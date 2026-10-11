@@ -6,6 +6,7 @@ import { AppModule } from '../src/app.module.js';
 
 describe('Players Feature (e2e)', () => {
   let app: INestApplication;
+  let adminToken: string;
 
   // Saved from the list test for reuse in the detail/record tests below.
   let savedPlayerId: string;
@@ -17,14 +18,28 @@ describe('Players Feature (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     app.setGlobalPrefix('api');
+
+    // Adds stricter formatting to tests
     app.useGlobalPipes(
       new ValidationPipe({
         whitelist: true,
-        transform: true,
         forbidNonWhitelisted: true,
+        transform: true,
       }),
     );
+
     await app.init();
+
+    // Logins for proper token
+    const loginResponse = await request(app.getHttpServer())
+      .post('/api/auth/login')
+      .send({
+        email: 'admin@tennis.com',
+        password: 'password123',
+      })
+      .expect(200);
+
+    adminToken = loginResponse.body.access_token;
   });
 
   afterAll(async () => {
@@ -33,7 +48,10 @@ describe('Players Feature (e2e)', () => {
 
   // Summary list of players (search page)
   it('GET /api/players -> should return a summary list of players', async () => {
-    const response = await request(app.getHttpServer()).get('/api/players').expect(200);
+    const response = await request(app.getHttpServer())
+      .get('/api/players')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .expect(200);
 
     expect(Array.isArray(response.body)).toBeTruthy();
     expect(response.body.length).toBeGreaterThan(0);
@@ -54,11 +72,15 @@ describe('Players Feature (e2e)', () => {
   it('GET /api/players?search= -> should filter players by name', async () => {
     expect(savedPlayerId).toBeDefined();
 
-    const all = await request(app.getHttpServer()).get('/api/players').expect(200);
+    const all = await request(app.getHttpServer())
+      .get('/api/players')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .expect(200);
     const target = all.body.find((p: any) => p.id === savedPlayerId);
 
     const response = await request(app.getHttpServer())
       .get(`/api/players?search=${encodeURIComponent(target.firstName)}`)
+      .set('Authorization', `Bearer ${adminToken}`)
       .expect(200);
 
     expect(response.body.some((p: any) => p.id === savedPlayerId)).toBe(true);
@@ -70,6 +92,7 @@ describe('Players Feature (e2e)', () => {
 
     const response = await request(app.getHttpServer())
       .get(`/api/players/${savedPlayerId}`)
+      .set('Authorization', `Bearer ${adminToken}`)
       .expect(200);
 
     expect(response.body).toEqual(
@@ -89,6 +112,7 @@ describe('Players Feature (e2e)', () => {
 
     const response = await request(app.getHttpServer())
       .get(`/api/players/${fakeUuid}`)
+      .set('Authorization', `Bearer ${adminToken}`)
       .expect(404);
 
     expect(response.body.message).toContain('not found');
@@ -100,6 +124,7 @@ describe('Players Feature (e2e)', () => {
 
     const response = await request(app.getHttpServer())
       .get(`/api/players/${savedPlayerId}/record`)
+      .set('Authorization', `Bearer ${adminToken}`)
       .expect(200);
 
     expect(response.body).toEqual(
@@ -117,6 +142,7 @@ describe('Players Feature (e2e)', () => {
 
     const response = await request(app.getHttpServer())
       .get(`/api/players/${fakeUuid}/record`)
+      .set('Authorization', `Bearer ${adminToken}`)
       .expect(404);
 
     expect(response.body.message).toContain('not found');
@@ -127,11 +153,15 @@ describe('Players Feature (e2e)', () => {
     it('updates the supplied fields and returns the full profile', async () => {
       expect(savedPlayerId).toBeDefined();
 
-      const before = await request(app.getHttpServer()).get(`/api/players/${savedPlayerId}`).expect(200);
+      const before = await request(app.getHttpServer())
+        .get(`/api/players/${savedPlayerId}`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .expect(200);
       const originalPhone = before.body.phone;
 
       const response = await request(app.getHttpServer())
         .patch(`/api/players/${savedPlayerId}`)
+        .set('Authorization', `Bearer ${adminToken}`)
         .send({ phone: '0400 123 456' })
         .expect(200);
 
@@ -146,6 +176,7 @@ describe('Players Feature (e2e)', () => {
 
       await request(app.getHttpServer())
         .patch(`/api/players/${savedPlayerId}`)
+        .set('Authorization', `Bearer ${adminToken}`)
         .send({ phone: originalPhone })
         .expect(200);
     });
@@ -155,6 +186,7 @@ describe('Players Feature (e2e)', () => {
 
       const response = await request(app.getHttpServer())
         .patch(`/api/players/${fakeUuid}`)
+        .set('Authorization', `Bearer ${adminToken}`)
         .send({ phone: '0400 000 000' })
         .expect(404);
 
@@ -166,6 +198,7 @@ describe('Players Feature (e2e)', () => {
 
       await request(app.getHttpServer())
         .patch(`/api/players/${savedPlayerId}`)
+        .set('Authorization', `Bearer ${adminToken}`)
         .send({ personCode: 'P999' })
         .expect(400);
     });
@@ -175,6 +208,7 @@ describe('Players Feature (e2e)', () => {
 
       await request(app.getHttpServer())
         .patch(`/api/players/${savedPlayerId}`)
+        .set('Authorization', `Bearer ${adminToken}`)
         .send({ email: 'not-an-email' })
         .expect(400);
     });
@@ -184,6 +218,7 @@ describe('Players Feature (e2e)', () => {
 
       await request(app.getHttpServer())
         .patch(`/api/players/${savedPlayerId}`)
+        .set('Authorization', `Bearer ${adminToken}`)
         .send({ firstName: null })
         .expect(400);
     });
@@ -191,7 +226,27 @@ describe('Players Feature (e2e)', () => {
     it('returns 400 Bad Request for an empty body', async () => {
       expect(savedPlayerId).toBeDefined();
 
-      await request(app.getHttpServer()).patch(`/api/players/${savedPlayerId}`).send({}).expect(400);
+      await request(app.getHttpServer())
+        .patch(`/api/players/${savedPlayerId}`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({})
+        .expect(400);
+    });
+  });
+
+  // Requires admin access
+  describe('Unauthorized Access', () => {
+    it('GET /api/players -> should return 401 Unauthorized when no token is provided', async () => {
+      await request(app.getHttpServer()).get('/api/players').expect(401);
+    });
+
+    it('PATCH /api/players/:id -> should return 401 Unauthorized when no token is provided', async () => {
+      expect(savedPlayerId).toBeDefined();
+
+      await request(app.getHttpServer())
+        .patch(`/api/players/${savedPlayerId}`)
+        .send({ phone: '0400 123 456' })
+        .expect(401);
     });
   });
 });
