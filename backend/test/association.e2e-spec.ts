@@ -6,6 +6,7 @@ import { AppModule } from '../src/app.module.js';
 
 describe('Associations Feature (e2e)', () => {
   let app: INestApplication;
+  let adminToken: string;
 
   // Variable for testing
   let savedAssociationId: string;
@@ -28,6 +29,18 @@ describe('Associations Feature (e2e)', () => {
     );
 
     await app.init();
+
+    // Logins for proper token
+    const loginResponse = await request(app.getHttpServer())
+      .post('/api/auth/login')
+      .send({
+        email: 'admin@tennis.com',
+        password: 'password123',
+      })
+      .expect(200);
+
+    adminToken = loginResponse.body.access_token;
+
   });
 
   afterAll(async () => {
@@ -91,6 +104,7 @@ describe('Associations Feature (e2e)', () => {
     const newAssociation = {name: "Unreal Tennis Association"};
     const response = await request(app.getHttpServer())
       .post('/api/associations')
+      .set('Authorization', `Bearer ${adminToken}`)
       .send(newAssociation)
       .expect(201);
 
@@ -103,6 +117,7 @@ describe('Associations Feature (e2e)', () => {
     const association = {name: "Association with typo"};
     const response = await request(app.getHttpServer())
       .post('/api/associations')
+      .set('Authorization', `Bearer ${adminToken}`)
       .send(association)
       .expect(201);
 
@@ -113,6 +128,7 @@ describe('Associations Feature (e2e)', () => {
     const updatedAssociation = {name: "Association without typo"}
     const updateResponse = await request(app.getHttpServer())
       .put('/api/associations/' + id)
+      .set('Authorization', `Bearer ${adminToken}`)
       .send(updatedAssociation)
       .expect(200);
 
@@ -125,7 +141,8 @@ describe('Associations Feature (e2e)', () => {
     const fakeId = "00000000-0000-0000-0000-000000000000"
     const association = {name: "new association 123"};
     const response = await request(app.getHttpServer())
-      .put('api/association/' + fakeId)
+      .put('/api/associations/' + fakeId)
+      .set('Authorized', `Bearer ${adminToken}`)
       .send(association)
       .expect(404);
   });
