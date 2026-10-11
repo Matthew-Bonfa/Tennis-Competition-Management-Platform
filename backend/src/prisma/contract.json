@@ -348,7 +348,6 @@
               },
               "contactPerson": {
                 "cardinality": "N:1",
-                "nullable": true,
                 "on": {
                   "localFields": [
                     "contactPersonId"
@@ -359,21 +358,6 @@
                 },
                 "to": {
                   "model": "Person",
-                  "namespace": "public"
-                }
-              },
-              "formats": {
-                "cardinality": "1:N",
-                "on": {
-                  "localFields": [
-                    "id"
-                  ],
-                  "targetFields": [
-                    "associationId"
-                  ]
-                },
-                "to": {
-                  "model": "Format",
                   "namespace": "public"
                 }
               },
@@ -436,7 +420,6 @@
             "relations": {
               "association": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "associationId"
@@ -452,7 +435,6 @@
               },
               "club": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "clubId"
@@ -485,6 +467,13 @@
           },
           "Club": {
             "fields": {
+              "address": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "contactPersonId": {
                 "nullable": true,
                 "type": {
@@ -532,7 +521,6 @@
               },
               "contactPerson": {
                 "cardinality": "N:1",
-                "nullable": true,
                 "on": {
                   "localFields": [
                     "contactPersonId"
@@ -594,6 +582,9 @@
             },
             "storage": {
               "fields": {
+                "address": {
+                  "column": "address"
+                },
                 "contactPersonId": {
                   "column": "contactPersonId"
                 },
@@ -652,7 +643,6 @@
             "relations": {
               "club": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "clubId"
@@ -668,7 +658,6 @@
               },
               "person": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "personId"
@@ -714,6 +703,19 @@
                   "kind": "scalar"
                 }
               },
+              "dayOfWeek": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "day_of_week",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
               "id": {
                 "nullable": false,
                 "type": {
@@ -727,12 +729,18 @@
                   "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
+              },
+              "startTime": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
               }
             },
             "relations": {
               "association": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "associationId"
@@ -782,11 +790,17 @@
                 "associationId": {
                   "column": "associationId"
                 },
+                "dayOfWeek": {
+                  "column": "dayOfWeek"
+                },
                 "id": {
                   "column": "id"
                 },
                 "name": {
                   "column": "name"
+                },
+                "startTime": {
+                  "column": "startTime"
                 }
               },
               "namespaceId": "public",
@@ -820,7 +834,6 @@
             "relations": {
               "competition": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "competitionId"
@@ -836,7 +849,6 @@
               },
               "format": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "formatId"
@@ -869,26 +881,6 @@
           },
           "Format": {
             "fields": {
-              "associationId": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/text@1",
-                  "kind": "scalar"
-                }
-              },
-              "dayOfWeek": {
-                "nullable": true,
-                "type": {
-                  "codecId": "pg/text@1",
-                  "kind": "scalar"
-                },
-                "valueSet": {
-                  "entityKind": "enum",
-                  "entityName": "day_of_week",
-                  "namespaceId": "public",
-                  "plane": "domain"
-                }
-              },
               "finalSetMatchTiebreak": {
                 "nullable": false,
                 "type": {
@@ -1011,7 +1003,6 @@
             "relations": {
               "association": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "associationId"
@@ -1054,31 +1045,10 @@
                   "model": "FormatTeamGender",
                   "namespace": "public"
                 }
-              },
-              "sections": {
-                "cardinality": "1:N",
-                "on": {
-                  "localFields": [
-                    "id"
-                  ],
-                  "targetFields": [
-                    "formatId"
-                  ]
-                },
-                "to": {
-                  "model": "Section",
-                  "namespace": "public"
-                }
               }
             },
             "storage": {
               "fields": {
-                "associationId": {
-                  "column": "associationId"
-                },
-                "dayOfWeek": {
-                  "column": "dayOfWeek"
-                },
                 "finalSetMatchTiebreak": {
                   "column": "finalSetMatchTiebreak"
                 },
@@ -1165,7 +1135,6 @@
             "relations": {
               "format": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "formatId"
@@ -1247,6 +1216,13 @@
                   "kind": "scalar"
                 }
               },
+              "location": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "matchDate": {
                 "nullable": false,
                 "type": {
@@ -1285,7 +1261,6 @@
             "relations": {
               "awayTeam": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "awayTeamId"
@@ -1301,7 +1276,6 @@
               },
               "confirmedBy": {
                 "cardinality": "N:1",
-                "nullable": true,
                 "on": {
                   "localFields": [
                     "confirmedByPersonId"
@@ -1317,7 +1291,6 @@
               },
               "enteredBy": {
                 "cardinality": "N:1",
-                "nullable": true,
                 "on": {
                   "localFields": [
                     "enteredByPersonId"
@@ -1333,7 +1306,6 @@
               },
               "homeTeam": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "homeTeamId"
@@ -1364,7 +1336,6 @@
               },
               "section": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "sectionId"
@@ -1401,6 +1372,9 @@
                 },
                 "id": {
                   "column": "id"
+                },
+                "location": {
+                  "column": "location"
                 },
                 "matchDate": {
                   "column": "matchDate"
@@ -1698,7 +1672,6 @@
             "relations": {
               "association": {
                 "cardinality": "N:1",
-                "nullable": true,
                 "on": {
                   "localFields": [
                     "associationId"
@@ -1714,7 +1687,6 @@
               },
               "club": {
                 "cardinality": "N:1",
-                "nullable": true,
                 "on": {
                   "localFields": [
                     "clubId"
@@ -1730,7 +1702,6 @@
               },
               "person": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "personId"
@@ -1827,7 +1798,6 @@
             "relations": {
               "match": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "matchId"
@@ -1873,7 +1843,6 @@
               },
               "winningTeam": {
                 "cardinality": "N:1",
-                "nullable": true,
                 "on": {
                   "localFields": [
                     "winningTeamId"
@@ -1947,7 +1916,6 @@
             "relations": {
               "person": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "personId"
@@ -1963,7 +1931,6 @@
               },
               "rubber": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "rubberId"
@@ -1979,7 +1946,6 @@
               },
               "team": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "teamId"
@@ -2075,7 +2041,6 @@
             "relations": {
               "rubber": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "rubberId"
@@ -2162,7 +2127,6 @@
             "relations": {
               "competition": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "competitionId"
@@ -2255,7 +2219,6 @@
             "relations": {
               "format": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "formatId"
@@ -2286,7 +2249,6 @@
               },
               "season": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "seasonId"
@@ -2400,7 +2362,6 @@
               },
               "club": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "clubId"
@@ -2461,7 +2422,6 @@
               },
               "section": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "sectionId"
@@ -2540,7 +2500,6 @@
             "relations": {
               "person": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "personId"
@@ -2556,7 +2515,6 @@
               },
               "team": {
                 "cardinality": "N:1",
-                "nullable": false,
                 "on": {
                   "localFields": [
                     "teamId"
@@ -2801,6 +2759,11 @@
             },
             "club": {
               "columns": {
+                "address": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
                 "contactPersonId": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
@@ -2945,11 +2908,29 @@
               "uniques": []
             },
             "competition": {
+              "checks": [
+                {
+                  "expression": "\"dayOfWeek\" IN ('monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday')",
+                  "name": "competition_dayOfWeek_check_96b6ba98",
+                  "prefix": "competition_dayOfWeek_check"
+                }
+              ],
               "columns": {
                 "associationId": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
                   "nullable": false
+                },
+                "dayOfWeek": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "day_of_week",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
                 },
                 "id": {
                   "codecId": "pg/text@1",
@@ -2960,6 +2941,11 @@
                   "codecId": "pg/text@1",
                   "nativeType": "text",
                   "nullable": false
+                },
+                "startTime": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
                 }
               },
               "foreignKeys": [
@@ -3088,33 +3074,12 @@
             "format": {
               "checks": [
                 {
-                  "expression": "\"dayOfWeek\" IN ('monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday')",
-                  "name": "format_dayOfWeek_check_96b6ba98",
-                  "prefix": "format_dayOfWeek_check"
-                },
-                {
                   "expression": "\"winnerDeterminedBy\" IN ('sets_then_games', 'rubbers_then_sets', 'ladder_position')",
                   "name": "format_winnerDeterminedBy_check_6967c1aa",
                   "prefix": "format_winnerDeterminedBy_check"
                 }
               ],
               "columns": {
-                "associationId": {
-                  "codecId": "pg/text@1",
-                  "nativeType": "text",
-                  "nullable": false
-                },
-                "dayOfWeek": {
-                  "codecId": "pg/text@1",
-                  "nativeType": "text",
-                  "nullable": true,
-                  "valueSet": {
-                    "entityKind": "valueSet",
-                    "entityName": "day_of_week",
-                    "namespaceId": "public",
-                    "plane": "storage"
-                  }
-                },
                 "finalSetMatchTiebreak": {
                   "codecId": "pg/bool@1",
                   "default": {
@@ -3218,34 +3183,8 @@
                   }
                 }
               },
-              "foreignKeys": [
-                {
-                  "source": {
-                    "columns": [
-                      "associationId"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "format"
-                  },
-                  "target": {
-                    "columns": [
-                      "id"
-                    ],
-                    "namespaceId": "public",
-                    "tableName": "association"
-                  }
-                }
-              ],
-              "indexes": [
-                {
-                  "columns": [
-                    "associationId"
-                  ],
-                  "name": "format_associationId_idx_54f3505c",
-                  "prefix": "format_associationId_idx",
-                  "unique": false
-                }
-              ],
+              "foreignKeys": [],
+              "indexes": [],
               "primaryKey": {
                 "columns": [
                   "id"
@@ -3373,6 +3312,11 @@
                   "codecId": "pg/text@1",
                   "nativeType": "text",
                   "nullable": false
+                },
+                "location": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
                 },
                 "matchDate": {
                   "codecId": "pg/timestamptz-temporal@1",

@@ -97,7 +97,10 @@ function ClubProfile() {
                 {club.teams.map((t: any) => (
                   <li key={t.id} className="flex items-center gap-2">
                     <Building2 className="h-4 w-4 text-sky-600" />
-                    {t.name} — {t.sectionName}
+                    <Link to={`/teams/${t.id}`} className="hover:underline hover:text-sky-600">
+                      {t.name}
+                    </Link>
+                    {' — '}{t.sectionName}
                   </li>
                 ))}
               </ul>

@@ -4,6 +4,17 @@ import { NotFoundException } from '@nestjs/common';
 import { formatScoreLine } from '../rubbers/format-scoreline.js';
 import { summariseRubber } from '../rubbers/summarise-rubber.js';
 
+// A null location means the match is played at the home team's club.
+function withEffectiveLocation<
+    M extends { location: string | null; homeTeam: { club: { id: string; name: string } | null } | null },
+>(match: M) {
+    return {
+        ...match,
+        location: match.location ?? match.homeTeam?.club?.name ?? null,
+        locationClubId: match.location === null ? (match.homeTeam?.club?.id ?? null) : null,
+    };
+}
+
 @Injectable()
 export class MatchesService {
     constructor(private readonly prisma: PrismaService) {}
@@ -11,14 +22,15 @@ export class MatchesService {
     async findAll(sectionId: number) {
         return this.prisma.client.orm.public.Match
         .where({ sectionId })
-        .include('homeTeam', (team) => team.select('id', 'name'))
+        .include('homeTeam', (team) => team.select('id', 'name').include('club', (club) => club.select('id', 'name')))
         .include('awayTeam', (team) => team.select('id', 'name'))
-        .all();
+        .all()
+        .then((matches) => matches.map(withEffectiveLocation));
     }
 
     async findOne(id: string): Promise<any> {
         const match = await this.prisma.client.orm.public.Match.where({ id })
-            .include('homeTeam', (team) => team.select('id', 'name'))
+            .include('homeTeam', (team) => team.select('id', 'name').include('club', (club) => club.select('id', 'name')))
             .include('awayTeam', (team) => team.select('id', 'name'))
             .include('rubbers', (rubber) => rubber
                 .orderBy((r) => r.rubberNumber.asc())
@@ -37,7 +49,7 @@ export class MatchesService {
             summary: summariseRubber(rubber.sets),
         }));
 
-        return { ...match, rubbers: rubbersWithSummary };
+        return { ...withEffectiveLocation(match), rubbers: rubbersWithSummary };
     }
 }
 

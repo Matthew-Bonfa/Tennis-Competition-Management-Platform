@@ -10,6 +10,7 @@ type ClubRow = {
     id: string;
     name: string;
     isFinancialMember: boolean;
+    address: string | null;
     contactPerson: ContactPersonRef | null;
     associations: { association: { id: string; name: string } }[];
     teams: { id: number; name: string; section: { id: number; name: string } }[];
@@ -22,6 +23,7 @@ export function toClubDetail(club: ClubRow): ClubDetail {
         id: club.id,
         name: club.name,
         isFinancialMember: club.isFinancialMember,
+        address: club.address,
         teamCount: club.teams.length,
         memberCount: club.memberships.length,
         contactPerson: club.contactPerson,

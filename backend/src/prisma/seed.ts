@@ -151,21 +151,25 @@ async function main() {
   const kilsyth = await db.orm.public.Club.create({
     name: 'Kilsyth Tennis Club',
     isFinancialMember: true,
+    address: 'Kilsyth VIC 3137', // placeholder sample data
     contactPersonId: sophie.id,
   });
   const ringwood = await db.orm.public.Club.create({
     name: 'Ringwood Tennis Club',
     isFinancialMember: true,
+    address: 'Ringwood VIC 3134', // placeholder sample data
     contactPersonId: emily.id,
   });
   const croydon = await db.orm.public.Club.create({
     name: 'Croydon Tennis Club',
     isFinancialMember: true,
+    address: 'Croydon VIC 3136', // placeholder sample data
     contactPersonId: sarah.id,
   });
   const lilydale = await db.orm.public.Club.create({
     name: 'Lilydale Tennis Club',
     isFinancialMember: true,
+    address: 'Lilydale VIC 3140', // placeholder sample data
     contactPersonId: michael.id,
   });
 
@@ -221,9 +225,7 @@ async function main() {
     midweekMixedFormat,
   ] = await Promise.all([
     db.orm.public.Format.create({
-      associationId: association.id,
       name: 'Junior Triples — Saturday',
-      dayOfWeek: 'saturday',
       minPlayers: 3,
       maxPlayers: 5,
       rubbersPerMatch: 6,
@@ -234,9 +236,7 @@ async function main() {
       minCourts: 1,
     }),
     db.orm.public.Format.create({
-      associationId: association.id,
       name: 'Junior Triples — Sunday',
-      dayOfWeek: 'sunday',
       minPlayers: 3,
       maxPlayers: 5,
       rubbersPerMatch: 6,
@@ -247,9 +247,7 @@ async function main() {
       minCourts: 1,
     }),
     db.orm.public.Format.create({
-      associationId: association.id,
       name: "President's Cup — Saturday",
-      dayOfWeek: 'saturday',
       minPlayers: 2,
       maxPlayers: 4,
       rubbersPerMatch: 3,
@@ -261,9 +259,7 @@ async function main() {
       minCourts: 1,
     }),
     db.orm.public.Format.create({
-      associationId: association.id,
       name: "President's Cup — Sunday",
-      dayOfWeek: 'sunday',
       minPlayers: 2,
       maxPlayers: 4,
       rubbersPerMatch: 3,
@@ -277,9 +273,7 @@ async function main() {
     // Byte-for-byte the same as President's Cup on every structured column —
     // see the note above. Seeded separately on purpose.
     db.orm.public.Format.create({
-      associationId: association.id,
       name: 'Singles/Doubles Rubbers — Saturday',
-      dayOfWeek: 'saturday',
       minPlayers: 2,
       maxPlayers: 4,
       rubbersPerMatch: 3,
@@ -291,9 +285,7 @@ async function main() {
       minCourts: 1,
     }),
     db.orm.public.Format.create({
-      associationId: association.id,
       name: 'Singles/Doubles Rubbers — Sunday',
-      dayOfWeek: 'sunday',
       minPlayers: 2,
       maxPlayers: 4,
       rubbersPerMatch: 3,
@@ -305,9 +297,7 @@ async function main() {
       minCourts: 1,
     }),
     db.orm.public.Format.create({
-      associationId: association.id,
       name: 'Green Ball Series — Saturday',
-      dayOfWeek: 'saturday',
       minPlayers: 3,
       maxPlayers: 5,
       rubbersPerMatch: 6,
@@ -318,9 +308,7 @@ async function main() {
       minCourts: 1,
     }),
     db.orm.public.Format.create({
-      associationId: association.id,
       name: 'Green Ball Series — Sunday',
-      dayOfWeek: 'sunday',
       minPlayers: 3,
       maxPlayers: 5,
       rubbersPerMatch: 6,
@@ -331,9 +319,7 @@ async function main() {
       minCourts: 1,
     }),
     db.orm.public.Format.create({
-      associationId: association.id,
       name: 'L Series',
-      dayOfWeek: 'sunday',
       minPlayers: 3,
       maxPlayers: 5,
       rubbersPerMatch: 3, // doubles only
@@ -344,9 +330,7 @@ async function main() {
       minCourts: 1,
     }),
     db.orm.public.Format.create({
-      associationId: association.id,
       name: 'G Series',
-      dayOfWeek: 'sunday',
       minPlayers: 3,
       maxPlayers: 4,
       minAge: 12,
@@ -360,9 +344,7 @@ async function main() {
     }),
     // --- Legacy adult formats, not from the spreadsheet (see note above) ---
     db.orm.public.Format.create({
-      associationId: association.id,
       name: 'Saturday Pennant — Singles/Doubles',
-      dayOfWeek: 'saturday',
       minPlayers: 6,
       maxPlayers: 8,
       rubbersPerMatch: 6,
@@ -373,9 +355,7 @@ async function main() {
       minCourts: 3,
     }),
     db.orm.public.Format.create({
-      associationId: association.id,
       name: 'Midweek Mixed Doubles',
-      dayOfWeek: 'wednesday',
       minPlayers: 4,
       maxPlayers: 6,
       rubbersPerMatch: 4,
@@ -536,6 +516,8 @@ async function main() {
   const competition = await db.orm.public.Competition.create({
     associationId: association.id,
     name: 'Saturday Open Pennant',
+    dayOfWeek: 'saturday',
+    startTime: '13:00',
   });
   await db.orm.public.CompetitionFormat.create({
     competitionId: competition.id,
@@ -736,6 +718,8 @@ async function main() {
   const midweekCompetition = await db.orm.public.Competition.create({
     associationId: association.id,
     name: 'Midweek Mixed Doubles',
+    dayOfWeek: 'wednesday',
+    startTime: '18:00',
   });
   await db.orm.public.CompetitionFormat.create({
     competitionId: midweekCompetition.id,
@@ -795,6 +779,7 @@ async function main() {
   const saturdayMorningJuniors = await db.orm.public.Competition.create({
     associationId: association.id,
     name: 'Saturday Morning Juniors',
+    dayOfWeek: 'saturday',
   });
   await Promise.all(
     [
@@ -813,6 +798,7 @@ async function main() {
   const sundayMorningJuniors = await db.orm.public.Competition.create({
     associationId: association.id,
     name: 'Sunday Morning Juniors',
+    dayOfWeek: 'sunday',
   });
   await Promise.all(
     [

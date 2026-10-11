@@ -1,8 +1,9 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query, Post, Body, Patch, Delete } from '@nestjs/common';
 import { CompetitionsService } from './competitions.service.js';
 import { Public } from '../auth/decorators/public.decorator.js';
-
-/* 
+import { CreateCompetitionDto } from './dto/create-competition.dto.js';
+import { UpdateCompetitionDto } from './dto/update-competition.dto.js';
+    /* 
     describes the routes (functions ?) undertaken for competitions
         get all users
         get user by id
@@ -13,20 +14,48 @@ import { Public } from '../auth/decorators/public.decorator.js';
 
 @Controller('competitions')
 export class CompetitionsController {
-  // injects into controller (singleton)
-  constructor(private readonly competitionsService: CompetitionsService) {}
+  
+    // injects into controller (singleton)
+    constructor(private readonly competitionsService: CompetitionsService) {}
+ 
+ 
+    // returns a lists of all competitions, can filter by association
+    @Public()
+    @Get()
+    findAll(@Query('associationId') associationId?: string) {
+        return this.competitionsService.findAll(associationId);
+    }
 
-  // returns a lists of all competitions, can filter by association
-  @Public()
-  @Get()
-  findAll(@Query('associationId') associationId?: string) {
-    return this.competitionsService.findAll(associationId);
-  }
+    // returns one competition by its ID
+    @Public()
+    @Get(':id')
+    findOne(@Param('id') id: string){  // all params are strings -> if want nums a string use unary (+) or parseInt
+        return this.competitionsService.findOne(id);
+    }
 
-  @Public()
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    // all params are strings -> if want nums a string use unary (+) or parseInt
-    return this.competitionsService.findOne(id);
-  }
+    // create a new competition
+    @Roles('ASSOCIATION_ADMIN')
+    @Post()
+    create(@Body() createCompetitionDto: CreateCompetitionDto){
+        return this.competitionsService.create(createCompetitionDto)
+    } 
+
+    // updates a competition
+    @Roles('ASSOCIATION_ADMIN')
+    @Patch(':id')
+    update(
+        @Param('id') id: string,
+        @Body() updateCompetitionDto: UpdateCompetitionDto,
+    ) {
+        // NEED WAY TO STORE HISTORICAL CHANGES
+        return this.competitionsService.update(id, updateCompetitionDto);
+    }
+ 
+    // deletes a competition
+    @Roles('ASSOCIATION_ADMIN')
+    @Delete('id')
+    delete(@Param('id') id: string){
+        // NEED WAY TO STORE HISTORICAL COMPETITONS
+        return { id }
+    }
 }

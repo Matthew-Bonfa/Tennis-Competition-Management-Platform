@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Param, Body } from '@nestjs/common';
+import { Controller, Get, Post, Put, Param, Body } from '@nestjs/common';
 
 import { AssociationsService } from './associations.service.js';
 import { Public } from '../auth/decorators/public.decorator.js';
@@ -10,8 +10,10 @@ export class AssociationsController {
 
   @Public()
   @Get()
-  getAllAssociations() {
-    return this.associationsService.getAll();
+  async getAllAssociations() {
+    const response = await this.associationsService.getAll();
+    console.log(response);
+    return response;
   }
 
   @Public()
@@ -27,4 +29,12 @@ export class AssociationsController {
       await this.associationsService.insertAssociation(body);
     return newAssociation;
   }
+
+  @Roles('ASSOCIATION_ADMIN')
+  @Put(':id')
+  async updateAssociation(@Param('id') id: string, @Body() body: {name: string}){
+    const updatedAssociation = await this.associationsService.updateAssociation(id, body);
+    return updatedAssociation;
+  }
+
 }

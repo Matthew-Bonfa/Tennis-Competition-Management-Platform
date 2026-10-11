@@ -11,6 +11,8 @@ function baseFixture(overrides: Partial<Fixture> = {}): Fixture {
         sectionId: 1,
         roundNumber: 3,
         matchDate: '2026-06-13T09:00:00.000Z',
+        location: 'Kilsyth',
+        locationClubId: 'club-1',
         status: 'scheduled',
         homeTeam,
         awayTeam,
@@ -20,6 +22,11 @@ function baseFixture(overrides: Partial<Fixture> = {}): Fixture {
 }
 
 describe('toFixtureCsvRow', () => {
+    it('includes the fixture location, or blank when there is none', () => {
+        expect(toFixtureCsvRow(baseFixture({ location: 'Court 3, Albert Park' })).location).toBe('Court 3, Albert Park');
+        expect(toFixtureCsvRow(baseFixture({ location: null })).location).toBe('');
+    });
+
     it('maps a completed fixture with a home win', () => {
         const row = toFixtureCsvRow(baseFixture({
             status: 'completed',

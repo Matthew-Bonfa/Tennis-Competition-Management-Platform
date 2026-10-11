@@ -22,7 +22,6 @@ import type {
 
 import type {
   ContractWithTypeMaps,
-  RelationKeys,
   TypeMaps as TypeMapsType,
 } from '@prisma/orm-postgres/family-contract/types';
 import type {
@@ -263,6 +262,7 @@ export type FieldOutputTypes = {
       readonly id: CodecTypes['pg/text@1']['output'];
       readonly name: CodecTypes['pg/text@1']['output'];
       readonly isFinancialMember: CodecTypes['pg/bool@1']['output'];
+      readonly address: CodecTypes['pg/text@1']['output'] | null;
       readonly contactPersonId: CodecTypes['pg/text@1']['output'] | null;
     };
     readonly ClubMembership: {
@@ -276,6 +276,9 @@ export type FieldOutputTypes = {
       readonly id: CodecTypes['pg/text@1']['output'];
       readonly associationId: CodecTypes['pg/text@1']['output'];
       readonly name: CodecTypes['pg/text@1']['output'];
+      readonly dayOfWeek:
+        'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday' | null;
+      readonly startTime: CodecTypes['pg/text@1']['output'] | null;
     };
     readonly CompetitionFormat: {
       readonly id: CodecTypes['pg/int4@1']['output'];
@@ -284,10 +287,7 @@ export type FieldOutputTypes = {
     };
     readonly Format: {
       readonly id: CodecTypes['pg/text@1']['output'];
-      readonly associationId: CodecTypes['pg/text@1']['output'];
       readonly name: CodecTypes['pg/text@1']['output'];
-      readonly dayOfWeek:
-        'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday' | null;
       readonly minPlayers: CodecTypes['pg/int4@1']['output'];
       readonly maxPlayers: CodecTypes['pg/int4@1']['output'];
       readonly minAge: CodecTypes['pg/int4@1']['output'] | null;
@@ -315,6 +315,7 @@ export type FieldOutputTypes = {
       readonly awayTeamId: CodecTypes['pg/int4@1']['output'];
       readonly roundNumber: CodecTypes['pg/int4@1']['output'];
       readonly matchDate: CodecTypes['pg/timestamptz-temporal@1']['output'];
+      readonly location: CodecTypes['pg/text@1']['output'] | null;
       readonly matchStatus: 'scheduled' | 'completed' | 'washout' | 'forfeit' | 'bye';
       readonly enteredByPersonId: CodecTypes['pg/text@1']['output'] | null;
       readonly enteredAt: CodecTypes['pg/timestamptz-temporal@1']['output'] | null;
@@ -414,6 +415,7 @@ export type FieldInputTypes = {
       readonly id: CodecTypes['pg/text@1']['input'];
       readonly name: CodecTypes['pg/text@1']['input'];
       readonly isFinancialMember: CodecTypes['pg/bool@1']['input'];
+      readonly address: CodecTypes['pg/text@1']['input'] | null;
       readonly contactPersonId: CodecTypes['pg/text@1']['input'] | null;
     };
     readonly ClubMembership: {
@@ -427,6 +429,9 @@ export type FieldInputTypes = {
       readonly id: CodecTypes['pg/text@1']['input'];
       readonly associationId: CodecTypes['pg/text@1']['input'];
       readonly name: CodecTypes['pg/text@1']['input'];
+      readonly dayOfWeek:
+        'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday' | null;
+      readonly startTime: CodecTypes['pg/text@1']['input'] | null;
     };
     readonly CompetitionFormat: {
       readonly id: CodecTypes['pg/int4@1']['input'];
@@ -435,10 +440,7 @@ export type FieldInputTypes = {
     };
     readonly Format: {
       readonly id: CodecTypes['pg/text@1']['input'];
-      readonly associationId: CodecTypes['pg/text@1']['input'];
       readonly name: CodecTypes['pg/text@1']['input'];
-      readonly dayOfWeek:
-        'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday' | null;
       readonly minPlayers: CodecTypes['pg/int4@1']['input'];
       readonly maxPlayers: CodecTypes['pg/int4@1']['input'];
       readonly minAge: CodecTypes['pg/int4@1']['input'] | null;
@@ -466,6 +468,7 @@ export type FieldInputTypes = {
       readonly awayTeamId: CodecTypes['pg/int4@1']['input'];
       readonly roundNumber: CodecTypes['pg/int4@1']['input'];
       readonly matchDate: CodecTypes['pg/timestamptz-temporal@1']['input'];
+      readonly location: CodecTypes['pg/text@1']['input'] | null;
       readonly matchStatus: 'scheduled' | 'completed' | 'washout' | 'forfeit' | 'bye';
       readonly enteredByPersonId: CodecTypes['pg/text@1']['input'] | null;
       readonly enteredAt: CodecTypes['pg/timestamptz-temporal@1']['input'] | null;
@@ -562,6 +565,7 @@ export type StorageColumnTypes = {
       readonly id: CodecTypes['pg/int4@1']['output'];
     };
     readonly club: {
+      readonly address: CodecTypes['pg/text@1']['output'] | null;
       readonly contactPersonId: CodecTypes['pg/text@1']['output'] | null;
       readonly id: CodecTypes['pg/text@1']['output'];
       readonly isFinancialMember: CodecTypes['pg/bool@1']['output'];
@@ -576,8 +580,11 @@ export type StorageColumnTypes = {
     };
     readonly competition: {
       readonly associationId: CodecTypes['pg/text@1']['output'];
+      readonly dayOfWeek:
+        'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday' | null;
       readonly id: CodecTypes['pg/text@1']['output'];
       readonly name: CodecTypes['pg/text@1']['output'];
+      readonly startTime: CodecTypes['pg/text@1']['output'] | null;
     };
     readonly competitionFormat: {
       readonly competitionId: CodecTypes['pg/text@1']['output'];
@@ -585,9 +592,6 @@ export type StorageColumnTypes = {
       readonly id: CodecTypes['pg/int4@1']['output'];
     };
     readonly format: {
-      readonly associationId: CodecTypes['pg/text@1']['output'];
-      readonly dayOfWeek:
-        'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday' | null;
       readonly finalSetMatchTiebreak: CodecTypes['pg/bool@1']['output'];
       readonly forfeitScoreline: CodecTypes['pg/text@1']['output'];
       readonly gamesPerSet: CodecTypes['pg/int4@1']['output'];
@@ -618,6 +622,7 @@ export type StorageColumnTypes = {
       readonly enteredByPersonId: CodecTypes['pg/text@1']['output'] | null;
       readonly homeTeamId: CodecTypes['pg/int4@1']['output'];
       readonly id: CodecTypes['pg/text@1']['output'];
+      readonly location: CodecTypes['pg/text@1']['output'] | null;
       readonly matchDate: CodecTypes['pg/timestamptz-temporal@1']['output'];
       readonly matchStatus: 'scheduled' | 'completed' | 'washout' | 'forfeit' | 'bye';
       readonly roundNumber: CodecTypes['pg/int4@1']['output'];
@@ -713,6 +718,7 @@ export type StorageColumnInputTypes = {
       readonly id: CodecTypes['pg/int4@1']['input'];
     };
     readonly club: {
+      readonly address: CodecTypes['pg/text@1']['input'] | null;
       readonly contactPersonId: CodecTypes['pg/text@1']['input'] | null;
       readonly id: CodecTypes['pg/text@1']['input'];
       readonly isFinancialMember: CodecTypes['pg/bool@1']['input'];
@@ -727,8 +733,11 @@ export type StorageColumnInputTypes = {
     };
     readonly competition: {
       readonly associationId: CodecTypes['pg/text@1']['input'];
+      readonly dayOfWeek:
+        'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday' | null;
       readonly id: CodecTypes['pg/text@1']['input'];
       readonly name: CodecTypes['pg/text@1']['input'];
+      readonly startTime: CodecTypes['pg/text@1']['input'] | null;
     };
     readonly competitionFormat: {
       readonly competitionId: CodecTypes['pg/text@1']['input'];
@@ -736,9 +745,6 @@ export type StorageColumnInputTypes = {
       readonly id: CodecTypes['pg/int4@1']['input'];
     };
     readonly format: {
-      readonly associationId: CodecTypes['pg/text@1']['input'];
-      readonly dayOfWeek:
-        'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday' | null;
       readonly finalSetMatchTiebreak: CodecTypes['pg/bool@1']['input'];
       readonly forfeitScoreline: CodecTypes['pg/text@1']['input'];
       readonly gamesPerSet: CodecTypes['pg/int4@1']['input'];
@@ -769,6 +775,7 @@ export type StorageColumnInputTypes = {
       readonly enteredByPersonId: CodecTypes['pg/text@1']['input'] | null;
       readonly homeTeamId: CodecTypes['pg/int4@1']['input'];
       readonly id: CodecTypes['pg/text@1']['input'];
+      readonly location: CodecTypes['pg/text@1']['input'] | null;
       readonly matchDate: CodecTypes['pg/timestamptz-temporal@1']['input'];
       readonly matchStatus: 'scheduled' | 'completed' | 'washout' | 'forfeit' | 'bye';
       readonly roundNumber: CodecTypes['pg/int4@1']['input'];
@@ -1037,6 +1044,11 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/bool@1';
                   readonly nullable: false;
                 };
+                readonly address: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                };
                 readonly contactPersonId: {
                   readonly nativeType: 'text';
                   readonly codecId: 'pg/text@1';
@@ -1156,6 +1168,16 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
                 };
+                readonly dayOfWeek: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                };
+                readonly startTime: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                };
               };
               primaryKey: { readonly columns: readonly ['id'] };
               uniques: readonly [];
@@ -1254,20 +1276,10 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
                 };
-                readonly associationId: {
-                  readonly nativeType: 'text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: false;
-                };
                 readonly name: {
                   readonly nativeType: 'text';
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
-                };
-                readonly dayOfWeek: {
-                  readonly nativeType: 'text';
-                  readonly codecId: 'pg/text@1';
-                  readonly nullable: true;
                 };
                 readonly minPlayers: {
                   readonly nativeType: 'int4';
@@ -1358,28 +1370,8 @@ type ContractBase = Omit<
               };
               primaryKey: { readonly columns: readonly ['id'] };
               uniques: readonly [];
-              indexes: readonly [
-                {
-                  readonly name: 'format_associationId_idx_54f3505c';
-                  readonly prefix: 'format_associationId_idx';
-                  readonly columns: readonly ['associationId'];
-                  readonly unique: false;
-                },
-              ];
-              foreignKeys: readonly [
-                {
-                  readonly source: {
-                    readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'format';
-                    readonly columns: readonly ['associationId'];
-                  };
-                  readonly target: {
-                    readonly namespaceId: 'public' & NamespaceId;
-                    readonly tableName: 'association';
-                    readonly columns: readonly ['id'];
-                  };
-                },
-              ];
+              indexes: readonly [];
+              foreignKeys: readonly [];
             };
             readonly formatTeamGender: {
               columns: {
@@ -1459,6 +1451,11 @@ type ContractBase = Omit<
                   readonly nativeType: 'timestamptz';
                   readonly codecId: 'pg/timestamptz-temporal@1';
                   readonly nullable: false;
+                };
+                readonly location: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
                 };
                 readonly matchStatus: {
                   readonly nativeType: 'text';
@@ -2449,17 +2446,6 @@ type ContractBase = Omit<
                   readonly targetFields: readonly ['id'];
                 };
               };
-              readonly formats: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'Format';
-                };
-                readonly cardinality: '1:N';
-                readonly on: {
-                  readonly localFields: readonly ['id'];
-                  readonly targetFields: readonly ['associationId'];
-                };
-              };
               readonly roles: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
@@ -2542,6 +2528,10 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
               };
+              readonly address: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
               readonly contactPersonId: {
                 readonly nullable: true;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
@@ -2608,6 +2598,7 @@ type ContractBase = Omit<
                 readonly id: { readonly column: 'id' };
                 readonly name: { readonly column: 'name' };
                 readonly isFinancialMember: { readonly column: 'isFinancialMember' };
+                readonly address: { readonly column: 'address' };
                 readonly contactPersonId: { readonly column: 'contactPersonId' };
               };
             };
@@ -2682,6 +2673,14 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
+              readonly dayOfWeek: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly startTime: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
             };
             readonly relations: {
               readonly association: {
@@ -2725,6 +2724,8 @@ type ContractBase = Omit<
                 readonly id: { readonly column: 'id' };
                 readonly associationId: { readonly column: 'associationId' };
                 readonly name: { readonly column: 'name' };
+                readonly dayOfWeek: { readonly column: 'dayOfWeek' };
+                readonly startTime: { readonly column: 'startTime' };
               };
             };
           };
@@ -2783,16 +2784,8 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
-              readonly associationId: {
-                readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
               readonly name: {
                 readonly nullable: false;
-                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
-              };
-              readonly dayOfWeek: {
-                readonly nullable: true;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
               readonly minPlayers: {
@@ -2853,43 +2846,10 @@ type ContractBase = Omit<
               };
             };
             readonly relations: {
-              readonly association: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'Association';
-                };
-                readonly cardinality: 'N:1';
-                readonly on: {
-                  readonly localFields: readonly ['associationId'];
-                  readonly targetFields: readonly ['id'];
-                };
-              };
-              readonly competitions: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'CompetitionFormat';
-                };
-                readonly cardinality: '1:N';
-                readonly on: {
-                  readonly localFields: readonly ['id'];
-                  readonly targetFields: readonly ['formatId'];
-                };
-              };
               readonly permittedGenders: {
                 readonly to: {
                   readonly namespace: 'public' & NamespaceId;
                   readonly model: 'FormatTeamGender';
-                };
-                readonly cardinality: '1:N';
-                readonly on: {
-                  readonly localFields: readonly ['id'];
-                  readonly targetFields: readonly ['formatId'];
-                };
-              };
-              readonly sections: {
-                readonly to: {
-                  readonly namespace: 'public' & NamespaceId;
-                  readonly model: 'Section';
                 };
                 readonly cardinality: '1:N';
                 readonly on: {
@@ -2903,9 +2863,7 @@ type ContractBase = Omit<
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
-                readonly associationId: { readonly column: 'associationId' };
                 readonly name: { readonly column: 'name' };
-                readonly dayOfWeek: { readonly column: 'dayOfWeek' };
                 readonly minPlayers: { readonly column: 'minPlayers' };
                 readonly maxPlayers: { readonly column: 'maxPlayers' };
                 readonly minAge: { readonly column: 'minAge' };
@@ -2989,6 +2947,10 @@ type ContractBase = Omit<
                   readonly kind: 'scalar';
                   readonly codecId: 'pg/timestamptz-temporal@1';
                 };
+              };
+              readonly location: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
               readonly matchStatus: {
                 readonly nullable: false;
@@ -3089,6 +3051,7 @@ type ContractBase = Omit<
                 readonly awayTeamId: { readonly column: 'awayTeamId' };
                 readonly roundNumber: { readonly column: 'roundNumber' };
                 readonly matchDate: { readonly column: 'matchDate' };
+                readonly location: { readonly column: 'location' };
                 readonly matchStatus: { readonly column: 'matchStatus' };
                 readonly enteredByPersonId: { readonly column: 'enteredByPersonId' };
                 readonly enteredAt: { readonly column: 'enteredAt' };

@@ -89,3 +89,16 @@ export async function patchApi(
   });
 }
 
+
+export async function putApi(endpoint: string, data: unknown, options: RequestInit = {}) {
+    const headers = new Headers(options.headers);
+    headers.set('Content-Type', 'application/json');
+
+    return fetchApi(endpoint, {
+        ...options,
+        method: 'PUT',
+        headers,
+        body: JSON.stringify(data),
+    });
+}
+

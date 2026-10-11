@@ -63,19 +63,28 @@ function FixtureCard({ fixture }: FixtureCardProps) {
     }
 
     return (
-        <Link
-            to={`/matches/${fixture.matchId}`}
-            className="flex items-center justify-between px-4 py-4 border-b border-gray-100 hover:bg-gray-50 transition-colors"
-        >
-            <div className="text-gray-900">
-                {fixture.homeTeam.name} <span className="text-gray-400 mx-1">v</span> {fixture.awayTeam.name}
+        <div className="relative flex items-center justify-between px-4 py-4 border-b border-gray-100 hover:bg-gray-50 transition-colors">
+            {/* Full-card overlay link to the match. Sits behind the team-name
+                links (z-0 vs z-10) so clicking a name goes to that team and
+                clicking anywhere else goes to the match — nesting an <a>
+                inside this one would be invalid HTML and fire both navigations. */}
+            <Link to={`/matches/${fixture.matchId}`} className="absolute inset-0 z-0" aria-label="View match result" />
+
+            <div className="relative z-10 text-gray-900">
+                <Link to={`/teams/${fixture.homeTeam.id}`} className="hover:underline hover:text-sky-600">
+                    {fixture.homeTeam.name}
+                </Link>
+                <span className="text-gray-400 mx-1">v</span>
+                <Link to={`/teams/${fixture.awayTeam.id}`} className="hover:underline hover:text-sky-600">
+                    {fixture.awayTeam.name}
+                </Link>
             </div>
 
-            <div className="flex items-center gap-3">
+            <div className="relative z-10 flex items-center gap-3 pointer-events-none">
                 {renderStatus()}
                 <ChevronRight className="h-4 w-4 text-gray-400" />
             </div>
-        </Link>
+        </div>
     );
 }
 

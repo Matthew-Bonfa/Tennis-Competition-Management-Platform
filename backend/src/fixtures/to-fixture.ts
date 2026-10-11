@@ -14,6 +14,8 @@ export function toFixture(match: MatchRow): Fixture {
         sectionId: match.sectionId,
         roundNumber: match.roundNumber,
         matchDate: fromInstant(match.matchDate).toISOString(),
+        location: match.location ?? match.homeTeam.club.name,
+        locationClubId: match.location === null ? match.homeTeam.club.id : null,
         status: match.matchStatus,
         homeTeam: toFixtureTeam(match.homeTeam),
         awayTeam: toFixtureTeam(match.awayTeam),
@@ -41,6 +43,7 @@ type MatchRow = {
     sectionId: number;
     roundNumber: number;
     matchDate: Temporal.Instant;
+    location: string | null;
     matchStatus: MatchStatus;
     homeTeam: TeamRow;
     awayTeam: TeamRow;

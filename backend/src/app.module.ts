@@ -16,6 +16,7 @@ import { AuthModule } from './auth/auth.module.js';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard.js';
 import { RolesGuard } from './auth/guards/roles.guard.js';
+import { FormatsModule } from './formats/formats.module.js';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { RolesGuard } from './auth/guards/roles.guard.js';
     ClubsModule,
     PlayersModule,
     AuthModule,
+    FormatsModule,
   ],
   controllers: [AppController],
   providers: [

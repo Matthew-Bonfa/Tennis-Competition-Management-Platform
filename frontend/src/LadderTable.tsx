@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import fetchApi from './api'
 
 interface LadderRow {
@@ -21,9 +22,11 @@ interface LadderRow {
 
 interface LadderTableProps {
   sectionId: string | undefined;
+  // For highlighting a specific team in the ladder table on the teams page
+  highlightTeamId?: number;
 }
 
-function LadderTable({ sectionId }: LadderTableProps) {
+function LadderTable({ sectionId, highlightTeamId }: LadderTableProps) {
   const [rows, setRows] = useState<LadderRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -69,10 +72,23 @@ function LadderTable({ sectionId }: LadderTableProps) {
           </tr>
         </thead>
         <tbody>
-          {rows.map((row) => (
-            <tr key={row.teamId} className="border-b border-gray-100 even:bg-gray-50">
+          {rows.map((row) => {
+            const isHighlighted = row.teamId === highlightTeamId;
+            return (
+            <tr
+              key={row.teamId}
+              className={
+                isHighlighted
+                  ? 'border-b border-gray-100 bg-sky-50 border-l-4 border-l-sky-500'
+                  : 'border-b border-gray-100 even:bg-gray-50'
+              }
+            >
               <td className="py-2 pr-2 font-semibold">{row.position}</td>
-              <td className="py-2 pr-2 font-medium text-gray-900">{row.teamName}</td>
+              <td className="py-2 pr-2 font-medium text-gray-900">
+                <Link to={`/teams/${row.teamId}`} className="hover:underline hover:text-sky-600">
+                  {row.teamName}
+                </Link>
+              </td>
               <td className="py-2 pr-2 text-center">{row.matchesPlayed}</td>
               <td className="py-2 pr-2 text-center">{row.matchesWon}</td>
               <td className="py-2 pr-2 text-center">{row.matchesDrawn}</td>
@@ -83,7 +99,8 @@ function LadderTable({ sectionId }: LadderTableProps) {
               <td className="py-2 pr-2 text-center">{formatPercentage(row.percentage)}</td>
               <td className="py-2 pr-2 text-center font-semibold">{row.points}</td>
             </tr>
-          ))}
+            );
+          })}
         </tbody>
       </table>
     </div>
