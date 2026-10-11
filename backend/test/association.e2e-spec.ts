@@ -85,4 +85,49 @@ describe('Associations Feature (e2e)', () => {
 
     expect(response.body.message).toContain('not found');
   });
+
+
+  it('POST /api/associations -> should return 201 Created for a new association', async () => {
+    const newAssociation = {name: "Unreal Tennis Association"};
+    const response = await request(app.getHttpServer())
+      .post('/api/associations')
+      .send(newAssociation)
+      .expect(201);
+
+    expect(response.body).toHaveProperty('id');
+    expect(response.body).toHaveProperty('name');
+    expect(response.body.name).toBe(newAssociation.name);
+  });
+
+  it('PUT /api/associations/:id -> should return 200 when updating an existing association', async () => {
+    const association = {name: "Association with typo"};
+    const response = await request(app.getHttpServer())
+      .post('/api/associations')
+      .send(association)
+      .expect(201);
+
+    expect(response.body.name).toBe(association.name);
+    expect(response.body).toHaveProperty('id');
+    const id = response.body.id;
+
+    const updatedAssociation = {name: "Association without typo"}
+    const updateResponse = await request(app.getHttpServer())
+      .put('/api/associations/' + id)
+      .send(updatedAssociation)
+      .expect(200);
+
+    expect(updateResponse.body.name).toBe(updatedAssociation.name);
+    expect(updateResponse.body).toHaveProperty('id');
+    expect(updateResponse.body.id).toBe(id);
+  });
+
+  it('PUT /api/associations/:id -> should return 404 for a non-existent id', async () => {
+    const fakeId = "00000000-0000-0000-0000-000000000000"
+    const association = {name: "new association 123"};
+    const response = await request(app.getHttpServer())
+      .put('api/association/' + fakeId)
+      .send(association)
+      .expect(404);
+  });
+
 });
