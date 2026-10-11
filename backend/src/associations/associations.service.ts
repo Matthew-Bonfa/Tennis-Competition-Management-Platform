@@ -32,15 +32,9 @@ export class AssociationsService {
   }
 
   async updateAssociation(id: string, data: {name: string}){
-    try {
-      return await this.prisma.client.orm.public.Association.where({id}).update(data);
-    } catch (error: any) {
-      if (error?.code === 'P2025') {
-        throw new NotFoundException(`Association with ID "${id}" not found`);
-      }
-      throw error;
-    }
- 
+    // if this id doesn't exist, getAssociation will throw the 404 for us
+    await this.getAssociation(id);
+    return await this.prisma.client.orm.public.Association.where({id}).update(data);
   }
 
 
