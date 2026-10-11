@@ -1,5 +1,6 @@
 import {useState, useEffect} from 'react'
 import {Link} from 'react-router-dom'
+import { Building2, ChevronRight } from 'lucide-react'
 
 import fetchApi from './api'
 
@@ -30,20 +31,36 @@ function AssociationsList(){
     if (loading){
         return <p>Loading...</p>;
     } else {
-        return <div className="grid gap-6 md:grid-cols-3">
-                {associations.map((assoc) => (
+        return (
+            <div className="space-y-3">
+            {associations.map((assoc) => (
                 <Link 
-                    key={assoc.id}
-                    to={`/associations/` + assoc.id}
-                    className="block bg-white border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow"
+                key={assoc.id}
+                to={`/associations/${assoc.id}`}
+                className="group flex items-center justify-between p-4 bg-white border border-gray-200/80 rounded-xl shadow-xs hover:border-sky-300 hover:shadow-md transition-all duration-200"
                 >
-                    <h2 className="text-xl font-semibold text-sky-800 mb-2">{assoc.name}</h2>
-                    <div className="mt-4 text-sky-600 text-sm font-medium flex items-center">
-                        View Association Profile &rarr;
+                {/* Left side: Icon + Association Name & Contact */}
+                <div className="flex items-center gap-4 min-w-0">
+                    <div className="p-2.5 bg-sky-50 text-sky-600 rounded-lg">
+                        <Building2 className="h-5 w-5" />
                     </div>
+                    
+                    <div className="min-w-0">
+                        <h2 className="text-base font-semibold text-gray-900 group-hover:text-sky-600 transition-colors truncate">
+                            {assoc.name}
+                        </h2>
+                    </div>
+                </div>
+
+                {/* Right side: Action link with sliding arrow */}
+                <div className="flex items-center gap-2 text-xs font-medium text-sky-600 shrink-0 ml-4">
+                    <span className="hidden sm:inline">View Profile</span>
+                    <ChevronRight className="h-4 w-4 text-gray-400 group-hover:text-sky-600 group-hover:translate-x-1 transition-all" />
+                </div>
                 </Link>
-                ))}
-            </div>;
+            ))}
+            </div>
+        );
     }
 
 
