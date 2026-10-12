@@ -1,4 +1,4 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { FormatsService } from './formats.service.js';
 import { Public } from '../auth/decorators/public.decorator.js'
 
@@ -8,7 +8,7 @@ export class FormatsController {
 
   @Public()
   @Get()
-  findAll(@Query('associationId') associationId?: string) {
-    return this.formatsService.findAll(associationId);
+  findAll() {
+    return this.formatsService.findAll();
   }
 }

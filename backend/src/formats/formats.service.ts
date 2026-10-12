@@ -5,16 +5,9 @@ import { PrismaService } from '../prisma/prisma.service.js';
 export class FormatsService {
   constructor(private prisma: PrismaService) {}
 
-  // list formats (optionally only one association's), for dropdowns
-  async findAll(associationId?: string) {
-    let id = {};
-    if (associationId){
-      const id = {associationId};
-    }
-
-    const formats = await this.prisma.client.orm.public.Format
-      .where(id)
-      .all();
+  // list all formats, for dropdowns
+  async findAll() {
+    const formats = await this.prisma.client.orm.public.Format.all();
 
     return formats.map((format) => ({
       id: format.id,
