@@ -1,5 +1,6 @@
+import { OmitType, PartialType } from "@nestjs/mapped-types";
 import { CreateCompetitionDto } from "./create-competition.dto.js";
-import { PartialType } from "@nestjs/mapped-types";
 
-// updates competition where no one field is required
-export class UpdateCompetitionDto extends PartialType(CreateCompetitionDto) {}
+export class UpdateCompetitionDto extends PartialType(
+  OmitType(CreateCompetitionDto, ["associationId"] as const),
+) {}

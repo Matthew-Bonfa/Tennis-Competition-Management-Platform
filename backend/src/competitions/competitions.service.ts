@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { AssociationsService } from '../associations/associations.service.js'
 import { SeasonsService } from '../seasons/seasons.service.js';
@@ -31,6 +31,8 @@ export class CompetitionsService {
       return {
         id: competition.id,
         name: competition.name,
+        dayOfWeek: competition.dayOfWeek,
+        startTime: competition.startTime,
         association: association ?? null,
       };
     });
@@ -70,18 +72,43 @@ export class CompetitionsService {
   }
 
   // create new competition
-  async create(createCompetitionDto: CreateCompetitionDto){
+  async create(createCompetitionDto: CreateCompetitionDto) {
     return this.prisma.client.orm.public.Competition.create({
       name: createCompetitionDto.name,
       associationId: createCompetitionDto.associationId,
+      dayOfWeek: createCompetitionDto.dayOfWeek ?? null,
+      startTime: createCompetitionDto.startTime ?? null,
     });
   }
 
   // update competition
   async update(id: string, updateCompetitionDto: UpdateCompetitionDto) {
-  return this.prisma.client.orm.public.Competition
-    .where({ id })
-    .update({ name: updateCompetitionDto.name });
+    // direct lookup (findOne would also fetch the association and seasons)
+    const existing = await this.prisma.client.orm.public.Competition
+      .where({ id })
+      .first();
+    if (!existing) {
+      throw new NotFoundException(`Competition ${id} not found`);
+    }
+
+    const data: any = {};
+    // a missing or null name is ignored, since a competition always needs one
+    if (updateCompetitionDto.name != null) {
+      data.name = updateCompetitionDto.name;
+    }
+    // for these two, null is allowed and clears the value
+    if (updateCompetitionDto.dayOfWeek !== undefined) {
+      data.dayOfWeek = updateCompetitionDto.dayOfWeek;
+    }
+    if (updateCompetitionDto.startTime !== undefined) {
+      data.startTime = updateCompetitionDto.startTime;
+    }
+
+    if (Object.keys(data).length === 0) {
+      throw new BadRequestException('Nothing to update');
+    }
+
+    return this.prisma.client.orm.public.Competition.where({ id }).update(data);
   }
 
 }
