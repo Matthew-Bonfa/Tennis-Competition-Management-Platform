@@ -29,14 +29,12 @@ function CreateSectionPage() {
       .catch(err => console.error('Failed to load competition:', err));
   }, [id]);
 
-  // once we know the association, load only its formats
-  useEffect(() => {
-    const associationId = competition?.association?.id;
-    if (!associationId) return;
-    fetchApi(`/formats?associationId=${associationId}`)
-      .then(data => setFormats(data))
-      .catch(err => console.error('Failed to load formats:', err));
-  }, [competition]);
+    // load the formats once, to fill the dropdown
+    useEffect(() => {
+      fetchApi('/formats')
+        .then(data => setFormats(data))
+        .catch(err => console.error('Failed to load formats:', err));
+    }, []);
 
   const season = competition?.seasons?.find((s: any) => s.id === seasonId);
 
