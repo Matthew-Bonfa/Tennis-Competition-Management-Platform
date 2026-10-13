@@ -6,6 +6,7 @@ import { AppModule } from '../src/app.module.js';
 
 describe('Clubs Feature (e2e)', () => {
   let app: INestApplication;
+  let adminToken: string;
 
   // Variable for testing
   let savedClubId: string;
@@ -28,6 +29,17 @@ describe('Clubs Feature (e2e)', () => {
     );
 
     await app.init();
+
+    // Logins for proper token
+    const loginResponse = await request(app.getHttpServer())
+      .post('/api/auth/login')
+      .send({
+        email: 'admin@tennis.com',
+        password: 'password123',
+      })
+      .expect(200);
+
+    adminToken = loginResponse.body.access_token;
   });
 
   afterAll(async () => {
@@ -88,4 +100,155 @@ describe('Clubs Feature (e2e)', () => {
 
     expect(response.body.message).toContain('not found');
   });
+
+  // can create a new club
+  it("POST /api/clubs -> should create a new club record and return 201 Created", async () => {
+    const newClub = {name: "the best tennis club"};
+
+    const response = await request(app.getHttpServer())
+      .post('/api/clubs')
+      .set("AUTHORIZATION", `Bearer ${adminToken}`)
+      .send(newClub)
+      .expect(201);
+
+    expect(response.body).toHaveProperty("id");
+    expect(response.body).toHaveProperty("name");
+    expect(response.body.name).toBe(newClub.name);
+
+  });
+
+  // can update an existing club (make a new one for that test)
+  // ie fill it with details
+
+  it("PATCH /api/clubs/:id -> should return 200 after updating an existing club's fields", async () => {
+    const club = {name: "the worst tennis club"};
+
+    const createResponse = await request(app.getHttpServer())
+      .post('/api/clubs')
+      .set("AUTHORIZATION", `Bearer ${adminToken}`)
+      .send(club)
+      .expect(201);
+
+    expect(createResponse.body).toHaveProperty("id");
+    const id = createResponse.body.id;
+
+    const update = {name: "the second worst tennis club", address: "64 Zoo Lane"}
+    const response = await request(app.getHttpServer())
+      .patch('/api/clubs/' + id)
+      .set("AUTHORIZATION", `Bearer ${adminToken}`)
+      .send(update)
+      .expect(200);
+
+    expect(response.body).toHaveProperty("id");
+    expect(response.body.id).toBe(id);
+    expect(response.body).toHaveProperty("address");
+    expect(response.body.address).toBe(update.address);
+    expect(response.body.name).toBe(update.name);
+
+  });
+
+  // can break when trying to update one that doesn't exist
+  it("PATCH /api/clubs/:id -> should return 404 when trying to update a nonexistent club id", async () => {
+    const fakeId = "00000000-0000-0000-0000-000000000000";
+
+    await request(app.getHttpServer())
+      .patch("/api/clubs/" + fakeId)
+      .set("AUTHORIZATION", `Bearer ${adminToken}`)
+      .send({name: "fake id tennis club"})
+      .expect(404);
+  });
+
+  // return 401 when trying to create or update anything without being authorised
+  it("POST /api/clubs -> should return 401 when trying to create a club without being authorised", async () => {
+    await request(app.getHttpServer())
+      .post("/api/clubs")
+      .send({name: "club but i'm not authorised to make it"})
+      .expect(401);
+  });
+
+  it("PATCH /api/clubs/:id -> should return 401 when updating a club without authorisation", async () => {
+    const club = {name: "average tennis club"};
+
+    const response = await request(app.getHttpServer())
+      .post('/api/clubs')
+      .set("AUTHORIZATION", `Bearer ${adminToken}`)
+      .send(club)
+      .expect(201);
+
+    expect(response.body).toHaveProperty("id");
+    const id = response.body.id;
+
+    await request(app.getHttpServer())
+      .patch('/api/clubs/' + id)
+      .send({name: "slightly above average tennis club"})
+      .expect(401);
+  });
+
+
+  /*
+
+  !!! CAN'T TEST THAT THE ROLE ASSIGNMENT WORKED UNTIL THERE IS AN ENDPOINT TO CREATE A PERSON
+      because the response is the club object containing parts of the person object attached to each role
+
+
+  // can create a role
+  it("PATCH /api/clubs/:id -> should be able to assign someone a role within the club", async () => {
+    const club = {name: "club that has roles"};
+
+    const response = await request(app.getHttpServer())
+      .post('/api/clubs')
+      .set("AUTHORIZATION", `Bearer ${adminToken}`)
+      .send(newClub)
+      .expect(201);
+
+    expect(response.body).toHaveProperty("id");
+    const id = response.body.id;
+
+    // CREATE A REAL PERSON BECAUSE OTHERWISE THE findOneClub AT THE END OF updateDetails
+    // WILL NOT BE ABLE TO MATCH THE PERSON ID TO A PERSON
+
+
+    const fakeRole = {personId: newPerson.id, role: "best player"};
+    const roleResponse = await request(app.getHttpServer())
+      .patch("/api/clubs/" + id)
+      .set("AUTHORIZATION", `Bearer ${adminToken}`)
+      .send({roles: [fakeRole]})
+      .expect(200);
+
+    expect(roleResponse.body).toHaveProperty("roles")
+    expect(roleRepsponse.body.roles).toBe([{role: fakeRole.role, person: {}}])
+
+  });
+
+
+  // can edit a role
+
+
+
+  */
+
+
+
+  // can break when trying to edit a role that doesn't exist
+  it("PATCH /api/clubs/:id -> should get 404 when trying to edit a role record that doesn't exist", async () => {
+    const club = {name: "club that has roles"};
+
+    const response = await request(app.getHttpServer())
+      .post('/api/clubs')
+      .set("AUTHORIZATION", `Bearer ${adminToken}`)
+      .send(club)
+      .expect(201);
+
+    expect(response.body).toHaveProperty("id");
+    const id = response.body.id;
+
+    const fakePersonId = "00000000-0000-0000-0000-000000000000";
+    const fakeRole = {id: "12341234-5678-5678-5678-123456781234", personId: fakePersonId, role: "best player"};
+    await request(app.getHttpServer())
+      .patch('/api/clubs/' + id)
+      .set("AUTHORIZATION", `Bearer ${adminToken}`)
+      .send({roles: [fakeRole]})
+      .expect(404);
+  });
+
 });

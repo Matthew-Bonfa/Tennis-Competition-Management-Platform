@@ -1,6 +1,7 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Param, Body, Query } from '@nestjs/common';
 import { ClubsService } from './clubs.service.js';
 import { Public } from '../auth/decorators/public.decorator.js';
+import { Roles } from '../auth/decorators/roles.decorator.js';
 
 @Controller('clubs')
 export class ClubsController {
@@ -17,5 +18,22 @@ export class ClubsController {
   findOne(@Param('id') id: string) {
     return this.clubsService.findOneClub(id);
   }
+
+
+  // creating a club only needs a name - immediately call updateDetails if you want to give other fields
+  @Roles("ASSOCIATION_ADMIN", "CLUB_ADMIN")
+  @Post()
+  createClub(@Body() club: {name: string}){
+    const newClub = {name: club.name, isFinancialMember: false};
+    return this.clubsService.createClub(newClub);
+
+  }
+
+  @Roles("ASSOCIATION_ADMIN", "CLUB_ADMIN")
+  @Patch(':id')
+  updateDetails(@Param('id') id: string, @Body() club: {name?: string, address?: string, contactPersonId?: string, roles?: [{roleId?: number, personId: string, role: string}]}) {
+    return this.clubsService.updateDetails(id, club);
+  }
+
 }
 

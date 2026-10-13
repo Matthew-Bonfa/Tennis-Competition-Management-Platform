@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
-import { NotFoundException } from '@nestjs/common';
+import { NotFoundException, BadRequestException } from '@nestjs/common';
 import { ClubSummary } from './types.js';
 import { toClubDetail } from './to-club-detail.js';
 import { ClubDetail } from './types.js';
@@ -8,7 +8,7 @@ import { ClubDetail } from './types.js';
 @Injectable()
 export class ClubsService {
   constructor(private readonly prisma: PrismaService) {}
-  
+
   async findAllClubs(associationId?: string) {
     let query = this.prisma.client.orm.public.Club;
 
@@ -62,5 +62,42 @@ export class ClubsService {
 
     return toClubDetail(club as any);
   }
+
+
+  async createClub(club: {name: string, isFinancialMember: boolean}){
+    if (!club.name || club.name.trim().length === 0){
+      throw new BadRequestException("Club name field is required");
+    }
+    const response = await this.prisma.client.orm.public.Club.create(club);
+    return response;
+  }
+
+  async updateDetails(id: string, club: {name?: string, address?: string, contactPersonId?: string, roles?: [{roleId?: number, personId: string, role: string}]}){
+    // roles exist within PersonRole so need to be handled separately
+    const {roles, ...details} = club;
+
+    const updateDetails = await this.prisma.client.orm.public.Club.where({id}).update(details);
+    if (!updateDetails){
+      throw new NotFoundException("Club with id " + id + " not found");
+    }
+
+    if (roles){
+      for (let i = 0; i < roles.length; i++){
+        if (!roles[i].roleId){
+          await this.prisma.client.orm.public.PersonRole.create({clubId: id, personId: roles[i].personId, role: roles[i].role});
+        } else {
+          const response = await this.prisma.client.orm.public.PersonRole
+            .where({id: roles[i].roleId})
+            .update({clubId: id, personId: roles[i].personId, role: roles[i].role});
+          if (!response){
+            throw new NotFoundException("PersonRole doesn't contain id " + roles[i].roleId);
+          }
+        }
+      }
+    }
+
+    return this.findOneClub(id);
+  }
+
 }
 
