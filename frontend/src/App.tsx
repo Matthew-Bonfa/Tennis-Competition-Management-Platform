@@ -33,6 +33,8 @@ import ManageSeasonPage from './manage-competitions/ManageSeasonPage';
 import ManagePlayersPage from './manage-players/ManagePlayersPage';
 import EditPlayerPage from './manage-players/EditPlayerPage';
 import Login from './Login';
+import ManageClubsPage from './manage-clubs/ManageClubsPage';
+import EditClubPage from './manage-clubs/EditClubPage';
 
 // --- MAIN APP ROUTING ---
 export default function App() {
@@ -71,6 +73,9 @@ export default function App() {
             <Route path="/manage-competitions/:id/seasons/:seasonId" element={<ManageSeasonPage />} />
             <Route path="/manage-players" element={<ManagePlayersPage />} />
             <Route path="/manage-players/:id" element={<EditPlayerPage />} />
+
+            <Route path="/manage-clubs" element={<ManageClubsPage />} />
+            <Route path="/manage-clubs/:id" element={<EditClubPage />} />
 
             <Route path="/login" element={<Login />} />
           </Routes>
