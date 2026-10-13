@@ -4,14 +4,6 @@ import { Public } from '../auth/decorators/public.decorator.js';
 import { Roles } from '../auth/decorators/roles.decorator.js';
 import { CreateCompetitionDto } from './dto/create-competition.dto.js';
 import { UpdateCompetitionDto } from './dto/update-competition.dto.js';
-    /* 
-    describes the routes (functions ?) undertaken for competitions
-        get all users
-        get user by id
-        create new user
-        edit a user
-        delete a user
-    */
 
 @Controller('competitions')
 export class CompetitionsController {
@@ -54,7 +46,7 @@ export class CompetitionsController {
  
     // deletes a competition
     @Roles('ASSOCIATION_ADMIN')
-    @Delete('id')
+    @Delete(';id')
     delete(@Param('id') id: string){
         // NEED WAY TO STORE HISTORICAL COMPETITONS
         return { id }
