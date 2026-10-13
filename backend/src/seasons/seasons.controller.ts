@@ -17,7 +17,7 @@ export class SeasonsController {
 
   @Public()
   @Get(':id')
-  findOne(id: number) {
+  findOne(@Param('id', ParseIntPipe) id: number) {
     return this.seasonsService.findOne(id);
   }
 

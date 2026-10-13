@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { CreateSeasonDto } from './dto/create-season.dto.js';
 import { UpdateSeasonDto } from './dto/update-season.dto.js';
@@ -46,15 +46,20 @@ export class SeasonsService {
         await this.findOne(id);
 
         const data: any = {};
-        if (updateSeasonDto.name !== undefined) {
+        if (updateSeasonDto.name != null) {
             data.name = updateSeasonDto.name;
         }
-        if (updateSeasonDto.startDate !== undefined) {
+        if (updateSeasonDto.startDate != null) {
             data.startDate = Temporal.Instant.from(new Date(updateSeasonDto.startDate).toISOString());
         }
-        if (updateSeasonDto.endDate !== undefined) {
+        if (updateSeasonDto.endDate != null) {
             data.endDate = Temporal.Instant.from(new Date(updateSeasonDto.endDate).toISOString());
         }
+
+        if (Object.keys(data).length === 0) {
+            throw new BadRequestException('Nothing to update');
+        }
+
         return this.prisma.client.orm.public.Season.where({ id }).update(data);
     }
 
