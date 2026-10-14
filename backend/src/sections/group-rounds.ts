@@ -9,9 +9,9 @@ export interface RoundMatchRow {
     matchStatus: MatchStatus;
 }
 
-// Pure so it can be unit-tested without touching the database: takes every
-// match in a section and groups it into the round-by-round summary the
-// round selector needs (one entry per distinct round number).
+// exclude awaiting result and disputed matches
+const FINAL_STATUSES: MatchStatus[] = ['completed', 'washout', 'forfeit', 'bye'];
+
 export function groupIntoRounds(matches: RoundMatchRow[]): RoundSummary[] {
     const groups = new Map<number, RoundMatchRow[]>();
 
@@ -31,7 +31,7 @@ export function groupIntoRounds(matches: RoundMatchRow[]): RoundSummary[] {
             label: `R${roundNumber}`,
             matchCount: roundMatches.length,
             firstMatchDate: matchDates.length > 0 ? matchDates.sort()[0] : null,
-            allComplete: roundMatches.every((m) => m.matchStatus !== 'scheduled'),
+            allComplete: roundMatches.every((m) => FINAL_STATUSES.includes(m.matchStatus)),
         });
     }
 

@@ -12,6 +12,7 @@ export interface SetScore {
     isMatchTiebreak: boolean;
     homeTiebreakPoints: number | null;
     awayTiebreakPoints: number | null;
+    isComplete?: boolean;
 }
 
 export interface RubberScore {
@@ -26,4 +27,4 @@ export interface ValidationResult {
     errors: string[];
 }
 
-export type OutcomeType = 'normal' | 'retired' | 'walkover';
+export type OutcomeType = 'normal' | 'retired' | 'walkover' | 'incomplete' | 'not_played';
