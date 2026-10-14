@@ -195,10 +195,10 @@ export class MatchesService {
             // Re-entering after a dispute replaces the old sheet
             const oldRubbers = await tx.orm.public.Rubber.where({ matchId }).all();
             for (const old of oldRubbers) {
-                await tx.orm.public.RubberSet.where({ rubberId: old.id }).delete();
-                await tx.orm.public.RubberPlayer.where({ rubberId: old.id }).delete();
+                await tx.orm.public.RubberSet.where({ rubberId: old.id }).deleteAndCount();
+                await tx.orm.public.RubberPlayer.where({ rubberId: old.id }).deleteAndCount();
             }
-            await tx.orm.public.Rubber.where({ matchId }).delete();
+            await tx.orm.public.Rubber.where({ matchId }).deleteAndCount();
 
             for (const rubber of result.rubbers) {
                 const created = await tx.orm.public.Rubber.create({

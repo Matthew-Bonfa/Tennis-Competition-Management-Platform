@@ -384,14 +384,6 @@ async function main() {
 
   // Rubber layout for each format: how many rubbers a match has, in score-sheet
   // order, and whether each is singles, doubles or mixed doubles.
-  //
-  // PLACEHOLDERS: the layouts below are NOT taken from the real competition
-  // rules (the spreadsheet only gave rubber counts). Only these are grounded:
-  //   - L Series: doubles only (per the old note on this format)
-  //   - Midweek Mixed Doubles: named for what it is
-  //   - Saturday Pennant: matches the singles, singles, doubles match seeded
-  //     below, which was written before formats had a rubber layout
-  // Replace the rest once the format owners confirm the real orders.
   const rubberLayout = (...types: Array<'singles' | 'doubles' | 'mixed_doubles'>) =>
     types.map((rubberType, index) => ({ rubberNumber: index + 1, rubberType }));
   const threeSinglesThreeDoubles = rubberLayout('singles', 'singles', 'singles', 'doubles', 'doubles', 'doubles');
@@ -530,6 +522,12 @@ async function main() {
       email: 'volunteer@tennis.com',
       passwordHash,
     }),
+    // Oliver is a PLAYER on the opposing side to Jack in the Midweek Fixture
+    db.orm.public.Account.create({
+      personId: oliver.id,
+      email: 'ringwood.player@tennis.com',
+      passwordHash,
+    }),
   ]);
 
   // =========================================================
@@ -610,7 +608,7 @@ async function main() {
     matchStatus: 'completed',
     enteredByPersonId: sophie.id,
     confirmedByPersonId: emily.id,
-    winningTeamId: kilsythTeam.id, // won rubbers 1 and 3 of 3
+    winningTeamId: kilsythTeam.id,
   });
 
   const rubber1 = await db.orm.public.Rubber.create({
@@ -773,10 +771,14 @@ async function main() {
     teamGender: 'open',
   });
 
+  // Two players a side: every rubber in this format is mixed doubles, so a
+  // result can only be entered for it if each team has a pair to put on court.
   await Promise.all(
     [
       { teamId: kilsythMidweekTeam.id, personId: jack.id },
+      { teamId: kilsythMidweekTeam.id, personId: daniel.id },
       { teamId: ringwoodMidweekTeam.id, personId: oliver.id },
+      { teamId: ringwoodMidweekTeam.id, personId: noah.id },
     ].map((data) => db.orm.public.TeamPlayer.create(data)),
   );
 
