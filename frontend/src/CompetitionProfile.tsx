@@ -6,6 +6,20 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Trophy, Shield, ArrowLeft, Calendar, Tag } from 'lucide-react';
 
+// the backend stores the day as lowercase text, e.g. "saturday"
+function formatDay(day: string | null | undefined) {
+  return day ? day.charAt(0).toUpperCase() + day.slice(1) : null;
+}
+
+// the backend stores the time as 24-hour "HH:mm", e.g. "13:00" -> "1:00 pm"
+function formatTime(time: string | null | undefined) {
+  if (!time) return null;
+  const [hours, minutes] = time.split(':').map(Number);
+  const period = hours >= 12 ? 'pm' : 'am';
+  const hour12 = hours % 12 === 0 ? 12 : hours % 12;
+  return `${hour12}:${String(minutes).padStart(2, '0')} ${period}`;
+}
+
 function CompetitionProfile() {
   const { id } = useParams();
 
@@ -111,21 +125,22 @@ function CompetitionProfile() {
               <span className="font-medium text-gray-800">{competition.association?.name || 'N/A'}</span>
             </div>
             <div className="flex justify-between py-2 border-b border-gray-100">
-              <span className="text-gray-500 font-medium">Location</span>
-              <span className="font-medium text-gray-400 italic">Not yet available</span>
-            </div>
-            <div className="flex justify-between py-2 border-b border-gray-100">
               <span className="text-gray-500 font-medium">Day</span>
-              <span className="font-medium text-gray-400 italic">Not yet available</span>
+              {competition.dayOfWeek ? (
+                <span className="font-medium text-gray-800">{formatDay(competition.dayOfWeek)}</span>
+              ) : (
+                <span className="font-medium text-gray-400 italic">Not set</span>
+              )}
             </div>
             <div className="flex justify-between py-2 border-b border-gray-100">
-              <span className="text-gray-500 font-medium">Time</span>
-              <span className="font-medium text-gray-400 italic">Not yet available</span>
+              <span className="text-gray-500 font-medium">Start Time</span>
+              {competition.startTime ? (
+                <span className="font-medium text-gray-800">{formatTime(competition.startTime)}</span>
+              ) : (
+                <span className="font-medium text-gray-400 italic">Not set</span>
+              )}
             </div>
           </div>
-          <p className="text-xs text-gray-400 mt-3">
-            Location, day, and time will display here once these fields are added to the Competition schema.
-          </p>
           {competition.association?.id && (
             <Link 
               to={`/associations/${competition.association.id}`}
