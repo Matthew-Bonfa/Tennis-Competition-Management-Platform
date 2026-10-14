@@ -20,6 +20,7 @@ model Person {
   enteredMatches        Match[]          @relation("MatchEnteredBy")
   confirmedMatches      Match[]          @relation("MatchConfirmedBy")
   rubberParticipations  RubberPlayer[]
+  matchResultEvents     MatchResultEvent[]
 
   account Account?
 }
@@ -90,7 +91,6 @@ model Format {
   maxAge     Int?
 
   // Match Format + Scoring
-  rubbersPerMatch       Int
   setsToWin             Int
   gamesPerSet           Int
   tiebreakAtGames       Int?
@@ -101,7 +101,23 @@ model Format {
   winnerDeterminedBy    winner_rule
   minCourts             Int
 
+  rubbers          FormatRubber[]
   permittedGenders FormatTeamGender[]
+}
+
+// The rubbers a match under this format consists of, in score-sheet order.
+// The number of rows is the number of rubbers per match. Rubber.rubberType is
+// copied from here when a result is saved, so editing a format later doesn't
+// rewrite how past matches were played.
+model FormatRubber {
+  id           Int         @id @default(autoincrement())
+  formatId     String
+  rubberNumber Int         // 1..N
+  rubberType   rubber_type
+
+  format Format @relation(fields: [formatId], references: [id])
+
+  @@unique([formatId, rubberNumber])
 }
 
 // The set of team genders a format permits
@@ -228,6 +244,7 @@ model Team {
   homeMatches Match[] @relation("HomeTeam")
   awayMatches Match[] @relation("AwayTeam")
   wonRubbers  Rubber[] @relation("WinningTeam")
+  wonMatches  Match[]  @relation("MatchWinner")
   rubberParticipations RubberPlayer[]
 }
 
@@ -238,19 +255,26 @@ model TeamPlayer {
 
   team     Team   @relation(fields: [teamId], references: [id])
   person   Person @relation(fields: [personId], references: [id])
+
+  @@unique([teamId, personId])
 }
 
 // ==========================================
 // MATCH PLAY & SCORING
 // ==========================================
 
+// A player-entered result sits in AwaitingConfirmation until a player from the
+// opposing team approves it (-> Completed) or disputes it (-> Disputed).
+// Only Completed matches count towards the ladder.
 enum match_status {
   @@type("pg/text@1")
-  Scheduled = "scheduled"
-  Completed = "completed"
-  Washout   = "washout"
-  Forfeit   = "forfeit"
-  Bye       = "bye"
+  Scheduled            = "scheduled"
+  AwaitingConfirmation = "awaiting_confirmation"
+  Disputed             = "disputed"
+  Completed            = "completed"
+  Washout              = "washout"
+  Forfeit              = "forfeit"
+  Bye                  = "bye"
 }
 
 enum rubber_type {
@@ -260,11 +284,25 @@ enum rubber_type {
   MixedDoubles = "mixed_doubles"
 }
 
+// Incomplete: play started but wasn't finished, so there is no winner. Its
+// games still count towards the ladder; the unfinished set doesn't count as a set.
+// NotPlayed: the rubber never started (e.g. a dead rubber).
 enum outcome_type {
   @@type("pg/text@1")
-  Normal   = "normal"
-  Retired  = "retired"
-  Walkover = "walkover"
+  Normal     = "normal"
+  Retired    = "retired"
+  Walkover   = "walkover"
+  Incomplete = "incomplete"
+  NotPlayed  = "not_played"
+}
+
+enum match_event_type {
+  @@type("pg/text@1")
+  Entered    = "entered"
+  Confirmed  = "confirmed"
+  Disputed   = "disputed"
+  Overridden = "overridden"   // an admin entered or changed the result directly
+  Reopened   = "reopened"
 }
 
 model Match {
@@ -280,14 +318,21 @@ model Match {
   enteredAt           DateTime?
   confirmedByPersonId String?
   confirmedAt         DateTime?
+  // Set from the rubbers by the server, never by the client. Only meaningful
+  // when matchStatus is Completed: null there means a draw. For a Forfeit it is
+  // the team that did not forfeit.
+  winningTeamId       Int?
+  disputeReason       String?
 
   section             Section @relation(fields: [sectionId], references: [id])
   homeTeam            Team    @relation("HomeTeam", fields: [homeTeamId], references: [id])
   awayTeam            Team    @relation("AwayTeam", fields: [awayTeamId], references: [id])
   enteredBy           Person? @relation("MatchEnteredBy", fields: [enteredByPersonId], references: [id])
   confirmedBy         Person? @relation("MatchConfirmedBy", fields: [confirmedByPersonId], references: [id])
+  winningTeam         Team?   @relation("MatchWinner", fields: [winningTeamId], references: [id])
 
   rubbers             Rubber[]
+  events              MatchResultEvent[]
 
   @@unique([sectionId, roundNumber, homeTeamId])
   @@index([sectionId, matchDate])
@@ -319,6 +364,9 @@ model RubberSet {
   homeTiebreakPoints Int?
   awayTiebreakPoints Int?
   isMatchTiebreak    Boolean @default(false)
+  // false for a set stopped part-way (retirement / incomplete rubber): its
+  // games count, but it isn't a set won or lost.
+  isComplete         Boolean @default(true)
 
   rubber      Rubber @relation(fields: [rubberId], references: [id])
 
@@ -336,4 +384,21 @@ model RubberPlayer {
   person   Person @relation(fields: [personId], references: [id])
 
   @@unique([rubberId, personId])
+}
+
+// Audit trail for the enter -> confirm / dispute -> admin override workflow, so
+// a later change never overwrites who did what and when.
+model MatchResultEvent {
+  id        Int              @id @default(autoincrement())
+  matchId   String
+  eventType match_event_type
+  personId  String
+  createdAt DateTime         @default(now())
+  note      String?
+  snapshot  String?          // the result as submitted, serialised JSON
+
+  match  Match  @relation(fields: [matchId], references: [id])
+  person Person @relation(fields: [personId], references: [id])
+
+  @@index([matchId])
 }
