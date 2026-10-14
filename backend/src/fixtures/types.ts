@@ -12,7 +12,7 @@ export interface FixtureQuery {
     round?: number;
 }
 
-export type MatchStatus = 'scheduled' | 'completed' | 'washout' | 'forfeit' | 'bye';
+export type MatchStatus = 'scheduled' | 'awaiting_confirmation' | 'disputed' | 'completed' | 'washout' | 'forfeit' | 'bye';
 
 export interface FixtureTeam {
     id: number;
