@@ -45,9 +45,9 @@ export class SectionsService {
       id: section.id,
       name: section.name,
       seasonId: section.seasonId,
+      formatId: section.formatId,
       gradeLabel: section.gradeLabel,
       ladder: ladder,
-      // add fixture here
     };
   }
 
@@ -220,6 +220,18 @@ export class SectionsService {
     }
     if (updateSectionDto.gradeLabel !== undefined) {
       data.gradeLabel = updateSectionDto.gradeLabel;
+    }
+
+    if (updateSectionDto.formatId !== undefined) {
+      // check the format exists, otherwise the database throws a
+      // confusing foreign key error (a 500) instead of a clear 404
+      const format = await this.prisma.client.orm.public.Format.where({
+        id: updateSectionDto.formatId,
+      }).first();
+      if (!format) {
+        throw new NotFoundException(`Format ${updateSectionDto.formatId} not found`);
+      }
+      data.formatId = updateSectionDto.formatId;
     }
 
     if (Object.keys(data).length === 0) {
