@@ -40,10 +40,12 @@ describe('groupIntoRounds', () => {
         expect(rounds.map((r) => r.roundNumber)).toEqual([1, 2, 3]);
     });
 
-    it('marks a round complete only when every match in it is no longer scheduled', () => {
+    it('marks a round complete only when every match in it has a final status', () => {
         const allComplete = groupIntoRounds([
             match({ roundNumber: 1, matchStatus: 'completed' }),
             match({ roundNumber: 1, matchStatus: 'washout' }),
+            match({ roundNumber: 1, matchStatus: 'forfeit' }),
+            match({ roundNumber: 1, matchStatus: 'bye' }),
         ]);
         expect(allComplete[0].allComplete).toBe(true);
 
@@ -52,6 +54,20 @@ describe('groupIntoRounds', () => {
             match({ roundNumber: 1, matchStatus: 'scheduled' }),
         ]);
         expect(stillPending[0].allComplete).toBe(false);
+    });
+
+    it('does not mark a round complete while a result is awaiting confirmation or disputed', () => {
+        const awaiting = groupIntoRounds([
+            match({ roundNumber: 1, matchStatus: 'completed' }),
+            match({ roundNumber: 1, matchStatus: 'awaiting_confirmation' }),
+        ]);
+        expect(awaiting[0].allComplete).toBe(false);
+
+        const disputed = groupIntoRounds([
+            match({ roundNumber: 1, matchStatus: 'completed' }),
+            match({ roundNumber: 1, matchStatus: 'disputed' }),
+        ]);
+        expect(disputed[0].allComplete).toBe(false);
     });
 
     it('takes the earliest match date in the round', () => {
