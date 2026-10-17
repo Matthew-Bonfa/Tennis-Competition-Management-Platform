@@ -1,5 +1,9 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, PencilLine } from 'lucide-react';
+
+import fetchApi, { ApiError } from './api';
+import { isAuthenticated } from './auth';
 
 interface FixtureTeam {
     id: number;
@@ -19,17 +23,57 @@ interface Fixture {
     sectionId: number;
     roundNumber: number;
     matchDate: string;
-    status: 'scheduled' | 'completed' | 'washout' | 'forfeit' | 'bye';
+    status: 'scheduled' | 'awaiting_confirmation' | 'disputed' | 'completed' | 'washout' | 'forfeit' | 'bye';
     homeTeam: FixtureTeam;
     awayTeam: FixtureTeam;
     result: FixtureResult | null;
 }
 
+const STATUS_LABELS: Partial<Record<Fixture['status'], string>> = {
+    awaiting_confirmation: 'Awaiting confirmation',
+    disputed: 'Disputed',
+};
+
 interface FixtureCardProps {
     fixture: Fixture;
 }
 
+// Result entry opens once the match day arrives, and stays open if nobody has entered one yet
+function hasStarted(matchDate: string) {
+    const endOfToday = new Date();
+    endOfToday.setHours(23, 59, 59, 999);
+    return new Date(matchDate) <= endOfToday;
+}
+
 function FixtureCard({ fixture }: FixtureCardProps) {
+    // Whether the signed-in viewer is allowed to enter this result 
+    const [canEnter, setCanEnter] = useState(false);
+    const entryOpen = fixture.status === 'scheduled' && hasStarted(fixture.matchDate);
+
+    useEffect(() => {
+        if (!entryOpen || !isAuthenticated()) {
+            return;
+        }
+
+        let cancelled = false;
+        fetchApi(`/matches/${fixture.matchId}/result-form`)
+            .then(() => {
+                if (!cancelled) {
+                    setCanEnter(true);
+                }
+            })
+            .catch((err) => {
+                // A 403 just means this viewer can't enter the result, so they keep seeing the date
+                if (!(err instanceof ApiError && err.status === 403)) {
+                    throw err;
+                }
+            });
+
+        return () => {
+            cancelled = true;
+        };
+    }, [entryOpen, fixture.matchId]);
+
     function renderStatus() {
         if (fixture.status === 'completed' && fixture.result) {
             const { homeRubbersWon, awayRubbersWon, winner } = fixture.result;
@@ -50,6 +94,18 @@ function FixtureCard({ fixture }: FixtureCardProps) {
             );
         }
 
+        if (fixture.status === 'scheduled' && canEnter) {
+            return (
+                <Link
+                    to={`/matches/${fixture.matchId}/enter`}
+                    className="pointer-events-auto inline-flex items-center gap-1 rounded bg-sky-600 px-3 py-1.5 text-sm text-white hover:bg-sky-700"
+                >
+                    <PencilLine className="h-4 w-4" />
+                    Enter result
+                </Link>
+            );
+        }
+
         if (fixture.status === 'scheduled') {
             const dateLabel = new Date(fixture.matchDate).toLocaleDateString(undefined, {
                 weekday: 'short',
@@ -59,7 +115,7 @@ function FixtureCard({ fixture }: FixtureCardProps) {
             return <span className="text-gray-500 text-sm">{dateLabel}</span>;
         }
 
-        return <span className="text-gray-500 text-sm capitalize">{fixture.status}</span>;
+        return <span className="text-gray-500 text-sm capitalize">{STATUS_LABELS[fixture.status] ?? fixture.status}</span>;
     }
 
     return (
