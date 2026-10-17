@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Check, Loader2, PencilLine, X } from 'lucide-react';
 
 import fetchApi, { ApiError, postApi } from '../api';
@@ -18,6 +18,7 @@ function errorMessage(err: ApiError) {
 }
 
 function ResultStatusPanel({ match, onMatchChange }: ResultStatusPanelProps) {
+  const navigate = useNavigate();
   const [form, setForm] = useState<ResultForm | null>(null);
   const [disputing, setDisputing] = useState(false);
   const [reason, setReason] = useState('');
@@ -40,6 +41,7 @@ function ResultStatusPanel({ match, onMatchChange }: ResultStatusPanelProps) {
       });
   }, [match.id, match.matchStatus]);
 
+  // A dispute always opens the entry form next, so the disputer can enter the score they think is right
   async function respond(action: 'confirm' | 'dispute') {
     setBusy(action);
     setError(null);
@@ -48,6 +50,9 @@ function ResultStatusPanel({ match, onMatchChange }: ResultStatusPanelProps) {
       setDisputing(false);
       setReason('');
       onMatchChange(updated);
+      if (action === 'dispute') {
+        navigate(`/matches/${match.id}/enter`);
+      }
     } catch (err) {
       if (err instanceof ApiError) {
         setError(errorMessage(err));
@@ -123,7 +128,7 @@ function ResultStatusPanel({ match, onMatchChange }: ResultStatusPanelProps) {
       {canRespond && disputing && (
         <div className="rounded border border-gray-200 bg-white p-3 space-y-2">
           <label className="block text-sm text-gray-600">
-            What is wrong with this result?
+            Why do you dispute this result? You will enter the correct score next.
             <textarea
               value={reason}
               onChange={(e) => setReason(e.target.value)}
@@ -132,7 +137,7 @@ function ResultStatusPanel({ match, onMatchChange }: ResultStatusPanelProps) {
               className="mt-1 w-full rounded border border-gray-300 px-3 py-2 text-gray-900"
             />
           </label>
-          <div className="flex justify-end gap-2">
+          <div className="flex flex-wrap justify-end gap-2">
             <button
               type="button"
               onClick={() => {
@@ -148,10 +153,10 @@ function ResultStatusPanel({ match, onMatchChange }: ResultStatusPanelProps) {
               type="button"
               onClick={() => respond('dispute')}
               disabled={busy !== null || reason.trim() === ''}
-              className="inline-flex items-center gap-1 rounded bg-red-600 px-3 py-1.5 text-sm text-white hover:bg-red-700 disabled:opacity-50"
+              className="inline-flex items-center gap-1 rounded bg-sky-600 px-3 py-1.5 text-sm text-white hover:bg-sky-700 disabled:opacity-50"
             >
               {busy === 'dispute' && <Loader2 className="h-4 w-4 animate-spin" />}
-              Send dispute
+              Dispute and enter the correct score
             </button>
           </div>
         </div>

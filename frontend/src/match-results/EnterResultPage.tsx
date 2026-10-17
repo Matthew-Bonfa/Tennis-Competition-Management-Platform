@@ -143,8 +143,17 @@ function EnterResultPage() {
         <>
           {form.matchStatus === 'disputed' && (
             <div className="rounded border border-amber-200 bg-amber-50 p-3 mb-4 text-sm text-amber-800">
-              <p className="font-semibold">The other team disputed the last result.</p>
+              <p className="font-semibold">
+                {form.viewerSide === null
+                  ? 'The last result was disputed.'
+                  : form.viewerSide === form.enteredBySide
+                    ? 'The other team disputed the last result.'
+                    : 'Your team disputed the last result.'}
+              </p>
               {form.disputeReason && <p className="mt-1">Reason: {form.disputeReason}</p>}
+              {form.viewerSide !== null && form.viewerSide !== form.enteredBySide && (
+                <p className="mt-1">Enter the score you think is correct. The other team will then be asked to confirm it.</p>
+              )}
             </div>
           )}
 
