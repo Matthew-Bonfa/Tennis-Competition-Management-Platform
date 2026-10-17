@@ -142,4 +142,78 @@ describe('validateRubber', () => {
         expect(result.isValid).toBe(true);
         expect(result.errors).toEqual([]);
     });
+
+    describe('match tiebreaks', () => {
+        const set = (setNumber: number, homeGames: number, awayGames: number) => ({
+            setNumber, homeGames, awayGames, homeTiebreakPoints: null, awayTiebreakPoints: null, isMatchTiebreak: false,
+        });
+        // A match tiebreak is stored as a 1-0 set, with the points kept separately
+        const matchTiebreak = (setNumber: number, homePoints: number, awayPoints: number) => ({
+            setNumber,
+            homeGames: homePoints > awayPoints ? 1 : 0,
+            awayGames: awayPoints > homePoints ? 1 : 0,
+            homeTiebreakPoints: homePoints,
+            awayTiebreakPoints: awayPoints,
+            isMatchTiebreak: true,
+        });
+
+        it('validates a match tiebreak as the deciding set', () => {
+            const result = validateRubber(fast4, [set(1, 4, 1), set(2, 2, 4), matchTiebreak(3, 10, 8)], 'normal');
+
+            expect(result.errors).toEqual([]);
+            expect(result.isValid).toBe(true);
+        });
+
+        it('validates a match tiebreak won by two after passing ten', () => {
+            const result = validateRubber(fast4, [set(1, 4, 1), set(2, 2, 4), matchTiebreak(3, 10, 12)], 'normal');
+
+            expect(result.errors).toEqual([]);
+        });
+
+        it('invalidates a match tiebreak won by one point', () => {
+            const result = validateRubber(fast4, [set(1, 4, 1), set(2, 2, 4), matchTiebreak(3, 10, 9)], 'normal');
+
+            expect(result.errors).toEqual(['Illegal match tiebreak score: 10-9']);
+        });
+
+        it('invalidates a match tiebreak that went past ten without a two point margin', () => {
+            const result = validateRubber(fast4, [set(1, 4, 1), set(2, 2, 4), matchTiebreak(3, 11, 8)], 'normal');
+
+            expect(result.errors).toEqual(['Illegal match tiebreak score: 11-8']);
+        });
+
+        it('invalidates a match tiebreak whose set winner disagrees with its points', () => {
+            const result = validateRubber(fast4, [
+                set(1, 4, 1), set(2, 2, 4), { ...matchTiebreak(3, 10, 8), homeGames: 0, awayGames: 1 },
+            ], 'normal');
+
+            expect(result.errors).toEqual(['Illegal match tiebreak score: 10-8']);
+        });
+
+        it('invalidates a match tiebreak with no points', () => {
+            const result = validateRubber(fast4, [
+                set(1, 4, 1), set(2, 2, 4), { ...matchTiebreak(3, 10, 8), homeTiebreakPoints: null },
+            ], 'normal');
+
+            expect(result.isValid).toBe(false);
+        });
+
+        it('invalidates a match tiebreak in a format that plays a full final set', () => {
+            const result = validateRubber(bestOfThree, [set(1, 6, 4), set(2, 3, 6), matchTiebreak(3, 10, 8)], 'normal');
+
+            expect(result.errors).toEqual(['Set 3: this format does not use a match tiebreak']);
+        });
+
+        it('invalidates a match tiebreak before the deciding set', () => {
+            const result = validateRubber(fast4, [set(1, 4, 1), matchTiebreak(2, 10, 8)], 'normal');
+
+            expect(result.errors).toEqual(['Set 2: only the deciding set can be a match tiebreak']);
+        });
+
+        it('invalidates a full deciding set in a match tiebreak format', () => {
+            const result = validateRubber(fast4, [set(1, 4, 1), set(2, 2, 4), set(3, 4, 2)], 'normal');
+
+            expect(result.errors).toEqual(['Set 3: the deciding set must be a match tiebreak']);
+        });
+    });
 });

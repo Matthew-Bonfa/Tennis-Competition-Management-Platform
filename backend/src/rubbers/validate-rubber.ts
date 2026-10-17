@@ -11,6 +11,27 @@ function isLegalTiebreakScore(winnerPoints: number, loserPoints: number): boolea
     return false;
 }
 
+// A match tiebreak is first to 10, won by 2, and is stored as a 1-0 set with
+// the points kept in the tiebreak fields
+function isLegalMatchTiebreak(set: SetScore): boolean {
+    const home = set.homeTiebreakPoints;
+    const away = set.awayTiebreakPoints;
+    if (home == null || away == null || home === away) {
+        return false;
+    }
+
+    const winnerPoints = Math.max(home, away);
+    const loserPoints = Math.min(home, away);
+    const legalPoints = winnerPoints === 10 ? loserPoints <= 8 : winnerPoints > 10 && winnerPoints - loserPoints === 2;
+
+    const homeWon = home > away;
+    const gamesMatch = homeWon
+        ? set.homeGames === 1 && set.awayGames === 0
+        : set.homeGames === 0 && set.awayGames === 1;
+
+    return legalPoints && gamesMatch;
+}
+
 function isLegalSetScore(format: RubberFormat, set: SetScore): boolean {
     if (set.homeGames === format.gamesPerSet && set.awayGames < format.gamesPerSet - 1) {
         return true;
@@ -80,7 +101,18 @@ export function validateRubber(format: RubberFormat, sets: SetScore[], outcome: 
             errors.push(`Set ${set.setNumber} played after match was already won`);
         }
 
-        if (!isLegalSetScore(format, set)) {
+        const isDecidingSet = i === format.setsToWin * 2 - 2;
+        if (set.isMatchTiebreak) {
+            if (!format.finalSetMatchTiebreak) {
+                errors.push(`Set ${set.setNumber}: this format does not use a match tiebreak`);
+            } else if (!isDecidingSet) {
+                errors.push(`Set ${set.setNumber}: only the deciding set can be a match tiebreak`);
+            } else if (!isLegalMatchTiebreak(set)) {
+                errors.push(`Illegal match tiebreak score: ${set.homeTiebreakPoints}-${set.awayTiebreakPoints}`);
+            }
+        } else if (format.finalSetMatchTiebreak && isDecidingSet) {
+            errors.push(`Set ${set.setNumber}: the deciding set must be a match tiebreak`);
+        } else if (!isLegalSetScore(format, set)) {
             errors.push(`Illegal set score: ${set.homeGames}-${set.awayGames}`);
         }
     }
