@@ -228,7 +228,6 @@ async function main() {
       name: 'Junior Triples — Saturday',
       minPlayers: 3,
       maxPlayers: 5,
-      rubbersPerMatch: 6,
       setsToWin: 1,
       gamesPerSet: 6,
       tiebreakAtGames: 6,
@@ -239,7 +238,6 @@ async function main() {
       name: 'Junior Triples — Sunday',
       minPlayers: 3,
       maxPlayers: 5,
-      rubbersPerMatch: 6,
       setsToWin: 1,
       gamesPerSet: 6,
       tiebreakAtGames: 6,
@@ -250,7 +248,6 @@ async function main() {
       name: "President's Cup — Saturday",
       minPlayers: 2,
       maxPlayers: 4,
-      rubbersPerMatch: 3,
       setsToWin: 2,
       gamesPerSet: 6,
       tiebreakAtGames: 6,
@@ -262,7 +259,6 @@ async function main() {
       name: "President's Cup — Sunday",
       minPlayers: 2,
       maxPlayers: 4,
-      rubbersPerMatch: 3,
       setsToWin: 2,
       gamesPerSet: 6,
       tiebreakAtGames: 6,
@@ -276,7 +272,6 @@ async function main() {
       name: 'Singles/Doubles Rubbers — Saturday',
       minPlayers: 2,
       maxPlayers: 4,
-      rubbersPerMatch: 3,
       setsToWin: 2,
       gamesPerSet: 6,
       tiebreakAtGames: 6,
@@ -288,7 +283,6 @@ async function main() {
       name: 'Singles/Doubles Rubbers — Sunday',
       minPlayers: 2,
       maxPlayers: 4,
-      rubbersPerMatch: 3,
       setsToWin: 2,
       gamesPerSet: 6,
       tiebreakAtGames: 6,
@@ -300,7 +294,6 @@ async function main() {
       name: 'Green Ball Series — Saturday',
       minPlayers: 3,
       maxPlayers: 5,
-      rubbersPerMatch: 6,
       setsToWin: 1,
       gamesPerSet: 6,
       tiebreakAtGames: null, // "No tiebreaks are played in this competition"
@@ -311,7 +304,6 @@ async function main() {
       name: 'Green Ball Series — Sunday',
       minPlayers: 3,
       maxPlayers: 5,
-      rubbersPerMatch: 6,
       setsToWin: 1,
       gamesPerSet: 6,
       tiebreakAtGames: null,
@@ -322,7 +314,6 @@ async function main() {
       name: 'L Series',
       minPlayers: 3,
       maxPlayers: 5,
-      rubbersPerMatch: 3, // doubles only
       setsToWin: 1,
       gamesPerSet: 8, // "finished when 8 games have been played"
       tiebreakAtGames: null, // sudden-death deuce instead, not a tiebreak
@@ -335,7 +326,6 @@ async function main() {
       maxPlayers: 4,
       minAge: 12,
       maxAge: 22,
-      rubbersPerMatch: 6,
       setsToWin: 1,
       gamesPerSet: 6,
       tiebreakAtGames: 6,
@@ -347,7 +337,6 @@ async function main() {
       name: 'Saturday Pennant — Singles/Doubles',
       minPlayers: 6,
       maxPlayers: 8,
-      rubbersPerMatch: 6,
       setsToWin: 2,
       gamesPerSet: 6,
       tiebreakAtGames: 6,
@@ -358,7 +347,6 @@ async function main() {
       name: 'Midweek Mixed Doubles',
       minPlayers: 4,
       maxPlayers: 6,
-      rubbersPerMatch: 4,
       setsToWin: 2,
       gamesPerSet: 6,
       tiebreakAtGames: 6,
@@ -392,6 +380,32 @@ async function main() {
       { formatId: saturdayPennantFormat.id, gender: 'open' as const },
       { formatId: midweekMixedFormat.id, gender: 'open' as const },
     ].map((data) => db.orm.public.FormatTeamGender.create(data)),
+  );
+
+  // Rubber layout for each format: how many rubbers a match has, in score-sheet
+  // order, and whether each is singles, doubles or mixed doubles.
+  const rubberLayout = (...types: Array<'singles' | 'doubles' | 'mixed_doubles'>) =>
+    types.map((rubberType, index) => ({ rubberNumber: index + 1, rubberType }));
+  const threeSinglesThreeDoubles = rubberLayout('singles', 'singles', 'singles', 'doubles', 'doubles', 'doubles');
+  const singlesSinglesDoubles = rubberLayout('singles', 'singles', 'doubles');
+
+  await Promise.all(
+    [
+      { format: juniorTriplesSat, rubbers: threeSinglesThreeDoubles },
+      { format: juniorTriplesSun, rubbers: threeSinglesThreeDoubles },
+      { format: presidentsCupSat, rubbers: singlesSinglesDoubles },
+      { format: presidentsCupSun, rubbers: singlesSinglesDoubles },
+      { format: singlesDoublesRubbersSat, rubbers: singlesSinglesDoubles },
+      { format: singlesDoublesRubbersSun, rubbers: singlesSinglesDoubles },
+      { format: greenBallSat, rubbers: threeSinglesThreeDoubles },
+      { format: greenBallSun, rubbers: threeSinglesThreeDoubles },
+      { format: lSeries, rubbers: rubberLayout('doubles', 'doubles', 'doubles') },
+      { format: gSeries, rubbers: threeSinglesThreeDoubles },
+      { format: saturdayPennantFormat, rubbers: singlesSinglesDoubles },
+      { format: midweekMixedFormat, rubbers: rubberLayout('mixed_doubles', 'mixed_doubles', 'mixed_doubles', 'mixed_doubles') },
+    ].flatMap(({ format, rubbers }) =>
+      rubbers.map((rubber) => db.orm.public.FormatRubber.create({ formatId: format.id, ...rubber })),
+    ),
   );
 
   // =========================================================
@@ -508,6 +522,12 @@ async function main() {
       email: 'volunteer@tennis.com',
       passwordHash,
     }),
+    // Oliver is a PLAYER on the opposing side to Jack in the Midweek Fixture
+    db.orm.public.Account.create({
+      personId: oliver.id,
+      email: 'ringwood.player@tennis.com',
+      passwordHash,
+    }),
   ]);
 
   // =========================================================
@@ -588,6 +608,7 @@ async function main() {
     matchStatus: 'completed',
     enteredByPersonId: sophie.id,
     confirmedByPersonId: emily.id,
+    winningTeamId: kilsythTeam.id,
   });
 
   const rubber1 = await db.orm.public.Rubber.create({
@@ -750,10 +771,14 @@ async function main() {
     teamGender: 'open',
   });
 
+  // Two players a side: every rubber in this format is mixed doubles, so a
+  // result can only be entered for it if each team has a pair to put on court.
   await Promise.all(
     [
       { teamId: kilsythMidweekTeam.id, personId: jack.id },
+      { teamId: kilsythMidweekTeam.id, personId: daniel.id },
       { teamId: ringwoodMidweekTeam.id, personId: oliver.id },
+      { teamId: ringwoodMidweekTeam.id, personId: noah.id },
     ].map((data) => db.orm.public.TeamPlayer.create(data)),
   );
 

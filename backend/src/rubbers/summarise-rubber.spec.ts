@@ -38,4 +38,27 @@ describe('summariseRubber', () => {
             awayGamesWon: 10,
         });
     });
+
+    it('counts the games of an incomplete set but not the set itself', () => {
+        expect(summariseRubber([
+            { setNumber: 1, homeGames: 6, awayGames: 4, homeTiebreakPoints: null, awayTiebreakPoints: null, isMatchTiebreak: false },
+            { setNumber: 2, homeGames: 3, awayGames: 1, homeTiebreakPoints: null, awayTiebreakPoints: null, isMatchTiebreak: false, isComplete: false },
+        ])).toEqual({
+            homeSetsWon: 1,
+            awaySetsWon: 0,
+            homeGamesWon: 9,
+            awayGamesWon: 5,
+        });
+    });
+
+    it('counts the games of an incomplete set stopped at level games', () => {
+        expect(summariseRubber([
+            { setNumber: 1, homeGames: 2, awayGames: 2, homeTiebreakPoints: null, awayTiebreakPoints: null, isMatchTiebreak: false, isComplete: false },
+        ])).toEqual({
+            homeSetsWon: 0,
+            awaySetsWon: 0,
+            homeGamesWon: 2,
+            awayGamesWon: 2,
+        });
+    });
 });

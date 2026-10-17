@@ -39,11 +39,26 @@ function isLegalSetScore(format: RubberFormat, set: SetScore): boolean {
 export function validateRubber(format: RubberFormat, sets: SetScore[], outcome: OutcomeType): ValidationResult {
     const errors: string[] = [];
 
-    // A retirement or walkover doesn't need to satisfy the normal set-count
-    // or per-set legality rules — the match ended early, or never started,
-    // so there's nothing to validate beyond the outcome itself.
-    if (outcome !== 'normal') {
-        return { isValid: true, errors: [] };
+    // The rubber never started, so there's nothing to score.
+    if (outcome === 'walkover' || outcome === 'not_played') {
+        return sets.length === 0
+            ? { isValid: true, errors: [] }
+            : { isValid: false, errors: [`A ${outcome} rubber has no sets`] };
+    }
+
+    // Play stopped part-way: the last set is the unfinished one, and any
+    // completed sets before it must still be legal scores.
+    if (outcome === 'retired' || outcome === 'incomplete') {
+        const last = sets.at(-1);
+        if (!last || last.isComplete !== false) {
+            errors.push('The last set of a retired or incomplete rubber must be marked incomplete');
+        }
+        for (const set of sets.slice(0, -1)) {
+            if (!isLegalSetScore(format, set)) {
+                errors.push(`Illegal set score: ${set.homeGames}-${set.awayGames}`);
+            }
+        }
+        return { isValid: errors.length === 0, errors };
     }
 
     if (sets.length > format.setsToWin * 2 - 1) {

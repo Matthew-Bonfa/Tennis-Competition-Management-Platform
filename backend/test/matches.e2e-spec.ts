@@ -82,4 +82,62 @@ describe('Matches Feature (e2e)', () => {
       }),
     );
   });
+
+  // Finds a seeded match of the given status in section 1
+  async function findMatchByStatus(status: string) {
+    const list = await request(app.getHttpServer())
+      .get('/api/matches?sectionId=1')
+      .expect(200);
+
+    const match = list.body.find((m: { matchStatus: string }) => m.matchStatus === status);
+    expect(match).toBeDefined();
+    return match;
+  }
+
+  // The server stores the match winner; a completed match reports who won it
+  it('GET /api/matches/:id -> a completed match should report its winning team', async () => {
+    const completed = await findMatchByStatus('completed');
+
+    const response = await request(app.getHttpServer())
+      .get(`/api/matches/${completed.id}`)
+      .expect(200);
+
+    expect(response.body.winningTeamId).toBe(completed.homeTeamId);
+    expect(response.body.disputeReason).toBeNull();
+  });
+
+  // No winner until a result has been entered and confirmed
+  it('GET /api/matches/:id -> a scheduled match should have no winning team', async () => {
+    const scheduled = await findMatchByStatus('scheduled');
+
+    const response = await request(app.getHttpServer())
+      .get(`/api/matches/${scheduled.id}`)
+      .expect(200);
+
+    expect(response.body.winningTeamId).toBeNull();
+    expect(response.body.rubbers).toEqual([]);
+  });
+
+  // Rubbers come back in score-sheet order, each with its winner and scoreline
+  it('GET /api/matches/:id -> a completed match should return its rubbers in order with winners and scorelines', async () => {
+    const completed = await findMatchByStatus('completed');
+
+    const response = await request(app.getHttpServer())
+      .get(`/api/matches/${completed.id}`)
+      .expect(200);
+
+    const { rubbers } = response.body;
+    expect(rubbers.map((r: { rubberNumber: number }) => r.rubberNumber)).toEqual([1, 2, 3]);
+    expect(rubbers.map((r: { rubberType: string }) => r.rubberType)).toEqual(['singles', 'singles', 'doubles']);
+    expect(rubbers.map((r: { winningTeamId: number }) => r.winningTeamId)).toEqual([
+      completed.homeTeamId,
+      completed.awayTeamId,
+      completed.homeTeamId,
+    ]);
+    expect(rubbers.map((r: { scoreline: string }) => r.scoreline)).toEqual([
+      '6-4 6-3',
+      '3-6 5-7',
+      '6-2 4-6 6-4',
+    ]);
+  });
 });

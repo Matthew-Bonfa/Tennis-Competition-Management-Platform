@@ -1,13 +1,10 @@
 // file created by Rex Kelly
 // AI was used in writing this file (Gemini, Claude)
 
-import React, { useState } from 'react';
-import { BrowserRouter, Routes, Route, Link, useParams } from 'react-router-dom';
-import { Trophy, Users, Building2, MapPin, Search } from 'lucide-react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import AssociationProfile from './AssociationProfile'
 import AssociationsPage from './AssociationsPage'
-import { ASSOCIATIONS } from './mock-data/MockAssociations'
 import ClubProfile from './ClubProfile'
 import ClubsPage from './ClubsPage'
 import AdminPage from './AdminPage'
@@ -33,6 +30,9 @@ import ManageSeasonPage from './manage-competitions/ManageSeasonPage';
 import ManagePlayersPage from './manage-players/ManagePlayersPage';
 import EditPlayerPage from './manage-players/EditPlayerPage';
 import Login from './Login';
+import ManageClubsPage from './manage-clubs/ManageClubsPage';
+import EditClubPage from './manage-clubs/EditClubPage';
+import { isAdmin, isAuthenticated } from './auth';
 
 // --- MAIN APP ROUTING ---
 export default function App() {
@@ -48,7 +48,39 @@ export default function App() {
             <Route path="/clubs" element={<ClubsPage />} />
             <Route path="/competitions" element={<CompetitionsPage />} />
             <Route path="/players" element={<PlayersPage />} />
-            <Route path="/admin" element={<AdminPage />} />
+
+            { /* The admin route is now protected properly */}
+            <Route
+              path="/admin"
+              element={[
+                isAuthenticated() && isAdmin() ? (
+                  <AdminPage />
+                ) : (
+                  <div className="flex items-center justify-center h-screen bg-gray-50 px-4">
+                    <div className="w-full max-w-md space-y-6 bg-white p-8 rounded-lg shadow">
+                      <h2 className="text-2xl font-bold text-gray-900">
+                        {isAuthenticated() ? 'Access Denied' : 'Please Sign In'}
+                      </h2>
+                      <p className="mt-1 text-sm text-gray-600">
+                        {isAuthenticated()
+                          ? 'You do not have permission to access the admin page.'
+                          : 'Please sign in to access the admin page.'}
+                      </p>
+                      {!isAuthenticated() && (
+                        <div className="mt-6">
+                          <button
+                            onClick={() => window.location.href = '/login'}
+                            className="w-full rounded bg-blue-600 py-2 font-medium text-white hover:bg-blue-700"
+                          >
+                            Sign In
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )
+              ]}
+            />
 
             <Route path="/clubs/:id" element={<ClubProfile />} />
             <Route path="/competitions/:id" element={<CompetitionProfile />} />
@@ -71,6 +103,9 @@ export default function App() {
             <Route path="/manage-competitions/:id/seasons/:seasonId" element={<ManageSeasonPage />} />
             <Route path="/manage-players" element={<ManagePlayersPage />} />
             <Route path="/manage-players/:id" element={<EditPlayerPage />} />
+
+            <Route path="/manage-clubs" element={<ManageClubsPage />} />
+            <Route path="/manage-clubs/:id" element={<EditClubPage />} />
 
             <Route path="/login" element={<Login />} />
           </Routes>

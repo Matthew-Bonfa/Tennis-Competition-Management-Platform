@@ -36,12 +36,20 @@
       "model": "Format",
       "namespace": "public"
     },
+    "formatRubber": {
+      "model": "FormatRubber",
+      "namespace": "public"
+    },
     "formatTeamGender": {
       "model": "FormatTeamGender",
       "namespace": "public"
     },
     "match": {
       "model": "Match",
+      "namespace": "public"
+    },
+    "matchResultEvent": {
+      "model": "MatchResultEvent",
       "namespace": "public"
     },
     "person": {
@@ -126,12 +134,45 @@
               }
             ]
           },
+          "match_event_type": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "Entered",
+                "value": "entered"
+              },
+              {
+                "name": "Confirmed",
+                "value": "confirmed"
+              },
+              {
+                "name": "Disputed",
+                "value": "disputed"
+              },
+              {
+                "name": "Overridden",
+                "value": "overridden"
+              },
+              {
+                "name": "Reopened",
+                "value": "reopened"
+              }
+            ]
+          },
           "match_status": {
             "codecId": "pg/text@1",
             "members": [
               {
                 "name": "Scheduled",
                 "value": "scheduled"
+              },
+              {
+                "name": "AwaitingConfirmation",
+                "value": "awaiting_confirmation"
+              },
+              {
+                "name": "Disputed",
+                "value": "disputed"
               },
               {
                 "name": "Completed",
@@ -165,6 +206,14 @@
               {
                 "name": "Walkover",
                 "value": "walkover"
+              },
+              {
+                "name": "Incomplete",
+                "value": "incomplete"
+              },
+              {
+                "name": "NotPlayed",
+                "value": "not_played"
               }
             ]
           },
@@ -982,13 +1031,6 @@
                   "kind": "scalar"
                 }
               },
-              "rubbersPerMatch": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/int4@1",
-                  "kind": "scalar"
-                }
-              },
               "setsToWin": {
                 "nullable": false,
                 "type": {
@@ -1032,6 +1074,21 @@
                   "model": "FormatTeamGender",
                   "namespace": "public"
                 }
+              },
+              "rubbers": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "formatId"
+                  ]
+                },
+                "to": {
+                  "model": "FormatRubber",
+                  "namespace": "public"
+                }
               }
             },
             "storage": {
@@ -1072,9 +1129,6 @@
                 "pointsPerRubber": {
                   "column": "pointsPerRubber"
                 },
-                "rubbersPerMatch": {
-                  "column": "rubbersPerMatch"
-                },
                 "setsToWin": {
                   "column": "setsToWin"
                 },
@@ -1087,6 +1141,80 @@
               },
               "namespaceId": "public",
               "table": "format"
+            }
+          },
+          "FormatRubber": {
+            "fields": {
+              "formatId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "rubberNumber": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "rubberType": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "rubber_type",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              }
+            },
+            "relations": {
+              "format": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "formatId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Format",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "formatId": {
+                  "column": "formatId"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "rubberNumber": {
+                  "column": "rubberNumber"
+                },
+                "rubberType": {
+                  "column": "rubberType"
+                }
+              },
+              "namespaceId": "public",
+              "table": "formatRubber"
             }
           },
           "FormatTeamGender": {
@@ -1176,6 +1304,13 @@
                   "kind": "scalar"
                 }
               },
+              "disputeReason": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "enteredAt": {
                 "nullable": true,
                 "type": {
@@ -1244,6 +1379,13 @@
                   "codecId": "pg/int4@1",
                   "kind": "scalar"
                 }
+              },
+              "winningTeamId": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
               }
             },
             "relations": {
@@ -1295,6 +1437,21 @@
                   "namespace": "public"
                 }
               },
+              "events": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "matchId"
+                  ]
+                },
+                "to": {
+                  "model": "MatchResultEvent",
+                  "namespace": "public"
+                }
+              },
               "homeTeam": {
                 "cardinality": "N:1",
                 "nullable": false,
@@ -1341,6 +1498,22 @@
                   "model": "Section",
                   "namespace": "public"
                 }
+              },
+              "winningTeam": {
+                "cardinality": "N:1",
+                "nullable": true,
+                "on": {
+                  "localFields": [
+                    "winningTeamId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Team",
+                  "namespace": "public"
+                }
               }
             },
             "storage": {
@@ -1353,6 +1526,9 @@
                 },
                 "confirmedByPersonId": {
                   "column": "confirmedByPersonId"
+                },
+                "disputeReason": {
+                  "column": "disputeReason"
                 },
                 "enteredAt": {
                   "column": "enteredAt"
@@ -1380,10 +1556,133 @@
                 },
                 "sectionId": {
                   "column": "sectionId"
+                },
+                "winningTeamId": {
+                  "column": "winningTeamId"
                 }
               },
               "namespaceId": "public",
               "table": "match"
+            }
+          },
+          "MatchResultEvent": {
+            "fields": {
+              "createdAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              },
+              "eventType": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "match_event_type",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "matchId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "note": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "personId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "snapshot": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "match": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "matchId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Match",
+                  "namespace": "public"
+                }
+              },
+              "person": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "personId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Person",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "createdAt": {
+                  "column": "createdAt"
+                },
+                "eventType": {
+                  "column": "eventType"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "matchId": {
+                  "column": "matchId"
+                },
+                "note": {
+                  "column": "note"
+                },
+                "personId": {
+                  "column": "personId"
+                },
+                "snapshot": {
+                  "column": "snapshot"
+                }
+              },
+              "namespaceId": "public",
+              "table": "matchResultEvent"
             }
           },
           "Person": {
@@ -1541,6 +1840,21 @@
                 },
                 "to": {
                   "model": "Match",
+                  "namespace": "public"
+                }
+              },
+              "matchResultEvents": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "personId"
+                  ]
+                },
+                "to": {
+                  "model": "MatchResultEvent",
                   "namespace": "public"
                 }
               },
@@ -2017,6 +2331,13 @@
                   "kind": "scalar"
                 }
               },
+              "isComplete": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
               "isMatchTiebreak": {
                 "nullable": false,
                 "type": {
@@ -2073,6 +2394,9 @@
                 },
                 "id": {
                   "column": "id"
+                },
+                "isComplete": {
+                  "column": "isComplete"
                 },
                 "isMatchTiebreak": {
                   "column": "isMatchTiebreak"
@@ -2439,6 +2763,21 @@
                 },
                 "to": {
                   "model": "Section",
+                  "namespace": "public"
+                }
+              },
+              "wonMatches": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "winningTeamId"
+                  ]
+                },
+                "to": {
+                  "model": "Match",
                   "namespace": "public"
                 }
               },
@@ -3426,11 +3765,6 @@
                   "nativeType": "int4",
                   "nullable": false
                 },
-                "rubbersPerMatch": {
-                  "codecId": "pg/int4@1",
-                  "nativeType": "int4",
-                  "nullable": false
-                },
                 "setsToWin": {
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
@@ -3461,6 +3795,88 @@
                 ]
               },
               "uniques": []
+            },
+            "formatRubber": {
+              "checks": [
+                {
+                  "expression": "\"rubberType\" IN ('singles', 'doubles', 'mixed_doubles')",
+                  "name": "formatRubber_rubberType_check_94ac6fcc",
+                  "prefix": "formatRubber_rubberType_check"
+                }
+              ],
+              "columns": {
+                "formatId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "rubberNumber": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "rubberType": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "rubber_type",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                }
+              },
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "formatId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "formatRubber"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "format"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "formatId"
+                  ],
+                  "name": "formatRubber_formatId_idx_306abbe2",
+                  "prefix": "formatRubber_formatId_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "formatId",
+                    "rubberNumber"
+                  ]
+                }
+              ]
             },
             "formatTeamGender": {
               "checks": [
@@ -3542,8 +3958,8 @@
             "match": {
               "checks": [
                 {
-                  "expression": "\"matchStatus\" IN ('scheduled', 'completed', 'washout', 'forfeit', 'bye')",
-                  "name": "match_matchStatus_check_21c8ad8e",
+                  "expression": "\"matchStatus\" IN ('scheduled', 'awaiting_confirmation', 'disputed', 'completed', 'washout', 'forfeit', 'bye')",
+                  "name": "match_matchStatus_check_1b41886e",
                   "prefix": "match_matchStatus_check"
                 }
               ],
@@ -3559,6 +3975,11 @@
                   "nullable": true
                 },
                 "confirmedByPersonId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "disputeReason": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
                   "nullable": true
@@ -3613,6 +4034,11 @@
                   "codecId": "pg/int4@1",
                   "nativeType": "int4",
                   "nullable": false
+                },
+                "winningTeamId": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
                 }
               },
               "foreignKeys": [
@@ -3695,6 +4121,22 @@
                     "namespaceId": "public",
                     "tableName": "person"
                   }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "winningTeamId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "match"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "team"
+                  }
                 }
               ],
               "indexes": [
@@ -3746,6 +4188,14 @@
                   "name": "match_sectionId_matchDate_idx_6d5b940c",
                   "prefix": "match_sectionId_matchDate_idx",
                   "unique": false
+                },
+                {
+                  "columns": [
+                    "winningTeamId"
+                  ],
+                  "name": "match_winningTeamId_idx_7bdd2d43",
+                  "prefix": "match_winningTeamId_idx",
+                  "unique": false
                 }
               ],
               "primaryKey": {
@@ -3762,6 +4212,124 @@
                   ]
                 }
               ]
+            },
+            "matchResultEvent": {
+              "checks": [
+                {
+                  "expression": "\"eventType\" IN ('entered', 'confirmed', 'disputed', 'overridden', 'reopened')",
+                  "name": "matchResultEvent_eventType_check_5d6b768b",
+                  "prefix": "matchResultEvent_eventType_check"
+                }
+              ],
+              "columns": {
+                "createdAt": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "eventType": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "match_event_type",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "matchId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "note": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "personId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "snapshot": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                }
+              },
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "matchId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "matchResultEvent"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "match"
+                  }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "personId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "matchResultEvent"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "person"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "matchId"
+                  ],
+                  "name": "matchResultEvent_matchId_idx_4caf5ecc",
+                  "prefix": "matchResultEvent_matchId_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "personId"
+                  ],
+                  "name": "matchResultEvent_personId_idx_e5e06b80",
+                  "prefix": "matchResultEvent_personId_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
             },
             "person": {
               "columns": {
@@ -3938,8 +4506,8 @@
             "rubber": {
               "checks": [
                 {
-                  "expression": "\"outcomeType\" IN ('normal', 'retired', 'walkover')",
-                  "name": "rubber_outcomeType_check_bd80204a",
+                  "expression": "\"outcomeType\" IN ('normal', 'retired', 'walkover', 'incomplete', 'not_played')",
+                  "name": "rubber_outcomeType_check_d8de23d9",
                   "prefix": "rubber_outcomeType_check"
                 },
                 {
@@ -4208,6 +4776,15 @@
                     "kind": "function"
                   },
                   "nativeType": "int4",
+                  "nullable": false
+                },
+                "isComplete": {
+                  "codecId": "pg/bool@1",
+                  "default": {
+                    "kind": "literal",
+                    "value": true
+                  },
+                  "nativeType": "bool",
                   "nullable": false
                 },
                 "isMatchTiebreak": {
@@ -4613,7 +5190,14 @@
                   "id"
                 ]
               },
-              "uniques": []
+              "uniques": [
+                {
+                  "columns": [
+                    "teamId",
+                    "personId"
+                  ]
+                }
+              ]
             },
             "teamRequest": {
               "checks": [
@@ -4882,10 +5466,22 @@
                 "sunday"
               ]
             },
+            "match_event_type": {
+              "kind": "valueSet",
+              "values": [
+                "entered",
+                "confirmed",
+                "disputed",
+                "overridden",
+                "reopened"
+              ]
+            },
             "match_status": {
               "kind": "valueSet",
               "values": [
                 "scheduled",
+                "awaiting_confirmation",
+                "disputed",
                 "completed",
                 "washout",
                 "forfeit",
@@ -4897,7 +5493,9 @@
               "values": [
                 "normal",
                 "retired",
-                "walkover"
+                "walkover",
+                "incomplete",
+                "not_played"
               ]
             },
             "rubber_type": {
@@ -4930,7 +5528,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "119000f9bc7128034938480fea223269839fd8a4819b4cb880a27f203808cec5"
+    "storageHash": "877ed903f404b2883aee05d34d802d622e7cdbaca629caacc19e5ba8cba91443"
   },
   "execution": {
     "executionHash": "23c544f7811d1f93c37e2e0065437fc55cf818cee6b23fa79cd811116f204776",

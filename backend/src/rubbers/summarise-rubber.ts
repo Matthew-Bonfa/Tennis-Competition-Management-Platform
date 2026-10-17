@@ -6,6 +6,12 @@ export function summariseRubber(sets: SetScore[]) : RubberScore {
     let homeGamesWon = 0;
     let awayGamesWon = 0;
     for (const set of sets) {
+        // A set stopped part-way (retirement / incomplete rubber) still has games counted
+        if (set.isComplete === false) {
+            homeGamesWon += set.homeGames;
+            awayGamesWon += set.awayGames;
+            continue;
+        }
         if (set.homeGames > set.awayGames) {
             homeSetsWon++;
         } else if (set.awayGames > set.homeGames) {
