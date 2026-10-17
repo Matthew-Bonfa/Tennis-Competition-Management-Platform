@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Query, ParseIntPipe, Post, Req } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Query, ParseIntPipe, Post, Put, Req } from '@nestjs/common';
 import { MatchesService } from './matches.service.js';
 import { Param } from '@nestjs/common';
+import { Roles } from '../auth/decorators/roles.decorator.js';
 import { Public } from '../auth/decorators/public.decorator.js';
-import { SubmitResultDto } from './dto/submit-result.dto.js';
+import { AdminResultDto, DisputeResultDto, SubmitResultDto } from './dto/submit-result.dto.js';
 
 interface AuthedRequest {
   user: { personId: string };
@@ -32,5 +33,23 @@ export class MatchesController {
   @Post(':id/result')
   submitResult(@Param('id') id: string, @Body() dto: SubmitResultDto, @Req() req: AuthedRequest) {
     return this.matchesService.submitResult(id, dto, req.user.personId);
+  }
+
+  @Post(':id/confirm')
+  @HttpCode(200)
+  confirmResult(@Param('id') id: string, @Req() req: AuthedRequest) {
+    return this.matchesService.confirmResult(id, req.user.personId);
+  }
+
+  @Post(':id/dispute')
+  @HttpCode(200)
+  disputeResult(@Param('id') id: string, @Body() dto: DisputeResultDto, @Req() req: AuthedRequest) {
+    return this.matchesService.disputeResult(id, dto, req.user.personId);
+  }
+
+  @Roles('ASSOCIATION_ADMIN')
+  @Put(':id/result')
+  adminSetResult(@Param('id') id: string, @Body() dto: AdminResultDto, @Req() req: AuthedRequest) {
+    return this.matchesService.adminSetResult(id, dto, req.user.personId);
   }
 }
