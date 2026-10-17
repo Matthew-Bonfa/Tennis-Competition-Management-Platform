@@ -1,0 +1,566 @@
+[
+  {
+    "id": "table.teamRequest",
+    "label": "Create table \"teamRequest\"",
+    "summary": "Creates table \"teamRequest\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "teamRequest"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"teamRequest\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"teamRequest\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"teamRequest\"",
+        "sql": "CREATE TABLE \"public\".\"teamRequest\" (\n  \"clubId\" text NOT NULL,\n  \"formatId\" text NOT NULL,\n  \"id\" SERIAL NOT NULL,\n  \"name\" text NOT NULL,\n  \"pending\" bool NOT NULL,\n  \"seasonId\" int4 NOT NULL,\n  \"sectionComment\" text NOT NULL,\n  \"teamGender\" text,\n  \"teamId\" int4,\n  PRIMARY KEY (\"id\"),\n  CONSTRAINT \"teamRequest_teamGender_check_94975ab4\" CHECK (\"teamGender\" IN ('boys', 'girls', 'open'))\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"teamRequest\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"teamRequest\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "table.teamRequestPlayer",
+    "label": "Create table \"teamRequestPlayer\"",
+    "summary": "Creates table \"teamRequestPlayer\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "teamRequestPlayer"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure table \"teamRequestPlayer\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"teamRequestPlayer\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create table \"teamRequestPlayer\"",
+        "sql": "CREATE TABLE \"public\".\"teamRequestPlayer\" (\n  \"id\" SERIAL NOT NULL,\n  \"personId\" text NOT NULL,\n  \"teamRequestId\" int4 NOT NULL,\n  PRIMARY KEY (\"id\")\n)",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify table \"teamRequestPlayer\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"teamRequestPlayer\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.teamRequest.teamRequest_clubId_idx_7aff947d",
+    "label": "Create index \"teamRequest_clubId_idx_7aff947d\" on \"teamRequest\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "teamRequest_clubId_idx_7aff947d",
+        "table": "teamRequest"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"teamRequest_clubId_idx_7aff947d\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"teamRequest_clubId_idx_7aff947d\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"teamRequest_clubId_idx_7aff947d\"",
+        "sql": "CREATE INDEX \"teamRequest_clubId_idx_7aff947d\" ON \"public\".\"teamRequest\" (\"clubId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"teamRequest_clubId_idx_7aff947d\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"teamRequest_clubId_idx_7aff947d\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.teamRequest.teamRequest_formatId_idx_306abbe2",
+    "label": "Create index \"teamRequest_formatId_idx_306abbe2\" on \"teamRequest\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "teamRequest_formatId_idx_306abbe2",
+        "table": "teamRequest"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"teamRequest_formatId_idx_306abbe2\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"teamRequest_formatId_idx_306abbe2\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"teamRequest_formatId_idx_306abbe2\"",
+        "sql": "CREATE INDEX \"teamRequest_formatId_idx_306abbe2\" ON \"public\".\"teamRequest\" (\"formatId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"teamRequest_formatId_idx_306abbe2\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"teamRequest_formatId_idx_306abbe2\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.teamRequest.teamRequest_seasonId_idx_aa50cbae",
+    "label": "Create index \"teamRequest_seasonId_idx_aa50cbae\" on \"teamRequest\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "teamRequest_seasonId_idx_aa50cbae",
+        "table": "teamRequest"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"teamRequest_seasonId_idx_aa50cbae\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"teamRequest_seasonId_idx_aa50cbae\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"teamRequest_seasonId_idx_aa50cbae\"",
+        "sql": "CREATE INDEX \"teamRequest_seasonId_idx_aa50cbae\" ON \"public\".\"teamRequest\" (\"seasonId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"teamRequest_seasonId_idx_aa50cbae\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"teamRequest_seasonId_idx_aa50cbae\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.teamRequest.teamRequest_teamId_idx_f2b72ab3",
+    "label": "Create index \"teamRequest_teamId_idx_f2b72ab3\" on \"teamRequest\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "teamRequest_teamId_idx_f2b72ab3",
+        "table": "teamRequest"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"teamRequest_teamId_idx_f2b72ab3\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"teamRequest_teamId_idx_f2b72ab3\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"teamRequest_teamId_idx_f2b72ab3\"",
+        "sql": "CREATE INDEX \"teamRequest_teamId_idx_f2b72ab3\" ON \"public\".\"teamRequest\" (\"teamId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"teamRequest_teamId_idx_f2b72ab3\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"teamRequest_teamId_idx_f2b72ab3\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.teamRequestPlayer.teamRequestPlayer_personId_idx_e5e06b80",
+    "label": "Create index \"teamRequestPlayer_personId_idx_e5e06b80\" on \"teamRequestPlayer\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "teamRequestPlayer_personId_idx_e5e06b80",
+        "table": "teamRequestPlayer"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"teamRequestPlayer_personId_idx_e5e06b80\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"teamRequestPlayer_personId_idx_e5e06b80\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"teamRequestPlayer_personId_idx_e5e06b80\"",
+        "sql": "CREATE INDEX \"teamRequestPlayer_personId_idx_e5e06b80\" ON \"public\".\"teamRequestPlayer\" (\"personId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"teamRequestPlayer_personId_idx_e5e06b80\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"teamRequestPlayer_personId_idx_e5e06b80\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.teamRequestPlayer.teamRequestPlayer_teamRequestId_idx_c7c0eaeb",
+    "label": "Create index \"teamRequestPlayer_teamRequestId_idx_c7c0eaeb\" on \"teamRequestPlayer\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "teamRequestPlayer_teamRequestId_idx_c7c0eaeb",
+        "table": "teamRequestPlayer"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"teamRequestPlayer_teamRequestId_idx_c7c0eaeb\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"teamRequestPlayer_teamRequestId_idx_c7c0eaeb\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"teamRequestPlayer_teamRequestId_idx_c7c0eaeb\"",
+        "sql": "CREATE INDEX \"teamRequestPlayer_teamRequestId_idx_c7c0eaeb\" ON \"public\".\"teamRequestPlayer\" (\"teamRequestId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"teamRequestPlayer_teamRequestId_idx_c7c0eaeb\" exists",
+        "sql": "SELECT (to_regclass($1)) IS NOT NULL AS \"result\"",
+        "params": [
+          "\"public\".\"teamRequestPlayer_teamRequestId_idx_c7c0eaeb\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.teamRequest.teamRequest_clubId_fkey",
+    "label": "Add foreign key \"teamRequest_clubId_fkey\" on \"teamRequest\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "teamRequest_clubId_fkey",
+        "table": "teamRequest"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"teamRequest_clubId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "teamRequest_clubId_fkey",
+          "public",
+          "\"public\".\"teamRequest\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"teamRequest_clubId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"teamRequest\"\nADD CONSTRAINT \"teamRequest_clubId_fkey\"\nFOREIGN KEY (\"clubId\")\nREFERENCES \"public\".\"club\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"teamRequest_clubId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "teamRequest_clubId_fkey",
+          "public",
+          "\"public\".\"teamRequest\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.teamRequest.teamRequest_seasonId_fkey",
+    "label": "Add foreign key \"teamRequest_seasonId_fkey\" on \"teamRequest\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "teamRequest_seasonId_fkey",
+        "table": "teamRequest"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"teamRequest_seasonId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "teamRequest_seasonId_fkey",
+          "public",
+          "\"public\".\"teamRequest\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"teamRequest_seasonId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"teamRequest\"\nADD CONSTRAINT \"teamRequest_seasonId_fkey\"\nFOREIGN KEY (\"seasonId\")\nREFERENCES \"public\".\"season\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"teamRequest_seasonId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "teamRequest_seasonId_fkey",
+          "public",
+          "\"public\".\"teamRequest\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.teamRequest.teamRequest_formatId_fkey",
+    "label": "Add foreign key \"teamRequest_formatId_fkey\" on \"teamRequest\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "teamRequest_formatId_fkey",
+        "table": "teamRequest"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"teamRequest_formatId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "teamRequest_formatId_fkey",
+          "public",
+          "\"public\".\"teamRequest\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"teamRequest_formatId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"teamRequest\"\nADD CONSTRAINT \"teamRequest_formatId_fkey\"\nFOREIGN KEY (\"formatId\")\nREFERENCES \"public\".\"format\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"teamRequest_formatId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "teamRequest_formatId_fkey",
+          "public",
+          "\"public\".\"teamRequest\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.teamRequest.teamRequest_teamId_fkey",
+    "label": "Add foreign key \"teamRequest_teamId_fkey\" on \"teamRequest\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "teamRequest_teamId_fkey",
+        "table": "teamRequest"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"teamRequest_teamId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "teamRequest_teamId_fkey",
+          "public",
+          "\"public\".\"teamRequest\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"teamRequest_teamId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"teamRequest\"\nADD CONSTRAINT \"teamRequest_teamId_fkey\"\nFOREIGN KEY (\"teamId\")\nREFERENCES \"public\".\"team\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"teamRequest_teamId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "teamRequest_teamId_fkey",
+          "public",
+          "\"public\".\"teamRequest\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.teamRequestPlayer.teamRequestPlayer_teamRequestId_fkey",
+    "label": "Add foreign key \"teamRequestPlayer_teamRequestId_fkey\" on \"teamRequestPlayer\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "teamRequestPlayer_teamRequestId_fkey",
+        "table": "teamRequestPlayer"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"teamRequestPlayer_teamRequestId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "teamRequestPlayer_teamRequestId_fkey",
+          "public",
+          "\"public\".\"teamRequestPlayer\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"teamRequestPlayer_teamRequestId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"teamRequestPlayer\"\nADD CONSTRAINT \"teamRequestPlayer_teamRequestId_fkey\"\nFOREIGN KEY (\"teamRequestId\")\nREFERENCES \"public\".\"teamRequest\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"teamRequestPlayer_teamRequestId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "teamRequestPlayer_teamRequestId_fkey",
+          "public",
+          "\"public\".\"teamRequestPlayer\""
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.teamRequestPlayer.teamRequestPlayer_personId_fkey",
+    "label": "Add foreign key \"teamRequestPlayer_personId_fkey\" on \"teamRequestPlayer\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "teamRequestPlayer_personId_fkey",
+        "table": "teamRequestPlayer"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"teamRequestPlayer_personId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "teamRequestPlayer_personId_fkey",
+          "public",
+          "\"public\".\"teamRequestPlayer\""
+        ]
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"teamRequestPlayer_personId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"teamRequestPlayer\"\nADD CONSTRAINT \"teamRequestPlayer_personId_fkey\"\nFOREIGN KEY (\"personId\")\nREFERENCES \"public\".\"person\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"teamRequestPlayer_personId_fkey\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "teamRequestPlayer_personId_fkey",
+          "public",
+          "\"public\".\"teamRequestPlayer\""
+        ]
+      }
+    ]
+  }
+]

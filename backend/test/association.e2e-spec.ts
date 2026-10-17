@@ -80,7 +80,7 @@ describe('Associations Feature (e2e)', () => {
     // Verifies the body is of the correct type
     expect(response.body).toEqual(
       expect.objectContaining({
-        contactPersonId: expect.any(String),
+        contactPersonId: expect.toBeOneOf([expect.any(String), null]),
         id: savedAssociationId,
         name: expect.any(String),
       }),

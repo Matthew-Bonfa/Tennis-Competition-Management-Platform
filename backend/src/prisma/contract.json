@@ -87,6 +87,14 @@
     "teamPlayer": {
       "model": "TeamPlayer",
       "namespace": "public"
+    },
+    "teamRequest": {
+      "model": "TeamRequest",
+      "namespace": "public"
+    },
+    "teamRequestPlayer": {
+      "model": "TeamRequestPlayer",
+      "namespace": "public"
     }
   },
   "domain": {
@@ -2884,6 +2892,267 @@
               "namespaceId": "public",
               "table": "teamPlayer"
             }
+          },
+          "TeamRequest": {
+            "fields": {
+              "clubId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "formatId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "name": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "pending": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/bool@1",
+                  "kind": "scalar"
+                }
+              },
+              "seasonId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "sectionComment": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "teamGender": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "team_gender",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
+              },
+              "teamId": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "club": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "clubId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Club",
+                  "namespace": "public"
+                }
+              },
+              "format": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "formatId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Format",
+                  "namespace": "public"
+                }
+              },
+              "players": {
+                "cardinality": "1:N",
+                "on": {
+                  "localFields": [
+                    "id"
+                  ],
+                  "targetFields": [
+                    "teamRequestId"
+                  ]
+                },
+                "to": {
+                  "model": "TeamRequestPlayer",
+                  "namespace": "public"
+                }
+              },
+              "season": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "seasonId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Season",
+                  "namespace": "public"
+                }
+              },
+              "team": {
+                "cardinality": "N:1",
+                "nullable": true,
+                "on": {
+                  "localFields": [
+                    "teamId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Team",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "clubId": {
+                  "column": "clubId"
+                },
+                "formatId": {
+                  "column": "formatId"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "name": {
+                  "column": "name"
+                },
+                "pending": {
+                  "column": "pending"
+                },
+                "seasonId": {
+                  "column": "seasonId"
+                },
+                "sectionComment": {
+                  "column": "sectionComment"
+                },
+                "teamGender": {
+                  "column": "teamGender"
+                },
+                "teamId": {
+                  "column": "teamId"
+                }
+              },
+              "namespaceId": "public",
+              "table": "teamRequest"
+            }
+          },
+          "TeamRequestPlayer": {
+            "fields": {
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              },
+              "personId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "teamRequestId": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/int4@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {
+              "person": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "personId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "Person",
+                  "namespace": "public"
+                }
+              },
+              "teamRequest": {
+                "cardinality": "N:1",
+                "nullable": false,
+                "on": {
+                  "localFields": [
+                    "teamRequestId"
+                  ],
+                  "targetFields": [
+                    "id"
+                  ]
+                },
+                "to": {
+                  "model": "TeamRequest",
+                  "namespace": "public"
+                }
+              }
+            },
+            "storage": {
+              "fields": {
+                "id": {
+                  "column": "id"
+                },
+                "personId": {
+                  "column": "personId"
+                },
+                "teamRequestId": {
+                  "column": "teamRequestId"
+                }
+              },
+              "namespaceId": "public",
+              "table": "teamRequestPlayer"
+            }
           }
         }
       }
@@ -4929,6 +5198,259 @@
                   ]
                 }
               ]
+            },
+            "teamRequest": {
+              "checks": [
+                {
+                  "expression": "\"teamGender\" IN ('boys', 'girls', 'open')",
+                  "name": "teamRequest_teamGender_check_94975ab4",
+                  "prefix": "teamRequest_teamGender_check"
+                }
+              ],
+              "columns": {
+                "clubId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "formatId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "name": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "pending": {
+                  "codecId": "pg/bool@1",
+                  "nativeType": "bool",
+                  "nullable": false
+                },
+                "seasonId": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "sectionComment": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "teamGender": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "team_gender",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
+                },
+                "teamId": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": true
+                }
+              },
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "clubId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "teamRequest"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "club"
+                  }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "seasonId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "teamRequest"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "season"
+                  }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "formatId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "teamRequest"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "format"
+                  }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "teamId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "teamRequest"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "team"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "clubId"
+                  ],
+                  "name": "teamRequest_clubId_idx_7aff947d",
+                  "prefix": "teamRequest_clubId_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "formatId"
+                  ],
+                  "name": "teamRequest_formatId_idx_306abbe2",
+                  "prefix": "teamRequest_formatId_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "seasonId"
+                  ],
+                  "name": "teamRequest_seasonId_idx_aa50cbae",
+                  "prefix": "teamRequest_seasonId_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "teamId"
+                  ],
+                  "name": "teamRequest_teamId_idx_f2b72ab3",
+                  "prefix": "teamRequest_teamId_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
+            },
+            "teamRequestPlayer": {
+              "columns": {
+                "id": {
+                  "codecId": "pg/int4@1",
+                  "default": {
+                    "expression": "autoincrement()",
+                    "kind": "function"
+                  },
+                  "nativeType": "int4",
+                  "nullable": false
+                },
+                "personId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "teamRequestId": {
+                  "codecId": "pg/int4@1",
+                  "nativeType": "int4",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [
+                {
+                  "source": {
+                    "columns": [
+                      "teamRequestId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "teamRequestPlayer"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "teamRequest"
+                  }
+                },
+                {
+                  "source": {
+                    "columns": [
+                      "personId"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "teamRequestPlayer"
+                  },
+                  "target": {
+                    "columns": [
+                      "id"
+                    ],
+                    "namespaceId": "public",
+                    "tableName": "person"
+                  }
+                }
+              ],
+              "indexes": [
+                {
+                  "columns": [
+                    "personId"
+                  ],
+                  "name": "teamRequestPlayer_personId_idx_e5e06b80",
+                  "prefix": "teamRequestPlayer_personId_idx",
+                  "unique": false
+                },
+                {
+                  "columns": [
+                    "teamRequestId"
+                  ],
+                  "name": "teamRequestPlayer_teamRequestId_idx_c7c0eaeb",
+                  "prefix": "teamRequestPlayer_teamRequestId_idx",
+                  "unique": false
+                }
+              ],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
             }
           },
           "valueSet": {
@@ -5006,7 +5528,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "ff5b2bfaa57dc3b2a858a000daf1cd1abcc53705da3b89a149de4e82f4ae005d"
+    "storageHash": "877ed903f404b2883aee05d34d802d622e7cdbaca629caacc19e5ba8cba91443"
   },
   "execution": {
     "executionHash": "23c544f7811d1f93c37e2e0065437fc55cf818cee6b23fa79cd811116f204776",
