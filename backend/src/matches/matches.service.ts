@@ -111,19 +111,25 @@ export class MatchesService {
         const match = await this.loadMatchForResult(matchId);
         const viewerSide = await this.sideOf(personId, match);
         if (!viewerSide) {
-            throw new ForbiddenException('Only players from the two teams can enter this result');
+            // Admins get the form too, with no side; anyone else is still refused
+            await this.assertAssociationAdmin(personId, match, 'Only players from the two teams or an association admin can view this result form');
         }
 
         const format = match.section!.format!;
-        const [homePlayers, awayPlayers] = await Promise.all([
+        const [homePlayers, awayPlayers, enteredBySide] = await Promise.all([
             this.rosterOf(match.homeTeamId),
             this.rosterOf(match.awayTeamId),
+            match.enteredByPersonId ? this.sideOf(match.enteredByPersonId, match) : null,
         ]);
 
         return {
             matchId,
             matchStatus: match.matchStatus,
+            // null means the viewer is an association admin rather than a player
             viewerSide,
+            // which team entered the current result, so the client knows who can confirm it
+            enteredBySide,
+            disputeReason: match.disputeReason,
             format: {
                 setsToWin: format.setsToWin,
                 gamesPerSet: format.gamesPerSet,
@@ -316,13 +322,14 @@ export class MatchesService {
     private async assertAssociationAdmin(
         personId: string,
         match: Awaited<ReturnType<MatchesService['loadMatchForResult']>>,
+        message = 'Only an admin of this association can change this result',
     ) {
         const associationId = match.section!.season!.competition!.associationId;
         const role = await this.prisma.client.orm.public.PersonRole
             .where({ personId, role: 'ASSOCIATION_ADMIN', associationId })
             .first();
         if (!role) {
-            throw new ForbiddenException('Only an admin of this association can change this result');
+            throw new ForbiddenException(message);
         }
     }
 

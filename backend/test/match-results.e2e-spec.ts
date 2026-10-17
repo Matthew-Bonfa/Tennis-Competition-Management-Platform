@@ -16,6 +16,7 @@ describe('Match result entry (e2e)', () => {
   let jackToken: string;
   let oliverToken: string;
   let adminToken: string;
+  let clubAdminToken: string;
 
   let matchId: string;
   let homeTeamId: number;
@@ -92,6 +93,8 @@ describe('Match result entry (e2e)', () => {
     jackToken = await login('volunteer@tennis.com');
     oliverToken = await login('ringwood.player@tennis.com');
     adminToken = await login('admin@tennis.com');
+    // Sophie is a club admin who plays for neither team
+    clubAdminToken = await login('club@tennis.com');
 
     // Find the Midweek fixture by its teams rather than hard-coding ids,
     // since ids depend on seed order.
@@ -119,8 +122,16 @@ describe('Match result entry (e2e)', () => {
       await getForm().expect(401);
     });
 
-    it('rejects someone who is not on either team', async () => {
-      await getForm(adminToken).expect(403);
+    it('rejects someone who is neither on a team nor an association admin', async () => {
+      await getForm(clubAdminToken).expect(403);
+    });
+
+    it('gives an association admin the form with no side', async () => {
+      const response = await getForm(adminToken).expect(200);
+
+      expect(response.body.viewerSide).toBeNull();
+      expect(response.body.rubbers).toHaveLength(4);
+      expect(response.body.homeTeam.players).toHaveLength(2);
     });
 
     it('returns the rubber layout, scoring rules and both rosters for a player', async () => {
@@ -131,6 +142,8 @@ describe('Match result entry (e2e)', () => {
         matchId,
         matchStatus: 'scheduled',
         viewerSide: 'home',
+        enteredBySide: null,
+        disputeReason: null,
         format: { setsToWin: 2, gamesPerSet: 6, tiebreakAtGames: 6, finalSetMatchTiebreak: false },
       });
       expect(form.rubbers).toHaveLength(4);
@@ -257,6 +270,13 @@ describe('Match result entry (e2e)', () => {
       expect(response.body.disputeReason).toBe('Rubber 4 was ours');
     });
 
+    it('shows the dispute reason on the result form', async () => {
+      const response = await getForm(jackToken).expect(200);
+
+      expect(response.body.matchStatus).toBe('disputed');
+      expect(response.body.disputeReason).toBe('Rubber 4 was ours');
+    });
+
     it('rejects a second dispute because nothing is awaiting confirmation', async () => {
       await post('dispute', oliverToken, { reason: 'Again' }).expect(409);
     });
@@ -274,6 +294,13 @@ describe('Match result entry (e2e)', () => {
   });
 
   describe('POST /api/matches/:id/confirm', () => {
+    it('tells each player which team entered the result', async () => {
+      const [jackForm, oliverForm] = await Promise.all([getForm(jackToken).expect(200), getForm(oliverToken).expect(200)]);
+
+      expect(jackForm.body).toMatchObject({ viewerSide: 'home', enteredBySide: 'home' });
+      expect(oliverForm.body).toMatchObject({ viewerSide: 'away', enteredBySide: 'home' });
+    });
+
     it('rejects a request with no token', async () => {
       await post('confirm', undefined).expect(401);
     });
