@@ -19,11 +19,16 @@ interface Fixture {
     sectionId: number;
     roundNumber: number;
     matchDate: string;
-    status: 'scheduled' | 'completed' | 'washout' | 'forfeit' | 'bye';
+    status: 'scheduled' | 'awaiting_confirmation' | 'disputed' | 'completed' | 'washout' | 'forfeit' | 'bye';
     homeTeam: FixtureTeam;
     awayTeam: FixtureTeam;
     result: FixtureResult | null;
 }
+
+const STATUS_LABELS: Partial<Record<Fixture['status'], string>> = {
+    awaiting_confirmation: 'Awaiting confirmation',
+    disputed: 'Disputed',
+};
 
 interface FixtureCardProps {
     fixture: Fixture;
@@ -59,7 +64,7 @@ function FixtureCard({ fixture }: FixtureCardProps) {
             return <span className="text-gray-500 text-sm">{dateLabel}</span>;
         }
 
-        return <span className="text-gray-500 text-sm capitalize">{fixture.status}</span>;
+        return <span className="text-gray-500 text-sm capitalize">{STATUS_LABELS[fixture.status] ?? fixture.status}</span>;
     }
 
     return (
