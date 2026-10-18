@@ -34,7 +34,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'ff5b2bfaa57dc3b2a858a000daf1cd1abcc53705da3b89a149de4e82f4ae005d'>;
+  StorageHashBase<'877ed903f404b2883aee05d34d802d622e7cdbaca629caacc19e5ba8cba91443'>;
 export type ExecutionHash =
   ExecutionHashBase<'23c544f7811d1f93c37e2e0065437fc55cf818cee6b23fa79cd811116f204776'>;
 export type ProfileHash =
@@ -415,6 +415,22 @@ export type FieldOutputTypes = {
       readonly teamId: CodecTypes['pg/int4@1']['output'];
       readonly personId: CodecTypes['pg/text@1']['output'];
     };
+    readonly TeamRequest: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly clubId: CodecTypes['pg/text@1']['output'];
+      readonly seasonId: CodecTypes['pg/int4@1']['output'];
+      readonly sectionComment: CodecTypes['pg/text@1']['output'];
+      readonly formatId: CodecTypes['pg/text@1']['output'];
+      readonly name: CodecTypes['pg/text@1']['output'];
+      readonly teamGender: 'boys' | 'girls' | 'open' | null;
+      readonly pending: CodecTypes['pg/bool@1']['output'];
+      readonly teamId: CodecTypes['pg/int4@1']['output'] | null;
+    };
+    readonly TeamRequestPlayer: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly teamRequestId: CodecTypes['pg/int4@1']['output'];
+      readonly personId: CodecTypes['pg/text@1']['output'];
+    };
   };
 };
 export type FieldInputTypes = {
@@ -590,6 +606,22 @@ export type FieldInputTypes = {
     readonly TeamPlayer: {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly teamId: CodecTypes['pg/int4@1']['input'];
+      readonly personId: CodecTypes['pg/text@1']['input'];
+    };
+    readonly TeamRequest: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly clubId: CodecTypes['pg/text@1']['input'];
+      readonly seasonId: CodecTypes['pg/int4@1']['input'];
+      readonly sectionComment: CodecTypes['pg/text@1']['input'];
+      readonly formatId: CodecTypes['pg/text@1']['input'];
+      readonly name: CodecTypes['pg/text@1']['input'];
+      readonly teamGender: 'boys' | 'girls' | 'open' | null;
+      readonly pending: CodecTypes['pg/bool@1']['input'];
+      readonly teamId: CodecTypes['pg/int4@1']['input'] | null;
+    };
+    readonly TeamRequestPlayer: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly teamRequestId: CodecTypes['pg/int4@1']['input'];
       readonly personId: CodecTypes['pg/text@1']['input'];
     };
   };
@@ -769,6 +801,22 @@ export type StorageColumnTypes = {
       readonly personId: CodecTypes['pg/text@1']['output'];
       readonly teamId: CodecTypes['pg/int4@1']['output'];
     };
+    readonly teamRequest: {
+      readonly clubId: CodecTypes['pg/text@1']['output'];
+      readonly formatId: CodecTypes['pg/text@1']['output'];
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly name: CodecTypes['pg/text@1']['output'];
+      readonly pending: CodecTypes['pg/bool@1']['output'];
+      readonly seasonId: CodecTypes['pg/int4@1']['output'];
+      readonly sectionComment: CodecTypes['pg/text@1']['output'];
+      readonly teamGender: 'boys' | 'girls' | 'open' | null;
+      readonly teamId: CodecTypes['pg/int4@1']['output'] | null;
+    };
+    readonly teamRequestPlayer: {
+      readonly id: CodecTypes['pg/int4@1']['output'];
+      readonly personId: CodecTypes['pg/text@1']['output'];
+      readonly teamRequestId: CodecTypes['pg/int4@1']['output'];
+    };
   };
 };
 export type StorageColumnInputTypes = {
@@ -945,6 +993,22 @@ export type StorageColumnInputTypes = {
       readonly id: CodecTypes['pg/int4@1']['input'];
       readonly personId: CodecTypes['pg/text@1']['input'];
       readonly teamId: CodecTypes['pg/int4@1']['input'];
+    };
+    readonly teamRequest: {
+      readonly clubId: CodecTypes['pg/text@1']['input'];
+      readonly formatId: CodecTypes['pg/text@1']['input'];
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly name: CodecTypes['pg/text@1']['input'];
+      readonly pending: CodecTypes['pg/bool@1']['input'];
+      readonly seasonId: CodecTypes['pg/int4@1']['input'];
+      readonly sectionComment: CodecTypes['pg/text@1']['input'];
+      readonly teamGender: 'boys' | 'girls' | 'open' | null;
+      readonly teamId: CodecTypes['pg/int4@1']['input'] | null;
+    };
+    readonly teamRequestPlayer: {
+      readonly id: CodecTypes['pg/int4@1']['input'];
+      readonly personId: CodecTypes['pg/text@1']['input'];
+      readonly teamRequestId: CodecTypes['pg/int4@1']['input'];
     };
   };
 };
@@ -2517,6 +2581,202 @@ type ContractBase = Omit<
                 },
               ];
             };
+            readonly teamRequest: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly clubId: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly seasonId: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly sectionComment: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly formatId: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly name: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly teamGender: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: true;
+                };
+                readonly pending: {
+                  readonly nativeType: 'bool';
+                  readonly codecId: 'pg/bool@1';
+                  readonly nullable: false;
+                };
+                readonly teamId: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: true;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'teamRequest_clubId_idx_7aff947d';
+                  readonly prefix: 'teamRequest_clubId_idx';
+                  readonly columns: readonly ['clubId'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'teamRequest_seasonId_idx_aa50cbae';
+                  readonly prefix: 'teamRequest_seasonId_idx';
+                  readonly columns: readonly ['seasonId'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'teamRequest_formatId_idx_306abbe2';
+                  readonly prefix: 'teamRequest_formatId_idx';
+                  readonly columns: readonly ['formatId'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'teamRequest_teamId_idx_f2b72ab3';
+                  readonly prefix: 'teamRequest_teamId_idx';
+                  readonly columns: readonly ['teamId'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'teamRequest';
+                    readonly columns: readonly ['clubId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'club';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'teamRequest';
+                    readonly columns: readonly ['seasonId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'season';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'teamRequest';
+                    readonly columns: readonly ['formatId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'format';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'teamRequest';
+                    readonly columns: readonly ['teamId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'team';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
+            readonly teamRequestPlayer: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'function';
+                    readonly expression: 'autoincrement()';
+                  };
+                };
+                readonly teamRequestId: {
+                  readonly nativeType: 'int4';
+                  readonly codecId: 'pg/int4@1';
+                  readonly nullable: false;
+                };
+                readonly personId: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [];
+              indexes: readonly [
+                {
+                  readonly name: 'teamRequestPlayer_teamRequestId_idx_c7c0eaeb';
+                  readonly prefix: 'teamRequestPlayer_teamRequestId_idx';
+                  readonly columns: readonly ['teamRequestId'];
+                  readonly unique: false;
+                },
+                {
+                  readonly name: 'teamRequestPlayer_personId_idx_e5e06b80';
+                  readonly prefix: 'teamRequestPlayer_personId_idx';
+                  readonly columns: readonly ['personId'];
+                  readonly unique: false;
+                },
+              ];
+              foreignKeys: readonly [
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'teamRequestPlayer';
+                    readonly columns: readonly ['teamRequestId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'teamRequest';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+                {
+                  readonly source: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'teamRequestPlayer';
+                    readonly columns: readonly ['personId'];
+                  };
+                  readonly target: {
+                    readonly namespaceId: 'public' & NamespaceId;
+                    readonly tableName: 'person';
+                    readonly columns: readonly ['id'];
+                  };
+                },
+              ];
+            };
           };
           readonly valueSet: {
             readonly day_of_week: {
@@ -2625,9 +2885,17 @@ type ContractBase = Omit<
     readonly season: { readonly namespace: 'public' & NamespaceId; readonly model: 'Season' };
     readonly section: { readonly namespace: 'public' & NamespaceId; readonly model: 'Section' };
     readonly team: { readonly namespace: 'public' & NamespaceId; readonly model: 'Team' };
+    readonly teamRequest: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'TeamRequest';
+    };
     readonly teamPlayer: {
       readonly namespace: 'public' & NamespaceId;
       readonly model: 'TeamPlayer';
+    };
+    readonly teamRequestPlayer: {
+      readonly namespace: 'public' & NamespaceId;
+      readonly model: 'TeamRequestPlayer';
     };
     readonly match: { readonly namespace: 'public' & NamespaceId; readonly model: 'Match' };
     readonly rubber: { readonly namespace: 'public' & NamespaceId; readonly model: 'Rubber' };
@@ -4263,6 +4531,161 @@ type ContractBase = Omit<
               readonly fields: {
                 readonly id: { readonly column: 'id' };
                 readonly teamId: { readonly column: 'teamId' };
+                readonly personId: { readonly column: 'personId' };
+              };
+            };
+          };
+          readonly TeamRequest: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly clubId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly seasonId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly sectionComment: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly formatId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly name: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly teamGender: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly pending: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/bool@1' };
+              };
+              readonly teamId: {
+                readonly nullable: true;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+            };
+            readonly relations: {
+              readonly club: {
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'Club' };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['clubId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly format: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Format';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['formatId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly players: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'TeamRequestPlayer';
+                };
+                readonly cardinality: '1:N';
+                readonly on: {
+                  readonly localFields: readonly ['id'];
+                  readonly targetFields: readonly ['teamRequestId'];
+                };
+              };
+              readonly season: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Season';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['seasonId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly team: {
+                readonly to: { readonly namespace: 'public' & NamespaceId; readonly model: 'Team' };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['teamId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'teamRequest';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly clubId: { readonly column: 'clubId' };
+                readonly seasonId: { readonly column: 'seasonId' };
+                readonly sectionComment: { readonly column: 'sectionComment' };
+                readonly formatId: { readonly column: 'formatId' };
+                readonly name: { readonly column: 'name' };
+                readonly teamGender: { readonly column: 'teamGender' };
+                readonly pending: { readonly column: 'pending' };
+                readonly teamId: { readonly column: 'teamId' };
+              };
+            };
+          };
+          readonly TeamRequestPlayer: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly teamRequestId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/int4@1' };
+              };
+              readonly personId: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+            };
+            readonly relations: {
+              readonly person: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'Person';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['personId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+              readonly teamRequest: {
+                readonly to: {
+                  readonly namespace: 'public' & NamespaceId;
+                  readonly model: 'TeamRequest';
+                };
+                readonly cardinality: 'N:1';
+                readonly on: {
+                  readonly localFields: readonly ['teamRequestId'];
+                  readonly targetFields: readonly ['id'];
+                };
+              };
+            };
+            readonly storage: {
+              readonly table: 'teamRequestPlayer';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly teamRequestId: { readonly column: 'teamRequestId' };
                 readonly personId: { readonly column: 'personId' };
               };
             };

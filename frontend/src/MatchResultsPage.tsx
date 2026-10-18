@@ -4,6 +4,7 @@ import { ArrowLeft } from 'lucide-react';
 
 import fetchApi, { ApiError } from './api'
 import MatchDetail from './MatchDetail'
+import ResultStatusPanel from './match-results/ResultStatusPanel'
 
 function MatchResultsPage() {
     const { matchId } = useParams();
@@ -87,28 +88,38 @@ function MatchResultsPage() {
                 </div>
 
                 <div className="px-6 py-4">
-                    <MatchDetail match={match} />
+                    <ResultStatusPanel match={match} onMatchChange={setMatch} />
+                    {match.rubbers.length === 0 ? (
+                        <p className="text-sm text-gray-500">No result has been entered yet.</p>
+                    ) : (
+                        <MatchDetail match={match} />
+                    )}
                 </div>
 
-                <div className="px-6 py-4 border-t border-gray-100 bg-gray-50">
-                    <div className="grid grid-cols-3 gap-y-2 text-center max-w-sm mx-auto">
-                        <span className={homeWonMatch ? 'font-bold text-gray-900' : 'text-gray-500'}>{match.homeTeam.name}</span>
-                        <span></span>
-                        <span className={awayWonMatch ? 'font-bold text-gray-900' : 'text-gray-500'}>{match.awayTeam.name}</span>
+                {match.rubbers.length > 0 && (
+                    <div className="px-6 py-4 border-t border-gray-100 bg-gray-50">
+                        {match.matchStatus !== 'completed' && (
+                            <p className="text-center text-xs uppercase tracking-wide text-amber-700 mb-3">Provisional result</p>
+                        )}
+                        <div className="grid grid-cols-3 gap-y-2 text-center max-w-sm mx-auto">
+                            <span className={homeWonMatch ? 'font-bold text-gray-900' : 'text-gray-500'}>{match.homeTeam.name}</span>
+                            <span></span>
+                            <span className={awayWonMatch ? 'font-bold text-gray-900' : 'text-gray-500'}>{match.awayTeam.name}</span>
 
-                        <span className="text-lg font-semibold text-gray-900">{homeRubbersWon}</span>
-                        <span className="text-xs uppercase tracking-wide text-gray-500 self-center">Rubbers</span>
-                        <span className="text-lg font-semibold text-gray-900">{awayRubbersWon}</span>
+                            <span className="text-lg font-semibold text-gray-900">{homeRubbersWon}</span>
+                            <span className="text-xs uppercase tracking-wide text-gray-500 self-center">Rubbers</span>
+                            <span className="text-lg font-semibold text-gray-900">{awayRubbersWon}</span>
 
-                        <span className="text-lg font-semibold text-gray-900">{setsWon.home}</span>
-                        <span className="text-xs uppercase tracking-wide text-gray-500 self-center">Sets</span>
-                        <span className="text-lg font-semibold text-gray-900">{setsWon.away}</span>
+                            <span className="text-lg font-semibold text-gray-900">{setsWon.home}</span>
+                            <span className="text-xs uppercase tracking-wide text-gray-500 self-center">Sets</span>
+                            <span className="text-lg font-semibold text-gray-900">{setsWon.away}</span>
 
-                        <span className="text-lg font-semibold text-gray-900">{gamesWon.home}</span>
-                        <span className="text-xs uppercase tracking-wide text-gray-500 self-center">Games</span>
-                        <span className="text-lg font-semibold text-gray-900">{gamesWon.away}</span>
+                            <span className="text-lg font-semibold text-gray-900">{gamesWon.home}</span>
+                            <span className="text-xs uppercase tracking-wide text-gray-500 self-center">Games</span>
+                            <span className="text-lg font-semibold text-gray-900">{gamesWon.away}</span>
+                        </div>
                     </div>
-                </div>
+                )}
             </div>
         </div>
     );

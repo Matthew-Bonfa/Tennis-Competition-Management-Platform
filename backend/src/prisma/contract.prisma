@@ -248,6 +248,27 @@ model Team {
   rubberParticipations RubberPlayer[]
 }
 
+model TeamRequest {
+  id             Int          @id @default(autoincrement())
+  clubId         String
+  seasonId       Int
+  sectionComment String
+  formatId       String
+  name           String
+  teamGender     team_gender?
+  pending        Boolean
+  teamId Int?
+  // if approved, pending false and teamId not null
+  // if denied, pending false and teamId null
+
+  club           Club   @relation(fields: [clubId], references: [id])
+  season         Season @relation(fields: [seasonId], references: [id])
+  format         Format @relation(fields: [formatId], references: [id])
+  team           Team?  @relation(fields: [teamId], references: [id])
+
+  players TeamRequestPlayer[]
+}
+
 model TeamPlayer {
   id       Int @id @default(autoincrement())
   teamId   Int
@@ -257,6 +278,15 @@ model TeamPlayer {
   person   Person @relation(fields: [personId], references: [id])
 
   @@unique([teamId, personId])
+}
+
+model TeamRequestPlayer {
+  id            Int @id     @default(autoincrement())
+  teamRequestId Int
+  personId      String
+
+  teamRequest   TeamRequest @relation(fields: [teamRequestId], references: [id])
+  person        Person      @relation(fields: [personId], references: [id])
 }
 
 // ==========================================

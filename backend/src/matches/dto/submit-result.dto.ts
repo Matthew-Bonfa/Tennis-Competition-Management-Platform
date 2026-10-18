@@ -37,3 +37,7 @@ export class SubmitResultDto {
 export class DisputeResultDto {
     @IsString() @IsNotEmpty() @MaxLength(500) reason: string;
 }
+
+export class AdminResultDto extends SubmitResultDto {
+    @IsOptional() @IsString() @MaxLength(500) note?: string;
+}

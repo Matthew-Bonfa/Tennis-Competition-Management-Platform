@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { SectionsService } from '../sections/sections.service.js';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { CreateTeamDto } from './dto/create-team.dto.js';
@@ -13,14 +13,112 @@ export class TeamsService {
     private readonly sectionsService: SectionsService,
   ) {}
 
-  create(_createTeamDto: CreateTeamDto) {
-    return 'This action adds a new team';
+  async create(data: {clubId: string, sectionId: number, name: string, players: [{personId: string}]}) {
+    if (!data.players){
+      throw new BadRequestException("No players given");
+    }
+    
+    return this.prisma.client.orm.public.Team.create({
+      clubId: data.clubId,
+      sectionId: data.sectionId,
+      name: data.name,
+      players: (tp) =>
+        tp.create(data.players.map(player => ({
+          personId: player.personId
+        })))
+    });
+  }
+
+  async getOneRequest(id: number){
+    return await this.prisma.client.orm.public.TeamRequest
+      .where({id})
+      .include("players")
+      .first();
+  }
+
+  async getRequestsBySeason(id: number){
+    return await this.prisma.client.orm.public.TeamRequest
+      .where({seasonId: id})
+      .include("players")
+      .all();
+  }
+
+  async register(data: {clubId: string, seasonId: number, sectionComment: string, formatId: string, name: string, players: [{personId: string}]}){
+    if (!data.players){
+      throw new BadRequestException("No players given");
+    }
+    return await this.prisma.client.orm.public.TeamRequest.create({
+      clubId: data.clubId,
+      seasonId: data.seasonId,
+      sectionComment: data.sectionComment,
+      formatId: data.formatId,
+      name: data.name,
+      pending: true,
+      players: (trp) =>
+        trp.create(data.players.map(player => ({
+          personId: player.personId
+        })))
+    });
+  }
+
+  async approve(id: number, sectionId: number){
+    const request = await this.getOneRequest(id);
+    if (!request){
+      throw new NotFoundException("No request with id " + id);
+    }
+    if (!request.pending){
+      throw new BadRequestException('Already handled request ' + request.id);
+    }
+    
+    // make the team
+    let newTeamWithoutPlayers = {
+      clubId: request.clubId,
+      sectionId: sectionId,
+      name: request.name,
+    };
+
+    let newTeam: any;
+    if (request.players.length > 0){
+      newTeam = {
+        ...newTeamWithoutPlayers,
+        players: request.players.map(player => ({
+          personId: player.personId
+        }))
+      };
+    } else {
+      newTeam = {...newTeamWithoutPlayers};
+    }
+
+    const response = await this.create(newTeam);
+
+    // modify the request
+    const updateResponse = await this.prisma.client.orm.public.TeamRequest
+      .where({id: id})
+      .update({teamId: response.id, pending: false});
+    
+    return response;
+  }
+
+  async deny(id: number){
+    const request = await this.getOneRequest(id);
+    if (!request){
+      throw new NotFoundException("No request with id " + id);
+    }
+    if (!request.pending){
+      throw new BadRequestException('Already handled request ' + request.id);
+    }
+    const response = await this.prisma.client.orm.public.TeamRequest
+      .where({id: id})
+      .update({pending: false});
+
+    return response;
   }
 
   // All teams
   async findAll() {
     return await this.prisma.client.orm.public.Team.include('club')
       .include('section')
+      .include('players')
       .all();
   }
 

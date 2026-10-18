@@ -16,6 +16,7 @@ import PlayersPage from './PlayersPage'
 import Ribbon from './Ribbon'
 import SectionPage from './SectionPage'
 import MatchResultsPage from './MatchResultsPage'
+import EnterResultPage from './match-results/EnterResultPage'
 import TeamProfile from './TeamProfile'
 import ManageAssociationsPage from './manage-associations/ManageAssociationsPage';
 import CreateAssociationPage from './manage-associations/CreateAssociationPage';
@@ -91,6 +92,7 @@ export default function App() {
 
             <Route path="/sections/:sectionId" element={<SectionPage />} />
             <Route path="/matches/:matchId" element={<MatchResultsPage />} />
+            <Route path="/matches/:matchId/enter" element={<EnterResultPage />} />
 
             <Route path="/manage-associations" element={<ManageAssociationsPage />} />
             <Route path="/manage-associations/create-new-association" element={<CreateAssociationPage />} />
