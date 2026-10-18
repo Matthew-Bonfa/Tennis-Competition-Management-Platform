@@ -220,11 +220,13 @@ export function Registration({season, association}){
       sectionComment: sectionComment,
       formatId: selectedFormat.id,
       name: teamName,
-      players: actualPlayers,
-      //missing team_gender
+      teamGender: gender,
+      players: actualPlayers.map(p => ({
+        personId: p.id
+      })),
     }
 
-    let response = await postApi('/teams/requests', newTeamRequest);
+    let response = await postApi('/teams/register', newTeamRequest);
 
 
     navigate('/manage-teams');

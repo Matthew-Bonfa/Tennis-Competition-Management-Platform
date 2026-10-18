@@ -43,7 +43,7 @@ export class TeamsService {
       .all();
   }
 
-  async register(data: {clubId: string, seasonId: number, sectionComment: string, formatId: string, name: string, players: [{personId: string}]}){
+  async register(data: {clubId: string, seasonId: number, sectionComment: string, formatId: string, name: string, teamGender: "open" | "boys" | "girls" | null | undefined, players: [{personId: string}]}){
     if (!data.players){
       throw new BadRequestException("No players given");
     }
@@ -53,6 +53,7 @@ export class TeamsService {
       sectionComment: data.sectionComment,
       formatId: data.formatId,
       name: data.name,
+      teamGender: data.teamGender,
       pending: true,
       players: (trp) =>
         trp.create(data.players.map(player => ({
