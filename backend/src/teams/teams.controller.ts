@@ -22,7 +22,7 @@ export class TeamsController {
   // POST /teams/register
   @Roles('ASSOCIATION_ADMIN', 'CLUB_ADMIN')
   @Post('register')
-  register(@Body () data: {clubId: string, seasonId: number, sectionComment: string, formatId: string, name: string, players: [{personId: string}]}){
+  register(@Body () data: {clubId: string, seasonId: number, sectionComment: string, formatId: string, name: string, teamGender: "open" | "boys" | "girls" | null | undefined, players: [{personId: string}]}){
     return this.teamsService.register(data);
   }
 

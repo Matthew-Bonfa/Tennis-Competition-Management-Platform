@@ -18,7 +18,6 @@ import SectionPage from './SectionPage'
 import MatchResultsPage from './MatchResultsPage'
 import EnterResultPage from './match-results/EnterResultPage'
 import TeamProfile from './TeamProfile'
-import RegisterTeamPage from './register-team/RegisterTeamPage'
 import ManageAssociationsPage from './manage-associations/ManageAssociationsPage';
 import CreateAssociationPage from './manage-associations/CreateAssociationPage';
 import ManageCompetitionsPage from './manage-competitions/ManageCompetitionsPage';
@@ -34,6 +33,9 @@ import Login from './Login';
 import ManageClubsPage from './manage-clubs/ManageClubsPage';
 import EditClubPage from './manage-clubs/EditClubPage';
 import { isAdmin, isAuthenticated } from './auth';
+import RegisterTeamPage from './register-team/RegisterTeamPage';
+import SelectCompetition from './register-team/SelectCompetition';
+import ReviewRequests from './register-team/ReviewRequests';
 
 // --- MAIN APP ROUTING ---
 export default function App() {
@@ -92,7 +94,6 @@ export default function App() {
             <Route path="/matches/:matchId" element={<MatchResultsPage />} />
             <Route path="/matches/:matchId/enter" element={<EnterResultPage />} />
 
-            <Route path="/register-team" element={<RegisterTeamPage />} />
             <Route path="/manage-associations" element={<ManageAssociationsPage />} />
             <Route path="/manage-associations/create-new-association" element={<CreateAssociationPage />} />
 
@@ -108,6 +109,11 @@ export default function App() {
 
             <Route path="/manage-clubs" element={<ManageClubsPage />} />
             <Route path="/manage-clubs/:id" element={<EditClubPage />} />
+
+
+            <Route path="/manage-teams" element={<RegisterTeamPage />} />
+            <Route path="/manage-teams/register" element={<SelectCompetition />} />
+            <Route path="/manage-teams/review" element={<ReviewRequests />} />
 
             <Route path="/login" element={<Login />} />
           </Routes>
