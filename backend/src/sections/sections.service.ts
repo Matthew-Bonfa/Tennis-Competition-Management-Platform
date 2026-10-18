@@ -205,6 +205,91 @@ export class SectionsService {
     });
   }
 
+  // everything the section owns goes with it, its fixtures and
+  // every rubber, set, player row and result event hanging off those fixtures,
+  // and the teams that were entered into it with their rosters. Nothing here
+  // is soft-deleted or archived, so the row is gone for good.
+  //
+  // Teams are the one thing that isn't only inside a section, but a team
+  // belongs to exactly one and the column is NOT NULL, so it can't outlive its
+  // section by being left behind. A TeamRequest is different: it records what a
+  // club asked for, so it survives the team it produced with the link cleared.
+  async remove(id: number) {
+    return this.prisma.client.transaction(async (tx) => {
+      const section = await tx.orm.public.Section.where({ id }).first();
+
+      // Checked inside the transaction so two deletes racing can't both report success
+      if (!section) {
+        throw new NotFoundException(`Section ${id} not found`);
+      }
+
+      // Deepest rows first
+      const matches = await tx.orm.public.Match.where({ sectionId: id })
+        .select('id')
+        .all();
+      const matchIds = matches.map((match) => match.id);
+
+      const rubbers = matchIds.length
+        ? await tx.orm.public.Rubber.where((rubber) =>
+            rubber.matchId.in(matchIds),
+          )
+            .select('id')
+            .all()
+        : [];
+      const rubberIds = rubbers.map((rubber) => rubber.id);
+
+      if (rubberIds.length) {
+        await tx.orm.public.RubberSet.where((set) =>
+          set.rubberId.in(rubberIds),
+        ).deleteAndCount();
+        await tx.orm.public.RubberPlayer.where((player) =>
+          player.rubberId.in(rubberIds),
+        ).deleteAndCount();
+        await tx.orm.public.Rubber.where((rubber) =>
+          rubber.id.in(rubberIds),
+        ).deleteAndCount();
+      }
+
+      if (matchIds.length) {
+        // The audit trail hangs off the match, not off the rubber, so it has to
+        // go before the match it describes
+        await tx.orm.public.MatchResultEvent.where((event) =>
+          event.matchId.in(matchIds),
+        ).deleteAndCount();
+        await tx.orm.public.Match.where((match) =>
+          match.id.in(matchIds),
+        ).deleteAndCount();
+      }
+
+      const teams = await tx.orm.public.Team.where({ sectionId: id })
+        .select('id')
+        .all();
+      const teamIds = teams.map((team) => team.id);
+
+      if (teamIds.length) {
+        await tx.orm.public.TeamPlayer.where((player) =>
+          player.teamId.in(teamIds),
+        ).deleteAndCount();
+        await tx.orm.public.TeamRequest.where((request) =>
+          request.teamId.in(teamIds),
+        ).updateAll({ teamId: null });
+        await tx.orm.public.Team.where((team) =>
+          team.id.in(teamIds),
+        ).deleteAndCount();
+      }
+
+      await tx.orm.public.Section.where({ id }).delete();
+
+      return {
+        id,
+        name: section.name,
+        matchesDeleted: matchIds.length,
+        rubbersDeleted: rubberIds.length,
+        teamsDeleted: teamIds.length,
+      };
+    });
+  }
+
   async update(id: number, updateSectionDto: UpdateSectionDto) {
     // quick existence check (since findOne also calculates the ladder, which we don't need here)
     const existing = await this.prisma.client.orm.public.Section.where({
@@ -229,7 +314,9 @@ export class SectionsService {
         id: updateSectionDto.formatId,
       }).first();
       if (!format) {
-        throw new NotFoundException(`Format ${updateSectionDto.formatId} not found`);
+        throw new NotFoundException(
+          `Format ${updateSectionDto.formatId} not found`,
+        );
       }
       data.formatId = updateSectionDto.formatId;
     }
@@ -241,3 +328,4 @@ export class SectionsService {
     return this.prisma.client.orm.public.Section.where({ id }).update(data);
   }
 }
+
