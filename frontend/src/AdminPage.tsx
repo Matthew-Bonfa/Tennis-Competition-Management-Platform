@@ -17,9 +17,9 @@ function AdminPage() {
               className="block bg-white border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
                 Manage Competitions
         </Link>
-        <Link to="/register-team"
+        <Link to="/manage-teams"
               className="block bg-white border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
-                Register a Team
+                Manage Teams
         </Link>
         <Link to="/manage-clubs"
               className="block bg-white border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
