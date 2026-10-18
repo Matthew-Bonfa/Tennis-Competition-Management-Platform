@@ -1,4 +1,14 @@
-import { Controller, Get, Query, Post, Body, Patch, Param, ParseIntPipe } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Query,
+  Post,
+  Body,
+  Patch,
+  Param,
+  ParseIntPipe,
+  Delete,
+} from '@nestjs/common';
 import { SeasonsService } from './seasons.service.js';
 import { Public } from '../auth/decorators/public.decorator.js';
 import { Roles } from '../auth/decorators/roles.decorator.js';
@@ -26,11 +36,20 @@ export class SeasonsController {
   create(@Body() createSeasonDto: CreateSeasonDto) {
     return this.seasonsService.create(createSeasonDto);
   }
-    
+
   @Roles('ASSOCIATION_ADMIN')
   @Patch(':id')
-  update(@Param('id', ParseIntPipe) id: number, @Body() updateSeasonDto: UpdateSeasonDto) {
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateSeasonDto: UpdateSeasonDto,
+  ) {
     return this.seasonsService.update(id, updateSeasonDto);
   }
 
+  // hard delete taking sections and everything inside
+  @Roles('ASSOCIATION_ADMIN')
+  @Delete(':id')
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.seasonsService.remove(id);
+  }
 }
