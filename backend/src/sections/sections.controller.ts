@@ -1,10 +1,22 @@
-import { Controller, Get, Param, ParseIntPipe, Res, Query, Post, Body, Patch } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  ParseIntPipe,
+  Res,
+  Query,
+  Post,
+  Body,
+  Patch,
+  Delete,
+} from '@nestjs/common';
 import type { Response } from 'express';
 import { csvFilename } from '../common/csv-filename.js';
 import { toCsv } from '../common/csv.js';
 import { SectionsService } from './sections.service.js';
 import { LADDER_CSV_COLUMNS, toLadderCsvRow } from './to-ladder-csv-row.js';
 import { Public } from '../auth/decorators/public.decorator.js';
+import { Roles } from '../auth/decorators/roles.decorator.js';
 import { CreateSectionDto } from './dto/create-section.dto.js';
 import { UpdateSectionDto } from './dto/update-section.dto.js';
 
@@ -72,5 +84,12 @@ export class SectionsController {
     @Body() updateSectionDto: UpdateSectionDto,
   ) {
     return this.sectionsService.update(id, updateSectionDto);
+  }
+
+  // delete section — HARD delete, taking its fixtures and teams with it
+  @Roles('ASSOCIATION_ADMIN')
+  @Delete(':id')
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.sectionsService.remove(id);
   }
 }
