@@ -1,7 +1,7 @@
 // file created by Ella Goodwin
 // AI was used in writing this file (Claude)
 
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException, ConflictException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { CreateFormatDto } from './dto/create-format.dto.js';
 import { formatNameFromRubbers } from './format-name.js';
@@ -114,5 +114,32 @@ export class FormatsService {
 
     // read it back after the transaction has committed
     return this.findOne(created.id);
+  }
+
+  // delete a format, its rubbers and its permitted genders together
+  async remove(id: string) {
+    // one transaction: if any delete fails, none of them are kept.
+    // Every query inside must go through tx, not this.prisma.client.
+    await this.prisma.client.transaction(async (tx) => {
+      const format = await tx.orm.public.Format.where({ id }).select('id').first();
+      if (!format) {
+        throw new NotFoundException(`Format ${id} not found`);
+      }
+
+      // a format can't be deleted while a section, competition or team request uses it
+      const usedBySection = await tx.orm.public.Section.where({ formatId: id }).select('id').first();
+      const usedByCompetition = await tx.orm.public.CompetitionFormat.where({ formatId: id }).select('id').first();
+      const usedByTeamRequest = await tx.orm.public.TeamRequest.where({ formatId: id }).select('id').first();
+      if (usedBySection || usedByCompetition || usedByTeamRequest) {
+        throw new ConflictException(
+          `Format ${id} is in use by a section, competition or team request and cannot be deleted`,
+        );
+      }
+
+      // children first, then the format itself
+      await tx.orm.public.FormatRubber.where({ formatId: id }).deleteAndCount();
+      await tx.orm.public.FormatTeamGender.where({ formatId: id }).deleteAndCount();
+      await tx.orm.public.Format.where({ id }).delete();
+    });
   }
 }
