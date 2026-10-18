@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Param, ParseUUIDPipe, Body } from '@nestjs/common';
+import { Controller, Get, Post, Param, ParseUUIDPipe, Body, Delete, HttpCode } from '@nestjs/common';
 import { FormatsService } from './formats.service.js';
 import { Public } from '../auth/decorators/public.decorator.js'
 import { Roles } from '../auth/decorators/roles.decorator.js';
@@ -22,10 +22,18 @@ export class FormatsController {
     return this.formatsService.findOne(id);
   }
 
-  // create a new format (formats are never edited, only created)
+  // create a new format (formats are never edited, only created or deleted)
   @Roles('ASSOCIATION_ADMIN')
   @Post()
   create(@Body() createFormatDto: CreateFormatDto) {
     return this.formatsService.create(createFormatDto);
+  }
+
+  // delete a format if it's not being used in any competitions
+  @Roles('ASSOCIATION_ADMIN')
+  @Delete(':id')
+  @HttpCode(204)
+  delete(@Param('id', ParseUUIDPipe) id: string) {
+    return this.formatsService.remove(id);
   }
 }

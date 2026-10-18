@@ -323,4 +323,95 @@ describe('Formats Feature (e2e)', () => {
       .send({ ...validFormat, winnerDeterminedBy: 'coin_toss' })
       .expect(400);
   });
+
+  // Deleting a format that nothing uses removes it, its rubbers and its genders
+  it('DELETE /api/formats/:id -> should delete an unused format and return 204', async () => {
+    const created = await request(app.getHttpServer())
+      .post('/api/formats')
+      .set('AUTHORIZATION', `Bearer ${adminToken}`)
+      .send(validFormat)
+      .expect(201);
+
+    await request(app.getHttpServer())
+      .delete(`/api/formats/${created.body.id}`)
+      .set('AUTHORIZATION', `Bearer ${adminToken}`)
+      .expect(204);
+
+    // It is gone from the detail endpoint and from the list
+    await request(app.getHttpServer())
+      .get(`/api/formats/${created.body.id}`)
+      .expect(404);
+
+    const list = await request(app.getHttpServer()).get('/api/formats').expect(200);
+    const ids = list.body.map((format: any) => format.id);
+    expect(ids).not.toContain(created.body.id);
+  });
+
+  // A format used by a section must be kept
+  it('DELETE /api/formats/:id -> should return 409 when a section uses the format', async () => {
+    // Section 1 is seeded, so its format is guaranteed to be in use
+    const section = await request(app.getHttpServer())
+      .get('/api/sections/1')
+      .expect(200);
+
+    const response = await request(app.getHttpServer())
+      .delete(`/api/formats/${section.body.formatId}`)
+      .set('AUTHORIZATION', `Bearer ${adminToken}`)
+      .expect(409);
+
+    expect(response.body.message).toContain('in use');
+
+    // The format must still exist after the rejected delete
+    await request(app.getHttpServer())
+      .get(`/api/formats/${section.body.formatId}`)
+      .expect(200);
+  });
+
+  // A uuid that is not in the database
+  it('DELETE /api/formats/:id -> should return 404 for a uuid that does not exist', async () => {
+    const fakeUuid = '123e4567-e89b-12d3-a456-426614174000';
+
+    const response = await request(app.getHttpServer())
+      .delete(`/api/formats/${fakeUuid}`)
+      .set('AUTHORIZATION', `Bearer ${adminToken}`)
+      .expect(404);
+
+    expect(response.body.message).toContain('not found');
+  });
+
+  // ParseUUIDPipe rejects anything that is not a uuid
+  it('DELETE /api/formats/:id -> should return 400 for an id that is not a uuid', async () => {
+    await request(app.getHttpServer())
+      .delete('/api/formats/not-a-uuid')
+      .set('AUTHORIZATION', `Bearer ${adminToken}`)
+      .expect(400);
+  });
+
+  // Deleting a format needs authentication
+  it('DELETE /api/formats/:id -> should return 401 when not authenticated', async () => {
+    await request(app.getHttpServer())
+      .delete(`/api/formats/${savedFormatId}`)
+      .expect(401);
+  });
+
+  // A club admin is authenticated but does not hold ASSOCIATION_ADMIN
+  it('DELETE /api/formats/:id -> should return 403 for a user without the ASSOCIATION_ADMIN role', async () => {
+    // Use a throwaway format so a broken guard can't delete a seeded one
+    const created = await request(app.getHttpServer())
+      .post('/api/formats')
+      .set('AUTHORIZATION', `Bearer ${adminToken}`)
+      .send(validFormat)
+      .expect(201);
+
+    await request(app.getHttpServer())
+      .delete(`/api/formats/${created.body.id}`)
+      .set('AUTHORIZATION', `Bearer ${clubAdminToken}`)
+      .expect(403);
+
+    // Clean up
+    await request(app.getHttpServer())
+      .delete(`/api/formats/${created.body.id}`)
+      .set('AUTHORIZATION', `Bearer ${adminToken}`)
+      .expect(204);
+  });
 });
