@@ -403,10 +403,14 @@ describe('Competitions Feature (e2e)', () => {
       await request(app.getHttpServer()).get(`/api/seasons/${season.body.id}`).expect(404);
       await request(app.getHttpServer()).get(`/api/sections/${section.body.id}`).expect(404);
       await request(app.getHttpServer()).get(`/api/teams/${team.body.id}`).expect(404);
-      await request(app.getHttpServer())
-        .get(`/api/teams/requests/${teamRequest.body.id}`)
+      // GET /api/teams/requests/:id answers 200 with an empty body for a missing
+      // request, so check the season's request list is empty instead
+      const requests = await request(app.getHttpServer())
+        .get(`/api/teams/requests/seasons/${season.body.id}`)
         .set('Authorization', `Bearer ${adminToken}`)
-        .expect(404);
+        .expect(200);
+      expect(requests.body.map((r: any) => r.id)).not.toContain(teamRequest.body.id);
+      expect(requests.body).toEqual([]);
 
       // The shared format and the seeded team are untouched
       await request(app.getHttpServer()).get(`/api/formats/${formatId}`).expect(200);
