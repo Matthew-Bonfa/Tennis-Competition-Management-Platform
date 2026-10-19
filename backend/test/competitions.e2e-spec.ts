@@ -10,6 +10,7 @@ import { AppModule } from '../src/app.module.js';
 describe('Competitions Feature (e2e)', () => {
   let app: INestApplication;
   let adminToken: string;
+  let clubAdminToken: string;
 
   // Saved from the list test for reuse in the detail and filter tests below.
   let savedCompetitionId: string;
@@ -54,6 +55,17 @@ describe('Competitions Feature (e2e)', () => {
       .expect(200);
 
     adminToken = loginResponse.body.access_token;
+
+    // Club admin, authenticated but not allowed to delete competitions
+    const clubLogin = await request(app.getHttpServer())
+      .post('/api/auth/login')
+      .send({
+        email: 'club@tennis.com',
+        password: 'password123',
+      })
+      .expect(200);
+
+    clubAdminToken = clubLogin.body.access_token;
   });
 
   // Close connection after testing is finished
@@ -298,7 +310,141 @@ describe('Competitions Feature (e2e)', () => {
     });
   });
 
-  // Create and update require admin access (reads are public)
+  // Deleting a competition (needs the admin token) ---------------------------------
+  describe('DELETE /api/competitions/:id', () => {
+    // A throwaway competition, so a broken delete can't remove a seeded one
+    const createThrowaway = async () => {
+      const response = await request(app.getHttpServer())
+        .post('/api/competitions')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ name: `${createdName} to delete`, associationId: savedAssociationId })
+        .expect(201);
+
+      return response.body.id as string;
+    };
+
+    it('deletes a competition with no seasons and returns 204', async () => {
+      expect(savedAssociationId).toBeDefined();
+      const id = await createThrowaway();
+
+      await request(app.getHttpServer())
+        .delete(`/api/competitions/${id}`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .expect(204);
+
+      // It is gone from the detail endpoint and from the list
+      await request(app.getHttpServer())
+        .get(`/api/competitions/${id}`)
+        .expect(404);
+
+      const list = await request(app.getHttpServer()).get('/api/competitions').expect(200);
+      expect(list.body.map((c: any) => c.id)).not.toContain(id);
+    });
+
+    it('deletes the seasons, sections, teams and team requests under the competition', async () => {
+      const id = await createThrowaway();
+
+      // Borrow a club, player and format from the seeded data
+      const seededTeam = await request(app.getHttpServer()).get('/api/teams/1').expect(200);
+      const seededSection = await request(app.getHttpServer()).get('/api/sections/1').expect(200);
+      const clubId = seededTeam.body.clubId;
+      const personId = seededTeam.body.players[0].personId;
+      const formatId = seededSection.body.formatId;
+
+      // Build competition -> season -> section -> team, plus a pending team request
+      const season = await request(app.getHttpServer())
+        .post('/api/seasons')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({
+          competitionId: id,
+          name: `${createdName} season`,
+          startDate: '2027-01-10',
+          endDate: '2027-03-28',
+        })
+        .expect(201);
+
+      const section = await request(app.getHttpServer())
+        .post('/api/sections')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({ name: `${createdName} section`, seasonId: season.body.id, formatId })
+        .expect(201);
+
+      const team = await request(app.getHttpServer())
+        .post('/api/teams')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({
+          clubId,
+          sectionId: section.body.id,
+          name: `${createdName} team`,
+          players: [{ personId }],
+        })
+        .expect(201);
+
+      const teamRequest = await request(app.getHttpServer())
+        .post('/api/teams/register')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .send({
+          clubId,
+          seasonId: season.body.id,
+          sectionComment: 'any section',
+          formatId,
+          name: `${createdName} requested team`,
+          players: [{ personId }],
+        })
+        .expect(201);
+
+      await request(app.getHttpServer())
+        .delete(`/api/competitions/${id}`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .expect(204);
+
+      // Every level below the competition has gone with it
+      await request(app.getHttpServer()).get(`/api/competitions/${id}`).expect(404);
+      await request(app.getHttpServer()).get(`/api/seasons/${season.body.id}`).expect(404);
+      await request(app.getHttpServer()).get(`/api/sections/${section.body.id}`).expect(404);
+      await request(app.getHttpServer()).get(`/api/teams/${team.body.id}`).expect(404);
+      await request(app.getHttpServer())
+        .get(`/api/teams/requests/${teamRequest.body.id}`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .expect(404);
+
+      // The shared format and the seeded team are untouched
+      await request(app.getHttpServer()).get(`/api/formats/${formatId}`).expect(200);
+      await request(app.getHttpServer()).get('/api/teams/1').expect(200);
+    });
+
+    it('returns 404 Not Found for a non-existent UUID', async () => {
+      const response = await request(app.getHttpServer())
+        .delete(`/api/competitions/${fakeUuid}`)
+        .set('Authorization', `Bearer ${adminToken}`)
+        .expect(404);
+
+      expect(response.body.message).toContain('not found');
+    });
+
+    it('returns 400 Bad Request for an id that is not a uuid', async () => {
+      await request(app.getHttpServer())
+        .delete('/api/competitions/not-a-uuid')
+        .set('Authorization', `Bearer ${adminToken}`)
+        .expect(400);
+    });
+
+    it('returns 403 Forbidden for a user without the ASSOCIATION_ADMIN role', async () => {
+      const id = await createThrowaway();
+
+      await request(app.getHttpServer())
+        .delete(`/api/competitions/${id}`)
+        .set('Authorization', `Bearer ${clubAdminToken}`)
+        .expect(403);
+
+      // A rejected delete leaves the competition in place
+      await request(app.getHttpServer())
+        .get(`/api/competitions/${id}`)
+        .expect(200);
+    });
+  });
+
+  // Create, update and delete require admin access (reads are public)
   describe('Unauthorized Access', () => {
     it('POST /api/competitions -> should return 401 Unauthorized when no token is provided', async () => {
       expect(savedAssociationId).toBeDefined();
@@ -315,6 +461,14 @@ describe('Competitions Feature (e2e)', () => {
       await request(app.getHttpServer())
         .patch(`/api/competitions/${createdCompetitionId}`)
         .send({ name: renamedName })
+        .expect(401);
+    });
+
+    it('DELETE /api/competitions/:id -> should return 401 Unauthorized when no token is provided', async () => {
+      expect(createdCompetitionId).toBeDefined();
+
+      await request(app.getHttpServer())
+        .delete(`/api/competitions/${createdCompetitionId}`)
         .expect(401);
     });
   });
