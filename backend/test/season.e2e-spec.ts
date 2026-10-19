@@ -5,10 +5,13 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, ValidationPipe } from '@nestjs/common';
 import request from 'supertest';
 import { describe, beforeAll, afterAll, it, expect } from 'vitest';
+import { Temporal } from '@js-temporal/polyfill';
 import { AppModule } from '../src/app.module.js';
+import { PrismaService } from '../src/prisma/prisma.service.js';
 
 describe('Seasons Feature (e2e)', () => {
   let app: INestApplication;
+  let prisma: PrismaService;
   let adminToken: string;
 
   // The competition this file creates for itself, so the seasons it adds
@@ -55,6 +58,8 @@ describe('Seasons Feature (e2e)', () => {
     );
 
     await app.init();
+
+    prisma = app.get(PrismaService);
 
     // Logins for proper token (only the create and update endpoints need it)
     const loginResponse = await request(app.getHttpServer())
@@ -125,7 +130,7 @@ describe('Seasons Feature (e2e)', () => {
   });
 
   // Filtering by competition (what the Manage Competition page uses)
-  it('GET /api/seasons?competitionId= -> should only return that competition\'s seasons', async () => {
+  it("GET /api/seasons?competitionId= -> should only return that competition's seasons", async () => {
     expect(seededSeason).toBeDefined();
 
     const response = await request(app.getHttpServer())
@@ -134,7 +139,9 @@ describe('Seasons Feature (e2e)', () => {
 
     expect(response.body.length).toBeGreaterThan(0);
     expect(
-      response.body.every((s: any) => s.competitionId === seededSeason.competitionId),
+      response.body.every(
+        (s: any) => s.competitionId === seededSeason.competitionId,
+      ),
     ).toBe(true);
     expect(response.body.some((s: any) => s.id === seededSeason.id)).toBe(true);
   });
@@ -198,7 +205,7 @@ describe('Seasons Feature (e2e)', () => {
       createdSeasonId = response.body.id;
     });
 
-    it('shows the new season when its competition\'s seasons are listed', async () => {
+    it("shows the new season when its competition's seasons are listed", async () => {
       expect(createdSeasonId).toBeDefined();
 
       const response = await request(app.getHttpServer())
@@ -224,7 +231,11 @@ describe('Seasons Feature (e2e)', () => {
       await request(app.getHttpServer())
         .post('/api/seasons')
         .set('Authorization', `Bearer ${adminToken}`)
-        .send({ name: createdName, startDate: '2027-01-10', endDate: '2027-03-28' })
+        .send({
+          name: createdName,
+          startDate: '2027-01-10',
+          endDate: '2027-03-28',
+        })
         .expect(400);
     });
 
@@ -267,7 +278,9 @@ describe('Seasons Feature (e2e)', () => {
         .send({ ...validBody(), colour: 'green' })
         .expect(400);
 
-      expect(response.body.message).toContain('property colour should not exist');
+      expect(response.body.message).toContain(
+        'property colour should not exist',
+      );
     });
   });
 
@@ -363,6 +376,237 @@ describe('Seasons Feature (e2e)', () => {
         .patch(`/api/seasons/${createdSeasonId}`)
         .send({ name: renamedName })
         .expect(401);
+    });
+  });
+
+  // A season is built and thrown away here rather than deleting the seeded
+  // Summer 2026/27 one: the read tests above rely on it, and the other suites
+  // read Section 1, which sits under it.
+  describe('DELETE /api/seasons/:id', () => {
+    let seasonId: number;
+    let seasonName: string;
+    let sectionIds: number[];
+    let teamIds: number[];
+    let matchId: string;
+    let rubberId: number;
+    let requestId: number;
+    let playerToken: string;
+
+    const del = (id: number | string, token?: string) => {
+      const req = request(app.getHttpServer()).delete(`/api/seasons/${id}`);
+      return token ? req.set('Authorization', `Bearer ${token}`) : req;
+    };
+
+    beforeAll(async () => {
+      // Jack is a PLAYER: signed in, but no say over an association's seasons.
+      const playerLogin = await request(app.getHttpServer())
+        .post('/api/auth/login')
+        .send({ email: 'volunteer@tennis.com', password: 'password123' })
+        .expect(200);
+      playerToken = playerLogin.body.access_token;
+
+      // Built through the ORM rather than the API: there is no endpoint that
+      // creates a section, a fixture or a registration request, and the cascade
+      // needs a season with all of them inside it.
+      const orm = prisma.client.orm.public;
+
+      seasonName = `E2E Season to delete ${Date.now()}`;
+      const season = await orm.Season.create({
+        competitionId,
+        name: seasonName,
+        startDate: Temporal.Instant.from('2027-05-01T00:00:00Z'),
+        endDate: Temporal.Instant.from('2027-08-31T00:00:00Z'),
+      });
+      seasonId = season.id;
+
+      // Borrowed off the seeded data, so everything below is built from rows
+      // that are already valid.
+      const format = (await orm.Format.all())[0];
+      const club = (await orm.Club.all())[0];
+      const person = (await orm.Person.all())[0];
+
+      // Two sections, so the cascade is proven to cover every section in the
+      // season and not just the first one it happens to find.
+      const sections = [];
+      for (const name of ['Season To Delete A', 'Season To Delete B']) {
+        sections.push(
+          await orm.Section.create({
+            seasonId,
+            formatId: format.id,
+            name,
+            gradeLabel: null,
+          }),
+        );
+      }
+      sectionIds = sections.map((section) => section.id);
+
+      // A team in each section, each with one player on its roster.
+      teamIds = [];
+      for (const [index, section] of sections.entries()) {
+        const team = await orm.Team.create({
+          clubId: club.id,
+          sectionId: section.id,
+          name: `Season To Delete Team ${index + 1}`,
+          teamGender: null,
+        });
+        teamIds.push(team.id);
+        await orm.TeamPlayer.create({ teamId: team.id, personId: person.id });
+      }
+
+      // A played fixture in the first section, with the full paper trail a
+      // result entry leaves behind it.
+      const match = await orm.Match.create({
+        sectionId: sectionIds[0],
+        homeTeamId: teamIds[0],
+        awayTeamId: teamIds[1],
+        roundNumber: 1,
+        matchDate: Temporal.Instant.from('2027-05-08T13:00:00Z'),
+        matchStatus: 'completed',
+        winningTeamId: teamIds[0],
+      });
+      matchId = match.id;
+
+      const rubber = await orm.Rubber.create({
+        matchId,
+        rubberNumber: 1,
+        rubberType: 'singles',
+        winningTeamId: teamIds[0],
+        outcomeType: 'normal',
+      });
+      rubberId = rubber.id;
+
+      await orm.RubberSet.create({
+        rubberId,
+        setNumber: 1,
+        homeGames: 6,
+        awayGames: 4,
+      });
+      await orm.RubberPlayer.create({
+        rubberId,
+        teamId: teamIds[0],
+        personId: person.id,
+      });
+      await orm.MatchResultEvent.create({
+        matchId,
+        eventType: 'entered',
+        personId: person.id,
+      });
+
+      // A registration request for this season, with a player on it. Its
+      // seasonId is NOT NULL, so it cannot be unlinked the way a section's
+      // request is — it has to be deleted, players first.
+      const teamRequest = await orm.TeamRequest.create({
+        clubId: club.id,
+        seasonId,
+        sectionComment: 'delete me along with the season',
+        formatId: format.id,
+        name: 'Season To Delete Team 1',
+        teamGender: null,
+        pending: false,
+        teamId: teamIds[0],
+      });
+      requestId = teamRequest.id;
+      await orm.TeamRequestPlayer.create({
+        teamRequestId: requestId,
+        personId: person.id,
+      });
+    });
+
+    it('rejects a request with no token', async () => {
+      await del(seasonId).expect(401);
+    });
+
+    it('rejects a player who is not an association admin', async () => {
+      await del(seasonId, playerToken).expect(403);
+    });
+
+    it('returns 400 Bad Request for a non-numeric ID', async () => {
+      await del('not-a-number', adminToken).expect(400);
+    });
+
+    it('returns 404 Not Found for a season that does not exist', async () => {
+      await del(9999999, adminToken).expect(404);
+    });
+
+    it('deletes the season and reports what went with it', async () => {
+      const response = await del(seasonId, adminToken).expect(200);
+
+      expect(response.body).toEqual({
+        id: seasonId,
+        name: seasonName,
+        sectionsDeleted: 2,
+        matchesDeleted: 1,
+        rubbersDeleted: 1,
+        teamsDeleted: 2,
+        teamRequestsDeleted: 1,
+      });
+
+      const afterDelete = await request(app.getHttpServer())
+        .get(`/api/seasons/${seasonId}`)
+        .expect(404);
+      expect(afterDelete.body.message).toContain('not found');
+    });
+
+    it('takes every section in it with it', async () => {
+      const orm = prisma.client.orm.public;
+
+      for (const sectionId of sectionIds) {
+        expect(await orm.Section.where({ id: sectionId }).first()).toBeNull();
+      }
+    });
+
+    it('takes the fixtures, rubbers, sets, players and result events with it', async () => {
+      const orm = prisma.client.orm.public;
+
+      expect(
+        await orm.Match.where({ sectionId: sectionIds[0] }).first(),
+      ).toBeNull();
+      expect(await orm.Rubber.where({ matchId }).first()).toBeNull();
+      expect(await orm.RubberSet.where({ rubberId }).all()).toEqual([]);
+      expect(await orm.RubberPlayer.where({ rubberId }).all()).toEqual([]);
+      expect(await orm.MatchResultEvent.where({ matchId }).all()).toEqual([]);
+    });
+
+    it('takes the teams entered into its sections, and their rosters, with it', async () => {
+      const orm = prisma.client.orm.public;
+
+      for (const teamId of teamIds) {
+        expect(await orm.Team.where({ id: teamId }).first()).toBeNull();
+        expect(await orm.TeamPlayer.where({ teamId }).all()).toEqual([]);
+      }
+    });
+
+    it("takes the season's registration requests, and their players, with it", async () => {
+      const orm = prisma.client.orm.public;
+
+      expect(await orm.TeamRequest.where({ id: requestId }).first()).toBeNull();
+      expect(
+        await orm.TeamRequestPlayer.where({ teamRequestId: requestId }).all(),
+      ).toEqual([]);
+    });
+
+    it('leaves the seeded season, its sections and its teams alone', async () => {
+      expect(seededSeason).toBeDefined();
+
+      const response = await request(app.getHttpServer())
+        .get(`/api/seasons/${seededSeason.id}`)
+        .expect(200);
+      expect(response.body.name).toBe('Summer 2026/27');
+
+      const orm = prisma.client.orm.public;
+      expect(
+        (await orm.Section.where({ seasonId: seededSeason.id }).all()).length,
+      ).toBeGreaterThan(0);
+      expect(
+        await orm.Team.where({ name: 'Kilsyth A' }).first(),
+      ).not.toBeNull();
+      await request(app.getHttpServer())
+        .get('/api/sections/1/ladder')
+        .expect(200);
+    });
+
+    it('returns 404 when the same season is deleted twice', async () => {
+      await del(seasonId, adminToken).expect(404);
     });
   });
 });
