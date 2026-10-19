@@ -5,30 +5,33 @@ import {EditAssociation} from './EditAssociation'
 import fetchApi from '../api.ts'
 
 function ManageAssociationsPage() {
-
-
   const [associations, setAssociations] = useState([]);
 
-  const [selectedAssociationId, setSelectedAssociationId] = useState();
+  const [selectedAssociationId, setSelectedAssociationId] = useState("");
+  const [fullSelectedAssociation, setFullSelectedAssociation] = useState(null);
 
- 
   // get every association for the dropdown
   useEffect(() => {
     async function getAssociations(){
       const response = await fetchApi("/associations");
       setAssociations(response);
-      if (response[0]){
-        setSelectedAssociationId(response[0].id);
-      }
-      
     }
     getAssociations();
   }, []);
   
-  
-  if (!associations[0]){
-    return;
-  }
+  useEffect(() => {
+    async function getFullAssociation(){
+      const full = await fetchApi('/associations/' + selectedAssociationId);
+      setFullSelectedAssociation(full);
+    }
+    if (selectedAssociationId){
+      // Immediately clear the previous association to prevent lagging/stale data display
+      setFullSelectedAssociation(null);
+      getFullAssociation();
+    } else {
+      setFullSelectedAssociation(null);
+    }
+  }, [selectedAssociationId]);
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
@@ -47,6 +50,7 @@ function ManageAssociationsPage() {
             onChange={(e) => setSelectedAssociationId(e.target.value)}
             className="block w-full border border-gray-300 rounded-lg shadow-sm bg-white text-gray-900 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sky-500 text-sm"
           >
+            <option value="" disabled>-- Select Association --</option>
             {associations.map(assoc => (
               <option key={assoc.id} value={assoc.id}>{assoc.name}</option>
             ))}
@@ -61,7 +65,9 @@ function ManageAssociationsPage() {
         </Link>
       </div>
 
-      <EditAssociation key={selectedAssociationId} association={associations.find(a => a.id === selectedAssociationId)} />
+      {fullSelectedAssociation && (
+        <EditAssociation key={selectedAssociationId} association={fullSelectedAssociation} />
+      )}
     </div>
   );
 }

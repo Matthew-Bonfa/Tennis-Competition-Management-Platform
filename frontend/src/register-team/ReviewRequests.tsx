@@ -19,7 +19,7 @@ function ReviewRequests() {
       try {
         setLoading(true);
         let seasons = await fetchApi('/seasons');
-        let now = new Date('2026-06-15T00:00:00Z');
+        let now = new Date();
         
         seasons = seasons.filter(s => new Date(s.startDate) > now);
         setFutureSeasons(seasons);
