@@ -1,14 +1,22 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { or } from '@prisma/orm-postgres/orm-client';
-import { fromInstant } from '../common/temporal.js';
+import { fromInstant, toInstant } from '../common/temporal.js';
 import { PrismaService } from '../prisma/prisma.service.js';
+import type { CreatePlayerDto } from './dto/create-player.dto.js';
 import type { UpdatePlayerDto } from './dto/update-player.dto.js';
+import { nextPersonCode } from './next-person-code.js';
 import { summarisePlayerRecord } from './summarise-player-record.js';
 import type { PlayerRubberRow } from './summarise-player-record.js';
 import { toPersonUpdate } from './to-person-update.js';
 import { toPlayerDetail } from './to-player-detail.js';
 import { toPlayerSummary } from './to-player-summary.js';
 import type { PlayerDetail, PlayerRecord, PlayerSummary, RubberType } from './types.js';
+
+// The signed-in user, as JwtStrategy attaches it to the request
+export interface RequestUser {
+  personId: string;
+  roles: string[];
+}
 
 @Injectable()
 export class PlayersService {
@@ -153,5 +161,81 @@ export class PlayersService {
     }
 
     return this.findOnePlayer(id);
+  }
+
+  // FOR THE ADD PLAYER FORM
+  // Creates the person and their primary club membership together, so a
+  // new player always shows up under their club. Returns the profile in
+  // the same shape as GET /players/:id.
+  async createPlayer(dto: CreatePlayerDto, user: RequestUser): Promise<PlayerDetail> {
+    const club = await this.prisma.client.orm.public.Club.where({ id: dto.clubId }).select('id').first();
+    if (!club) {
+      throw new NotFoundException(`Club ${dto.clubId} not found`);
+    }
+
+    await this.assertCanManageClub(user, dto.clubId);
+
+    // A Tennis Australia number identifies exactly one person, so a second
+    // player with the same one is a duplicate. Email is not checked: juniors
+    // are often registered under a parent's address.
+    if (dto.tennisAustraliaNumber) {
+      const existing = await this.prisma.client.orm.public.Person.where({
+        tennisAustraliaNumber: dto.tennisAustraliaNumber,
+      })
+        .select('id')
+        .first();
+      if (existing) {
+        throw new ConflictException(
+          `A player with Tennis Australia number ${dto.tennisAustraliaNumber} already exists`,
+        );
+      }
+    }
+
+    const codes = await this.prisma.client.orm.public.Person.select('personCode').all();
+    const personCode = nextPersonCode(codes.map((p: any) => p.personCode));
+
+    // one transaction: a person is never left without their club membership
+    const created = await this.prisma.client.transaction(async (tx) => {
+      const person = await tx.orm.public.Person.create({
+        personCode,
+        firstName: dto.firstName,
+        lastName: dto.lastName,
+        dateOfBirth: dto.dateOfBirth ? toInstant(new Date(dto.dateOfBirth)) : null,
+        utrId: dto.utrId ?? null,
+        tennisAustraliaNumber: dto.tennisAustraliaNumber ?? null,
+        email: dto.email ?? null,
+        phone: dto.phone ?? null,
+      });
+
+      await tx.orm.public.ClubMembership.create({
+        personId: person.id,
+        clubId: dto.clubId,
+        isPrimaryClub: true,
+        isFinancialMember: dto.isFinancialMember ?? false,
+      });
+
+      return person;
+    });
+
+    // read it back after the transaction has committed
+    return this.findOnePlayer(created.id);
+  }
+
+  // The JWT only says someone is a club admin, not of which club. An
+  // association admin can add players to any club; a club admin only to
+  // the club their CLUB_ADMIN role is attached to.
+  private async assertCanManageClub(user: RequestUser, clubId: string) {
+    if (user.roles.includes('ASSOCIATION_ADMIN')) {
+      return;
+    }
+
+    const role = await this.prisma.client.orm.public.PersonRole.where({
+      personId: user.personId,
+      role: 'CLUB_ADMIN',
+      clubId,
+    }).first();
+    if (!role) {
+      throw new ForbiddenException('Only an admin of this club can add players to it');
+    }
   }
 }

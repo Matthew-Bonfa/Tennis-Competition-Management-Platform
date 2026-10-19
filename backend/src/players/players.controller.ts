@@ -6,10 +6,14 @@ import {
   ParseEnumPipe,
   ParseIntPipe,
   Patch,
+  Post,
   Query,
+  Req,
 } from '@nestjs/common';
+import { CreatePlayerDto } from './dto/create-player.dto.js';
 import { UpdatePlayerDto } from './dto/update-player.dto.js';
 import { PlayersService } from './players.service.js';
+import type { RequestUser } from './players.service.js';
 import { RubberTypeValues } from './types.js';
 import type { RubberType } from './types.js';
 import { Public } from '../auth/decorators/public.decorator.js';
@@ -25,6 +29,16 @@ export class PlayersController {
   @Get()
   findAll(@Query('search') search?: string, @Query('clubId') clubId?: string) {
     return this.playersService.findAllPlayers(search, clubId);
+  }
+
+  // POST /players
+  // Creates a player and their primary club membership. A club admin can
+  // only add players to their own club. Returns the profile in the same
+  // shape as GET /players/:id.
+  @Roles('ASSOCIATION_ADMIN', 'CLUB_ADMIN')
+  @Post()
+  create(@Body() createPlayerDto: CreatePlayerDto, @Req() req: { user: RequestUser }) {
+    return this.playersService.createPlayer(createPlayerDto, req.user);
   }
 
   // GET /players/:id
