@@ -4,9 +4,9 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Building2, ArrowLeft } from 'lucide-react';
+import { Building2, ArrowLeft, MapPin } from 'lucide-react';
 
-import fetchApi, { ApiError } from './api'
+import fetchApi, { ApiError } from './api';
 
 function ClubProfile() {
   const { id } = useParams();
@@ -18,6 +18,7 @@ function ClubProfile() {
     async function fetchClub() {
       try {
         const data = await fetchApi('/clubs/' + id);
+        console.log(data);
         setClub(data);
       } catch (err) {
         if (err instanceof ApiError && err.status === 404) {
@@ -34,7 +35,7 @@ function ClubProfile() {
   }, [id]);
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <p className="text-center py-12 text-gray-500">Loading...</p>;
   }
 
   if (notFound || !club) {
@@ -60,11 +61,20 @@ function ClubProfile() {
 
       {/* Main Profile Card */}
       <div className="bg-white border border-gray-200 rounded-lg p-8 shadow-sm">
+        {/* Header Section */}
         <div className="relative text-center border-b border-gray-100 pb-6 mb-6">
           <div className="bg-sky-50 text-sky-700 font-semibold px-4 py-2 rounded-full text-sm border border-sky-200 absolute top-0 right-0">
             {club.isFinancialMember ? 'Financial Member' : 'Non-Financial Member'}
           </div>
           <h1 className="text-3xl font-bold text-gray-900 pr-28 sm:pr-0">{club.name}</h1>
+          
+          {/* Club Address (Conditional) */}
+          {club.address && (
+            <p className="mt-2 text-sm text-gray-600 inline-flex items-center gap-1.5">
+              <MapPin className="h-4 w-4 text-sky-600 flex-shrink-0" />
+              <span>{club.address}</span>
+            </p>
+          )}
         </div>
 
         {/* Associations & Teams */}
@@ -73,7 +83,7 @@ function ClubProfile() {
             <span className="text-xs uppercase tracking-wider text-gray-500 font-semibold block mb-1">
               Associations
             </span>
-            {club.associations.length > 0 ? (
+            {club.associations && club.associations.length > 0 ? (
               <ul>
                 {club.associations.map((a: any) => (
                   <li key={a.id}>
@@ -92,7 +102,7 @@ function ClubProfile() {
             <span className="text-xs uppercase tracking-wider text-gray-500 font-semibold block mb-1">
               Teams
             </span>
-            {club.teams.length > 0 ? (
+            {club.teams && club.teams.length > 0 ? (
               <ul>
                 {club.teams.map((t: any) => (
                   <li key={t.id} className="flex items-center gap-2">
@@ -116,7 +126,7 @@ function ClubProfile() {
             <span className="text-xs uppercase tracking-wider text-gray-500 font-semibold block mb-1">
               Officials
             </span>
-            {club.officials.length > 0 ? (
+            {club.officials && club.officials.length > 0 ? (
               <ul>
                 {club.officials.map((o: any) => (
                   <li key={o.personId}>

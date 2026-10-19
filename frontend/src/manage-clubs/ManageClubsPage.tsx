@@ -11,7 +11,7 @@ function ManageClubsPage(){
   useEffect(() => {
     async function getClubs(){
       const response = await fetchApi("/clubs");
-      setClubs(response);
+      setClubs(response.sort((a, b) => a.name - b.name));
     }
     getClubs();
   }, []);

@@ -10,6 +10,7 @@ describe('Clubs Feature (e2e)', () => {
 
   // Variable for testing
   let savedClubId: string;
+  let savedPeople = [];
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -103,7 +104,14 @@ describe('Clubs Feature (e2e)', () => {
 
   // can create a new club
   it("POST /api/clubs -> should create a new club record and return 201 Created", async () => {
-    const newClub = {name: "the best tennis club"};
+
+    let people = await request(app.getHttpServer())
+      .get('/api/players')
+      .set('AUTHORIZATION', `Bearer ${adminToken}`)
+      .expect(200);
+    people = people.body.slice(0, 2);
+
+    const newClub = {name: "the best tennis club", address: "123 tennis street", roles: [{personId: people[0].id, role: "president"}]};
 
     const response = await request(app.getHttpServer())
       .post('/api/clubs')
@@ -115,12 +123,23 @@ describe('Clubs Feature (e2e)', () => {
     expect(response.body).toHaveProperty("name");
     expect(response.body.name).toBe(newClub.name);
 
+
+    const withRoles = await request(app.getHttpServer())
+      .get('/api/clubs/' + response.body.id)
+      .expect(200);
+
+    expect(withRoles.body.officials[0].personId).toBe(people[0].id);
+    expect(withRoles.body.officials[0].role).toBe("president");
+
+    savedPeople = people;
   });
 
   // can update an existing club (make a new one for that test)
   // ie fill it with details
 
   it("PATCH /api/clubs/:id -> should return 200 after updating an existing club's fields", async () => {
+    expect(savedPeople.length).toBeGreaterThan(1);
+    
     const club = {name: "the worst tennis club"};
 
     const createResponse = await request(app.getHttpServer())
@@ -132,7 +151,7 @@ describe('Clubs Feature (e2e)', () => {
     expect(createResponse.body).toHaveProperty("id");
     const id = createResponse.body.id;
 
-    const update = {name: "the second worst tennis club", address: "64 Zoo Lane"}
+    const update = {name: "the second worst tennis club", address: "64 Zoo Lane", roles: [{personId: savedPeople[0].id, role: "zookeeper"}]}
     const response = await request(app.getHttpServer())
       .patch('/api/clubs/' + id)
       .set("AUTHORIZATION", `Bearer ${adminToken}`)
@@ -144,6 +163,9 @@ describe('Clubs Feature (e2e)', () => {
     expect(response.body).toHaveProperty("address");
     expect(response.body.address).toBe(update.address);
     expect(response.body.name).toBe(update.name);
+
+    expect(response.body.officials[0].personId).toBe(savedPeople[0].id);
+    expect(response.body.officials[0].role).toBe("zookeeper");
 
   });
 
@@ -183,50 +205,6 @@ describe('Clubs Feature (e2e)', () => {
       .send({name: "slightly above average tennis club"})
       .expect(401);
   });
-
-
-  /*
-
-  !!! CAN'T TEST THAT THE ROLE ASSIGNMENT WORKED UNTIL THERE IS AN ENDPOINT TO CREATE A PERSON
-      because the response is the club object containing parts of the person object attached to each role
-
-
-  // can create a role
-  it("PATCH /api/clubs/:id -> should be able to assign someone a role within the club", async () => {
-    const club = {name: "club that has roles"};
-
-    const response = await request(app.getHttpServer())
-      .post('/api/clubs')
-      .set("AUTHORIZATION", `Bearer ${adminToken}`)
-      .send(newClub)
-      .expect(201);
-
-    expect(response.body).toHaveProperty("id");
-    const id = response.body.id;
-
-    // CREATE A REAL PERSON BECAUSE OTHERWISE THE findOneClub AT THE END OF updateDetails
-    // WILL NOT BE ABLE TO MATCH THE PERSON ID TO A PERSON
-
-
-    const fakeRole = {personId: newPerson.id, role: "best player"};
-    const roleResponse = await request(app.getHttpServer())
-      .patch("/api/clubs/" + id)
-      .set("AUTHORIZATION", `Bearer ${adminToken}`)
-      .send({roles: [fakeRole]})
-      .expect(200);
-
-    expect(roleResponse.body).toHaveProperty("roles")
-    expect(roleRepsponse.body.roles).toBe([{role: fakeRole.role, person: {}}])
-
-  });
-
-
-  // can edit a role
-
-
-
-  */
-
 
 
   // can break when trying to edit a role that doesn't exist
