@@ -5,10 +5,20 @@ import fetchApi from '../api'
 function SelectCompetition() {
   
   const [associations, setAssociations] = useState([]);
+  const [selectedAssociationId, setSelectedAssociationId] = useState();
   const [selectedAssociation, setSelectedAssociation] = useState();
 
   const [seasons, setSeasons] = useState([]);
   const [selectedSeason, setSelectedSeason] = useState(null);
+
+
+
+
+  useEffect(() => {
+    let a = associations.filter(assoc => assoc.id === selectedAssociationId)[0];
+    setSelectedAssociation(a);
+  }, [selectedAssociationId]);
+
 
   useEffect(() => {
     async function fetchAssociations(){
@@ -26,7 +36,7 @@ function SelectCompetition() {
       }
       let competitions = await fetchApi("/competitions?associationId=" + selectedAssociation.id);
       let futureSeasons = [];
-      let now = new Date("2026-06-15T00:00:00Z");
+      let now = new Date();
       for (let i = 0; i < competitions.length; i++){
         let seasons = await fetchApi("/seasons?competitionId=" + competitions[i].id);
         for (let j = 0; j < seasons.length; j++){
@@ -65,8 +75,8 @@ function SelectCompetition() {
             </label>
             <div className="flex-1">
               <select 
-                value={selectedAssociation} 
-                onChange={(e) => setSelectedAssociation(e.target.value)}
+                value={selectedAssociationId} 
+                onChange={(e) => setSelectedAssociationId(e.target.value)}
                 className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white transition-all"
               >
                 <option value="" disabled>--Select an association--</option>

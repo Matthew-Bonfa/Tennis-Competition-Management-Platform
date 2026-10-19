@@ -23,15 +23,13 @@ export class ClubsController {
   // creating a club only needs a name - immediately call updateDetails if you want to give other fields
   @Roles("ASSOCIATION_ADMIN", "CLUB_ADMIN")
   @Post()
-  createClub(@Body() club: {name: string}){
-    const newClub = {name: club.name, isFinancialMember: false};
-    return this.clubsService.createClub(newClub);
-
+  createClub(@Body() club: {name: string, address?: string, contactPersonId?: string, roles: [{personId: string, role: string}]}){
+        return this.clubsService.createClub(club);
   }
 
   @Roles("ASSOCIATION_ADMIN", "CLUB_ADMIN")
   @Patch(':id')
-  updateDetails(@Param('id') id: string, @Body() club: {name?: string, address?: string, contactPersonId?: string, roles?: [{roleId?: number, personId: string, role: string}]}) {
+  updateDetails(@Param('id') id: string, @Body() club: {name?: string, address?: string, contactPersonId?: string, roles?: [{personId: string, role: string}]}) {
     return this.clubsService.updateDetails(id, club);
   }
 

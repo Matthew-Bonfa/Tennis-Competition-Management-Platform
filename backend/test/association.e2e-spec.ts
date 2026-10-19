@@ -7,6 +7,7 @@ import { AppModule } from '../src/app.module.js';
 describe('Associations Feature (e2e)', () => {
   let app: INestApplication;
   let adminToken: string;
+  let personIds: string[];
 
   // Variable for testing
   let savedAssociationId: string;
@@ -101,20 +102,55 @@ describe('Associations Feature (e2e)', () => {
 
 
   it('POST /api/associations -> should return 201 Created for a new association', async () => {
-    const newAssociation = {name: "Unreal Tennis Association"};
-    const response = await request(app.getHttpServer())
+    const getPeople = await request(app.getHttpServer())
+      .get("/api/players")
+      .set('AUTHORIZATION', `Bearer ${adminToken}`)
+      .expect(200);
+    const people = getPeople.body;
+
+    expect(people).toBeDefined();
+    expect(people.length).toBeGreaterThan(1);
+
+    const newAssociation = {
+      name: "Unreal Tennis Association", 
+      contactPersonId: people[0].id, 
+      roles: [
+        {personId: people[0].id, role: "president"},
+        {personId: people[1].id, role: "secretary"}
+      ]
+    };
+
+
+    const create = await request(app.getHttpServer())
       .post('/api/associations')
       .set('Authorization', `Bearer ${adminToken}`)
       .send(newAssociation)
       .expect(201);
 
+    
+    const response = await request(app.getHttpServer())
+      .get('/api/associations/' + create.body.id)
+      .expect(200);
+
     expect(response.body).toHaveProperty('id');
     expect(response.body).toHaveProperty('name');
     expect(response.body.name).toBe(newAssociation.name);
+
+    expect(response.body.contactPersonId).toBe(newAssociation.contactPersonId);
+
+    expect(response.body.roles.length).toBe(newAssociation.roles.length);
+    expect(response.body.roles[0].personId).toBe(newAssociation.roles[0].personId);
+    expect(response.body.roles[0].role).toBe(newAssociation.roles[0].role);
+    expect(response.body.roles[1].personId).toBe(newAssociation.roles[1].personId);
+    expect(response.body.roles[1].role).toBe(newAssociation.roles[1].role);
+
+    personIds = people.slice(0, 2).map(p => p.id);
   });
 
   it('PUT /api/associations/:id -> should return 200 when updating an existing association', async () => {
-    const association = {name: "Association with typo"};
+    expect(personIds.length).toBeGreaterThan(1);
+    
+    const association = {name: "Association with typo", roles: [{personId: personIds[1], role: "helper"}]};
     const response = await request(app.getHttpServer())
       .post('/api/associations')
       .set('Authorization', `Bearer ${adminToken}`)
@@ -125,16 +161,38 @@ describe('Associations Feature (e2e)', () => {
     expect(response.body).toHaveProperty('id');
     const id = response.body.id;
 
-    const updatedAssociation = {name: "Association without typo"}
+    const withRoles = await request(app.getHttpServer())
+      .get('/api/associations/' + id)
+      .expect(200);
+
+    const updatedAssociation = {
+      name: "Association without typo", 
+      contactPersonId: personIds[0], 
+      roles: [
+        {personId: personIds[1], role: "manager"},
+        {personId: personIds[0], role: "coordinator"},
+      ]
+    }
+
     const updateResponse = await request(app.getHttpServer())
       .put('/api/associations/' + id)
       .set('Authorization', `Bearer ${adminToken}`)
       .send(updatedAssociation)
       .expect(200);
 
+    
+    const updatedWithRoles = await request(app.getHttpServer())
+      .get('/api/associations/' + id)
+      .expect(200);
+
     expect(updateResponse.body.name).toBe(updatedAssociation.name);
     expect(updateResponse.body).toHaveProperty('id');
     expect(updateResponse.body.id).toBe(id);
+
+    expect(updatedWithRoles.body.roles[0].personId).toBe(personIds[1]);
+    expect(updatedWithRoles.body.roles[0].role).toBe(updatedAssociation.roles[0].role);
+    expect(updatedWithRoles.body.roles[1].personId).toBe(personIds[0]);
+    expect(updatedWithRoles.body.roles[1].role).toBe(updatedAssociation.roles[1].role);
   });
 
   it('PUT /api/associations/:id -> should return 404 for a non-existent id', async () => {
