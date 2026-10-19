@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query, Post, Body, Patch, Delete } from '@nestjs/common';
+import { Controller, Get, Param, Query, Post, Body, Patch, Delete, HttpCode, ParseUUIDPipe } from '@nestjs/common';
 import { CompetitionsService } from './competitions.service.js';
 import { Public } from '../auth/decorators/public.decorator.js';
 import { Roles } from '../auth/decorators/roles.decorator.js';
@@ -44,11 +44,11 @@ export class CompetitionsController {
         return this.competitionsService.update(id, updateCompetitionDto);
     }
  
-    // deletes a competition
+    // deletes a competition and everything under it (seasons, sections, teams, matches)
     @Roles('ASSOCIATION_ADMIN')
-    @Delete(';id')
-    delete(@Param('id') id: string){
-        // NEED WAY TO STORE HISTORICAL COMPETITONS
-        return { id }
+    @Delete(':id')
+    @HttpCode(204)
+    delete(@Param('id', ParseUUIDPipe) id: string){
+        return this.competitionsService.remove(id);
     }
 }
