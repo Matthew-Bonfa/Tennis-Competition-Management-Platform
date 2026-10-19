@@ -44,7 +44,18 @@ function ManagePlayersPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-gray-900 mb-6">Manage Players</h1>
+      {/* Three columns so the title stays centred on the page, not just
+          centred in the space the button leaves; stacks on small screens */}
+      <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto_1fr] items-center gap-4 mb-6">
+        <div className="hidden sm:block" />
+        <h1 className="text-3xl font-bold text-gray-900 text-center">Manage Players</h1>
+        <Link
+          to="/manage-players/create-new-player"
+          className="justify-self-center sm:justify-self-end bg-sky-600 text-white font-medium px-4 py-2 rounded-lg hover:bg-sky-700"
+        >
+          + Add new player
+        </Link>
+      </div>
 
       {/* Search Bar */}
       <div className="relative mb-8">
