@@ -1,14 +1,15 @@
 import {useState, useEffect} from 'react';
 import { Registration } from './Registration';
 import fetchApi from '../api'
+import type { NamedRef, Season } from './types';
 
 function SelectCompetition() {
-  
-  const [associations, setAssociations] = useState([]);
-  const [selectedAssociation, setSelectedAssociation] = useState();
 
-  const [seasons, setSeasons] = useState([]);
-  const [selectedSeason, setSelectedSeason] = useState(null);
+  const [associations, setAssociations] = useState<NamedRef[]>([]);
+  const [selectedAssociation, setSelectedAssociation] = useState<NamedRef | undefined>();
+
+  const [seasons, setSeasons] = useState<Season[]>([]);
+  const [selectedSeason, setSelectedSeason] = useState<Season | null>(null);
 
   useEffect(() => {
     async function fetchAssociations(){
@@ -25,7 +26,7 @@ function SelectCompetition() {
         return;
       }
       let competitions = await fetchApi("/competitions?associationId=" + selectedAssociation.id);
-      let futureSeasons = [];
+      let futureSeasons: Season[] = [];
       let now = new Date("2026-06-15T00:00:00Z");
       for (let i = 0; i < competitions.length; i++){
         let seasons = await fetchApi("/seasons?competitionId=" + competitions[i].id);
@@ -64,9 +65,12 @@ function SelectCompetition() {
               Association
             </label>
             <div className="flex-1">
-              <select 
-                value={selectedAssociation} 
-                onChange={(e) => setSelectedAssociation(e.target.value)}
+              <select
+                /* Pre-existing mismatch (NOT fixed here): the state is seeded with an
+                   association object from the API, but the select reads/writes a plain
+                   string id. The casts keep the existing runtime behaviour exactly. */
+                value={selectedAssociation as unknown as string}
+                onChange={(e) => setSelectedAssociation(e.target.value as unknown as NamedRef)}
                 className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white transition-all"
               >
                 <option value="" disabled>--Select an association--</option>
@@ -120,8 +124,9 @@ function SelectCompetition() {
           </button>
         </div>
 
-        {/* Registration Form Component */}
-        <Registration season={selectedSeason} association={selectedAssociation} />
+        {/* Registration Form Component. `selectedAssociation` is guaranteed here:
+            the season list only populates once an association is selected. */}
+        <Registration season={selectedSeason} association={selectedAssociation!} />
 
       </div>
     );

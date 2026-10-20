@@ -2,15 +2,18 @@ import { useState } from "react";
 
 import {putApi} from "../api"
 
-export function EditAssociation({association}) {
+export interface Association {
+  id: string;
+  name: string;
+}
+
+export function EditAssociation({association}: {association: Association}) {
 
   const [name, setName] = useState(association.name || "");
   const [msg, setMsg] = useState("");
 
   const [savedName, setSavedName] = useState(association.name);
   const isChanged = name.trim() !== (savedName || "").trim();
-
-  if (!association) return;
 
   async function updateAssociation() {
     const trimmedName = name.trim();

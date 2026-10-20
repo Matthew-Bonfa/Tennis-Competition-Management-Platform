@@ -2,27 +2,28 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import fetchApi from '../api';
 import { postApi } from '../api';
+import type { NamedRef, Season, Section, Format, Player } from './types';
 
-export function Registration({season, association}){
+export function Registration({season, association}: {season: Season; association: NamedRef}){
   const navigate = useNavigate();
 
 
-  const [sections, setSections] = useState([]);
-  const [formats, setFormats] = useState([]);
-  const [selectedFormat, setSelectedFormat] = useState(null);
+  const [sections, setSections] = useState<Section[]>([]);
+  const [formats, setFormats] = useState<Format[]>([]);
+  const [selectedFormat, setSelectedFormat] = useState<Format | null>(null);
 
-  const [clubs, setClubs] = useState([]);
+  const [clubs, setClubs] = useState<NamedRef[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredClubs, setFilteredClubs] = useState([]);
-  const [selectedClub, setSelectedClub] = useState(null);
+  const [filteredClubs, setFilteredClubs] = useState<NamedRef[]>([]);
+  const [selectedClub, setSelectedClub] = useState<NamedRef | null>(null);
 
   const [teamName, setTeamName] = useState("");
 
-  const [playerText, setPlayerText] = useState([]);
-  const [updatedPlayer, setUpdatedPlayer] = useState(null);
-  const [playerResults, setPlayerResults] = useState([]);
+  const [playerText, setPlayerText] = useState<string[]>([]);
+  const [updatedPlayer, setUpdatedPlayer] = useState<number | null>(null);
+  const [playerResults, setPlayerResults] = useState<Player[]>([]);
 
-  const [players, setPlayers] = useState([]);
+  const [players, setPlayers] = useState<(Player | null)[]>([]);
 
   const [gender, setGender] = useState("");
 
@@ -52,7 +53,10 @@ export function Registration({season, association}){
 
   function updatePlayerText(i: number, text: string){
     async function getPlayersFromSearch(){
-      let data = await fetchApi('/players?search=' + playerText[updatedPlayer]);
+      /* Pre-existing bug (NOT fixed here): `updatedPlayer` still holds the previous
+         index at this point, so the search uses the previous player's text. The
+         assertion only satisfies the type checker. */
+      let data = await fetchApi('/players?search=' + playerText[updatedPlayer!]);
       setPlayerResults(data);
     }
 
@@ -72,8 +76,8 @@ export function Registration({season, association}){
     if (!selectedFormat){
       return;
     }
-    let text = [];
-    let p = [];
+    let text: string[] = [];
+    let p: (Player | null)[] = [];
     let min = 1;
     if (selectedFormat !== null && selectedFormat.minPlayers > 1){
       min = selectedFormat.minPlayers;
@@ -91,7 +95,7 @@ export function Registration({season, association}){
   useEffect(() => {
     if (!selectedClub || selectedClub.name !== searchTerm){
       setSelectedClub(null);
-      let filtered = [];
+      let filtered: NamedRef[] = [];
       for (let i = 0; i < clubs.length; i++){
         if (clubs[i].name.toLowerCase().includes(searchTerm.toLowerCase())){
           filtered.push(clubs[i]);
@@ -112,7 +116,7 @@ export function Registration({season, association}){
   useEffect(() => {
     async function fetchSections(){
       let data = await fetchApi('/sections?seasonId=' + season.id);
-      let fullSections = [];
+      let fullSections: Section[] = [];
       for (let i = 0; i < data.length; i++){
         fullSections.push(await fetchApi('/sections/' + data[i].id));
       }
@@ -123,12 +127,12 @@ export function Registration({season, association}){
 
   useEffect(() => {
     async function getFormats(){
-      let formatIds = [];
+      let formatIds: string[] = [];
       for (let i = 0; i < sections.length; i++){
         formatIds.push(sections[i].formatId);
       }
 
-      let sectionFormats = [];
+      let sectionFormats: Format[] = [];
       for (let i = 0; i < formatIds.length; i++){
         let format = await fetchApi('/formats/' + formatIds[i])
         sectionFormats.push(format);
@@ -172,10 +176,11 @@ export function Registration({season, association}){
     }
     
     // check the number of players and that they are unique
-    let nonemptyPlayers = [];
+    let nonemptyPlayers: Player[] = [];
     for (let i = 0; i < players.length; i++){
-      if (players[i] !== null){
-        nonemptyPlayers.push(players[i]);
+      const player = players[i];
+      if (player !== null){
+        nonemptyPlayers.push(player);
       }
     }
     const actualPlayers = nonemptyPlayers.filter((player, index, self) =>
@@ -191,7 +196,7 @@ export function Registration({season, association}){
 
     // team gender vs format gender
     if (!selectedFormat.permittedGenders.includes(gender)){
-      let gendersTranslation = [];
+      let gendersTranslation: string[] = [];
       if (selectedFormat.permittedGenders.includes("boys")){
         gendersTranslation.push("Men's");
       }
@@ -226,7 +231,7 @@ export function Registration({season, association}){
       })),
     }
 
-    let response = await postApi('/teams/register', newTeamRequest);
+    await postApi('/teams/register', newTeamRequest);
 
 
     navigate('/manage-teams');
@@ -300,7 +305,7 @@ export function Registration({season, association}){
           <div className="flex-1">
             <select 
               value={selectedFormat ? selectedFormat.id : ""} 
-              onChange={(e) => setSelectedFormat(formats.find(f => f.id === e.target.value))}
+              onChange={(e) => setSelectedFormat(formats.find(f => f.id === e.target.value) ?? null)}
               className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white transition-all"
             >
               <option value="" disabled>--Select a format--</option>

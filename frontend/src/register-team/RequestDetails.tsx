@@ -1,14 +1,20 @@
 import { useState, useEffect } from 'react';
 import fetchApi from '../api';
 import { patchApi } from '../api';
+import type { NamedRef, Player, Format, Section, TeamRequest } from './types';
 
-function RequestDetails({ request, onBack }) {
+interface RequestDetailsProps {
+  request: TeamRequest;
+  onBack: () => void;
+}
 
-  const [club, setClub] = useState(null);
-  const [players, setPlayers] = useState([]);
-  const [format, setFormat] = useState(null);
-  const [sections, setSections] = useState([]);
-  const [selectedSectionId, setSelectedSectionId] = useState(null);
+function RequestDetails({ request, onBack }: RequestDetailsProps) {
+
+  const [club, setClub] = useState<NamedRef | null>(null);
+  const [players, setPlayers] = useState<Player[]>([]);
+  const [format, setFormat] = useState<Format | null>(null);
+  const [sections, setSections] = useState<Section[]>([]);
+  const [selectedSectionId, setSelectedSectionId] = useState<string | null>(null);
 
 
   async function deny(){
@@ -32,7 +38,7 @@ function RequestDetails({ request, onBack }) {
         return null;
       }
       
-      let teamPlayers = [];
+      let teamPlayers: Player[] = [];
       if (request.players && Array.isArray(request.players)) {
         for (let i = 0; i < request.players.length; i++){
           teamPlayers.push(await fetchApi('/players/' + request.players[i].personId));
@@ -42,14 +48,14 @@ function RequestDetails({ request, onBack }) {
 
       setFormat(await fetchApi('/formats/' + request.formatId));
 
-      let allSectionIds = (await fetchApi('/sections?seasonId=' + request.seasonId)).map(s => s.id);
+      let allSectionIds = (await fetchApi('/sections?seasonId=' + request.seasonId)).map((s: Section) => s.id);
 
-      let allSections = [];
+      let allSections: Section[] = [];
       for (let i = 0; i < allSectionIds.length; i++){
         allSections.push(await fetchApi('/sections/' + allSectionIds[i]));
       }
 
-      let sectionsMatchingFormat = [];
+      let sectionsMatchingFormat: Section[] = [];
       for (let i = 0; i < allSections.length; i++){
         if (allSections[i].formatId === request.formatId){
           sectionsMatchingFormat.push(allSections[i]);

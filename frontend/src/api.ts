@@ -73,9 +73,11 @@ export async function postApi(
   });
 }
 
+// `data` is optional so callers that send no body (e.g. PATCH /teams/deny/:id)
+// keep producing a request with no body, as they did before this was typed.
 export async function patchApi(
   endpoint: string,
-  data: unknown,
+  data?: unknown,
   options: RequestInit = {},
 ) {
   const headers = new Headers(options.headers);

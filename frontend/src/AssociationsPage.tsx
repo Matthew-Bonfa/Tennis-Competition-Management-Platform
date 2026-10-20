@@ -1,8 +1,6 @@
 // file created by Rex Kelly
 // AI was used in writing this file (Gemini)
 
-import {Link} from 'react-router-dom';
-
 import AssociationsList from './AssociationsList'
 
 function AssociationsPage() {

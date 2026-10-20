@@ -2,20 +2,41 @@
 // AI was used in writing this file (Gemini)
 
 import {useState, useEffect} from 'react'
-import { useParams, Link } from 'react-router-dom';
-import { Trophy, Building2, Shield, User, Phone, Mail, ChevronRight, Award, ArrowLeft } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Trophy, Shield, User, Phone, Mail, ChevronRight, ArrowLeft } from 'lucide-react';
 
 import fetchApi from './api.js'
 
-import { ASSOCIATIONS } from './mock-data/MockAssociations';
+interface ContactPerson {
+  firstName: string;
+  lastName: string;
+  phone?: string;
+  email?: string;
+}
+
+interface AssociationDetail {
+  id: string;
+  name: string;
+  contactPerson?: ContactPerson;
+}
+
+interface ClubSummary {
+  id: string;
+  name: string;
+}
+
+interface CompetitionSummary {
+  id: string;
+  name: string;
+}
 
 function AssociationProfile() {
 
   const id = window.location.pathname.split("/").at(-1);
-  
-  const [association, setAssociation] = useState();
-  const [clubs, setClubs] = useState();
-  const [competitions, setCompetitions] = useState();
+
+  const [association, setAssociation] = useState<AssociationDetail>();
+  const [clubs, setClubs] = useState<ClubSummary[]>();
+  const [competitions, setCompetitions] = useState<CompetitionSummary[]>();
 
   useEffect(() => {
     async function fetchAssociation(){
@@ -31,8 +52,9 @@ function AssociationProfile() {
     if (!association){
       return;
     }
+    const associationId = association.id;
     async function fetchClubs(){
-      let data = await fetchApi("/clubs?associationId=" + association.id);
+      let data = await fetchApi("/clubs?associationId=" + associationId);
       setClubs(data);
     }
     fetchClubs();
@@ -44,8 +66,9 @@ function AssociationProfile() {
     if (!association){
       return;
     }
+    const associationId = association.id;
     async function fetchCompetitions(){
-      let data = await fetchApi("/competitions?associationId=" + association.id);
+      let data = await fetchApi("/competitions?associationId=" + associationId);
       console.log(data);
       setCompetitions(data);
     }

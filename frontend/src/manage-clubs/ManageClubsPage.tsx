@@ -3,9 +3,14 @@ import { Link } from 'react-router-dom';
 import { Plus, Search, ChevronRight } from 'lucide-react';
 import fetchApi from "../api";
 
+interface ClubSummary {
+  id: string;
+  name: string;
+}
+
 function ManageClubsPage(){
 
-  const [clubs, setClubs] = useState([]);
+  const [clubs, setClubs] = useState<ClubSummary[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {

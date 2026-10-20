@@ -2,23 +2,24 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import fetchApi from '../api';
 import RequestDetails from './RequestDetails';
+import type { NamedRef, Season, TeamRequest } from './types';
 
 function ReviewRequests() {
   const navigate = useNavigate();
 
-  const [futureSeasons, setFutureSeasons] = useState([]);
-  const [pendingRequests, setPendingRequests] = useState([]);
+  const [futureSeasons, setFutureSeasons] = useState<Season[]>([]);
+  const [pendingRequests, setPendingRequests] = useState<TeamRequest[]>([]);
   const [loading, setLoading] = useState(true);
-  const [competitions, setCompetitions] = useState([]);
+  const [competitions, setCompetitions] = useState<NamedRef[]>([]);
 
   // State to hold selected request for viewing details on the same URL
-  const [selectedRequest, setSelectedRequest] = useState(null);
+  const [selectedRequest, setSelectedRequest] = useState<TeamRequest | null>(null);
 
   useEffect(() => {
     async function getRequests() {
       try {
         setLoading(true);
-        let seasons = await fetchApi('/seasons');
+        let seasons: Season[] = await fetchApi('/seasons');
         let now = new Date('2026-06-15T00:00:00Z');
         
         seasons = seasons.filter(s => new Date(s.startDate) > now);
@@ -26,20 +27,20 @@ function ReviewRequests() {
 
         let seasonIds = seasons.map(s => s.id);
 
-        let compIds = [];
+        let compIds: string[] = [];
         for (let i = 0; i < seasons.length; i++) {
           if (!compIds.includes(seasons[i].competitionId)) {
             compIds.push(seasons[i].competitionId);
           }
         }
-        let comps = [];
+        let comps: NamedRef[] = [];
         for (let i = 0; i < compIds.length; i++) {
           let data = await fetchApi('/competitions/' + compIds[i]);
           comps.push({ id: data.id, name: data.name });
         }
         setCompetitions(comps);
         
-        let allRequests = [];
+        let allRequests: TeamRequest[] = [];
         for (let i = 0; i < seasons.length; i++) {
           let data = await fetchApi('/teams/requests/seasons/' + seasons[i].id);
           if (Array.isArray(data)) {

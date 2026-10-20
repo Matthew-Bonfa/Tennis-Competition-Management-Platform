@@ -4,9 +4,14 @@ import { Building2, ChevronRight } from 'lucide-react'
 
 import fetchApi from './api'
 
+interface AssociationSummary {
+    id: string;
+    name: string;
+}
+
 function AssociationsList(){
 
-    const [associations, setAssociations] = useState([]);
+    const [associations, setAssociations] = useState<AssociationSummary[]>([]);
     const [loading, setLoading] = useState(true);
 
 

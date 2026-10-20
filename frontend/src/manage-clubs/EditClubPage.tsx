@@ -2,6 +2,11 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import fetchApi, { postApi } from '../api';
 
+interface ClubForm {
+  name?: string;
+  address?: string;
+}
+
 function EditClubPage(){
 
   const navigate = useNavigate();
@@ -14,8 +19,8 @@ function EditClubPage(){
     startedNew = true;
   }
 
-  const [club, setClub] = useState({});
-  const [newClub, setNewClub] = useState({});
+  const [club, setClub] = useState<ClubForm>({});
+  const [newClub, setNewClub] = useState<ClubForm>({});
 
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -40,18 +45,24 @@ function EditClubPage(){
         return;
       }
       const response = postApi("/clubs", {name: newClub.name});
-      clubId = response.id;
+      /* Pre-existing bug (NOT fixed here): `postApi` is not awaited, so `response`
+         is a Promise and `.id` is always undefined — the follow-up PATCH goes to
+         "/clubs/undefined". The cast only satisfies the type checker; the runtime
+         behaviour is unchanged. */
+      clubId = (response as unknown as {id: string}).id;
       creatingNew = false;
     }
 
     console.log(newClub);
-    let update = [];
-    if (newClub.name.trim() !== club.name){
-      if (newClub.name.trim() === ""){
+    let update: ClubForm[] = [];
+    /* The `!` assertions are erased at build time — if `name` were ever undefined
+       this still throws exactly as it did before, it just satisfies the checker. */
+    if (newClub.name!.trim() !== club.name){
+      if (newClub.name!.trim() === ""){
         setErrorMessage("Name can't be empty")
         return;
       }
-      update.push({name: newClub.name.trim()});
+      update.push({name: newClub.name!.trim()});
     }
     if (newClub.address !== undefined && newClub.address.trim() !== club.address){
       update.push({address: newClub.address.trim()});

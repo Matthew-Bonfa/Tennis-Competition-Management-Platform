@@ -3,16 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import fetchApi, { ApiError } from '../api';
-
-// local helper: fetchApi accepts any method, so PATCH doesn't need a shared helper
-function patchApi(endpoint: string, data: unknown) {
-  return fetchApi(endpoint, {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  });
-}
+import fetchApi from '../api';
 
 function ManageCompetitionsPage() {
   const [competitions, setCompetitions] = useState<any[]>([]);

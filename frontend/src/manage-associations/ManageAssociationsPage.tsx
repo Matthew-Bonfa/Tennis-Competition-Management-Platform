@@ -1,15 +1,15 @@
 import {Link} from 'react-router-dom';
 import {useState, useEffect} from 'react'
 
-import {EditAssociation} from './EditAssociation'
+import {EditAssociation, type Association} from './EditAssociation'
 import fetchApi from '../api.ts'
 
 function ManageAssociationsPage() {
 
 
-  const [associations, setAssociations] = useState([]);
+  const [associations, setAssociations] = useState<Association[]>([]);
 
-  const [selectedAssociationId, setSelectedAssociationId] = useState();
+  const [selectedAssociationId, setSelectedAssociationId] = useState<string | undefined>();
 
  
   // get every association for the dropdown
@@ -29,6 +29,8 @@ function ManageAssociationsPage() {
   if (!associations[0]){
     return;
   }
+
+  const selectedAssociation = associations.find(a => a.id === selectedAssociationId);
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
@@ -61,7 +63,9 @@ function ManageAssociationsPage() {
         </Link>
       </div>
 
-      <EditAssociation key={selectedAssociationId} association={associations.find(a => a.id === selectedAssociationId)} />
+      {selectedAssociation && (
+        <EditAssociation key={selectedAssociationId} association={selectedAssociation} />
+      )}
     </div>
   );
 }
