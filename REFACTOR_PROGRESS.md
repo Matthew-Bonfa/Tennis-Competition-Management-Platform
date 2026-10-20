@@ -4,9 +4,11 @@ Branch: `feature/frontend/refactor`
 Scope: visual + structural refactor of `frontend/` only. No functional, route, API, state or
 copy changes. Verification per phase: `npm run build` and `npm run lint` in `frontend/`.
 
-**Next step:** Phase 2 — theme and global CSS: add the `@theme` tokens to `index.css`, drop the
-`#root` fixed width and the 18px root font-size, and delete `App.css` + `Ribbon.css`.
-Phases 0 and 1 are complete: the build is green and `src/` is restructured.
+**Next step:** Phase 3 — `Ribbon.tsx` → `components/layout/Header.tsx`: rewrite its styling as
+Tailwind utilities, collapse the nav into a mobile menu below `md`, and add the
+Log in / Log out button. **This is where `Ribbon.css` finally gets deleted** (deferred from
+Phase 2 — see the note there). Phases 0–2 are complete: the build is green, `src/` is
+restructured, and the theme tokens are in place.
 
 > **Baseline finding (2026-10-20):** the frontend does **not** build at HEAD `8876186`.
 > `npm run build` (`tsc -b && vite build`) fails with **160 TypeScript errors across 13 files**,
@@ -87,7 +89,7 @@ so that the refactor stays behaviour-neutral. **All three need fixing separately
 | Log in button | Show **Log in** when signed out, **Log out** when signed in. Adds a small amount of new behaviour (see Open questions). |
 | Structure | **Full reorganisation** into `pages/`, `components/{layout,ui}/`, `lib/`. |
 | Unused Vite assets | **Leave in place** (`hero.png`, `react.svg`, `vite.svg`, `public/icons.svg`). |
-| `index.html` title | Change `frontend` → **`Waverley Tennis`**. |
+| `index.html` title | Change `frontend` → **`Waverley Tennis`**. ✅ Done in Phase 2. |
 
 ## Theme / palette (Phase 2)
 
@@ -138,11 +140,11 @@ their descriptive name. Files are **moved**, and renamed only where the rule abo
 
 ## CSS migration
 
-| File | Action |
-|---|---|
-| `src/index.css` | Kept as the only stylesheet: Tailwind import + `@theme` + short `@layer base`. Remove the `#root { width: 1126px; border-inline; text-align: center }` rule and the 18px root font-size — the fixed width is why the layout can't breathe. |
-| `src/App.css` | **Delete.** Imported by nothing; all classes unused Vite-template leftovers. |
-| `src/Ribbon.css` | **Delete.** Becomes Tailwind utilities on `components/layout/Header.tsx`; the bare global `nav {}` selector is removed. |
+| File | Action | Status |
+|---|---|---|
+| `src/index.css` | Kept as the only stylesheet: Tailwind import + `@theme` + short `@layer base`. Removed the `#root` fixed width / centering rule and the 18px root font-size — the fixed width was why the layout couldn't breathe. | ✅ Phase 2 |
+| `src/App.css` | **Deleted.** Imported by nothing; every class was an unused Vite-template leftover (`.counter`, `.hero`, `#center`, `#next-steps`, `#docs`, `#spacer`, `.ticks`). | ✅ Phase 2 |
+| `src/Ribbon.css` | **Delete in Phase 3.** Becomes Tailwind utilities on `components/layout/Header.tsx`; the bare global `nav {}` selector goes with it. | ⏳ Phase 3 |
 
 ---
 
@@ -178,12 +180,49 @@ each relative specifier re-resolved against the file's *old* directory and re-em
 to its *new* one, preserving each specifier's original extension spelling so `./api.js` stayed
 `.js`). The script is not committed — this is the resulting tree, not the scaffolding.
 
-### Phase 2 — Theme and global CSS
-- [ ] Add `@theme` tokens (palette, fonts, radii) to `index.css`
-- [ ] Add `@layer base`: page background, font stack, `:focus-visible` ring, `body { margin: 0 }`
-- [ ] Remove `#root` width/border/centering and the 18px root font-size
-- [ ] Delete `App.css` and `Ribbon.css`; update `main.tsx`
-- [ ] Build + lint + commit
+### Phase 2 — Theme and global CSS ✅
+- [x] Add `@theme` tokens (palette, fonts, radii) to `index.css`
+- [x] Add `@layer base`: page background, font stack, `:focus-visible` ring, `body { margin: 0 }`
+- [x] Remove `#root` width/border/centering and the 18px root font-size
+- [x] Delete `App.css`
+- [ ] Delete `Ribbon.css` — **deferred to Phase 3**, see below
+- [x] Change `index.html` title to `Waverley Tennis` and move the font load out of CSS
+- [x] Build + lint + commit
+
+**Result:** `index.css` is now Tailwind + `@theme` + a short `@layer base` and nothing else.
+`npm run build` succeeds, lint is unchanged at 29 warnings / 0 errors, and the
+`@import rules must precede all rules` warning is gone.
+
+#### What changed
+
+- **Tokens** for the primary blue ramp, neutrals (`canvas`, `surface`, `border`,
+  `border-strong`, `ink`, `ink-muted`, `ink-subtle`), and success/warning/danger each with a
+  `-bg`/`-border` tint, plus `--font-sans`/`--font-mono`. Kanit is dropped; Inter carries
+  headings as well as body.
+- **Removed from `index.css`:** the `#root { width: 1126px; border-inline; text-align: center;
+  … }` rule, the 18px root font-size, `letter-spacing: 0.18px`, and the global `h1`/`h2`
+  font-size/margin rules. Also the dead `code`/`.counter` rules.
+- **Font loading moved to `index.html`** as `<link rel="preconnect">` + a stylesheet link,
+  rather than an `@import` in CSS. The Tailwind plugin inlines `@import "tailwindcss"` in
+  place, which left the font `@import` sitting after other rules — that was the source of the
+  build warning. Loading it in the document head also starts the request earlier.
+
+#### Notes and flagged items
+
+- **Radii were not overridden.** Tailwind's defaults (`rounded-md` 6px, `rounded-lg` 8px)
+  already match the "small radius" spec, and overriding them would have changed every
+  `rounded-*` in the app at once. Phase 5 shrinks the oversized `rounded-2xl`/`rounded-xl`
+  per component instead.
+- **`text-align: center` was inherited by every element** from the old `#root` rule and is now
+  gone. Every `h1`/`h2` in the app already sets its own size and colour classes, and pages that
+  want centring ask for `text-center` explicitly, so this should only left-align text that was
+  centred by accident. **Needs a visual pass in Phase 5/6** — it is the one change in this phase
+  that could visibly shift more than one page.
+- **Unused theme variables are pruned from the output.** Tailwind v4 only emits a `@theme`
+  variable once a utility actually uses it — verified against its own defaults, which behave
+  the same way. So `--color-ink-muted` and friends are absent from `dist` today and will appear
+  as soon as Phase 5 references them. Not a problem, but it means "token missing from the built
+  CSS" is not a useful signal.
 
 ### Phase 3 — Header, mobile nav, Log in button
 - [ ] `Ribbon.tsx` → `components/layout/Header.tsx`, all styling as Tailwind
@@ -248,3 +287,6 @@ to its *new* one, preserving each specifier's original extension spelling so `./
 - Phase 0 fixed the type errors rather than loosening `tsconfig`, so the strictness stays on
   for the rest of the refactor. `strict` is *not* written into `tsconfig.app.json` — it is
   TypeScript 6's default, and adding it would only restate what is already true.
+- The original plan deleted `App.css` *and* `Ribbon.css` in Phase 2, but `Ribbon.tsx` still
+  imports `Ribbon.css`, so deleting it there would have broken the build for one phase. Its
+  deletion moved to Phase 3, where the file is rewritten as Tailwind anyway.
