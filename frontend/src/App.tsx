@@ -3,40 +3,40 @@
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import AssociationProfile from './AssociationProfile'
-import AssociationsPage from './AssociationsPage'
-import ClubProfile from './ClubProfile'
-import ClubsPage from './ClubsPage'
-import AdminPage from './AdminPage'
-import CompetitionProfile from './CompetitionProfile'
-import CompetitionsPage from './CompetitionsPage'
-import Home from './Home'
-import PlayerProfile from './PlayerProfile'
-import PlayersPage from './PlayersPage'
-import Ribbon from './Ribbon'
-import SectionPage from './SectionPage'
-import MatchResultsPage from './MatchResultsPage'
-import EnterResultPage from './match-results/EnterResultPage'
-import TeamProfile from './TeamProfile'
-import ManageAssociationsPage from './manage-associations/ManageAssociationsPage';
-import CreateAssociationPage from './manage-associations/CreateAssociationPage';
-import ManageCompetitionsPage from './manage-competitions/ManageCompetitionsPage';
-import CreateCompetitionPage from './manage-competitions/CreateCompetitionPage';
-import ManageCompetitionPage from './manage-competitions/ManageCompetitionPage';
-import CreateSeasonPage from './manage-competitions/CreateSeasonPage';
-import CreateSectionPage from './manage-competitions/CreateSectionPage';
-import ManageSectionPage from './manage-competitions/ManageSectionPage';
-import ManageSeasonPage from './manage-competitions/ManageSeasonPage';
-import ManagePlayersPage from './manage-players/ManagePlayersPage';
-import EditPlayerPage from './manage-players/EditPlayerPage';
-import CreatePlayerPage from './manage-players/CreatePlayerPage';
-import Login from './Login';
-import ManageClubsPage from './manage-clubs/ManageClubsPage';
-import EditClubPage from './manage-clubs/EditClubPage';
-import { isAdmin, isAuthenticated } from './auth';
-import RegisterTeamPage from './register-team/RegisterTeamPage';
-import SelectCompetition from './register-team/SelectCompetition';
-import ReviewRequests from './register-team/ReviewRequests';
+import AssociationProfile from './pages/associations/AssociationProfilePage'
+import AssociationsPage from './pages/associations/AssociationsPage'
+import ClubProfile from './pages/clubs/ClubProfilePage'
+import ClubsPage from './pages/clubs/ClubsPage'
+import AdminPage from './pages/AdminPage'
+import CompetitionProfile from './pages/competitions/CompetitionProfilePage'
+import CompetitionsPage from './pages/competitions/CompetitionsPage'
+import Home from './pages/HomePage'
+import PlayerProfile from './pages/players/PlayerProfilePage'
+import PlayersPage from './pages/players/PlayersPage'
+import Ribbon from './components/layout/Ribbon'
+import SectionPage from './pages/competitions/SectionPage'
+import MatchResultsPage from './pages/matches/MatchResultsPage'
+import EnterResultPage from './pages/matches/EnterResultPage'
+import TeamProfile from './pages/teams/TeamProfilePage'
+import ManageAssociationsPage from './pages/manage/associations/ManageAssociationsPage';
+import CreateAssociationPage from './pages/manage/associations/CreateAssociationPage';
+import ManageCompetitionsPage from './pages/manage/competitions/ManageCompetitionsPage';
+import CreateCompetitionPage from './pages/manage/competitions/CreateCompetitionPage';
+import ManageCompetitionPage from './pages/manage/competitions/ManageCompetitionPage';
+import CreateSeasonPage from './pages/manage/competitions/CreateSeasonPage';
+import CreateSectionPage from './pages/manage/competitions/CreateSectionPage';
+import ManageSectionPage from './pages/manage/competitions/ManageSectionPage';
+import ManageSeasonPage from './pages/manage/competitions/ManageSeasonPage';
+import ManagePlayersPage from './pages/manage/players/ManagePlayersPage';
+import EditPlayerPage from './pages/manage/players/EditPlayerPage';
+import CreatePlayerPage from './pages/manage/players/CreatePlayerPage';
+import Login from './pages/LoginPage';
+import ManageClubsPage from './pages/manage/clubs/ManageClubsPage';
+import EditClubPage from './pages/manage/clubs/EditClubPage';
+import { isAdmin, isAuthenticated } from './lib/auth';
+import RegisterTeamPage from './pages/register-team/RegisterTeamPage';
+import SelectCompetition from './pages/register-team/SelectCompetitionPage';
+import ReviewRequests from './pages/register-team/ReviewRequestsPage';
 
 // --- MAIN APP ROUTING ---
 export default function App() {

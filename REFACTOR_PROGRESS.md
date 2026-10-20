@@ -4,8 +4,9 @@ Branch: `feature/frontend/refactor`
 Scope: visual + structural refactor of `frontend/` only. No functional, route, API, state or
 copy changes. Verification per phase: `npm run build` and `npm run lint` in `frontend/`.
 
-**Next step:** Phase 1 — restructure `src/` into `pages/`, `components/{layout,ui}/`, `lib/`
-(see the target structure below). Phase 0 is complete: the build is green.
+**Next step:** Phase 2 — theme and global CSS: add the `@theme` tokens to `index.css`, drop the
+`#root` fixed width and the 18px root font-size, and delete `App.css` + `Ribbon.css`.
+Phases 0 and 1 are complete: the build is green and `src/` is restructured.
 
 > **Baseline finding (2026-10-20):** the frontend does **not** build at HEAD `8876186`.
 > `npm run build` (`tsc -b && vite build`) fails with **160 TypeScript errors across 13 files**,
@@ -104,13 +105,14 @@ Tailwind v4 `@theme` tokens in `index.css`. Components use token names, never ra
   h2 `text-lg→xl`, body `text-sm/base`, meta `text-xs/sm`.
 - **Shape** `rounded-md` inputs/buttons, `rounded-lg` cards, `shadow-sm` only, `duration-150`.
 
-## Target structure
+## Structure (actual, after Phase 1)
 
 ```
 src/
-  App.tsx  main.tsx  index.css          # index.css = Tailwind + @theme + base only
+  App.tsx  main.tsx  index.css          # index.css = Tailwind + @theme + base only (Phase 2)
+  App.css  Ribbon.css                   # both deleted in Phase 2
   pages/
-    HomePage.tsx  LoginPage.tsx  AdminPage.tsx
+    HomePage  LoginPage  AdminPage
     associations/  AssociationsPage  AssociationProfilePage  AssociationsList
     clubs/         ClubsPage  ClubProfilePage
     competitions/  CompetitionsPage  CompetitionProfilePage  SectionPage
@@ -119,17 +121,16 @@ src/
     matches/       MatchResultsPage  EnterResultPage  MatchDetail  UpcomingMatches
                    FixtureCard  FixtureList  LadderTable  RoundSelector
                    ExportFixturesControl  ResultStatusPanel  RubberRow  ScoresheetForm
+                   types
     manage/        associations/  clubs/  competitions/  players/
     register-team/ RegisterTeamPage  SelectCompetitionPage  ReviewRequestsPage
-                   Registration  RequestDetails
+                   Registration  RequestDetails  types
   components/
-    layout/        Header  MobileNav  PageContainer  PageHeader  BackButton
-    ui/            Button  Input  Select  Textarea  Field  Card  Badge  Alert
-                   SearchInput  EmptyState  LoadingState  Table  StatTile
-  lib/             api  auth  exportLinks  playerRecord  teamRecord
-                   formatName  scoresheet  types
-  assets/          WaverleyLogo.png (+ unused template leftovers, kept)
-  mock-data/
+    layout/        Ribbon  (→ Header in Phase 3)
+    ui/            (added in Phase 4)
+  lib/             api  auth  exportLinks  playerRecord  teamRecord  formatName  scoresheet
+  assets/          WaverleyLogo.png  hero.png  react.svg  vite.svg
+  mock-data/       MockAssociations  MockCompetitions
 ```
 
 Naming rule: route-level components get a `Page` suffix; non-route sub-components keep
@@ -147,12 +148,35 @@ their descriptive name. Files are **moved**, and renamed only where the rule abo
 
 ## Checklist
 
-### Phase 1 — Restructure (no visual change)
-- [ ] Create `pages/`, `components/layout/`, `lib/`
-- [ ] `git mv` all files to the target tree per the naming rule
-- [ ] Rewrite every relative import to its new location
-- [ ] `npm run build` + `npm run lint`
-- [ ] Commit
+### Phase 1 — Restructure (no visual change) ✅
+- [x] Create `pages/`, `components/layout/`, `lib/`
+- [x] `git mv` all files to the target tree per the naming rule
+- [x] Rewrite every relative import to its new location
+- [x] `npm run build` + `npm run lint`
+- [x] Commit
+
+**Result:** 60 files moved, 101 import specifiers rewritten across 44 files.
+`npx tsc -b` reports 0 errors, `npm run build` succeeds, lint is unchanged at 29 warnings / 0 errors.
+The six old feature folders are gone and nothing outside `src/` referenced them.
+
+Renamed by the `Page` suffix rule: `Home`→`HomePage`, `Login`→`LoginPage`,
+`AssociationProfile`→`AssociationProfilePage`, `ClubProfile`→`ClubProfilePage`,
+`CompetitionProfile`→`CompetitionProfilePage`, `PlayerProfile`→`PlayerProfilePage`,
+`TeamProfile`→`TeamProfilePage`, `SelectCompetition`→`SelectCompetitionPage`,
+`ReviewRequests`→`ReviewRequestsPage`. Default-exported component *names* are unchanged —
+only the filenames moved — so this phase stays behaviour-neutral.
+
+Two deliberate deviations from the tree below:
+
+- The two `types.ts` files stay with their features (`pages/matches/types.ts`,
+  `pages/register-team/types.ts`). Merging them into one `lib/types.ts` would have collided.
+- `Ribbon.tsx` moved to `components/layout/` but keeps its name; the rename to `Header.tsx`
+  happens in Phase 3 together with its rewrite, so Phase 1 stays purely mechanical.
+
+The move + import-rewrite was driven by a throwaway script (mapping table old→new path, then
+each relative specifier re-resolved against the file's *old* directory and re-emitted relative
+to its *new* one, preserving each specifier's original extension spelling so `./api.js` stayed
+`.js`). The script is not committed — this is the resulting tree, not the scaffolding.
 
 ### Phase 2 — Theme and global CSS
 - [ ] Add `@theme` tokens (palette, fonts, radii) to `index.css`
