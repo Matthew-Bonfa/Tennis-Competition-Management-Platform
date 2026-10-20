@@ -7,6 +7,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, Check, Loader2 } from 'lucide-react';
 
 import fetchApi, { ApiError, patchApi } from '../../../lib/api';
+import LoadingState from '../../../components/ui/LoadingState';
 
 interface PlayerDetail {
   id: string;
@@ -95,7 +96,7 @@ function EditPlayerPage() {
   }
 
   if (loading) {
-    return <p className="max-w-3xl mx-auto px-4 py-12 text-gray-500">Loading...</p>;
+    return <LoadingState />;
   }
 
   if (notFound || !player || !form) {

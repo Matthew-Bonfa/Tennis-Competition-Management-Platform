@@ -6,6 +6,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Trophy, Shield } from 'lucide-react';
+import LoadingState from '../../components/ui/LoadingState';
 
 // REMOVED: mock-data imports (ASSOCIATIONS, ALL_COMPETITIONS) — no longer needed,
 // we're pulling real data from the backend instead
@@ -66,7 +67,7 @@ function CompetitionsPage() {
 
   // ADDED: early-exit screens for the loading and error states, shown instead
   // of the main page while we're waiting or if the fetch failed
-  if (loading) return <div className="text-center py-12">Loading...</div>;
+  if (loading) return <LoadingState />;
   if (error) return <div className="text-center py-12 text-red-600">Error: {error}</div>;
 
   // UNCHANGED FROM HERE DOWN: this is all Rex's original JSX, untouched

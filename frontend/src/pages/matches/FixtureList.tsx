@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import fetchApi from '../../lib/api'
 import FixtureCard from './FixtureCard'
+import LoadingState from '../../components/ui/LoadingState';
 
 interface FixtureListProps {
     sectionId: string | undefined;
@@ -27,7 +28,7 @@ function FixtureList({ sectionId, round }: FixtureListProps) {
     }, [sectionId, round]);
 
     if (loading) {
-        return <p>Loading...</p>;
+        return <LoadingState />;
     }
 
     if (error) {

@@ -6,6 +6,7 @@ import { Search, User } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 import fetchApi from '../../lib/api'
+import LoadingState from '../../components/ui/LoadingState';
 
 interface PlayerSummary {
   id: string;
@@ -44,7 +45,7 @@ function PlayersPage() {
   });
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <LoadingState />;
   }
 
   return (

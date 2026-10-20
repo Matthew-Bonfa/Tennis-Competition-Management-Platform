@@ -8,6 +8,7 @@ import { ArrowLeft, X } from 'lucide-react';
 import fetchApi, { ApiError } from '../../../lib/api';
 import FormatForm from './FormatForm';
 import { rubberLabel, genderLabel, winnerRuleLabel } from '../../../lib/formatName';
+import LoadingState from '../../../components/ui/LoadingState';
 
 // local helper: fetchApi accepts any method, so PATCH doesn't need a shared helper
 function patchApi(endpoint: string, data: unknown) {
@@ -129,7 +130,7 @@ function ManageSectionPage() {
     }
   }
 
-  if (loading) return <div className="text-center py-12">Loading...</div>;
+  if (loading) return <LoadingState />;
   if (loadError) return <div className="text-center py-12 text-red-600">Error: {loadError}</div>;
   if (!section) return <div className="text-center py-12">Section not found.</div>;
 

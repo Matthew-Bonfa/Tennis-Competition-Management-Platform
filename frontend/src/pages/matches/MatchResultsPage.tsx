@@ -5,6 +5,7 @@ import { ArrowLeft } from 'lucide-react';
 import fetchApi, { ApiError } from '../../lib/api'
 import MatchDetail from './MatchDetail'
 import ResultStatusPanel from './ResultStatusPanel'
+import LoadingState from '../../components/ui/LoadingState';
 
 function MatchResultsPage() {
     const { matchId } = useParams();
@@ -32,7 +33,7 @@ function MatchResultsPage() {
     }, [matchId]);
 
     if (loading) {
-        return <p className="max-w-3xl mx-auto px-4 py-12 text-gray-500">Loading...</p>;
+        return <LoadingState />;
     }
 
     if (notFound || !match) {

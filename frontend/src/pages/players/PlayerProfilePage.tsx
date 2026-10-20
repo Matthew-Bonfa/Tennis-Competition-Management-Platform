@@ -6,6 +6,7 @@ import fetchApi, { ApiError } from '../../lib/api'
 import PlayerStats from './PlayerStats'
 import UpcomingMatches from '../matches/UpcomingMatches'
 import type { PlayerRecord } from '../../lib/playerRecord'
+import LoadingState from '../../components/ui/LoadingState';
 
 interface PlayerClub {
   id: string;
@@ -93,7 +94,7 @@ function PlayerProfile() {
   }, [player]);
 
   if (loading) {
-    return <p className="max-w-7xl mx-auto px-4 py-12 text-gray-500">Loading...</p>;
+    return <LoadingState />;
   }
 
   if (notFound || !player || !record) {

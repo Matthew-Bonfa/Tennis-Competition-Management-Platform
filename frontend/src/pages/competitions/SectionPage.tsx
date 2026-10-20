@@ -7,6 +7,7 @@ import FixtureList from '../matches/FixtureList'
 import LadderTable from '../matches/LadderTable'
 import ExportFixturesControl from '../matches/ExportFixturesControl'
 import { ladderExportUrl } from '../../lib/exportLinks'
+import LoadingState from '../../components/ui/LoadingState';
 
 function SectionPage() {
     const { sectionId } = useParams();
@@ -62,7 +63,7 @@ function SectionPage() {
     }
 
     if (loading) {
-        return <p>Loading...</p>;
+        return <LoadingState />;
     }
 
     if (notFound) {

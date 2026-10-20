@@ -7,6 +7,7 @@ import { isAuthenticated } from '../../lib/auth';
 import ScoresheetForm from './ScoresheetForm';
 import { draftFromMatch, emptyDraft, splitErrors } from '../../lib/scoresheet';
 import type { ResultForm, ScoresheetPayload } from './types';
+import LoadingState from '../../components/ui/LoadingState';
 
 // Players can enter a result before it's played out or after a dispute;
 // admins can also replace one that's waiting or already confirmed
@@ -91,7 +92,7 @@ function EnterResultPage() {
   }
 
   if (state === 'loading') {
-    return <p className="max-w-3xl mx-auto px-4 py-12 text-gray-500">Loading...</p>;
+    return <LoadingState />;
   }
 
   const backLink = (

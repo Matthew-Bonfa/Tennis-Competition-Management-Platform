@@ -4,6 +4,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import fetchApi from '../../../lib/api';
+import LoadingState from '../../../components/ui/LoadingState';
 
 function ManageCompetitionsPage() {
   const [competitions, setCompetitions] = useState<any[]>([]);
@@ -22,7 +23,7 @@ function ManageCompetitionsPage() {
       });
   }, []);
 
-  if (loading) return <div className="text-center py-12">Loading...</div>;
+  if (loading) return <LoadingState />;
   if (error) return <div className="text-center py-12 text-red-600">Error: {error}</div>;
 
   return (

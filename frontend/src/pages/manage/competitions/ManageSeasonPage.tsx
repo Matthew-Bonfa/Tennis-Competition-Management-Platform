@@ -6,6 +6,7 @@ import type { FormEvent } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import fetchApi, { ApiError } from '../../../lib/api';
+import LoadingState from '../../../components/ui/LoadingState';
 
 // local helper: fetchApi accepts any method, so PATCH doesn't need a shared helper
 function patchApi(endpoint: string, data: unknown) {
@@ -84,7 +85,7 @@ function ManageSeasonPage() {
     }
   }
 
-  if (loading) return <div className="text-center py-12">Loading...</div>;
+  if (loading) return <LoadingState />;
   if (loadError) return <div className="text-center py-12 text-red-600">Error: {loadError}</div>;
   if (!season) return <div className="text-center py-12">Season not found.</div>;
 

@@ -7,6 +7,7 @@ import { useParams, Link } from 'react-router-dom';
 import { Building2, ArrowLeft } from 'lucide-react';
 
 import fetchApi, { ApiError } from '../../lib/api'
+import LoadingState from '../../components/ui/LoadingState';
 
 function ClubProfile() {
   const { id } = useParams();
@@ -34,7 +35,7 @@ function ClubProfile() {
   }, [id]);
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <LoadingState />;
   }
 
   if (notFound || !club) {

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import fetchApi from '../../lib/api'
+import LoadingState from '../../components/ui/LoadingState';
 
 interface LadderRow {
   teamId: number;
@@ -39,7 +40,7 @@ function LadderTable({ sectionId, highlightTeamId }: LadderTableProps) {
   }, [sectionId]);
 
   if (loading) {
-    return <p className="px-4 py-8 text-gray-500">Loading...</p>;
+    return <LoadingState />;
   }
 
   if (error) {

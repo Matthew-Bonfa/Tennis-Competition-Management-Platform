@@ -4,10 +4,11 @@ Branch: `feature/frontend/refactor`
 Scope: visual + structural refactor of `frontend/` only. No functional, route, API, state or
 copy changes. Verification per phase: `npm run build` and `npm run lint` in `frontend/`.
 
-**Next step:** Phase 4 — add the shared `components/ui/*` primitives and fix the
-non-responsive layouts (fixed-column grids, wide tables, inconsistent loading/empty states).
-Phases 0–3 are complete: the build is green, `src/` is restructured, the theme tokens are in
-place, and the header is responsive with a working Log in / Log out button.
+**Next step:** Phase 4b — the responsive grid fixes and the empty-state migration; the
+inventory and the planned change for each site are in the Phase 4 section below. Phases 0–3
+and 4a are complete: the build is green, `src/` is restructured, the theme tokens are in
+place, the header is responsive with a working Log in / Log out button, and every page-level
+loading state now renders through one shared component.
 
 > **Baseline finding (2026-10-20):** the frontend does **not** build at HEAD `8876186`.
 > `npm run build` (`tsc -b && vite build`) fails with **160 TypeScript errors across 13 files**,
@@ -128,7 +129,7 @@ src/
                    Registration  RequestDetails  types
   components/
     layout/        Header
-    ui/            (added in Phase 4)
+    ui/            LoadingState  EmptyState  (Phase 4)
   lib/             api  auth  exportLinks  playerRecord  teamRecord  formatName  scoresheet
   assets/          WaverleyLogo.png  hero.png  react.svg  vite.svg
   mock-data/       MockAssociations  MockCompetitions
@@ -271,13 +272,60 @@ lint is unchanged at **29 warnings / 0 errors**, and none of them are in `Header
   container to both**, so they line up on wide screens.
 
 ### Phase 4 — Shared UI primitives and responsive layout fixes
-- [ ] Add thin `components/ui/*` primitives (className composition only, no behaviour change)
-- [ ] Fix non-responsive grids: `grid-cols-4` (EditClubPage), `grid-cols-3` (PlayerStats,
-      MatchResultsPage), `grid-cols-2` (RubberRow, FormatForm), `min-w-[280px]`
-      (AssociationProfile) → mobile-first
-- [ ] Wrap wide tables in scroll containers; reflow to cards on mobile where needed
-- [ ] Make loading / empty states consistent (bare `<p>Loading...</p>` in ManagePlayersPage)
+
+Split into two commits. 4a is mechanical and touches 19 files; 4b needs each file read
+individually, so doing them together would have made one unreviewable diff.
+
+#### 4a — Loading/empty primitives ✅
+- [x] Add `components/ui/LoadingState.tsx` and `components/ui/EmptyState.tsx`
+- [x] Replace the 19 hand-written page-level loading states with `<LoadingState />`
+- [x] Build + lint + commit
+
+**Result:** 19 files, one site each, 2 insertions / 1 deletion per file. `npm run build`
+succeeds, lint unchanged at **29 warnings / 0 errors**, nothing new in the two primitives.
+
+The inventory was worse than the plan assumed: **five** different spellings of the same
+three words — `<p>Loading...</p>` (7 files), `max-w-7xl mx-auto px-4 py-12 text-gray-500`
+(2), `max-w-3xl mx-auto px-4 py-12 text-gray-500` (3), `text-center py-12` (6), and
+`px-4 py-8 text-gray-500` (1). A page's loading state looked different depending on which
+page it was. All 19 now render through one component.
+
+Done with a throwaway script (not committed), same shape as the Phase 1 reorg: match the
+exact JSX strings, swap them for `<LoadingState />`, then insert the import after the last
+single-line import. The relative path is computed from each file's depth, which matters
+because `pages/manage/*/` is three levels deep where `pages/*/` is two. The script reported
+one site per file and no problems, and two files were spot-checked before building.
+
+**Left as-is deliberately:** three *inline* loading messages that are not page-level states
+and whose text is contextual — `UpcomingMatches.tsx:85` ("Loading..." inside a card),
+`RequestDetails.tsx:78` ("Loading details...") and `ReviewRequestsPage.tsx` ("Loading
+registration requests..."). Swapping them would either change their text (not allowed) or
+impose page-level padding inside a card. `UpcomingMatches`' `text-gray-400` is 2.5:1 on
+white and fails AA — that is a Phase 5 colour fix, noted there.
+
+#### 4b — Responsive grids, tables and empty states ⏳
+- [ ] Fix the fixed-column grids that cannot fit at 320px
+- [ ] Tables: check they scroll rather than squish
+- [ ] Convert the per-page empty states to `<EmptyState />`
 - [ ] Build + lint + commit
+
+Corrected inventory (the plan's list was written from a heuristic and was partly wrong —
+these are the real numbers, evaluated at a 320px viewport):
+
+| Site | Columns | Fits at 320px? | Action |
+|---|---|---|---|
+| `TeamRecordCard:34` | `grid-cols-4` | No — ~56px tiles, "RUBBERS" label overflows | `grid-cols-2 sm:grid-cols-4` |
+| `EditClubPage:113,128` | `grid-cols-4` | No — 56px label column, "Address" wraps | stack below `sm` |
+| `RubberRow:88` | `grid-cols-2` | Cramped — ~130px selects | stack below `sm` |
+| `FormatForm:322,366` | `grid-cols-2` | Cramped — ~130px inputs | stack below `sm` |
+| `AssociationProfilePage:107` | `min-w-[280px]` | **No — forces page-level horizontal scroll** | `min-w-0 md:min-w-[280px]` |
+| `PlayerStats:96` | `grid-cols-3` | Yes — ~80px tiles | leave |
+| `MatchResultsPage:104` | `grid-cols-3` | Yes — names wrap, no overflow | leave |
+| `MatchDetail:29` | `grid-cols-[1fr_auto_1fr]` | Yes — inherent 3-col score row | leave |
+
+Tables are better than the plan assumed: there are only **two** `<table>`s in the app
+(`PlayerStats`, `LadderTable`) and both already sit in `overflow-x-auto` wrappers. The
+remaining question is whether `w-full` lets them squish instead of scroll.
 
 ### Phase 5 — Page polish (batched, one commit each)
 - [ ] 5a Public pages: Home, Competitions(+Profile, Section), Clubs(+Profile),
@@ -340,3 +388,12 @@ lint is unchanged at **29 warnings / 0 errors**, and none of them are in `Header
   `string | ((props: NavLinkRenderProps) => string | undefined)`, so a hand-written
   `{ isActive: boolean }` parameter would have failed `strictFunctionTypes` — the parameter has
   to accept the whole render-props object.
+- **Phase 4 adds only the two primitives it can use immediately** (`LoadingState`,
+  `EmptyState`) rather than the full `Button`/`Card`/`Field` set the plan mentioned. Creating
+  components that nothing renders yet is dead code, and Phase 5 rewrites each page anyway —
+  so `Button`, `Card` and `Field` will be introduced there, against real call sites, if they
+  still look worth it once the pages have been through the polish pass. The plan's premise was
+  that Phase 4 would create them and Phase 5 would adopt them; inverting that keeps the
+  codebase free of unused abstractions at every commit.
+- **Phase 4 was split into 4a and 4b** (one commit each) so the 19-file mechanical swap is
+  reviewable on its own rather than mixed in with the per-file layout decisions.

@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom'
 import { Building2, ChevronRight } from 'lucide-react'
 
 import fetchApi from '../../lib/api'
+import LoadingState from '../../components/ui/LoadingState';
 
 interface AssociationSummary {
     id: string;
@@ -34,7 +35,7 @@ function AssociationsList(){
     // otherwise return the actual component you want
 
     if (loading){
-        return <p>Loading...</p>;
+        return <LoadingState />;
     } else {
         return (
             <div className="space-y-3">

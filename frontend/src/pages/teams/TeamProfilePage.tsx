@@ -7,6 +7,7 @@ import LadderTable from '../matches/LadderTable'
 import TeamRecordCard from './TeamRecordCard'
 import UpcomingMatches from '../matches/UpcomingMatches'
 import type { TeamDetail, TeamRecord } from '../../lib/teamRecord'
+import LoadingState from '../../components/ui/LoadingState';
 
 function TeamProfile() {
   const { id } = useParams();
@@ -43,7 +44,7 @@ function TeamProfile() {
   );
 
   if (loading) {
-    return <p className="max-w-7xl mx-auto px-4 py-12 text-gray-500">Loading...</p>;
+    return <LoadingState />;
   }
 
   if (notFound || !team || !record) {

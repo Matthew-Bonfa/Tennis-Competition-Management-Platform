@@ -7,6 +7,7 @@ import { Search } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 import fetchApi from '../../lib/api'
+import LoadingState from '../../components/ui/LoadingState';
 
 function ClubsPage() {
   const [clubs, setClubs] = useState<any[]>([]);
@@ -28,7 +29,7 @@ function ClubsPage() {
   );
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <LoadingState />;
   }
 
   return (
