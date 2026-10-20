@@ -104,7 +104,7 @@ function AssociationProfile() {
         </div>
 
         {/* Right Side: Contact Info Card */}
-        <div className="bg-gray-50/80 border border-gray-200/60 rounded-xl p-4 min-w-[280px]">
+        <div className="bg-gray-50/80 border border-gray-200/60 rounded-xl p-4 min-w-0 md:min-w-[280px]">
           {association.contactPerson ? (
             <div className="space-y-1.5 text-sm text-gray-700">
               <div className="flex items-center gap-2 font-medium text-gray-900 pb-1 border-b border-gray-200/50">

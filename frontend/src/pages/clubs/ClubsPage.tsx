@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom'
 
 import fetchApi from '../../lib/api'
 import LoadingState from '../../components/ui/LoadingState';
+import EmptyState from '../../components/ui/EmptyState';
 
 function ClubsPage() {
   const [clubs, setClubs] = useState<any[]>([]);
@@ -77,9 +78,7 @@ function ClubsPage() {
           ))}
         </div>
       ) : (
-        <div className="text-center py-12 text-gray-500 bg-white border border-gray-200 rounded-lg">
-          No clubs found matching "{searchTerm}".
-        </div>
+        <EmptyState>No clubs found matching "{searchTerm}".</EmptyState>
       )}
     </div>
   );

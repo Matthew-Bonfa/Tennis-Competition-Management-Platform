@@ -4,11 +4,13 @@ Branch: `feature/frontend/refactor`
 Scope: visual + structural refactor of `frontend/` only. No functional, route, API, state or
 copy changes. Verification per phase: `npm run build` and `npm run lint` in `frontend/`.
 
-**Next step:** Phase 4b — the responsive grid fixes and the empty-state migration; the
-inventory and the planned change for each site are in the Phase 4 section below. Phases 0–3
-and 4a are complete: the build is green, `src/` is restructured, the theme tokens are in
-place, the header is responsive with a working Log in / Log out button, and every page-level
-loading state now renders through one shared component.
+**Next step:** Phase 5a — public page polish (Home, Competitions, Clubs, Associations,
+Players, Teams, Admin). This is where components finally migrate off the raw Tailwind scale
+(`sky-600`, `gray-900`, `slate-*`) onto the theme tokens, which is also what will make the
+currently-pruned theme variables appear in the built CSS. Phases 0–4 are complete: the build
+is green, `src/` is restructured, the theme tokens are in place, the header is responsive with
+a working Log in / Log out button, and loading and empty states render through shared
+components.
 
 > **Baseline finding (2026-10-20):** the frontend does **not** build at HEAD `8876186`.
 > `npm run build` (`tsc -b && vite build`) fails with **160 TypeScript errors across 13 files**,
@@ -303,11 +305,13 @@ registration requests..."). Swapping them would either change their text (not al
 impose page-level padding inside a card. `UpcomingMatches`' `text-gray-400` is 2.5:1 on
 white and fails AA — that is a Phase 5 colour fix, noted there.
 
-#### 4b — Responsive grids, tables and empty states ⏳
-- [ ] Fix the fixed-column grids that cannot fit at 320px
-- [ ] Tables: check they scroll rather than squish
-- [ ] Convert the per-page empty states to `<EmptyState />`
-- [ ] Build + lint + commit
+#### 4b — Responsive grids, tables and empty states ✅
+- [x] Fix the fixed-column grids that cannot fit at 320px
+- [x] Tables: check they scroll rather than squish
+- [x] Convert the per-page empty states to `<EmptyState />`
+- [x] Build + lint + commit
+
+**Result:** build succeeds with 0 type errors; lint unchanged at **29 warnings / 0 errors**.
 
 Corrected inventory (the plan's list was written from a heuristic and was partly wrong —
 these are the real numbers, evaluated at a 320px viewport):
@@ -324,8 +328,69 @@ these are the real numbers, evaluated at a 320px viewport):
 | `MatchDetail:29` | `grid-cols-[1fr_auto_1fr]` | Yes — inherent 3-col score row | leave |
 
 Tables are better than the plan assumed: there are only **two** `<table>`s in the app
-(`PlayerStats`, `LadderTable`) and both already sit in `overflow-x-auto` wrappers. The
-remaining question is whether `w-full` lets them squish instead of scroll.
+(`PlayerStats`, `LadderTable`) and both already sit in `overflow-x-auto` wrappers. A `w-full`
+table inside one of those does not overflow — it squishes, wrapping the header text instead.
+`LadderTable` has 11 columns, so its table now carries `min-w-[40rem]`: below that it scrolls
+inside its own container rather than crushing 11 columns into 320px. `PlayerStats` has 5
+columns of short values and fits, so it is left alone — its `overflow-x-auto` already covers
+narrower cases.
+
+#### What changed in 4b
+
+| File | Change |
+|---|---|
+| `teams/TeamRecordCard.tsx` | `grid-cols-4` → `grid-cols-2 sm:grid-cols-4` |
+| `manage/clubs/EditClubPage.tsx` (×2) | label/input rows stack below `sm`; label left-aligns on mobile, stays right-aligned from `sm` |
+| `matches/RubberRow.tsx` | home/away player columns stack below `sm` |
+| `manage/competitions/FormatForm.tsx` (×2) | Teams and Scoring field pairs stack below `sm` |
+| `associations/AssociationProfilePage.tsx` | `min-w-[280px]` → `min-w-0 md:min-w-[280px]` |
+| `matches/LadderTable.tsx` | table gains `min-w-[40rem]` so it scrolls instead of squishing |
+| 6 files | full-width "no results" panels → `<EmptyState />` |
+
+The `AssociationProfilePage` one was a real bug rather than a tight fit: the contact card
+carried `min-w-[280px]` inside a card that is only ~240px wide at a 320px viewport, so it
+overflowed its parent and gave the whole page a horizontal scrollbar. `min-w-0` fixes it and
+`md:min-w-[280px]` leaves the desktop layout identical.
+
+#### Empty states: what was converted, and what was not
+
+Six full-width panels now render through `<EmptyState />` — `CompetitionsPage`, `ClubsPage`,
+`PlayersPage`, `ManagePlayersPage`, `ManageCompetitionsPage` (five of them the identical
+`text-center py-12 text-gray-500 bg-white border border-gray-200 rounded-lg` box) and
+`ManageClubsPage` (`py-10`, `rounded-xl` and a `shadow-sm`). `ManageCompetitionsPage` was
+missed by the first inventory pass and only turned up in a follow-up grep for the old class
+string, which is why the grep is worth running rather than trusting the list.
+
+**Left as plain text**, because a bordered panel nested inside an already-bordered card reads
+as a double border:
+
+- `CompetitionProfilePage.tsx:175,180` — "No seasons recorded…", "No sections found…"
+- `PlayerStats.tsx:78` — "No results for this filter."
+- `ManageCompetitionPage.tsx:159` — "This competition doesn't have any seasons yet…", which
+  carries its own "Create new season" button
+- `TeamRecordCard.tsx:16` — "No completed matches yet this season."
+
+**Left for Phase 5**, because they are a different family of state:
+
+- The error and not-found returns: 5 × `if (loadError) return <div className="text-center
+  py-12 text-red-600">Error: …` and 3 × `if (!x) return <div className="text-center
+  py-12">… not found.</div>`. They sit *adjacent to each other* in the same guard blocks, so
+  converting the not-found ones without an `ErrorState` primitive would create a fresh
+  inconsistency three lines above each conversion. The pair belongs together, in Phase 5,
+  where `ErrorState` can be introduced against real call sites and `text-red-600` migrates
+  to `text-danger`.
+- `register-team/RequestDetails.tsx:77` and `ReviewRequestsPage.tsx:97,101` — these use
+  `slate-*`, `rounded-xl` and `animate-pulse`, all of which Phase 5c is removing anyway.
+
+#### A note on this phase's verification
+
+The tool-safety classifier went down partway through 4b and refused every `Bash` call for a
+stretch, so the build and lint could not be run until it came back. While it was down the edits
+were checked read-only instead: a grep confirmed all six `EmptyState` conversions have both an
+import and a usage, another confirmed no old grid or empty-panel class strings remain, and each
+conversion's surrounding markup was re-read to confirm it is a page-level alternative to a grid
+rather than something nested inside another card. The build and lint were then run normally and
+both pass, so nothing rests on the read-only pass.
 
 ### Phase 5 — Page polish (batched, one commit each)
 - [ ] 5a Public pages: Home, Competitions(+Profile, Section), Clubs(+Profile),
@@ -397,3 +462,7 @@ remaining question is whether `w-full` lets them squish instead of scroll.
   codebase free of unused abstractions at every commit.
 - **Phase 4 was split into 4a and 4b** (one commit each) so the 19-file mechanical swap is
   reviewable on its own rather than mixed in with the per-file layout decisions.
+- Phase 4b converted only the full-width "no results" panels to `EmptyState`, not the empty
+  messages rendered inside cards, and deliberately left the error/not-found returns for
+  Phase 5 so the pair can be converted together with a new `ErrorState`. The reasoning for
+  both is in the Phase 4 section.

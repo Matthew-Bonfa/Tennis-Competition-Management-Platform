@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import fetchApi from '../../../lib/api';
 import LoadingState from '../../../components/ui/LoadingState';
+import EmptyState from '../../../components/ui/EmptyState';
 
 function ManageCompetitionsPage() {
   const [competitions, setCompetitions] = useState<any[]>([]);
@@ -54,9 +55,7 @@ function ManageCompetitionsPage() {
           ))}
         </div>
       ) : (
-        <div className="text-center py-12 text-gray-500 bg-white border border-gray-200 rounded-lg">
-          No competitions yet. Create one to get started.
-        </div>
+        <EmptyState>No competitions yet. Create one to get started.</EmptyState>
       )}
     </div>
   );

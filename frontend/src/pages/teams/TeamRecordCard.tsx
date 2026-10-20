@@ -31,7 +31,7 @@ function TeamRecordCard({ record }: TeamRecordCardProps) {
             </div>
           </div>
 
-          <div className="grid grid-cols-4 gap-4 text-center">
+          <div className="grid grid-cols-2 gap-4 text-center sm:grid-cols-4">
             <div>
               <div className="text-lg font-semibold text-gray-900">{record.matchesPlayed}</div>
               <div className="text-xs uppercase tracking-wide text-gray-500">Played</div>

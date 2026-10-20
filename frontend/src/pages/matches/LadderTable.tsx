@@ -56,7 +56,7 @@ function LadderTable({ sectionId, highlightTeamId }: LadderTableProps) {
 
   return (
     <div className="px-4 pb-8 overflow-x-auto">
-      <table className="w-full text-sm border-collapse">
+      <table className="w-full min-w-[40rem] text-sm border-collapse">
         <thead>
           <tr className="text-left text-gray-500 border-b border-gray-200">
             <th className="py-2 pr-2">Pos</th>

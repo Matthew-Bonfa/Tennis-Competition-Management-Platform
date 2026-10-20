@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, Trophy, Shield } from 'lucide-react';
 import LoadingState from '../../components/ui/LoadingState';
+import EmptyState from '../../components/ui/EmptyState';
 
 // REMOVED: mock-data imports (ASSOCIATIONS, ALL_COMPETITIONS) — no longer needed,
 // we're pulling real data from the backend instead
@@ -133,9 +134,7 @@ function CompetitionsPage() {
           ))}
         </div>
       ) : (
-        <div className="text-center py-12 text-gray-500 bg-white border border-gray-200 rounded-lg">
-          No competitions found matching "{searchTerm}".
-        </div>
+        <EmptyState>No competitions found matching "{searchTerm}".</EmptyState>
       )}
     </div>
   );

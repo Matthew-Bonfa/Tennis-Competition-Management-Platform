@@ -85,7 +85,7 @@ function RubberRow({ draft, form, teamNames, errors, onChange }: RubberRowProps)
         </select>
       </div>
 
-      <div className="grid grid-cols-2 gap-4 mb-4">
+      <div className="grid grid-cols-1 gap-4 mb-4 sm:grid-cols-2">
         <div className="space-y-2">
           <p className="text-xs uppercase tracking-wide text-gray-500">{teamNames.home}</p>
           {playerSelects('home')}

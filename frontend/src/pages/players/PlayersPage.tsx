@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom'
 
 import fetchApi from '../../lib/api'
 import LoadingState from '../../components/ui/LoadingState';
+import EmptyState from '../../components/ui/EmptyState';
 
 interface PlayerSummary {
   id: string;
@@ -92,9 +93,7 @@ function PlayersPage() {
           ))}
         </div>
       ) : (
-        <div className="text-center py-12 text-gray-500 bg-white border border-gray-200 rounded-lg">
-          No players found matching "{searchTerm}".
-        </div>
+        <EmptyState>No players found matching "{searchTerm}".</EmptyState>
       )}
     </div>
   );

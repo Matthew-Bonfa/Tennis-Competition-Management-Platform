@@ -319,7 +319,7 @@ function FormatForm({ initial = null, onSaved, onCancel }: FormatFormProps) {
       {/* Teams */}
       <div>
         <h3 className="text-sm font-semibold text-gray-900 mb-2">Teams</h3>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <NumberField
             label="Minimum players"
             value={values.minPlayers}
@@ -363,7 +363,7 @@ function FormatForm({ initial = null, onSaved, onCancel }: FormatFormProps) {
       {/* Scoring */}
       <div>
         <h3 className="text-sm font-semibold text-gray-900 mb-2">Scoring</h3>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <NumberField
             label="Sets to win"
             value={values.setsToWin}

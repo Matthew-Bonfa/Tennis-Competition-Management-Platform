@@ -110,11 +110,11 @@ function EditClubPage(){
         
         <div className="space-y-5">
           
-          <div className="grid grid-cols-4 gap-4 items-center">
-            <label className="col-span-1 text-sm font-medium text-gray-700 text-right">
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-4 sm:gap-4 items-center">
+            <label className="text-sm font-medium text-gray-700 sm:col-span-1 sm:text-right">
               Name
             </label>
-            <div className="col-span-3">
+            <div className="sm:col-span-3">
               <input 
                 type="text" 
                 value={newClub.name || ""} 
@@ -125,11 +125,11 @@ function EditClubPage(){
             </div>
           </div>
 
-          <div className="grid grid-cols-4 gap-4 items-center">
-            <label className="col-span-1 text-sm font-medium text-gray-700 text-right">
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-4 sm:gap-4 items-center">
+            <label className="text-sm font-medium text-gray-700 sm:col-span-1 sm:text-right">
               Address
             </label>
-            <div className="col-span-3">
+            <div className="sm:col-span-3">
               <input 
                 type="text" 
                 value={newClub.address || ""} 

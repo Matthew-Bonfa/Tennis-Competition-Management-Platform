@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Plus, Search, ChevronRight } from 'lucide-react';
 import fetchApi from "../../../lib/api";
+import EmptyState from '../../../components/ui/EmptyState';
 
 interface ClubSummary {
   id: string;
@@ -72,9 +73,7 @@ function ManageClubsPage(){
             </Link>
           ))
         ) : (
-          <div className="text-center py-10 bg-white rounded-xl border border-gray-100 shadow-sm text-gray-500 text-sm">
-            No clubs found.
-          </div>
+          <EmptyState>No clubs found.</EmptyState>
         )}
       </div>
 
