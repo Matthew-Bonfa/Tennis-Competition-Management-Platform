@@ -13,7 +13,7 @@ import CompetitionsPage from './pages/competitions/CompetitionsPage'
 import Home from './pages/HomePage'
 import PlayerProfile from './pages/players/PlayerProfilePage'
 import PlayersPage from './pages/players/PlayersPage'
-import Ribbon from './components/layout/Ribbon'
+import Header from './components/layout/Header'
 import SectionPage from './pages/competitions/SectionPage'
 import MatchResultsPage from './pages/matches/MatchResultsPage'
 import EnterResultPage from './pages/matches/EnterResultPage'
@@ -43,7 +43,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
-        <Ribbon />
+        <Header />
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />

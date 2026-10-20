@@ -4,11 +4,10 @@ Branch: `feature/frontend/refactor`
 Scope: visual + structural refactor of `frontend/` only. No functional, route, API, state or
 copy changes. Verification per phase: `npm run build` and `npm run lint` in `frontend/`.
 
-**Next step:** Phase 3 — `Ribbon.tsx` → `components/layout/Header.tsx`: rewrite its styling as
-Tailwind utilities, collapse the nav into a mobile menu below `md`, and add the
-Log in / Log out button. **This is where `Ribbon.css` finally gets deleted** (deferred from
-Phase 2 — see the note there). Phases 0–2 are complete: the build is green, `src/` is
-restructured, and the theme tokens are in place.
+**Next step:** Phase 4 — add the shared `components/ui/*` primitives and fix the
+non-responsive layouts (fixed-column grids, wide tables, inconsistent loading/empty states).
+Phases 0–3 are complete: the build is green, `src/` is restructured, the theme tokens are in
+place, and the header is responsive with a working Log in / Log out button.
 
 > **Baseline finding (2026-10-20):** the frontend does **not** build at HEAD `8876186`.
 > `npm run build` (`tsc -b && vite build`) fails with **160 TypeScript errors across 13 files**,
@@ -112,7 +111,7 @@ Tailwind v4 `@theme` tokens in `index.css`. Components use token names, never ra
 ```
 src/
   App.tsx  main.tsx  index.css          # index.css = Tailwind + @theme + base only (Phase 2)
-  App.css  Ribbon.css                   # both deleted in Phase 2
+                                        # App.css (Phase 2) and Ribbon.css (Phase 3) are gone
   pages/
     HomePage  LoginPage  AdminPage
     associations/  AssociationsPage  AssociationProfilePage  AssociationsList
@@ -128,7 +127,7 @@ src/
     register-team/ RegisterTeamPage  SelectCompetitionPage  ReviewRequestsPage
                    Registration  RequestDetails  types
   components/
-    layout/        Ribbon  (→ Header in Phase 3)
+    layout/        Header
     ui/            (added in Phase 4)
   lib/             api  auth  exportLinks  playerRecord  teamRecord  formatName  scoresheet
   assets/          WaverleyLogo.png  hero.png  react.svg  vite.svg
@@ -144,7 +143,7 @@ their descriptive name. Files are **moved**, and renamed only where the rule abo
 |---|---|---|
 | `src/index.css` | Kept as the only stylesheet: Tailwind import + `@theme` + short `@layer base`. Removed the `#root` fixed width / centering rule and the 18px root font-size — the fixed width was why the layout couldn't breathe. | ✅ Phase 2 |
 | `src/App.css` | **Deleted.** Imported by nothing; every class was an unused Vite-template leftover (`.counter`, `.hero`, `#center`, `#next-steps`, `#docs`, `#spacer`, `.ticks`). | ✅ Phase 2 |
-| `src/Ribbon.css` | **Delete in Phase 3.** Becomes Tailwind utilities on `components/layout/Header.tsx`; the bare global `nav {}` selector goes with it. | ⏳ Phase 3 |
+| `src/Ribbon.css` | **Deleted.** Became Tailwind utilities on `components/layout/Header.tsx`; the bare global `nav {}` selector and the 2rem link font went with it. | ✅ Phase 3 |
 
 ---
 
@@ -224,13 +223,52 @@ to its *new* one, preserving each specifier's original extension spelling so `./
   as soon as Phase 5 references them. Not a problem, but it means "token missing from the built
   CSS" is not a useful signal.
 
-### Phase 3 — Header, mobile nav, Log in button
-- [ ] `Ribbon.tsx` → `components/layout/Header.tsx`, all styling as Tailwind
-- [ ] Desktop nav bar; below `md`, collapse into a hamburger + panel
-- [ ] 44px minimum touch targets; visible focus states
-- [ ] Add Log in (signed out) / Log out (signed in) button — right side on desktop,
+### Phase 3 — Header, mobile nav, Log in button ✅
+- [x] `Ribbon.tsx` → `components/layout/Header.tsx`, all styling as Tailwind
+- [x] Desktop nav bar; below `md`, collapse into a hamburger + panel
+- [x] 44px minimum touch targets; visible focus states
+- [x] Add Log in (signed out) / Log out (signed in) button — right side on desktop,
       inside the mobile menu on small screens; primary button styling
-- [ ] Build + lint + commit
+- [x] Build + lint + commit
+
+**Result:** `Ribbon.tsx` and `Ribbon.css` are deleted; `Header.tsx` is the only file that
+changed besides `App.tsx`'s two references to it. `npm run build` succeeds (0 type errors),
+lint is unchanged at **29 warnings / 0 errors**, and none of them are in `Header.tsx`.
+
+#### What changed
+
+- **The bar is light, not navy.** It is now `bg-surface` with a `border-b border-border`, ink
+  text and `primary-600` for the active/hover state. The old bar was `--navy #3a4f85`, which is
+  outside the light-theme palette the brief asks for, and the link font drops from `2rem` to
+  `text-sm`. Worth noting: those `--navy` / `--navy-dark` variables lived in the old `:root`
+  block that Phase 2 deleted, so between Phase 2 and this phase the header was rendering with a
+  **transparent background** — this phase is what puts a background back.
+- **Nav items are built once** by a `navItems()` helper and rendered twice — desktop bar and
+  mobile panel — so the two lists cannot drift. The role gating (`Players` for admin/club admin,
+  `Admin` for admin) is unchanged, and so is every label and route.
+- **Semantics:** the wrapping `<nav>` became `<header>` + an inner `<nav aria-label="Main">`.
+  `NavLink` already sets `aria-current="page"`, so the active item is announced.
+- **Mobile:** the hamburger is a 44×44px button with `aria-expanded` / `aria-controls`, and the
+  panel closes when a link is followed or when Log out is used. `lucide-react`'s `Menu`/`X` are
+  used for the icon, per the existing icon set.
+- **Touch targets:** every nav link, button and the logo link carries `min-h-11` (44px).
+  Focus states come from the global `:focus-visible` ring added in Phase 2.
+- **Log out** clears `access_token`, `personId` and `roles` — exactly the three keys
+  `LoginPage` writes — and then navigates to `/login`. This is the one behavioural addition in
+  the refactor (see Open questions).
+
+#### Decisions taken in this phase
+
+- **Log out is styled secondary** (bordered, neutral), not primary. The brief asked for the
+  *Log in* button to be the primary style; a blue Log out in the header would read as the
+  page's main action. Easy to flip if you would rather they match.
+- **The header is not sticky.** The old bar scrolled away with the page, and making it stick
+  would change how every page behaves. Worth revisiting separately if you want it.
+- **No `max-w-*` container yet.** The old `#root` rule capped the app at 1126px and Phase 2
+  removed it, so pages are currently full-bleed. The header follows the same
+  `px-4 sm:px-6 lg:px-8` padding as the pages rather than introducing a container of its own,
+  which would have left the header and the content misaligned. **Phase 4 should add one shared
+  container to both**, so they line up on wide screens.
 
 ### Phase 4 — Shared UI primitives and responsive layout fixes
 - [ ] Add thin `components/ui/*` primitives (className composition only, no behaviour change)
@@ -268,9 +306,13 @@ to its *new* one, preserving each specifier's original extension spelling so `./
 - **Log out is new behaviour.** The plan was "visual only", but there is no logout anywhere
   in the app today (`auth.ts` has no logout function), so a Log out button has to clear the
   three `localStorage` keys and navigate to `/login`. Flagged as the one behavioural addition.
-- **Auth state is not reactive.** `auth.ts` reads `localStorage` at call time and nothing
-  subscribes to changes, so the header will not re-render on login/logout without a reload.
-  Fixing that properly means new state management — out of scope unless asked.
+- **Auth state is not reactive, but the header keeps up on navigation.** `auth.ts` reads
+  `localStorage` at call time and nothing subscribes to changes, so the header only re-reads it
+  when it re-renders. Both flows happen to navigate — login goes to `/`, Log out goes to
+  `/login` — and `Header` sits outside `<Routes>`, so a route change re-renders it and the
+  button flips without a reload. A `localStorage` change that does *not* navigate (another tab
+  signing out) still will not update it. Fixing that properly means new state management — out
+  of scope unless asked.
 - **Google Fonts** stays as a remote `@import`; Kanit is dropped, Inter is kept.
 - **No frontend tests exist.** Verification is build + lint. The backend e2e suite is
   destructive and unrelated, so it is not run.
@@ -290,3 +332,11 @@ to its *new* one, preserving each specifier's original extension spelling so `./
 - The original plan deleted `App.css` *and* `Ribbon.css` in Phase 2, but `Ribbon.tsx` still
   imports `Ribbon.css`, so deleting it there would have broken the build for one phase. Its
   deletion moved to Phase 3, where the file is rewritten as Tailwind anyway.
+- Phase 3 styles Log out as a secondary button and leaves primary blue to Log in, and leaves the
+  header non-sticky and without a `max-w-*` container (see the phase notes for the reasoning on
+  each). All three are one-line changes if you would rather they went the other way.
+- The `Ribbon.tsx` → Tailwind rewrite used `NavLink`'s function `className`, typed with
+  `NavLinkRenderProps` from `react-router-dom`. The prop is
+  `string | ((props: NavLinkRenderProps) => string | undefined)`, so a hand-written
+  `{ isActive: boolean }` parameter would have failed `strictFunctionTypes` — the parameter has
+  to accept the whole render-props object.
