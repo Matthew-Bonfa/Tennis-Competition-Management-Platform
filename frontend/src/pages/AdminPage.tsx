@@ -2,7 +2,7 @@ import {Link} from 'react-router-dom';
 
 function AdminPage() {
   return (
-    <div>  
+    <div className="max-w-4xl mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold text-ink mb-6">Administration</h1>
       <div className="grid gap-6 md:grid-cols-3">
         <Link to="/enter-results"

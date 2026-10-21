@@ -439,6 +439,14 @@ Three contrast fixes fall out of this for free: `text-gray-400` (2.5:1 on white,
 `text-sky-600` (4.10:1, fails AA) are both gone, and the amber/red/emerald text all move to
 tokens that were picked to clear 4.5:1.
 
+#### Pre-5b fix — `AdminPage` had no page container (user request) ✅
+
+`AdminPage` was the only page shell in the app with no container at all: a bare `<div>`, so
+its six cards ran right up to the screen edge while the header above them was inset by `px-4`,
+which is what made it look wrong. It now uses `max-w-4xl mx-auto px-4 py-8` — the same
+container every sibling page uses — so it is inset on both sides at every width and no longer
+stretches across a 1440px screen. One-line diff, no other change to the page.
+
 #### 5b–5e — per-area detail polish (batched, one commit each)
 
 - [ ] 5b Public pages: Home, Competitions(+Profile, Section), Clubs(+Profile),
