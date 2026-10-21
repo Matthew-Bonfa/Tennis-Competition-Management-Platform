@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Trophy, Shield, ArrowLeft, Calendar, Tag } from 'lucide-react';
 import LoadingState from '../../components/ui/LoadingState';
+import ErrorState from '../../components/ui/ErrorState';
 
 // the backend stores the day as lowercase text, e.g. "saturday"
 function formatDay(day: string | null | undefined) {
@@ -68,7 +69,7 @@ function CompetitionProfile() {
   }, [selectedSeasonId]);
 
   if (loading) return <LoadingState />;
-  if (error) return <div className="text-center py-12 text-danger">Error: {error}</div>;
+  if (error) return <ErrorState>Error: {error}</ErrorState>;
 
   if (!competition) {
     return (

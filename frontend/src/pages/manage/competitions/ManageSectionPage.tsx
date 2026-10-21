@@ -9,6 +9,7 @@ import fetchApi, { ApiError } from '../../../lib/api';
 import FormatForm from './FormatForm';
 import { rubberLabel, genderLabel, winnerRuleLabel } from '../../../lib/formatName';
 import LoadingState from '../../../components/ui/LoadingState';
+import ErrorState from '../../../components/ui/ErrorState';
 
 // local helper: fetchApi accepts any method, so PATCH doesn't need a shared helper
 function patchApi(endpoint: string, data: unknown) {
@@ -131,7 +132,7 @@ function ManageSectionPage() {
   }
 
   if (loading) return <LoadingState />;
-  if (loadError) return <div className="text-center py-12 text-danger">Error: {loadError}</div>;
+  if (loadError) return <ErrorState>Error: {loadError}</ErrorState>;
   if (!section) return <div className="text-center py-12">Section not found.</div>;
 
   const season = competition?.seasons?.find((s: any) => s.id === section.seasonId);

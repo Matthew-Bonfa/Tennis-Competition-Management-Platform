@@ -4,12 +4,14 @@ Branch: `feature/frontend/refactor`
 Scope: visual + structural refactor of `frontend/` only. No functional, route, API, state or
 copy changes. Verification per phase: `npm run build` and `npm run lint` in `frontend/`.
 
-**Next step:** Phase 5d — the `ErrorState` primitive, plus the 5 error and 3 not-found returns
-deliberately deferred from Phase 4b. Phases 0–4 and 5a–5c are complete: the build is green,
-`src/` is restructured, the theme tokens are in place **and in use**, every radius and shadow
-comes from a three-value scale, every page shell shares one container that lines up with the
-header, the header is responsive with a working Log in / Log out button, and loading and empty
-states render through shared components.
+**Next step:** the per-area detail polish, starting with the public pages (Home,
+Competitions +Profile +Section, Clubs +Profile, Associations +Profile +List, Players +Profile
++Stats, Teams, Admin) — spacing, typography, interactive states, and the not-found states listed
+under 5d. Phases 0–4 and 5a–5d are complete: the build is green, `src/` is restructured, the
+theme tokens are in place **and in use**, every radius and shadow comes from a three-value scale,
+every page shell shares one container that lines up with the header, loading/empty/error states
+render through shared components, and the header is responsive with a working Log in / Log out
+button.
 
 > **Baseline finding (2026-10-20):** the frontend does **not** build at HEAD `8876186`.
 > `npm run build` (`tsc -b && vite build`) fails with **160 TypeScript errors across 13 files**,
@@ -504,6 +506,34 @@ to a small three-column score table. It was caught by reading the transform's ow
 than trusting the count, and reverted; the verification greps afterwards confirm every changed
 line is a `max-w-*` shell.
 
+#### 5d — `ErrorState` and the six page-level error returns ✅
+
+`ErrorState` is the third page-level state primitive and the counterpart to `LoadingState`:
+`role="alert"`, centred danger text, and — the actual fix — the container padding these returns
+never had. Six pages wrote the identical bare
+`<div className="text-center py-12 text-danger">Error: {…}</div>` as an early return, so the
+message rendered directly under `<main>` with no side padding and no max-width.
+
+**The inventory was wrong again, in the same direction as 5b.** The Phase 4b note said "5 error
++ 3 not-found" and assumed the not-found returns shared one shape, so the pair could be
+converted together. Measuring them found **6** error returns — all byte-identical, so the
+conversion is mechanical — and **five** different not-found shapes:
+
+| Not-found shape | Sites |
+| --- | --- |
+| Container + "Back to…" link (the message `<p>` sits inside it) | `CompetitionProfilePage` |
+| Bare `<div className="text-center py-12">`, **no colour class at all** — so full-strength body text | `ManageCompetitionPage`, `ManageSeasonPage`, `ManageSectionPage` |
+| `<div className="p-8 text-center text-ink-muted">`, no max-width | `AssociationProfilePage` |
+| `<p className="text-ink-muted mb-4">` inside a page shell | `ClubProfilePage`, `PlayerProfilePage`, `TeamProfilePage`, `EditPlayerPage`, `MatchResultsPage` |
+| A bare text node in a shell; a string in a ternary | `SectionPage`, `EnterResultPage` |
+
+**So the not-found states are deliberately not converted here.** They are not errors — the record
+simply does not exist — and there is no single treatment to apply: three want a container, one
+already has a link block, and five sit inside shells where a bordered panel would double-border
+the card around them. Each is handled in its own page's pass, with that page's context in view.
+
+Verified: 6 imports, 6 usages, no instance of the old shape left, build green, lint unchanged.
+
 #### Per-area detail polish (one commit each, unnumbered)
 
 The numbering is dropped here deliberately. This work is genuinely per-area — spacing,
@@ -631,3 +661,21 @@ cross-cutting passes (5a–5c) were found ahead of it. The areas:
   new element would be a structural change to every page — and each page's `max-w-*` differs
   anyway. Repeating the same utility string is the smaller, more reviewable change, and it stays
   a one-line edit per page if the scale ever moves.
+- **Phase 5d narrows the Phase 4b plan on purpose.** Phase 4b deferred the error and not-found
+  returns together, on the assumption that the not-found states shared one shape and would
+  otherwise sit inconsistently a few lines below a converted error. Measuring them showed five
+  shapes (see the 5d table), so only the six identical error returns were converted. The
+  not-found states are not errors, and choosing one treatment for five shapes is a design
+  decision that belongs with each page, not with a mechanical commit.
+- **`ErrorState` is the third page-level state primitive, and probably the last.**
+  `LoadingState` is plain centred text, `EmptyState` is a bordered neutral panel used inside a
+  page shell, and `ErrorState` is centred danger text with `role="alert"`. No not-found
+  primitive is created until the per-area passes show whether one is genuinely needed — the
+  five shapes above suggest the answer is per-page judgement, not a component.
+- **The inline error banners are not `ErrorState`.** Three sites (`LoginPage`,
+  `ResultStatusPanel`, `ScoresheetForm`) already agree on
+  `rounded-md border border-danger-border bg-danger-bg p-3 text-sm text-danger` for form-level
+  errors, and about a dozen more use a bare `text-danger text-sm`. That is a different
+  presentation for a different job — a message beside the field that failed, not a full-page
+  state — so it is left for the per-area passes, where the form context is visible and the
+  question of whether the bare ones should become banners can be judged per form.

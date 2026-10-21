@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import fetchApi from '../../../lib/api';
 import LoadingState from '../../../components/ui/LoadingState';
 import EmptyState from '../../../components/ui/EmptyState';
+import ErrorState from '../../../components/ui/ErrorState';
 
 function ManageCompetitionsPage() {
   const [competitions, setCompetitions] = useState<any[]>([]);
@@ -25,7 +26,7 @@ function ManageCompetitionsPage() {
   }, []);
 
   if (loading) return <LoadingState />;
-  if (error) return <div className="text-center py-12 text-danger">Error: {error}</div>;
+  if (error) return <ErrorState>Error: {error}</ErrorState>;
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 sm:px-6 lg:px-8">

@@ -7,6 +7,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import fetchApi, { ApiError } from '../../../lib/api';
 import LoadingState from '../../../components/ui/LoadingState';
+import ErrorState from '../../../components/ui/ErrorState';
 
 // local helper: fetchApi accepts any method, so PATCH doesn't need a shared helper
 function patchApi(endpoint: string, data: unknown) {
@@ -86,7 +87,7 @@ function ManageSeasonPage() {
   }
 
   if (loading) return <LoadingState />;
-  if (loadError) return <div className="text-center py-12 text-danger">Error: {loadError}</div>;
+  if (loadError) return <ErrorState>Error: {loadError}</ErrorState>;
   if (!season) return <div className="text-center py-12">Season not found.</div>;
 
   const unchanged =
