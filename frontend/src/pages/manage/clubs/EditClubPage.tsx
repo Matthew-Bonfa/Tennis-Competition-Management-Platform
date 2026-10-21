@@ -106,7 +106,7 @@ function EditClubPage(){
       </div>
 
       {/* 2. Wider Form Card Bubble (Fields & Button only) */}
-      <div className="bg-surface p-8 rounded-xl shadow-lg border border-border">
+      <div className="bg-surface p-8 rounded-lg shadow-md border border-border">
         
         <div className="space-y-5">
           

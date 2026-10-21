@@ -260,7 +260,7 @@ function CreateSectionPage() {
           a form cannot be placed inside another form. */}
       {panelOpen && (
         <div className="fixed inset-0 z-50 bg-ink/40 overflow-y-auto p-4">
-          <div className="bg-surface rounded-lg shadow-xl max-w-2xl mx-auto my-8 p-6">
+          <div className="bg-surface rounded-lg shadow-md max-w-2xl mx-auto my-8 p-6">
             <div className="flex items-start justify-between mb-4">
               <div>
                 <h2 className="text-xl font-bold text-ink">

@@ -4,11 +4,11 @@ Branch: `feature/frontend/refactor`
 Scope: visual + structural refactor of `frontend/` only. No functional, route, API, state or
 copy changes. Verification per phase: `npm run build` and `npm run lint` in `frontend/`.
 
-**Next step:** Phase 5b — public page polish (Home, Competitions, Clubs, Associations, Players,
-Teams, Admin). This is the per-page pass over radii, shadows, spacing, typography and
-interactive states, now that every colour in the app already comes from a token. Phases 0–4 and
-5a are complete: the build is green, `src/` is restructured, the theme tokens are in place **and
-in use** (they appear in the built CSS for the first time as of 5a), the header is responsive
+**Next step:** Phase 5c — public page polish (Home, Competitions, Clubs, Associations, Players,
+Teams, Admin). This is the per-page pass over spacing, typography and interactive states, now
+that colour (5a) and the radius/shadow scale (5b) are uniform across the app. Phases 0–4, 5a and
+5b are complete: the build is green, `src/` is restructured, the theme tokens are in place **and
+in use**, every radius and shadow now comes from a three-value scale, the header is responsive
 with a working Log in / Log out button, and loading and empty states render through shared
 components.
 
@@ -439,7 +439,7 @@ Three contrast fixes fall out of this for free: `text-gray-400` (2.5:1 on white,
 `text-sky-600` (4.10:1, fails AA) are both gone, and the amber/red/emerald text all move to
 tokens that were picked to clear 4.5:1.
 
-#### Pre-5b fix — `AdminPage` had no page container (user request) ✅
+#### `AdminPage` page container (user request) ✅
 
 `AdminPage` was the only page shell in the app with no container at all: a bare `<div>`, so
 its six cards ran right up to the screen edge while the header above them was inset by `px-4`,
@@ -447,14 +447,39 @@ which is what made it look wrong. It now uses `max-w-4xl mx-auto px-4 py-8` — 
 container every sibling page uses — so it is inset on both sides at every width and no longer
 stretches across a 1440px screen. One-line diff, no other change to the page.
 
-#### 5b–5e — per-area detail polish (batched, one commit each)
+#### 5b — Radius and shadow scale, applied globally (one commit) ✅
 
-- [ ] 5b Public pages: Home, Competitions(+Profile, Section), Clubs(+Profile),
+Same shape of problem as 5a, so the same treatment: the app carried **six radius values and
+seven shadow values**, and the brief asks for "small radius, restrained shadows". 93 utilities
+across 26 files collapsed onto three of each.
+
+| From | To | Occurrences |
+| --- | --- | --- |
+| `rounded-2xl`, `rounded-xl` | `rounded-lg` | 33 |
+| `rounded` (bare) | `rounded-md` | 49 |
+| `shadow-xs`, `shadow` (bare) | `shadow-sm` | 6 |
+| `shadow-lg`, `shadow-xl` | `shadow-md` | 5 |
+
+Leaving a deliberate three-value scale each:
+
+- **Radius** — `rounded-md` (6px) for controls (inputs, buttons, chips), `rounded-lg` (8px) for
+  surfaces (cards, panels, modals), `rounded-full` for pills and avatars only. The old
+  `rounded-2xl` (16px) on cards was the main offender against "modest radius".
+- **Shadow** — `shadow-sm` resting, `shadow-md` for hover and overlays, `shadow-none` where a
+  border already does the work. Nothing heavier than `shadow-md` exists in the app now.
+
+`transition-shadow` (10 occurrences) is a transition utility rather than a shadow value and is
+left alone. Noting this for accuracy: the first inventory counted "13 bare `shadow`", but 10 of
+those were the `shadow` inside `transition-shadow` — only 3 were genuinely bare, on the three
+page-level centred cards in `App.tsx`, `LoginPage.tsx` and `EnterResultPage.tsx`.
+
+#### 5c–5f — per-area detail polish (batched, one commit each)
+
+- [ ] 5c Public pages: Home, Competitions(+Profile, Section), Clubs(+Profile),
       Associations(+Profile, List), Players(+Profile, Stats), Teams, Admin
-- [ ] 5c Manage pages: associations, clubs, competitions, players
-- [ ] 5d `register-team/` — shrink the oversized `rounded-2xl`/`shadow-md` and swap the
-      `←` `→` text glyphs for lucide icons
-- [ ] 5e `match-results/` — scoresheet, rubber rows, status panel
+- [ ] 5d Manage pages: associations, clubs, competitions, players
+- [ ] 5e `register-team/` — swap the `←` `→` text glyphs for lucide icons
+- [ ] 5f `match-results/` — scoresheet, rubber rows, status panel
 
 ### Phase 6 — Responsive and accessibility sweep
 - [ ] Check 320 / 375 / 768 / 1024 / 1440px, no horizontal page scroll at any width
@@ -539,3 +564,18 @@ stretches across a 1440px screen. One-line diff, no other change to the page.
 - **`text-white` is the one raw colour class left in `src/`, deliberately.** See the 5a notes —
   it is Tailwind's default `--color-white` token rather than a hex, and it is the correct
   foreground on both primary and danger fills, so a semantic alias would be wrong half the time.
+- **Phase 5b continues the 5a re-sequencing: the radius and shadow scale was normalised
+  globally in one commit, ahead of the per-area polish batches.** The reasoning is the same one
+  that moved the colour pass global — radii and shadows are set by shared sub-components
+  (`RubberRow`, `FixtureCard`, `ResultStatusPanel`) that public and manage pages both render, so
+  an area-by-area pass cannot reach a consistent scale at any single commit. The per-area work
+  that genuinely needs per-page judgement (spacing, typography, hover and focus states) stays
+  batched as 5c–5f, one commit each. The approved plan's 5b–5e are now 5c–5f; no work was
+  dropped, only reordered.
+- **Radius and shadow are deliberately not theme tokens.** Colour lives in `@theme` because the
+  brief says colours live only there, and because a palette needs names (`danger`, `ink-muted`)
+  that say what they mean. Radius and shadow are already a closed numeric scale in Tailwind, and
+  the fix was to use *fewer* of its steps rather than to invent names for them — adding
+  `--radius-card` would have restated `rounded-lg` and given reviewers a second vocabulary to
+  learn. If the scale ever needs to change app-wide, Tailwind v4 lets `--radius-*` and
+  `--shadow-*` be overridden in the same `@theme` block.

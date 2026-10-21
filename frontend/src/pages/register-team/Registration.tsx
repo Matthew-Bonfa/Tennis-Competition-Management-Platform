@@ -238,7 +238,7 @@ export function Registration({season, association}: {season: Season; association
   }
 
   return (
-    <div className="max-w-2xl mx-auto my-10 p-8 bg-surface rounded-2xl shadow-md border border-border font-sans text-ink">
+    <div className="max-w-2xl mx-auto my-10 p-8 bg-surface rounded-lg shadow-md border border-border font-sans text-ink">
 
       {/* Header / Title */}
       <div className="mb-7 pb-4 border-b border-border">
@@ -267,7 +267,7 @@ export function Registration({season, association}: {season: Season; association
             />
 
             {searchTerm && filteredClubs.length > 0 && (
-              <div className="absolute top-full left-0 right-0 bg-surface border border-border rounded-lg shadow-lg max-h-44 overflow-y-auto z-10 mt-1">
+              <div className="absolute top-full left-0 right-0 bg-surface border border-border rounded-lg shadow-md max-h-44 overflow-y-auto z-10 mt-1">
                 {filteredClubs.map(c => (
                   <button 
                     key={c.id} 
@@ -323,7 +323,7 @@ export function Registration({season, association}: {season: Season; association
             <div className="flex flex-col gap-3">
 
               {/* Centered Select Players & Minimum Requirement Message */}
-              <div className="bg-canvas p-3.5 rounded-xl border border-border text-center mb-1">
+              <div className="bg-canvas p-3.5 rounded-lg border border-border text-center mb-1">
                 <h3 className="text-sm font-bold text-ink mb-0.5">
                   Select Players
                 </h3>
@@ -346,7 +346,7 @@ export function Registration({season, association}: {season: Season; association
                         className="w-full px-3.5 py-2.5 rounded-lg border border-border-strong text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
                       />
                       {updatedPlayer === index && playerResults.length > 0 && (
-                        <div className="absolute top-full left-0 right-0 bg-surface border border-border rounded-lg shadow-lg max-h-36 overflow-y-auto z-10 mt-1">
+                        <div className="absolute top-full left-0 right-0 bg-surface border border-border rounded-lg shadow-md max-h-36 overflow-y-auto z-10 mt-1">
                           {playerResults.map(p => (
                             <button 
                               key={p.id} 

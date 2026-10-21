@@ -63,7 +63,7 @@ function ManageClubsPage(){
             <Link
               key={club.id}
               to={club.id}
-              className="p-4 bg-surface rounded-xl border border-border shadow-sm hover:border-primary-300 hover:shadow-md transition-all flex items-center justify-between text-ink group"
+              className="p-4 bg-surface rounded-lg border border-border shadow-sm hover:border-primary-300 hover:shadow-md transition-all flex items-center justify-between text-ink group"
             >
               {/* font-normal keeps the club name looking standard instead of bold */}
               <span className="text-ink font-normal group-hover:text-primary-600 transition-colors">

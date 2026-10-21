@@ -45,7 +45,7 @@ function SelectCompetition() {
 
   if (!selectedSeason) {
     return (
-      <div className="max-w-2xl mx-auto my-10 p-8 bg-surface rounded-2xl shadow-md border border-border font-sans text-ink">
+      <div className="max-w-2xl mx-auto my-10 p-8 bg-surface rounded-lg shadow-md border border-border font-sans text-ink">
 
         {/* Header / Title */}
         <div className="mb-7 pb-4 border-b border-border">
@@ -91,7 +91,7 @@ function SelectCompetition() {
                 <button 
                   key={s.id} 
                   onClick={() => setSelectedSeason(s)}
-                  className="w-full p-4 bg-canvas hover:bg-primary-50 border border-border hover:border-primary-500 text-ink hover:text-primary-700 rounded-xl font-semibold text-sm transition-all shadow-sm flex items-center justify-between group"
+                  className="w-full p-4 bg-canvas hover:bg-primary-50 border border-border hover:border-primary-500 text-ink hover:text-primary-700 rounded-lg font-semibold text-sm transition-all shadow-sm flex items-center justify-between group"
                 >
                   <span>{s.name}</span>
                   <span className="text-ink-subtle group-hover:text-primary-600 transition-colors">→</span>
@@ -106,7 +106,7 @@ function SelectCompetition() {
     );
   } else {
     return (
-      <div className="max-w-2xl mx-auto my-10 p-8 bg-surface rounded-2xl shadow-md border border-border font-sans text-ink">
+      <div className="max-w-2xl mx-auto my-10 p-8 bg-surface rounded-lg shadow-md border border-border font-sans text-ink">
 
         {/* Header Bar with Back Button */}
         <div className="mb-6 pb-4 border-b border-border flex items-center justify-between gap-4">

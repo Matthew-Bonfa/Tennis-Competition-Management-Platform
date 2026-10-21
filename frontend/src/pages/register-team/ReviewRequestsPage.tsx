@@ -63,7 +63,7 @@ function ReviewRequests() {
   }, []);
 
   return (
-    <div className="max-w-2xl mx-auto my-10 p-8 bg-surface rounded-2xl shadow-md border border-border font-sans text-ink">
+    <div className="max-w-2xl mx-auto my-10 p-8 bg-surface rounded-lg shadow-md border border-border font-sans text-ink">
 
       {/* Conditional Rendering: Show Details Component if selected, otherwise show List */}
       {selectedRequest ? (
@@ -98,7 +98,7 @@ function ReviewRequests() {
               Loading registration requests...
             </div>
           ) : futureSeasons.length === 0 ? (
-            <div className="text-center py-12 px-4 bg-canvas rounded-xl border border-dashed border-border text-ink-subtle text-sm">
+            <div className="text-center py-12 px-4 bg-canvas rounded-lg border border-dashed border-border text-ink-subtle text-sm">
               No upcoming seasons found.
             </div>
           ) : (
@@ -132,7 +132,7 @@ function ReviewRequests() {
                           <button
                             key={req.id || req.name}
                             onClick={() => setSelectedRequest(req)}
-                            className="w-full p-4 bg-canvas hover:bg-primary-50/50 border border-border hover:border-primary-400 rounded-xl text-left flex items-center justify-between transition-all cursor-pointer group"
+                            className="w-full p-4 bg-canvas hover:bg-primary-50/50 border border-border hover:border-primary-400 rounded-lg text-left flex items-center justify-between transition-all cursor-pointer group"
                           >
                             <div>
                               <h4 className="text-sm font-semibold text-ink group-hover:text-primary-700 transition-colors">

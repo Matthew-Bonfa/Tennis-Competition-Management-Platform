@@ -43,7 +43,7 @@ function AssociationsList(){
                 <Link 
                 key={assoc.id}
                 to={`/associations/${assoc.id}`}
-                className="group flex items-center justify-between p-4 bg-surface border border-border/80 rounded-xl shadow-xs hover:border-primary-300 hover:shadow-md transition-all duration-200"
+                className="group flex items-center justify-between p-4 bg-surface border border-border/80 rounded-lg shadow-sm hover:border-primary-300 hover:shadow-md transition-all duration-200"
                 >
                 {/* Left side: Icon + Association Name & Contact */}
                 <div className="flex items-center gap-4 min-w-0">

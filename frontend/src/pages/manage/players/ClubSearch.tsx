@@ -81,7 +81,7 @@ function ClubSearch({ clubs, value, onChange }: ClubSearchProps) {
   // Once a club is picked, show it as a chip that can be cleared to search again
   if (selected) {
     return (
-      <div className="mt-1 flex w-full items-center justify-between rounded border border-border-strong bg-surface px-3 py-1.5 text-ink">
+      <div className="mt-1 flex w-full items-center justify-between rounded-md border border-border-strong bg-surface px-3 py-1.5 text-ink">
         <span>{selected.name}</span>
         <button
           type="button"
@@ -115,13 +115,13 @@ function ClubSearch({ clubs, value, onChange }: ClubSearchProps) {
         }}
         onFocus={() => setOpen(true)}
         onKeyDown={handleKeyDown}
-        className="w-full rounded border border-border-strong py-1.5 pl-9 pr-3 text-ink"
+        className="w-full rounded-md border border-border-strong py-1.5 pl-9 pr-3 text-ink"
       />
 
       {open && (
         <ul
           role="listbox"
-          className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded border border-border bg-surface py-1 shadow-md"
+          className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-md border border-border bg-surface py-1 shadow-md"
         >
           {matches.length > 0 ? (
             matches.map((club, i) => (

@@ -93,7 +93,7 @@ function AssociationProfile() {
     </Link>
 
     {/* Association Info Card */}
-    <div className="bg-surface border border-border/80 rounded-2xl p-6 shadow-sm">
+    <div className="bg-surface border border-border/80 rounded-lg p-6 shadow-sm">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         
         {/* Left Side: Association Title */}
@@ -104,7 +104,7 @@ function AssociationProfile() {
         </div>
 
         {/* Right Side: Contact Info Card */}
-        <div className="bg-canvas/80 border border-border/60 rounded-xl p-4 min-w-0 md:min-w-[280px]">
+        <div className="bg-canvas/80 border border-border/60 rounded-lg p-4 min-w-0 md:min-w-[280px]">
           {association.contactPerson ? (
             <div className="space-y-1.5 text-sm text-ink-muted">
               <div className="flex items-center gap-2 font-medium text-ink pb-1 border-b border-border/50">
@@ -145,9 +145,9 @@ function AssociationProfile() {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       
       {/* Clubs Box */}
-      <div className="bg-surface border border-border/80 rounded-2xl p-6 shadow-sm flex flex-col">
+      <div className="bg-surface border border-border/80 rounded-lg p-6 shadow-sm flex flex-col">
         <div className="flex items-center gap-2.5 pb-4 mb-4 border-b border-border">
-          <div className="p-2 bg-primary-50 text-primary-600 rounded-xl">
+          <div className="p-2 bg-primary-50 text-primary-600 rounded-lg">
             <Shield className="h-5 w-5" />
           </div>
           <h2 className="text-lg font-semibold text-ink">Clubs</h2>
@@ -162,7 +162,7 @@ function AssociationProfile() {
               <Link 
                 key={club.id}
                 to={`/clubs/${club.id}`}
-                className="group flex items-center justify-between p-3.5 bg-canvas/70 hover:bg-surface border border-border/60 hover:border-primary-300 rounded-xl shadow-xs hover:shadow-md transition-all duration-200"
+                className="group flex items-center justify-between p-3.5 bg-canvas/70 hover:bg-surface border border-border/60 hover:border-primary-300 rounded-lg shadow-sm hover:shadow-md transition-all duration-200"
               >
                 <div className="flex items-center gap-3">
                   <span className="font-medium text-ink group-hover:text-ink text-sm">
@@ -173,7 +173,7 @@ function AssociationProfile() {
               </Link>
             ))
           ) : (
-            <div className="h-full flex flex-col items-center justify-center p-8 text-center border-2 border-dashed border-border rounded-xl">
+            <div className="h-full flex flex-col items-center justify-center p-8 text-center border-2 border-dashed border-border rounded-lg">
               <p className="text-sm text-ink-subtle italic">No clubs registered yet</p>
             </div>
           )}
@@ -181,9 +181,9 @@ function AssociationProfile() {
       </div>
 
       {/* Competitions Box */}
-      <div className="bg-surface border border-border/80 rounded-2xl p-6 shadow-sm flex flex-col">
+      <div className="bg-surface border border-border/80 rounded-lg p-6 shadow-sm flex flex-col">
         <div className="flex items-center gap-2.5 pb-4 mb-4 border-b border-border">
-          <div className="p-2 bg-primary-50 text-primary-600 rounded-xl">
+          <div className="p-2 bg-primary-50 text-primary-600 rounded-lg">
             <Trophy className="h-5 w-5" />
           </div>
           <h2 className="text-lg font-semibold text-ink">Competitions</h2>
@@ -198,7 +198,7 @@ function AssociationProfile() {
               <Link
                 key={comp.id}
                 to={`/competitions/${comp.id}`}
-                className="group flex items-center justify-between p-3.5 bg-canvas/70 hover:bg-surface border border-border/60 hover:border-primary-300 rounded-xl shadow-xs hover:shadow-md transition-all duration-200"
+                className="group flex items-center justify-between p-3.5 bg-canvas/70 hover:bg-surface border border-border/60 hover:border-primary-300 rounded-lg shadow-sm hover:shadow-md transition-all duration-200"
               >
                 <div className="flex items-center gap-3">
                   <span className="font-medium text-ink group-hover:text-ink text-sm">
@@ -209,7 +209,7 @@ function AssociationProfile() {
               </Link>
             ))
           ) : (
-            <div className="h-full flex flex-col items-center justify-center p-8 text-center border-2 border-dashed border-border rounded-xl">
+            <div className="h-full flex flex-col items-center justify-center p-8 text-center border-2 border-dashed border-border rounded-lg">
               <p className="text-sm text-ink-subtle italic">No competitions active</p>
             </div>
           )}

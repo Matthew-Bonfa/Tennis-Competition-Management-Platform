@@ -83,7 +83,7 @@ function PlayersPage() {
                 </h3>
               </div>
               <p className="text-sm text-ink-muted">{player.primaryClubName ?? 'No club recorded'}</p>
-              <div className="mt-3 text-xs bg-muted text-ink-muted px-2.5 py-1 rounded inline-block">
+              <div className="mt-3 text-xs bg-muted text-ink-muted px-2.5 py-1 rounded-md inline-block">
                 {player.personCode}
               </div>
               <div className="mt-6 text-primary-600 text-sm font-medium flex items-center">

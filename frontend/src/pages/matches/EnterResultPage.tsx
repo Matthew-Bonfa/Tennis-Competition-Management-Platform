@@ -80,10 +80,10 @@ function EnterResultPage() {
   if (!isAuthenticated()) {
     return (
       <div className="max-w-md mx-auto px-4 py-12">
-        <div className="space-y-4 bg-surface p-8 rounded-lg shadow text-center">
+        <div className="space-y-4 bg-surface p-8 rounded-lg shadow-sm text-center">
           <h2 className="text-2xl font-bold text-ink">Please Sign In</h2>
           <p className="text-sm text-ink-muted">Sign in to enter a match result.</p>
-          <Link to="/login" className="block w-full rounded bg-primary-600 py-2 font-medium text-white hover:bg-primary-700">
+          <Link to="/login" className="block w-full rounded-md bg-primary-600 py-2 font-medium text-white hover:bg-primary-700">
             Sign In
           </Link>
         </div>
@@ -143,7 +143,7 @@ function EnterResultPage() {
       ) : (
         <>
           {form.matchStatus === 'disputed' && (
-            <div className="rounded border border-warning-border bg-warning-bg p-3 mb-4 text-sm text-warning">
+            <div className="rounded-md border border-warning-border bg-warning-bg p-3 mb-4 text-sm text-warning">
               <p className="font-semibold">
                 {form.viewerSide === null
                   ? 'The last result was disputed.'

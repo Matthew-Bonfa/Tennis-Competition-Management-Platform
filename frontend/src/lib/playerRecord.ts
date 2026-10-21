@@ -60,7 +60,7 @@ export function sumTotals(rows: RecordTotals[]): RecordTotals {
   );
 }
 
-// Win percentage, 0-100, rounded to one decimal. 0 for an unplayed
+// Win percentage, 0-100, rounded-md to one decimal. 0 for an unplayed
 // selection rather than NaN, so an empty filter result renders "0.0%"
 // instead of breaking the page.
 export function winPercentage(totals: RecordTotals): number {

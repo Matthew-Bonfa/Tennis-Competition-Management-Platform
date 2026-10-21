@@ -103,7 +103,7 @@ function RequestDetails({ request, onBack }: RequestDetailsProps) {
       </div>
 
       {/* Status Badge & Title Banner */}
-      <div className="p-5 bg-canvas border border-border rounded-xl flex items-center justify-between gap-4">
+      <div className="p-5 bg-canvas border border-border rounded-lg flex items-center justify-between gap-4">
         <div>
           <span className="text-xs font-semibold uppercase tracking-wider text-ink-subtle">
             Team Name
@@ -126,17 +126,17 @@ function RequestDetails({ request, onBack }: RequestDetailsProps) {
 
       {/* Key Attribute Grid (3 items: Club, Format, Gender) */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="p-4 bg-canvas/50 border border-border/80 rounded-xl">
+        <div className="p-4 bg-canvas/50 border border-border/80 rounded-lg">
           <p className="text-xs font-medium text-ink-subtle uppercase tracking-wider">Club</p>
           <p className="text-sm font-semibold text-ink mt-1">{club?.name || 'N/A'}</p>
         </div>
 
-        <div className="p-4 bg-canvas/50 border border-border/80 rounded-xl">
+        <div className="p-4 bg-canvas/50 border border-border/80 rounded-lg">
           <p className="text-xs font-medium text-ink-subtle uppercase tracking-wider">Format</p>
           <p className="text-sm font-semibold text-ink mt-1">{format?.name || 'N/A'}</p>
         </div>
 
-        <div className="p-4 bg-canvas/50 border border-border/80 rounded-xl">
+        <div className="p-4 bg-canvas/50 border border-border/80 rounded-lg">
           <p className="text-xs font-medium text-ink-subtle uppercase tracking-wider">Team Gender</p>
           <p className="text-sm font-semibold text-ink mt-1 uppercase">{request.teamGender || 'N/A'}</p>
         </div>
@@ -167,7 +167,7 @@ function RequestDetails({ request, onBack }: RequestDetailsProps) {
               return (
                 <div 
                   key={p.id || index}
-                  className="p-3 bg-canvas border border-border rounded-xl flex items-center justify-between text-xs"
+                  className="p-3 bg-canvas border border-border rounded-lg flex items-center justify-between text-xs"
                 >
                   <p className="font-semibold text-ink">
                     {fullName}
@@ -183,7 +183,7 @@ function RequestDetails({ request, onBack }: RequestDetailsProps) {
       {request.sectionComment && (
         <div className="flex flex-col gap-2 pt-2 border-t border-border pt-4">
           <h4 className="text-xs font-bold text-ink-subtle uppercase tracking-wider">Section Comment</h4>
-          <div className="p-4 bg-canvas border border-border rounded-xl text-xs text-ink-muted whitespace-pre-line">
+          <div className="p-4 bg-canvas border border-border rounded-lg text-xs text-ink-muted whitespace-pre-line">
             {request.sectionComment}
           </div>
         </div>
@@ -199,7 +199,7 @@ function RequestDetails({ request, onBack }: RequestDetailsProps) {
             {sections.map((sec) => (
               <label 
                 key={sec.id}
-                className="flex items-center gap-3 p-3 bg-canvas hover:bg-muted border border-border rounded-xl cursor-pointer text-xs font-semibold text-ink transition-all"
+                className="flex items-center gap-3 p-3 bg-canvas hover:bg-muted border border-border rounded-lg cursor-pointer text-xs font-semibold text-ink transition-all"
               >
                 <input 
                   type="radio" 
@@ -223,7 +223,7 @@ function RequestDetails({ request, onBack }: RequestDetailsProps) {
           onClick={() => {
             approve();
           }}
-          className={`flex-1 py-2.5 rounded-xl font-semibold text-sm transition-all shadow-sm ${
+          className={`flex-1 py-2.5 rounded-lg font-semibold text-sm transition-all shadow-sm ${
             !selectedSectionId 
               ? 'bg-border text-ink-subtle cursor-not-allowed opacity-75' 
               : 'bg-success hover:bg-success text-white cursor-pointer'
@@ -236,7 +236,7 @@ function RequestDetails({ request, onBack }: RequestDetailsProps) {
           onClick={() => {
             deny();
           }}
-          className="flex-1 py-2.5 bg-danger hover:bg-danger text-white rounded-xl font-semibold text-sm transition-all shadow-sm cursor-pointer"
+          className="flex-1 py-2.5 bg-danger hover:bg-danger text-white rounded-lg font-semibold text-sm transition-all shadow-sm cursor-pointer"
         >
           Deny Request
         </button>

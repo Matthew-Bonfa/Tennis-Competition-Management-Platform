@@ -5,7 +5,7 @@ function RegisterTeamPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="max-w-2xl mx-auto my-10 p-8 bg-surface rounded-2xl shadow-md border border-border font-sans text-ink">
+    <div className="max-w-2xl mx-auto my-10 p-8 bg-surface rounded-lg shadow-md border border-border font-sans text-ink">
 
       {/* Header Bar with Centered Text and Back Button */}
       <div className="mb-7 pb-4 border-b border-border relative flex items-center justify-center">
@@ -31,7 +31,7 @@ function RegisterTeamPage() {
         {/* Option 1: Register a Team */}
         <button
           onClick={() => navigate('/manage-teams/register')}
-          className="w-full p-5 bg-canvas hover:bg-primary-50 border border-border hover:border-primary-500 text-left rounded-2xl transition-all shadow-sm flex items-center justify-between group cursor-pointer"
+          className="w-full p-5 bg-canvas hover:bg-primary-50 border border-border hover:border-primary-500 text-left rounded-lg transition-all shadow-sm flex items-center justify-between group cursor-pointer"
         >
           <div>
             <h3 className="text-base font-bold text-ink group-hover:text-primary-700 transition-colors">
@@ -50,7 +50,7 @@ function RegisterTeamPage() {
         {isAuthenticated() && (isAdmin() || isClubAdmin()) && (
           <button
             onClick={() => navigate('/manage-teams/review')}
-            className="w-full p-5 bg-canvas hover:bg-primary-50 border border-border hover:border-primary-500 text-left rounded-2xl transition-all shadow-sm flex items-center justify-between group cursor-pointer"
+            className="w-full p-5 bg-canvas hover:bg-primary-50 border border-border hover:border-primary-500 text-left rounded-lg transition-all shadow-sm flex items-center justify-between group cursor-pointer"
           >
             <div>
               <h3 className="text-base font-bold text-ink group-hover:text-primary-700 transition-colors">

@@ -66,7 +66,7 @@ function ClubsPage() {
                 <p className="text-sm text-ink-muted">
                   {club.isFinancialMember ? 'Financial Member' : 'Non-Financial Member'}
                 </p>
-                <div className="mt-3 text-xs bg-muted text-ink-muted px-2.5 py-1 rounded inline-block">
+                <div className="mt-3 text-xs bg-muted text-ink-muted px-2.5 py-1 rounded-md inline-block">
                   {club.teamCount} {club.teamCount === 1 ? 'Team' : 'Teams'} · {club.memberCount} {club.memberCount === 1 ? 'Member' : 'Members'}
                 </div>
               </div>

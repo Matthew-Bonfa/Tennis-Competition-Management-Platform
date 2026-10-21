@@ -151,7 +151,7 @@ function PlayerProfile() {
                       {club.name}
                     </Link>
                     {club.isPrimaryClub && (
-                      <span className="text-xs bg-muted text-ink-muted px-2 py-0.5 rounded shrink-0">
+                      <span className="text-xs bg-muted text-ink-muted px-2 py-0.5 rounded-md shrink-0">
                         Primary
                       </span>
                     )}

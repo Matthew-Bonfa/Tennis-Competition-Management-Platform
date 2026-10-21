@@ -98,7 +98,7 @@ function FixtureCard({ fixture }: FixtureCardProps) {
             return (
                 <Link
                     to={`/matches/${fixture.matchId}/enter`}
-                    className="pointer-events-auto inline-flex items-center gap-1 rounded bg-primary-600 px-3 py-1.5 text-sm text-white hover:bg-primary-700"
+                    className="pointer-events-auto inline-flex items-center gap-1 rounded-md bg-primary-600 px-3 py-1.5 text-sm text-white hover:bg-primary-700"
                 >
                     <PencilLine className="h-4 w-4" />
                     Enter result
