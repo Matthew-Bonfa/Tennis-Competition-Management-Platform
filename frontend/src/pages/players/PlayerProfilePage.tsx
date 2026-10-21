@@ -147,7 +147,7 @@ function PlayerProfile() {
               <ul className="space-y-2">
                 {player.clubs.map((club) => (
                   <li key={club.id} className="flex items-center justify-between gap-2">
-                    <Link to={`/clubs/${club.id}`} className="text-primary-700 hover:underline font-medium">
+                    <Link to={`/clubs/${club.id}`} className="text-primary-600 hover:underline font-medium">
                       {club.name}
                     </Link>
                     {club.isPrimaryClub && (
@@ -174,7 +174,7 @@ function PlayerProfile() {
                   <li key={competitionId} className="pb-4 border-b border-border last:border-0 last:pb-0">
                     <Link
                       to={`/competitions/${competitionId}`}
-                      className="text-primary-700 hover:underline font-semibold"
+                      className="text-primary-600 hover:underline font-semibold"
                     >
                       {entries[0].competitionName}
                     </Link>

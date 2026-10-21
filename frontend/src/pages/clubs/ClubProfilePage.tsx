@@ -78,7 +78,7 @@ function ClubProfile() {
               <ul>
                 {club.associations.map((a: any) => (
                   <li key={a.id}>
-                    <Link to={`/associations/${a.id}`} className="text-primary-700 hover:underline">
+                    <Link to={`/associations/${a.id}`} className="text-primary-600 hover:underline">
                       {a.name}
                     </Link>
                   </li>

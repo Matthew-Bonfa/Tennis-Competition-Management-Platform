@@ -3,7 +3,7 @@
 // file updated by Zach Ranson
 
 import { useState, useEffect } from 'react'
-import { Search } from 'lucide-react'
+import { Search, ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 import fetchApi from '../../lib/api'
@@ -47,7 +47,7 @@ function ClubsPage() {
           placeholder="Search clubs by name..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="block w-full pl-10 pr-4 py-3 border border-border-strong rounded-lg shadow-sm bg-surface text-ink focus:outline-none focus:ring-2 focus:ring-primary-500"
+          className="block w-full pl-10 pr-4 py-3 border border-border-strong rounded-lg bg-surface text-ink focus:outline-none focus:ring-2 focus:ring-primary-500"
         />
       </div>
 
@@ -62,7 +62,7 @@ function ClubsPage() {
               className="block bg-surface border border-border rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between"
             >
               <div>
-                <h3 className="text-xl font-semibold text-primary-800 mb-2 text-center">{club.name}</h3>
+                <h3 className="text-xl font-semibold text-primary-800 mb-2">{club.name}</h3>
                 <p className="text-sm text-ink-muted">
                   {club.isFinancialMember ? 'Financial Member' : 'Non-Financial Member'}
                 </p>
@@ -71,8 +71,8 @@ function ClubsPage() {
                 </div>
               </div>
 
-              <div className="mt-6 text-primary-600 text-sm font-medium flex items-center">
-                View Club Profile &rarr;
+              <div className="mt-6 text-primary-600 text-sm font-medium flex items-center gap-1">
+                View Club Profile <ArrowRight className="h-4 w-4" />
               </div>
             </Link>
           ))}

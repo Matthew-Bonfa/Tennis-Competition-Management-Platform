@@ -4,14 +4,13 @@ Branch: `feature/frontend/refactor`
 Scope: visual + structural refactor of `frontend/` only. No functional, route, API, state or
 copy changes. Verification per phase: `npm run build` and `npm run lint` in `frontend/`.
 
-**Next step:** the per-area detail polish, starting with the public pages (Home,
-Competitions +Profile +Section, Clubs +Profile, Associations +Profile +List, Players +Profile
-+Stats, Teams, Admin) — spacing, typography, interactive states, and the not-found states listed
-under 5d. Phases 0–4 and 5a–5d are complete: the build is green, `src/` is restructured, the
-theme tokens are in place **and in use**, every radius and shadow comes from a three-value scale,
-every page shell shares one container that lines up with the header, loading/empty/error states
-render through shared components, and the header is responsive with a working Log in / Log out
-button.
+**Next step:** the next per-area batch — the manage pages (associations, clubs, competitions,
+players). Phases 0–4, 5a–5d and the public-pages pass are complete: the build is green, `src/`
+is restructured, the theme tokens are in place **and in use**, every radius and shadow comes from
+a three-value scale, every page shell shares one container that lines up with the header,
+loading/empty/error states render through shared components, the header is responsive with a
+working Log in / Log out button, and the public pages now share one title scale, one heading
+scale and one card hover.
 
 > **Baseline finding (2026-10-20):** the frontend does **not** build at HEAD `8876186`.
 > `npm run build` (`tsc -b && vite build`) fails with **160 TypeScript errors across 13 files**,
@@ -540,11 +539,32 @@ The numbering is dropped here deliberately. This work is genuinely per-area — 
 typography and interactive states inside each page — and it kept needing to be renumbered as
 cross-cutting passes (5a–5c) were found ahead of it. The areas:
 
-- [ ] Public pages: Home, Competitions(+Profile, Section), Clubs(+Profile),
+- [x] Public pages: Home, Competitions(+Profile, Section), Clubs(+Profile),
       Associations(+Profile, List), Players(+Profile, Stats), Teams, Admin
 - [ ] Manage pages: associations, clubs, competitions, players
 - [ ] `register-team/` — the `my-10 p-8` cards, and the `←` `→` text glyphs → lucide icons
 - [ ] `match-results/` — scoresheet, rubber rows, status panel
+
+##### Public pages — one commit ✅
+
+Twelve of the fifteen files changed. `HomePage`, `AdminPage`, `TeamRecordCard` and
+`PlayerStats` were already consistent and were left alone; the two stats cards in particular
+agree with each other down to the `tracking-wider` on their headline labels.
+
+| What | Before | After |
+| --- | --- | --- |
+| Page title | `text-3xl font-bold` on ten pages, but `text-2xl font-bold tracking-tight` on Associations and `text-2xl sm:text-3xl … tracking-tight` on the association profile | `text-3xl font-bold text-ink` everywhere except the Home hero, which is a landing headline and keeps `text-4xl font-extrabold sm:text-5xl` |
+| Section heading | `text-xl font-bold` on five pages, `text-lg font-semibold` on the association profile's two boxes | `text-xl font-bold text-ink` |
+| Card hover | grids: `hover:shadow-md transition-shadow`. Both association files: `hover:border-primary-300 hover:shadow-md transition-all duration-200` plus a decorative `group-hover:translate-x-*` on the chevron | top-level cards lift (`hover:shadow-md transition-shadow`); rows **inside** a card change background (`hover:bg-surface transition-colors`) |
+| Link colour | `text-primary-600` (75 uses) vs `text-primary-700` (20) | `text-primary-600` for link text. Pills keep `text-primary-700`, where the darker shade is doing contrast work against `bg-primary-50` |
+| Card call to action | `View X Profile &rarr;`, the arrow as text | the same words plus a lucide `ArrowRight`, as the register-team batch already planned |
+| Token opacity | `border-border/80`, `/60`, `/50`, `bg-canvas/80`, `/70` — every one of them in the two association files | plain `border-border` / `bg-canvas` |
+| Odds and ends | `border-2 border-dashed`; `rounded-full` on the count chips; `shadow-sm` on the three search inputs; a stray `text-center` on `ClubsPage`'s card title; a dead `group-hover:text-ink` on text that is already `text-ink` | `border border-dashed`; `rounded-md` to match every other meta chip; no input shadow, matching every form input in the app; removed |
+
+The two association files were the whole outlier set — they are the only place in `src/` using
+token opacity modifiers, `transition-all`, `duration-200` or a decorative transform, and the only
+pages not on the `text-3xl`/`text-xl` scale. Worth knowing for the remaining batches: that style
+came in with `47c4b11`, not with the original pages.
 
 ### Phase 6 — Responsive and accessibility sweep
 - [ ] Check 320 / 375 / 768 / 1024 / 1440px, no horizontal page scroll at any width
@@ -582,10 +602,25 @@ cross-cutting passes (5a–5c) were found ahead of it. The areas:
 - **Google Fonts** stays as a remote `@import`; Kanit is dropped, Inter is kept.
 - **No frontend tests exist.** Verification is build + lint. The backend e2e suite is
   destructive and unrelated, so it is not run.
-- **CSS `@import` ordering warning at build.** Vite reports `@import rules must precede all
-  rules aside from @charset and @layer statements` — the Google Fonts `@import` sits below
-  `:root` in the stylesheet. Harmless today, and resolved in Phase 2 when the global CSS is
-  rewritten.
+- **`AssociationProfilePage` has no loading state, so it flashes "Association not found."** It
+  has no `loading` flag at all — `association` starts `undefined`, so the not-found branch renders
+  on the first paint of every visit before the real card replaces it. **Not fixed:** adding the
+  flag is a state-logic change, which the brief rules out. The not-found return itself *was*
+  fixed — it had no container and no back link, so the message sat flush against the viewport
+  edge inside a bare `p-8`; it now matches the other four profile pages.
+- **The three grid pages skip a heading level.** `CompetitionsPage`, `ClubsPage` and
+  `PlayersPage` go `h1` → `h3` with nothing between, because their card titles are `h3`. Those
+  should be `h2`. Left for Phase 6, which owns semantic HTML — it is a tag change with no visual
+  effect, so it belongs with the rest of the a11y sweep rather than here.
+- **`ClubProfilePage`'s member badge is positioned against its own title.** The badge is
+  `absolute top-0 right-0` inside a `text-center` block, and the `h1` carries `pr-28 sm:pr-0` to
+  keep clear of it — so on a narrow screen the title is centred inside a box that is not the
+  card. Left for Phase 6, where the 320px pass can judge it against the real layout instead of
+  guessing.
+- **CSS `@import` ordering warning at build — resolved.** The earlier note here said Vite warned
+  that `@import` rules must precede all other rules, because the Google Fonts `@import` sat below
+  `:root`. The Phase 2 stylesheet rewrite put it back at the top; the current build prints no
+  such warning.
 
 ## Decisions log
 
@@ -679,3 +714,28 @@ cross-cutting passes (5a–5c) were found ahead of it. The areas:
   presentation for a different job — a message beside the field that failed, not a full-page
   state — so it is left for the per-area passes, where the form context is visible and the
   question of whether the bare ones should become banners can be judged per form.
+- **The public-pages batch settles scales and states, and changes no layout.** Two title sizes
+  were in use for the same job (`text-3xl` and `text-2xl tracking-tight`), two section-heading
+  sizes (`text-xl font-bold` and `text-lg font-semibold`), and two link colours (`primary-600`,
+  75 uses, and `primary-700`, 20). Each was resolved toward the majority rather than toward a new
+  value, so the batch moves the outliers and leaves the bulk of the app untouched. `tracking-tight`
+  is gone: it appeared on exactly the two association pages and nowhere else.
+- **Cards and in-card rows get different hover treatments, deliberately.** A card that sits on
+  the canvas lifts with a shadow; a row that already sits inside a card does not, because a
+  shadow on a row inside a card reads as a mistake. Those rows change background instead
+  (`hover:bg-surface`). Both use a property-specific transition at Tailwind's default 150ms, which
+  is the brief's number — the association files' `transition-all duration-200` was both broader
+  and slower than everything else in the app.
+- **The decorative hover transform is removed, not kept as a nicety.** `group-hover:translate-x-1`
+  on a chevron is animation that carries no information — the chevron is already there and
+  already turns blue on hover. The brief rules out decorative animation, so it went. The colour
+  change stays, which is what actually signals the row is clickable.
+- **`&rarr;` becomes `ArrowRight` in the public cards too.** The approved plan had this for the
+  register-team glyphs only, but the same text arrow is used as a card's call to action on all
+  four public surfaces, and `AssociationsList` already uses a lucide chevron for the same job. The
+  words are unchanged; only the arrow stops being a text character.
+- **Opacity modifiers on theme tokens are not used anywhere now.** `border-border/80` and friends
+  appeared only in the two association files. The palette already has `border` and
+  `border-strong` for exactly this, and a half-opacity border is a third value nobody chose — it
+  was a side effect of writing `border-border/80` by habit. Plain tokens keep the palette the
+  only place a colour decision lives.

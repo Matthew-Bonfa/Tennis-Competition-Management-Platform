@@ -68,8 +68,8 @@ function SectionPage() {
 
     if (notFound) {
         return (
-            <div className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8 text-center text-ink-muted">
-                Section not found.
+            <div className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8 text-center">
+                <p className="text-ink-muted">Section not found.</p>
             </div>
         );
     }

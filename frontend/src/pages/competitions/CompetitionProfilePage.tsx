@@ -4,7 +4,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Trophy, Shield, ArrowLeft, Calendar, Tag } from 'lucide-react';
+import { Trophy, Shield, ArrowLeft, Calendar, Tag, ArrowRight } from 'lucide-react';
 import LoadingState from '../../components/ui/LoadingState';
 import ErrorState from '../../components/ui/ErrorState';
 
@@ -148,7 +148,7 @@ function CompetitionProfile() {
               to={`/associations/${competition.association.id}`}
               className="inline-flex items-center gap-1 text-sm font-medium text-primary-600 hover:underline mt-4"
             >
-              View Parent Association Profile &rarr;
+              View Parent Association Profile <ArrowRight className="h-4 w-4" />
             </Link>
           )}
         </div>

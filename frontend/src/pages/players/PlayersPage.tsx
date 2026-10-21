@@ -2,7 +2,7 @@
 // search/list implementation added — see PlayerProfile.tsx for the detail page
 
 import { useState, useEffect } from 'react'
-import { Search, User } from 'lucide-react'
+import { Search, User, ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 import fetchApi from '../../lib/api'
@@ -63,7 +63,7 @@ function PlayersPage() {
           placeholder="Search players by name or player code..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="block w-full pl-10 pr-4 py-3 border border-border-strong rounded-lg shadow-sm bg-surface text-ink focus:outline-none focus:ring-2 focus:ring-primary-500"
+          className="block w-full pl-10 pr-4 py-3 border border-border-strong rounded-lg bg-surface text-ink focus:outline-none focus:ring-2 focus:ring-primary-500"
         />
       </div>
 
@@ -86,8 +86,8 @@ function PlayersPage() {
               <div className="mt-3 text-xs bg-muted text-ink-muted px-2.5 py-1 rounded-md inline-block">
                 {player.personCode}
               </div>
-              <div className="mt-6 text-primary-600 text-sm font-medium flex items-center">
-                View Player Profile &rarr;
+              <div className="mt-6 text-primary-600 text-sm font-medium flex items-center gap-1">
+                View Player Profile <ArrowRight className="h-4 w-4" />
               </div>
             </Link>
           ))}

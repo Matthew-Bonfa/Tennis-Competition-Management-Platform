@@ -5,7 +5,7 @@
 // CHANGED: added useEffect alongside useState, for running the fetch once on load
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, Trophy, Shield } from 'lucide-react';
+import { Search, Trophy, Shield, ArrowRight } from 'lucide-react';
 import LoadingState from '../../components/ui/LoadingState';
 import EmptyState from '../../components/ui/EmptyState';
 import ErrorState from '../../components/ui/ErrorState';
@@ -88,7 +88,7 @@ function CompetitionsPage() {
             placeholder="Search competitions by name or association..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="block w-full pl-10 pr-4 py-3 border border-border-strong rounded-lg shadow-sm bg-surface text-ink focus:outline-none focus:ring-2 focus:ring-primary-500"
+            className="block w-full pl-10 pr-4 py-3 border border-border-strong rounded-lg bg-surface text-ink focus:outline-none focus:ring-2 focus:ring-primary-500"
           />
         </div>
 
@@ -96,7 +96,7 @@ function CompetitionsPage() {
         <select
           value={selectedAssociationId}
           onChange={(e) => setSelectedAssociationId(e.target.value)}
-          className="border border-border-strong rounded-lg shadow-sm bg-surface text-ink px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
+          className="border border-border-strong rounded-lg bg-surface text-ink px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
         >
           <option value="">All Associations</option>
           {associations.map(assoc => (
@@ -128,8 +128,8 @@ function CompetitionsPage() {
                 )}
               </div>
 
-              <div className="mt-6 text-primary-600 text-sm font-medium flex items-center">
-                View Competition Profile &rarr;
+              <div className="mt-6 text-primary-600 text-sm font-medium flex items-center gap-1">
+                View Competition Profile <ArrowRight className="h-4 w-4" />
               </div>
             </Link>
           ))}

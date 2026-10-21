@@ -43,7 +43,7 @@ function AssociationsList(){
                 <Link 
                 key={assoc.id}
                 to={`/associations/${assoc.id}`}
-                className="group flex items-center justify-between p-4 bg-surface border border-border/80 rounded-lg shadow-sm hover:border-primary-300 hover:shadow-md transition-all duration-200"
+                className="group flex items-center justify-between p-4 bg-surface border border-border rounded-lg shadow-sm hover:shadow-md transition-shadow"
                 >
                 {/* Left side: Icon + Association Name & Contact */}
                 <div className="flex items-center gap-4 min-w-0">
@@ -59,9 +59,9 @@ function AssociationsList(){
                 </div>
 
                 {/* Right side: Action link with sliding arrow */}
-                <div className="flex items-center gap-2 text-xs font-medium text-primary-600 shrink-0 ml-4">
+                <div className="flex items-center gap-2 text-sm font-medium text-primary-600 shrink-0 ml-4">
                     <span className="hidden sm:inline">View Profile</span>
-                    <ChevronRight className="h-4 w-4 text-ink-subtle group-hover:text-primary-600 group-hover:translate-x-1 transition-all" />
+                    <ChevronRight className="h-4 w-4 text-ink-subtle group-hover:text-primary-600 transition-colors" />
                 </div>
                 </Link>
             ))}

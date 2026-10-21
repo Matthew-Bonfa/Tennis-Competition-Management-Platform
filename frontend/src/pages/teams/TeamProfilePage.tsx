@@ -74,9 +74,9 @@ function TeamProfile() {
       <div className="bg-surface border border-border rounded-lg p-8 shadow-sm mb-6 text-center">
         <h1 className="text-3xl font-bold text-ink">{team.name}</h1>
         <p className="text-sm text-ink-subtle mt-2">
-          <Link to={`/clubs/${team.clubId}`} className="text-primary-700 hover:underline">{team.clubName}</Link>
+          <Link to={`/clubs/${team.clubId}`} className="text-primary-600 hover:underline">{team.clubName}</Link>
           {' · '}
-          <Link to={`/sections/${team.sectionId}`} className="text-primary-700 hover:underline">
+          <Link to={`/sections/${team.sectionId}`} className="text-primary-600 hover:underline">
             {team.competitionName} &middot; {team.sectionName}
           </Link>
         </p>
@@ -95,7 +95,7 @@ function TeamProfile() {
             <ul className="space-y-2">
               {team.players.map((player) => (
                 <li key={player.personId}>
-                  <Link to={`/players/${player.personId}`} className="text-primary-700 hover:underline font-medium">
+                  <Link to={`/players/${player.personId}`} className="text-primary-600 hover:underline font-medium">
                     {player.firstName} {player.lastName}
                   </Link>
                 </li>
