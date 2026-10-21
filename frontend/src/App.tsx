@@ -42,7 +42,7 @@ import ReviewRequests from './pages/register-team/ReviewRequestsPage';
 export default function App() {
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
+      <div className="min-h-screen bg-canvas flex flex-col font-sans">
         <Header />
         <main className="flex-grow">
           <Routes>
@@ -60,12 +60,12 @@ export default function App() {
                 isAuthenticated() && isAdmin() ? (
                   <AdminPage />
                 ) : (
-                  <div className="flex items-center justify-center h-screen bg-gray-50 px-4">
-                    <div className="w-full max-w-md space-y-6 bg-white p-8 rounded-lg shadow">
-                      <h2 className="text-2xl font-bold text-gray-900">
+                  <div className="flex items-center justify-center h-screen bg-canvas px-4">
+                    <div className="w-full max-w-md space-y-6 bg-surface p-8 rounded-lg shadow">
+                      <h2 className="text-2xl font-bold text-ink">
                         {isAuthenticated() ? 'Access Denied' : 'Please Sign In'}
                       </h2>
-                      <p className="mt-1 text-sm text-gray-600">
+                      <p className="mt-1 text-sm text-ink-muted">
                         {isAuthenticated()
                           ? 'You do not have permission to access the admin page.'
                           : 'Please sign in to access the admin page.'}
@@ -74,7 +74,7 @@ export default function App() {
                         <div className="mt-6">
                           <button
                             onClick={() => window.location.href = '/login'}
-                            className="w-full rounded bg-blue-600 py-2 font-medium text-white hover:bg-blue-700"
+                            className="w-full rounded bg-primary-600 py-2 font-medium text-white hover:bg-primary-700"
                           >
                             Sign In
                           </button>

@@ -85,9 +85,9 @@ function FixtureCard({ fixture }: FixtureCardProps) {
             return (
                 <>
                     {winner !== 'draw' && (
-                        <span className="font-semibold text-sky-700">{winnerName} WON</span>
+                        <span className="font-semibold text-primary-700">{winnerName} WON</span>
                     )}
-                    <span className="bg-gray-100 text-gray-900 font-semibold px-3 py-1 rounded-full text-sm">
+                    <span className="bg-muted text-ink font-semibold px-3 py-1 rounded-full text-sm">
                         {homeRubbersWon}–{awayRubbersWon}
                     </span>
                 </>
@@ -98,7 +98,7 @@ function FixtureCard({ fixture }: FixtureCardProps) {
             return (
                 <Link
                     to={`/matches/${fixture.matchId}/enter`}
-                    className="pointer-events-auto inline-flex items-center gap-1 rounded bg-sky-600 px-3 py-1.5 text-sm text-white hover:bg-sky-700"
+                    className="pointer-events-auto inline-flex items-center gap-1 rounded bg-primary-600 px-3 py-1.5 text-sm text-white hover:bg-primary-700"
                 >
                     <PencilLine className="h-4 w-4" />
                     Enter result
@@ -112,33 +112,33 @@ function FixtureCard({ fixture }: FixtureCardProps) {
                 day: 'numeric',
                 month: 'short',
             });
-            return <span className="text-gray-500 text-sm">{dateLabel}</span>;
+            return <span className="text-ink-subtle text-sm">{dateLabel}</span>;
         }
 
-        return <span className="text-gray-500 text-sm capitalize">{STATUS_LABELS[fixture.status] ?? fixture.status}</span>;
+        return <span className="text-ink-subtle text-sm capitalize">{STATUS_LABELS[fixture.status] ?? fixture.status}</span>;
     }
 
     return (
-        <div className="relative flex items-center justify-between px-4 py-4 border-b border-gray-100 hover:bg-gray-50 transition-colors">
+        <div className="relative flex items-center justify-between px-4 py-4 border-b border-border hover:bg-canvas transition-colors">
             {/* Full-card overlay link to the match. Sits behind the team-name
                 links (z-0 vs z-10) so clicking a name goes to that team and
                 clicking anywhere else goes to the match — nesting an <a>
                 inside this one would be invalid HTML and fire both navigations. */}
             <Link to={`/matches/${fixture.matchId}`} className="absolute inset-0 z-0" aria-label="View match result" />
 
-            <div className="relative z-10 text-gray-900">
-                <Link to={`/teams/${fixture.homeTeam.id}`} className="hover:underline hover:text-sky-600">
+            <div className="relative z-10 text-ink">
+                <Link to={`/teams/${fixture.homeTeam.id}`} className="hover:underline hover:text-primary-600">
                     {fixture.homeTeam.name}
                 </Link>
-                <span className="text-gray-400 mx-1">v</span>
-                <Link to={`/teams/${fixture.awayTeam.id}`} className="hover:underline hover:text-sky-600">
+                <span className="text-ink-subtle mx-1">v</span>
+                <Link to={`/teams/${fixture.awayTeam.id}`} className="hover:underline hover:text-primary-600">
                     {fixture.awayTeam.name}
                 </Link>
             </div>
 
             <div className="relative z-10 flex items-center gap-3 pointer-events-none">
                 {renderStatus()}
-                <ChevronRight className="h-4 w-4 text-gray-400" />
+                <ChevronRight className="h-4 w-4 text-ink-subtle" />
             </div>
         </div>
     );

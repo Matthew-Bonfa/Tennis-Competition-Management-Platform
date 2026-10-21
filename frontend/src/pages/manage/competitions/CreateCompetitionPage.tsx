@@ -47,16 +47,16 @@ function CreateCompetitionPage() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-gray-900 mb-6">Create New Competition</h1>
+      <h1 className="text-3xl font-bold text-ink mb-6">Create New Competition</h1>
 
-      <form onSubmit={handleSubmit} className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm space-y-4">
+      <form onSubmit={handleSubmit} className="bg-surface border border-border rounded-lg p-6 shadow-sm space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Association</label>
+          <label className="block text-sm font-medium text-ink-muted mb-1">Association</label>
           <select
             value={associationId}
             onChange={(e) => setAssociationId(e.target.value)}
             required
-            className="block w-full border border-gray-300 rounded-lg bg-white text-gray-900 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sky-500"
+            className="block w-full border border-border-strong rounded-lg bg-surface text-ink px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
           >
             <option value="">Select an association...</option>
             {associations.map(assoc => (
@@ -66,22 +66,22 @@ function CreateCompetitionPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Competition name</label>
+          <label className="block text-sm font-medium text-ink-muted mb-1">Competition name</label>
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
-            className="block w-full border border-gray-300 rounded-lg bg-white text-gray-900 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sky-500"
+            className="block w-full border border-border-strong rounded-lg bg-surface text-ink px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
           />
         </div>
 
-        {error && <p className="text-red-600 text-sm">{error}</p>}
+        {error && <p className="text-danger text-sm">{error}</p>}
 
         <button
           type="submit"
           disabled={saving || !name.trim() || !associationId}
-          className="bg-sky-600 text-white font-medium px-6 py-3 rounded-lg hover:bg-sky-700 disabled:opacity-50"
+          className="bg-primary-600 text-white font-medium px-6 py-3 rounded-lg hover:bg-primary-700 disabled:opacity-50"
         >
           {saving ? 'Saving...' : 'Save'}
         </button>

@@ -154,7 +154,7 @@ function problemWith(v: FormValues): string | null {
 }
 
 const inputClass =
-  'block w-full border border-gray-300 rounded-lg bg-white text-gray-900 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500';
+  'block w-full border border-border-strong rounded-lg bg-surface text-ink px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500';
 
 function NumberField({
   label,
@@ -169,9 +169,9 @@ function NumberField({
 }) {
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">
+      <label className="block text-sm font-medium text-ink-muted mb-1">
         {label}
-        {optional && <span className="text-gray-400"> (optional)</span>}
+        {optional && <span className="text-ink-subtle"> (optional)</span>}
       </label>
       <input
         type="number"
@@ -266,23 +266,23 @@ function FormatForm({ initial = null, onSaved, onCancel }: FormatFormProps) {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* The name is generated from the rubbers */}
-      <div className="rounded-lg bg-sky-50 border border-sky-200 p-3">
-        <p className="text-xs text-sky-700">Name (generated from the rubbers)</p>
-        <p className="font-semibold text-sky-900">
+      <div className="rounded-lg bg-primary-50 border border-primary-200 p-3">
+        <p className="text-xs text-primary-700">Name (generated from the rubbers)</p>
+        <p className="font-semibold text-primary-900">
           {values.rubbers.length > 0 ? formatNameFromRubbers(values.rubbers) : 'Add a rubber'}
         </p>
       </div>
 
       {/* Rubbers */}
       <div>
-        <h3 className="text-sm font-semibold text-gray-900 mb-2">Rubbers (in score sheet order)</h3>
+        <h3 className="text-sm font-semibold text-ink mb-2">Rubbers (in score sheet order)</h3>
         <div className="space-y-2">
           {values.rubbers.map((type, index) => (
             <div
               key={index}
-              className="flex items-center gap-3 border border-gray-200 rounded-lg p-3 bg-gray-50"
+              className="flex items-center gap-3 border border-border rounded-lg p-3 bg-canvas"
             >
-              <span className="text-sm font-medium text-gray-600 w-20 shrink-0">
+              <span className="text-sm font-medium text-ink-muted w-20 shrink-0">
                 Rubber {index + 1}
               </span>
               <select
@@ -300,7 +300,7 @@ function FormatForm({ initial = null, onSaved, onCancel }: FormatFormProps) {
                 type="button"
                 onClick={() => removeRubber(index)}
                 disabled={values.rubbers.length === 1}
-                className="text-sm text-red-600 hover:underline disabled:opacity-40 disabled:no-underline shrink-0"
+                className="text-sm text-danger hover:underline disabled:opacity-40 disabled:no-underline shrink-0"
               >
                 Remove
               </button>
@@ -310,7 +310,7 @@ function FormatForm({ initial = null, onSaved, onCancel }: FormatFormProps) {
         <button
           type="button"
           onClick={addRubber}
-          className="mt-2 text-sm font-medium text-sky-600 hover:underline"
+          className="mt-2 text-sm font-medium text-primary-600 hover:underline"
         >
           + Add rubber
         </button>
@@ -318,7 +318,7 @@ function FormatForm({ initial = null, onSaved, onCancel }: FormatFormProps) {
 
       {/* Teams */}
       <div>
-        <h3 className="text-sm font-semibold text-gray-900 mb-2">Teams</h3>
+        <h3 className="text-sm font-semibold text-ink mb-2">Teams</h3>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <NumberField
             label="Minimum players"
@@ -344,10 +344,10 @@ function FormatForm({ initial = null, onSaved, onCancel }: FormatFormProps) {
           />
         </div>
         <div className="mt-3">
-          <p className="block text-sm font-medium text-gray-700 mb-1">Genders allowed</p>
+          <p className="block text-sm font-medium text-ink-muted mb-1">Genders allowed</p>
           <div className="flex gap-4">
             {GENDER_OPTIONS.map((option) => (
-              <label key={option.value} className="flex items-center gap-2 text-sm text-gray-700">
+              <label key={option.value} className="flex items-center gap-2 text-sm text-ink-muted">
                 <input
                   type="checkbox"
                   checked={values.permittedGenders.includes(option.value)}
@@ -362,7 +362,7 @@ function FormatForm({ initial = null, onSaved, onCancel }: FormatFormProps) {
 
       {/* Scoring */}
       <div>
-        <h3 className="text-sm font-semibold text-gray-900 mb-2">Scoring</h3>
+        <h3 className="text-sm font-semibold text-ink mb-2">Scoring</h3>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <NumberField
             label="Sets to win"
@@ -396,7 +396,7 @@ function FormatForm({ initial = null, onSaved, onCancel }: FormatFormProps) {
             onChange={(v) => setField('pointsPerMatchWin', v)}
           />
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Forfeit scoreline</label>
+            <label className="block text-sm font-medium text-ink-muted mb-1">Forfeit scoreline</label>
             <input
               type="text"
               value={values.forfeitScoreline}
@@ -405,7 +405,7 @@ function FormatForm({ initial = null, onSaved, onCancel }: FormatFormProps) {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Winner decided by</label>
+            <label className="block text-sm font-medium text-ink-muted mb-1">Winner decided by</label>
             <select
               value={values.winnerDeterminedBy}
               onChange={(e) => setField('winnerDeterminedBy', e.target.value)}
@@ -419,7 +419,7 @@ function FormatForm({ initial = null, onSaved, onCancel }: FormatFormProps) {
             </select>
           </div>
         </div>
-        <label className="mt-3 flex items-center gap-2 text-sm text-gray-700">
+        <label className="mt-3 flex items-center gap-2 text-sm text-ink-muted">
           <input
             type="checkbox"
             checked={values.finalSetMatchTiebreak}
@@ -431,23 +431,23 @@ function FormatForm({ initial = null, onSaved, onCancel }: FormatFormProps) {
 
       {/* Messages */}
       {unchanged && (
-        <p className="text-sm text-gray-500">Change at least one setting to save a new format.</p>
+        <p className="text-sm text-ink-subtle">Change at least one setting to save a new format.</p>
       )}
-      {!unchanged && problem && <p className="text-sm text-gray-500">{problem}</p>}
-      {error && <p className="text-red-600 text-sm">{error}</p>}
+      {!unchanged && problem && <p className="text-sm text-ink-subtle">{problem}</p>}
+      {error && <p className="text-danger text-sm">{error}</p>}
 
       <div className="flex justify-end gap-3">
         <button
           type="button"
           onClick={onCancel}
-          className="text-gray-700 border border-gray-300 font-medium px-5 py-2 rounded-lg hover:bg-gray-50"
+          className="text-ink-muted border border-border-strong font-medium px-5 py-2 rounded-lg hover:bg-canvas"
         >
           Cancel
         </button>
         <button
           type="submit"
           disabled={saving || !!problem || unchanged}
-          className="bg-sky-600 text-white font-medium px-5 py-2 rounded-lg hover:bg-sky-700 disabled:opacity-50"
+          className="bg-primary-600 text-white font-medium px-5 py-2 rounded-lg hover:bg-primary-700 disabled:opacity-50"
         >
           {saving ? 'Saving...' : initial ? 'Save as new format' : 'Save format'}
         </button>

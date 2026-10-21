@@ -77,24 +77,24 @@ function UpcomingMatches({ teams }: UpcomingMatchesProps) {
           : null;
 
         return (
-          <div key={team.teamId} className="bg-white border border-gray-200 rounded-lg p-5 shadow-sm text-center">
-            <div className="text-xs uppercase tracking-wider text-gray-500 font-semibold mb-2">
+          <div key={team.teamId} className="bg-surface border border-border rounded-lg p-5 shadow-sm text-center">
+            <div className="text-xs uppercase tracking-wider text-ink-subtle font-semibold mb-2">
               {team.teamName}
             </div>
             {loading ? (
-              <p className="text-gray-400 text-sm">Loading...</p>
+              <p className="text-ink-subtle text-sm">Loading...</p>
             ) : fixture ? (
-              <Link to={`/matches/${fixture.matchId}`} className="block hover:text-sky-600">
-                <div className="flex items-center justify-center gap-1.5 text-gray-900 font-semibold">
-                  <CalendarClock className="h-4 w-4 text-sky-600 shrink-0" />
+              <Link to={`/matches/${fixture.matchId}`} className="block hover:text-primary-600">
+                <div className="flex items-center justify-center gap-1.5 text-ink font-semibold">
+                  <CalendarClock className="h-4 w-4 text-primary-600 shrink-0" />
                   vs {opponent}
                 </div>
-                <p className="text-sm text-gray-500 mt-1">
+                <p className="text-sm text-ink-subtle mt-1">
                   Round {fixture.roundNumber} &middot; {new Date(fixture.matchDate).toLocaleDateString()}
                 </p>
               </Link>
             ) : (
-              <p className="text-gray-400 text-sm">No upcoming match scheduled</p>
+              <p className="text-ink-subtle text-sm">No upcoming match scheduled</p>
             )}
           </div>
         );

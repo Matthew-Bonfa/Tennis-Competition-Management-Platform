@@ -58,62 +58,62 @@ function CreateSeasonPage() {
     <div className="max-w-2xl mx-auto px-4 py-8">
       <Link
         to={`/manage-competitions/${id}`}
-        className="inline-flex items-center gap-1 text-sm text-gray-600 hover:text-sky-600 mb-6 transition-colors"
+        className="inline-flex items-center gap-1 text-sm text-ink-muted hover:text-primary-600 mb-6 transition-colors"
       >
         <ArrowLeft className="h-4 w-4" /> Back to Manage Competition
       </Link>
 
-      <h1 className="text-3xl font-bold text-gray-900 mb-1">Create New Season</h1>
+      <h1 className="text-3xl font-bold text-ink mb-1">Create New Season</h1>
       {competition && (
-        <p className="text-gray-600 mb-6">
+        <p className="text-ink-muted mb-6">
           {competition.association?.name} &middot; {competition.name}
         </p>
       )}
 
-      <form onSubmit={handleSubmit} className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm space-y-4">
+      <form onSubmit={handleSubmit} className="bg-surface border border-border rounded-lg p-6 shadow-sm space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Season name</label>
+          <label className="block text-sm font-medium text-ink-muted mb-1">Season name</label>
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="e.g. Summer 2027"
             required
-            className="block w-full border border-gray-300 rounded-lg bg-white text-gray-900 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sky-500"
+            className="block w-full border border-border-strong rounded-lg bg-surface text-ink px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Start date</label>
+          <label className="block text-sm font-medium text-ink-muted mb-1">Start date</label>
           <input
             type="date"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
             required
-            className="block w-full border border-gray-300 rounded-lg bg-white text-gray-900 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sky-500"
+            className="block w-full border border-border-strong rounded-lg bg-surface text-ink px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">End date</label>
+          <label className="block text-sm font-medium text-ink-muted mb-1">End date</label>
           <input
             type="date"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
             required
-            className="block w-full border border-gray-300 rounded-lg bg-white text-gray-900 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sky-500"
+            className="block w-full border border-border-strong rounded-lg bg-surface text-ink px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
           />
         </div>
 
         {datesInvalid && (
-          <p className="text-red-600 text-sm">The end date can't be before the start date.</p>
+          <p className="text-danger text-sm">The end date can't be before the start date.</p>
         )}
-        {error && <p className="text-red-600 text-sm">{error}</p>}
+        {error && <p className="text-danger text-sm">{error}</p>}
 
         <button
           type="submit"
           disabled={saving || !name.trim() || !startDate || !endDate || datesInvalid}
-          className="bg-sky-600 text-white font-medium px-6 py-3 rounded-lg hover:bg-sky-700 disabled:opacity-50"
+          className="bg-primary-600 text-white font-medium px-6 py-3 rounded-lg hover:bg-primary-700 disabled:opacity-50"
         >
           {saving ? 'Saving...' : 'Save'}
         </button>

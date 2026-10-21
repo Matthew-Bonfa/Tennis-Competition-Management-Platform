@@ -25,15 +25,15 @@ function ManageCompetitionsPage() {
   }, []);
 
   if (loading) return <LoadingState />;
-  if (error) return <div className="text-center py-12 text-red-600">Error: {error}</div>;
+  if (error) return <div className="text-center py-12 text-danger">Error: {error}</div>;
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Manage Competitions</h1>
+        <h1 className="text-3xl font-bold text-ink">Manage Competitions</h1>
         <Link
           to="/manage-competitions/create-new-competition"
-          className="bg-sky-600 text-white font-medium px-4 py-2 rounded-lg hover:bg-sky-700"
+          className="bg-primary-600 text-white font-medium px-4 py-2 rounded-lg hover:bg-primary-700"
         >
           + Create new competition
         </Link>
@@ -45,11 +45,11 @@ function ManageCompetitionsPage() {
             <Link
               key={comp.id}
               to={`/manage-competitions/${comp.id}`}
-              className="block bg-white border border-gray-200 rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow"
+              className="block bg-surface border border-border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow"
             >
-              <p className="font-semibold text-sky-800">{comp.name}</p>
+              <p className="font-semibold text-primary-800">{comp.name}</p>
               {comp.association?.name && (
-                <p className="text-sm text-gray-600">{comp.association.name}</p>
+                <p className="text-sm text-ink-muted">{comp.association.name}</p>
               )}
             </Link>
           ))}

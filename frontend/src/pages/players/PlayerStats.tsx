@@ -30,9 +30,9 @@ function PlayerStats({ record }: PlayerStatsProps) {
   const percentage = winPercentage(totals);
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-      <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center justify-center gap-2">
-        <BarChart3 className="h-5 w-5 text-sky-600" /> Win/Loss Record
+    <div className="bg-surface border border-border rounded-lg p-6 shadow-sm">
+      <h2 className="text-xl font-bold text-ink mb-4 flex items-center justify-center gap-2">
+        <BarChart3 className="h-5 w-5 text-primary-600" /> Win/Loss Record
       </h2>
 
       {/* Filter row: year dropdown + match type segmented control */}
@@ -40,7 +40,7 @@ function PlayerStats({ record }: PlayerStatsProps) {
         <select
           value={year}
           onChange={(e) => setYear(e.target.value === 'all' ? 'all' : Number(e.target.value))}
-          className="border border-gray-300 rounded-lg text-sm px-3 py-1.5 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-sky-500"
+          className="border border-border-strong rounded-lg text-sm px-3 py-1.5 bg-surface text-ink focus:outline-none focus:ring-2 focus:ring-primary-500"
         >
           <option value="all">All years</option>
           {record.years.map((y) => (
@@ -53,10 +53,10 @@ function PlayerStats({ record }: PlayerStatsProps) {
         {/* Hidden entirely for a player who's only ever played one match
             type — there's nothing to toggle between. */}
         {record.rubberTypes.length > 1 && (
-          <div className="inline-flex rounded-lg border border-gray-300 overflow-hidden text-sm">
+          <div className="inline-flex rounded-lg border border-border-strong overflow-hidden text-sm">
             <button
               onClick={() => setMatchType('all')}
-              className={`px-3 py-1.5 font-medium ${matchType === 'all' ? 'bg-sky-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
+              className={`px-3 py-1.5 font-medium ${matchType === 'all' ? 'bg-primary-600 text-white' : 'bg-surface text-ink-muted hover:bg-canvas'}`}
             >
               All
             </button>
@@ -64,7 +64,7 @@ function PlayerStats({ record }: PlayerStatsProps) {
               <button
                 key={type}
                 onClick={() => setMatchType(type)}
-                className={`px-3 py-1.5 font-medium border-l border-gray-300 ${matchType === type ? 'bg-sky-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
+                className={`px-3 py-1.5 font-medium border-l border-border-strong ${matchType === type ? 'bg-primary-600 text-white' : 'bg-surface text-ink-muted hover:bg-canvas'}`}
               >
                 {RUBBER_TYPE_LABELS[type]}
               </button>
@@ -74,20 +74,20 @@ function PlayerStats({ record }: PlayerStatsProps) {
       </div>
 
       {totals.played === 0 ? (
-        <p className="text-gray-500 text-sm py-6 text-center">
+        <p className="text-ink-subtle text-sm py-6 text-center">
           No results for this filter.
         </p>
       ) : (
         <>
           {/* Headline: won-lost and win percentage */}
-          <div className="flex items-end justify-center gap-4 mb-6 pb-6 border-b border-gray-100">
+          <div className="flex items-end justify-center gap-4 mb-6 pb-6 border-b border-border">
             <div className="text-center">
-              <div className="text-4xl font-bold text-gray-900">
+              <div className="text-4xl font-bold text-ink">
                 {totals.won}&ndash;{totals.lost}
               </div>
-              <div className="text-xs uppercase tracking-wider text-gray-500 mt-1">Won&ndash;Lost</div>
+              <div className="text-xs uppercase tracking-wider text-ink-subtle mt-1">Won&ndash;Lost</div>
             </div>
-            <div className="bg-sky-50 text-sky-700 font-semibold px-4 py-2 rounded-full text-sm border border-sky-200 mb-1">
+            <div className="bg-primary-50 text-primary-700 font-semibold px-4 py-2 rounded-full text-sm border border-primary-200 mb-1">
               {percentage}% win rate
             </div>
           </div>
@@ -95,20 +95,20 @@ function PlayerStats({ record }: PlayerStatsProps) {
           {/* Secondary stat tiles */}
           <div className="grid grid-cols-3 gap-4 mb-6 text-center">
             <div>
-              <div className="text-lg font-semibold text-gray-900">{totals.played}</div>
-              <div className="text-xs uppercase tracking-wide text-gray-500">Played</div>
+              <div className="text-lg font-semibold text-ink">{totals.played}</div>
+              <div className="text-xs uppercase tracking-wide text-ink-subtle">Played</div>
             </div>
             <div>
-              <div className="text-lg font-semibold text-gray-900">
+              <div className="text-lg font-semibold text-ink">
                 {totals.setsWon}-{totals.setsLost}
               </div>
-              <div className="text-xs uppercase tracking-wide text-gray-500">Sets</div>
+              <div className="text-xs uppercase tracking-wide text-ink-subtle">Sets</div>
             </div>
             <div>
-              <div className="text-lg font-semibold text-gray-900">
+              <div className="text-lg font-semibold text-ink">
                 {totals.gamesWon}-{totals.gamesLost}
               </div>
-              <div className="text-xs uppercase tracking-wide text-gray-500">Games</div>
+              <div className="text-xs uppercase tracking-wide text-ink-subtle">Games</div>
             </div>
           </div>
 
@@ -118,7 +118,7 @@ function PlayerStats({ record }: PlayerStatsProps) {
           <div className="overflow-x-auto">
             <table className="w-full text-sm border-collapse">
               <thead>
-                <tr className="text-gray-500 border-b border-gray-200">
+                <tr className="text-ink-subtle border-b border-border">
                   <th className="py-2 px-2 text-center">Year</th>
                   <th className="py-2 px-2 text-center">Match Type</th>
                   <th className="py-2 px-2 text-center">W&ndash;L</th>
@@ -128,8 +128,8 @@ function PlayerStats({ record }: PlayerStatsProps) {
               </thead>
               <tbody>
                 {selectedBuckets.map((bucket) => (
-                  <tr key={`${bucket.year}-${bucket.rubberType}`} className="border-b border-gray-100 even:bg-gray-50">
-                    <td className="py-2 px-2 text-center font-medium text-gray-900">{bucket.year}</td>
+                  <tr key={`${bucket.year}-${bucket.rubberType}`} className="border-b border-border even:bg-canvas">
+                    <td className="py-2 px-2 text-center font-medium text-ink">{bucket.year}</td>
                     <td className="py-2 px-2 text-center">{RUBBER_TYPE_LABELS[bucket.rubberType]}</td>
                     <td className="py-2 px-2 text-center">{bucket.won}&ndash;{bucket.lost}</td>
                     <td className="py-2 px-2 text-center">{bucket.setsWon}-{bucket.setsLost}</td>

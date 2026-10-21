@@ -100,8 +100,8 @@ function PlayerProfile() {
   if (notFound || !player || !record) {
     return (
       <div className="max-w-7xl mx-auto px-4 py-12 text-center">
-        <p className="text-gray-600 mb-4">Player not found.</p>
-        <Link to="/players" className="text-sky-600 hover:underline inline-flex items-center gap-1">
+        <p className="text-ink-muted mb-4">Player not found.</p>
+        <Link to="/players" className="text-primary-600 hover:underline inline-flex items-center gap-1">
           <ArrowLeft className="h-4 w-4" /> Back to Players
         </Link>
       </div>
@@ -120,14 +120,14 @@ function PlayerProfile() {
     <div className="max-w-7xl mx-auto px-4 py-8">
       <Link
         to="/players"
-        className="inline-flex items-center gap-1 text-sm text-gray-600 hover:text-sky-600 mb-6 transition-colors"
+        className="inline-flex items-center gap-1 text-sm text-ink-muted hover:text-primary-600 mb-6 transition-colors"
       >
         <ArrowLeft className="h-4 w-4" /> Back to Players
       </Link>
 
       {/* Header — just the name */}
-      <div className="bg-white border border-gray-200 rounded-lg p-8 shadow-sm mb-6 text-center">
-        <h1 className="text-3xl font-bold text-gray-900">
+      <div className="bg-surface border border-border rounded-lg p-8 shadow-sm mb-6 text-center">
+        <h1 className="text-3xl font-bold text-ink">
           {player.firstName} {player.lastName}
         </h1>
       </div>
@@ -139,19 +139,19 @@ function PlayerProfile() {
       <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] items-start">
         <div className="space-y-6">
           {/* Clubs */}
-          <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-            <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center justify-center gap-2">
-              <Building2 className="h-5 w-5 text-sky-600" /> Clubs
+          <div className="bg-surface border border-border rounded-lg p-6 shadow-sm">
+            <h2 className="text-xl font-bold text-ink mb-4 flex items-center justify-center gap-2">
+              <Building2 className="h-5 w-5 text-primary-600" /> Clubs
             </h2>
             {player.clubs.length > 0 ? (
               <ul className="space-y-2">
                 {player.clubs.map((club) => (
                   <li key={club.id} className="flex items-center justify-between gap-2">
-                    <Link to={`/clubs/${club.id}`} className="text-sky-700 hover:underline font-medium">
+                    <Link to={`/clubs/${club.id}`} className="text-primary-700 hover:underline font-medium">
                       {club.name}
                     </Link>
                     {club.isPrimaryClub && (
-                      <span className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded shrink-0">
+                      <span className="text-xs bg-muted text-ink-muted px-2 py-0.5 rounded shrink-0">
                         Primary
                       </span>
                     )}
@@ -159,34 +159,34 @@ function PlayerProfile() {
                 ))}
               </ul>
             ) : (
-              <p className="text-gray-500 text-sm text-center">Not currently a member of any club.</p>
+              <p className="text-ink-subtle text-sm text-center">Not currently a member of any club.</p>
             )}
           </div>
 
           {/* Competitions */}
-          <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
-            <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center justify-center gap-2">
-              <Trophy className="h-5 w-5 text-sky-600" /> Competitions
+          <div className="bg-surface border border-border rounded-lg p-6 shadow-sm">
+            <h2 className="text-xl font-bold text-ink mb-4 flex items-center justify-center gap-2">
+              <Trophy className="h-5 w-5 text-primary-600" /> Competitions
             </h2>
             {competitionsById.size > 0 ? (
               <ul className="space-y-4">
                 {[...competitionsById.entries()].map(([competitionId, entries]) => (
-                  <li key={competitionId} className="pb-4 border-b border-gray-100 last:border-0 last:pb-0">
+                  <li key={competitionId} className="pb-4 border-b border-border last:border-0 last:pb-0">
                     <Link
                       to={`/competitions/${competitionId}`}
-                      className="text-sky-700 hover:underline font-semibold"
+                      className="text-primary-700 hover:underline font-semibold"
                     >
                       {entries[0].competitionName}
                     </Link>
                     <ul className="mt-1 space-y-1">
                       {entries.map((entry) => (
-                        <li key={entry.teamId} className="text-sm text-gray-600">
+                        <li key={entry.teamId} className="text-sm text-ink-muted">
                           {entry.seasonName} &middot;{' '}
-                          <Link to={`/sections/${entry.sectionId}`} className="hover:underline hover:text-sky-600">
+                          <Link to={`/sections/${entry.sectionId}`} className="hover:underline hover:text-primary-600">
                             {entry.sectionName}
                           </Link>{' '}
                           &middot;{' '}
-                          <Link to={`/teams/${entry.teamId}`} className="hover:underline hover:text-sky-600">
+                          <Link to={`/teams/${entry.teamId}`} className="hover:underline hover:text-primary-600">
                             {entry.teamName}
                           </Link>
                         </li>
@@ -196,7 +196,7 @@ function PlayerProfile() {
                 ))}
               </ul>
             ) : (
-              <p className="text-gray-500 text-sm text-center">Not currently entered in any competition.</p>
+              <p className="text-ink-subtle text-sm text-center">Not currently entered in any competition.</p>
             )}
           </div>
         </div>

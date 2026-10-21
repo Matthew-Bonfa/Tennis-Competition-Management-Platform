@@ -17,9 +17,9 @@ const RUBBER_TYPE_LABELS = {
   mixed_doubles: 'Mixed doubles',
 };
 
-const inputClass = 'rounded border border-gray-300 px-2 py-1.5 text-gray-900 text-sm';
+const inputClass = 'rounded border border-border-strong px-2 py-1.5 text-ink text-sm';
 const scoreClass = `${inputClass} w-16 text-center`;
-const tiebreakClass = 'rounded border border-gray-300 px-1 py-1 text-gray-900 text-xs w-12 text-center';
+const tiebreakClass = 'rounded border border-border-strong px-1 py-1 text-ink text-xs w-12 text-center';
 
 function RubberRow({ draft, form, teamNames, errors, onChange }: RubberRowProps) {
   function setPlayer(side: 'home' | 'away', slot: number, personId: string) {
@@ -67,11 +67,11 @@ function RubberRow({ draft, form, teamNames, errors, onChange }: RubberRowProps)
   const showSets = hasSets(draft.outcomeType);
 
   return (
-    <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+    <div className="bg-surface border border-border rounded-lg p-4 shadow-sm">
       <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
-        <h2 className="font-semibold text-gray-900">
+        <h2 className="font-semibold text-ink">
           Rubber {draft.rubberNumber}
-          <span className="text-gray-400 font-normal"> · {RUBBER_TYPE_LABELS[draft.rubberType]}</span>
+          <span className="text-ink-subtle font-normal"> · {RUBBER_TYPE_LABELS[draft.rubberType]}</span>
         </h2>
         <select
           value={draft.outcomeType}
@@ -87,17 +87,17 @@ function RubberRow({ draft, form, teamNames, errors, onChange }: RubberRowProps)
 
       <div className="grid grid-cols-1 gap-4 mb-4 sm:grid-cols-2">
         <div className="space-y-2">
-          <p className="text-xs uppercase tracking-wide text-gray-500">{teamNames.home}</p>
+          <p className="text-xs uppercase tracking-wide text-ink-subtle">{teamNames.home}</p>
           {playerSelects('home')}
         </div>
         <div className="space-y-2">
-          <p className="text-xs uppercase tracking-wide text-gray-500">{teamNames.away}</p>
+          <p className="text-xs uppercase tracking-wide text-ink-subtle">{teamNames.away}</p>
           {playerSelects('away')}
         </div>
       </div>
 
       {needsWinner(draft.outcomeType) && (
-        <label className="block text-sm text-gray-600 mb-4">
+        <label className="block text-sm text-ink-muted mb-4">
           Winner
           <select
             value={draft.winner}
@@ -125,9 +125,9 @@ function RubberRow({ draft, form, teamNames, errors, onChange }: RubberRowProps)
 
             return (
               <div key={index} className="flex flex-wrap items-center gap-2">
-                <span className="w-32 text-sm text-gray-600">
+                <span className="w-32 text-sm text-ink-muted">
                   {label}
-                  {optional && <span className="text-gray-400"> (if played)</span>}
+                  {optional && <span className="text-ink-subtle"> (if played)</span>}
                 </span>
                 <input
                   type="number"
@@ -138,7 +138,7 @@ function RubberRow({ draft, form, teamNames, errors, onChange }: RubberRowProps)
                   aria-label={`Rubber ${draft.rubberNumber} ${label} home ${matchTiebreak ? 'points' : 'games'}`}
                   className={scoreClass}
                 />
-                <span className="text-gray-400">–</span>
+                <span className="text-ink-subtle">–</span>
                 <input
                   type="number"
                   min={0}
@@ -149,7 +149,7 @@ function RubberRow({ draft, form, teamNames, errors, onChange }: RubberRowProps)
                   className={scoreClass}
                 />
                 {showTiebreakPoints && (
-                  <span className="flex items-center gap-1 text-xs text-gray-500">
+                  <span className="flex items-center gap-1 text-xs text-ink-subtle">
                     tiebreak
                     <input
                       type="number"
@@ -176,7 +176,7 @@ function RubberRow({ draft, form, teamNames, errors, onChange }: RubberRowProps)
             );
           })}
           {isStopped(draft.outcomeType) && (
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-ink-subtle">
               Enter the sets played. The last one you fill in is counted as unfinished.
             </p>
           )}
@@ -184,7 +184,7 @@ function RubberRow({ draft, form, teamNames, errors, onChange }: RubberRowProps)
       )}
 
       {errors.length > 0 && (
-        <ul className="mt-4 space-y-1 text-sm text-red-600" role="alert">
+        <ul className="mt-4 space-y-1 text-sm text-danger" role="alert">
           {errors.map((error, i) => (
             <li key={i}>{error}</li>
           ))}

@@ -17,8 +17,8 @@ function RoundSelector({ rounds, activeRound, onChange }: RoundSelectorProps) {
             aria-current={isActive ? 'page' : undefined}
             className={
               isActive
-                ? 'w-10 h-10 shrink-0 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center'
-                : 'w-10 h-10 shrink-0 rounded-full text-gray-500 font-bold flex items-center justify-center hover:bg-gray-100'
+                ? 'w-10 h-10 shrink-0 rounded-full bg-primary-600 text-white font-bold flex items-center justify-center'
+                : 'w-10 h-10 shrink-0 rounded-full text-ink-subtle font-bold flex items-center justify-center hover:bg-muted'
             }
           >
             {round.label}

@@ -44,7 +44,7 @@ function LadderTable({ sectionId, highlightTeamId }: LadderTableProps) {
   }
 
   if (error) {
-    return <p className="px-4 py-8 text-red-600">Failed to load the ladder.</p>;
+    return <p className="px-4 py-8 text-danger">Failed to load the ladder.</p>;
   }
 
   function formatPercentage(value: number) {
@@ -58,7 +58,7 @@ function LadderTable({ sectionId, highlightTeamId }: LadderTableProps) {
     <div className="px-4 pb-8 overflow-x-auto">
       <table className="w-full min-w-[40rem] text-sm border-collapse">
         <thead>
-          <tr className="text-left text-gray-500 border-b border-gray-200">
+          <tr className="text-left text-ink-subtle border-b border-border">
             <th className="py-2 pr-2">Pos</th>
             <th className="py-2 pr-2">Team</th>
             <th className="py-2 pr-2 text-center">P</th>
@@ -80,13 +80,13 @@ function LadderTable({ sectionId, highlightTeamId }: LadderTableProps) {
               key={row.teamId}
               className={
                 isHighlighted
-                  ? 'border-b border-gray-100 bg-sky-50 border-l-4 border-l-sky-500'
-                  : 'border-b border-gray-100 even:bg-gray-50'
+                  ? 'border-b border-border bg-primary-50 border-l-4 border-l-sky-500'
+                  : 'border-b border-border even:bg-canvas'
               }
             >
               <td className="py-2 pr-2 font-semibold">{row.position}</td>
-              <td className="py-2 pr-2 font-medium text-gray-900">
-                <Link to={`/teams/${row.teamId}`} className="hover:underline hover:text-sky-600">
+              <td className="py-2 pr-2 font-medium text-ink">
+                <Link to={`/teams/${row.teamId}`} className="hover:underline hover:text-primary-600">
                   {row.teamName}
                 </Link>
               </td>

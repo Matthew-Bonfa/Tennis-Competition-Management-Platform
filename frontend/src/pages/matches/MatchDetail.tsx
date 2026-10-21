@@ -14,7 +14,7 @@ function MatchDetail({ match }: MatchDetailProps) {
         return players.map((p: any, index: number) => (
             <Fragment key={p.personId}>
                 {index > 0 && ' / '}
-                <Link to={`/players/${p.personId}`} className="hover:underline hover:text-sky-600">
+                <Link to={`/players/${p.personId}`} className="hover:underline hover:text-primary-600">
                     {p.person.firstName[0]}. {p.person.lastName}
                 </Link>
             </Fragment>
@@ -32,13 +32,13 @@ function MatchDetail({ match }: MatchDetailProps) {
                 const awayNames = sidePlayers(rubber, match.awayTeam.id);
                 const homeWon = rubber.winningTeamId === match.homeTeam.id;
                 const isLast = index === match.rubbers.length - 1;
-                const rowBorder = isLast ? 'py-2' : 'py-2 border-b border-gray-50';
+                const rowBorder = isLast ? 'py-2' : 'py-2 border-b border-border';
 
                 return (
                     <Fragment key={rubber.id}>
-                        <span className={`min-w-0 truncate text-right ${rowBorder} ${homeWon ? 'font-semibold text-gray-900' : 'text-gray-500'}`}>{homeNames}</span>
-                        <span className={`font-mono text-gray-700 text-center ${rowBorder}`}>{rubber.scoreline}</span>
-                        <span className={`min-w-0 truncate text-left ${rowBorder} ${!homeWon ? 'font-semibold text-gray-900' : 'text-gray-500'}`}>{awayNames}</span>
+                        <span className={`min-w-0 truncate text-right ${rowBorder} ${homeWon ? 'font-semibold text-ink' : 'text-ink-subtle'}`}>{homeNames}</span>
+                        <span className={`font-mono text-ink-muted text-center ${rowBorder}`}>{rubber.scoreline}</span>
+                        <span className={`min-w-0 truncate text-left ${rowBorder} ${!homeWon ? 'font-semibold text-ink' : 'text-ink-subtle'}`}>{awayNames}</span>
                     </Fragment>
                 );
             })}

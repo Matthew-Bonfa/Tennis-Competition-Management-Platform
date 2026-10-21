@@ -32,10 +32,10 @@ function ManageClubsPage(){
       
       {/* Header Row: Title & New Club Button */}
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Manage Clubs</h1>
+        <h1 className="text-3xl font-bold text-ink">Manage Clubs</h1>
         <Link
           to="new-club"
-          className="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors shadow-sm text-sm"
+          className="inline-flex items-center bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-lg transition-colors shadow-sm text-sm"
         >
           <Plus className="w-4 h-4 mr-1.5" />
           New Club
@@ -45,14 +45,14 @@ function ManageClubsPage(){
       {/* Search Input with Icon */}
       <div className="mb-6 relative">
         <span className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none">
-          <Search className="w-4 h-4 text-gray-400" />
+          <Search className="w-4 h-4 text-ink-subtle" />
         </span>
         <input
           type="text"
           value={searchTerm || ''}
           onChange={(e) => setSearchTerm(e.target.value)}
           placeholder="Search clubs..."
-          className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800 text-sm"
+          className="w-full pl-10 pr-4 py-2.5 border border-border-strong rounded-lg shadow-sm bg-surface focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-ink text-sm"
         />
       </div>
 
@@ -63,13 +63,13 @@ function ManageClubsPage(){
             <Link
               key={club.id}
               to={club.id}
-              className="p-4 bg-white rounded-xl border border-gray-100 shadow-sm hover:border-blue-300 hover:shadow-md transition-all flex items-center justify-between text-gray-800 group"
+              className="p-4 bg-surface rounded-xl border border-border shadow-sm hover:border-primary-300 hover:shadow-md transition-all flex items-center justify-between text-ink group"
             >
               {/* font-normal keeps the club name looking standard instead of bold */}
-              <span className="text-gray-900 font-normal group-hover:text-blue-600 transition-colors">
+              <span className="text-ink font-normal group-hover:text-primary-600 transition-colors">
                 {club.name}
               </span>
-              <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-blue-500 transition-colors" />
+              <ChevronRight className="w-5 h-5 text-ink-subtle group-hover:text-primary-500 transition-colors" />
             </Link>
           ))
         ) : (

@@ -35,7 +35,7 @@ function ExportFixturesControl({ sectionId }: ExportFixturesControlProps) {
             <div className="px-4 pb-8">
                 <button
                     onClick={() => setExpanded(true)}
-                    className="text-sm font-semibold text-blue-600 hover:text-blue-800"
+                    className="text-sm font-semibold text-primary-600 hover:text-primary-800"
                 >
                     Export Season Fixtures (CSV)
                 </button>
@@ -48,7 +48,7 @@ function ExportFixturesControl({ sectionId }: ExportFixturesControlProps) {
             <select
                 value={selectedTeamId}
                 onChange={(e) => setSelectedTeamId(e.target.value)}
-                className="border border-gray-300 rounded-lg shadow-sm bg-white text-gray-900 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                className="border border-border-strong rounded-lg shadow-sm bg-surface text-ink px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
                 <option value="">All Teams</option>
                 {teams.map((team) => (
@@ -60,13 +60,13 @@ function ExportFixturesControl({ sectionId }: ExportFixturesControlProps) {
                 href={fixturesExportUrl(sectionId, selectedTeamId || null)}
                 download
                 onClick={() => setExpanded(false)}
-                className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
+                className="rounded-lg bg-primary-600 px-4 py-2 text-sm font-semibold text-white hover:bg-primary-700"
             >
                 Confirm Export
             </a>
             <button
                 onClick={() => setExpanded(false)}
-                className="text-sm font-semibold text-gray-500 hover:text-gray-700"
+                className="text-sm font-semibold text-ink-subtle hover:text-ink-muted"
             >
                 Cancel
             </button>

@@ -4,12 +4,12 @@ Branch: `feature/frontend/refactor`
 Scope: visual + structural refactor of `frontend/` only. No functional, route, API, state or
 copy changes. Verification per phase: `npm run build` and `npm run lint` in `frontend/`.
 
-**Next step:** Phase 5a — public page polish (Home, Competitions, Clubs, Associations,
-Players, Teams, Admin). This is where components finally migrate off the raw Tailwind scale
-(`sky-600`, `gray-900`, `slate-*`) onto the theme tokens, which is also what will make the
-currently-pruned theme variables appear in the built CSS. Phases 0–4 are complete: the build
-is green, `src/` is restructured, the theme tokens are in place, the header is responsive with
-a working Log in / Log out button, and loading and empty states render through shared
+**Next step:** Phase 5b — public page polish (Home, Competitions, Clubs, Associations, Players,
+Teams, Admin). This is the per-page pass over radii, shadows, spacing, typography and
+interactive states, now that every colour in the app already comes from a token. Phases 0–4 and
+5a are complete: the build is green, `src/` is restructured, the theme tokens are in place **and
+in use** (they appear in the built CSS for the first time as of 5a), the header is responsive
+with a working Log in / Log out button, and loading and empty states render through shared
 components.
 
 > **Baseline finding (2026-10-20):** the frontend does **not** build at HEAD `8876186`.
@@ -392,13 +392,61 @@ conversion's surrounding markup was re-read to confirm it is a page-level altern
 rather than something nested inside another card. The build and lint were then run normally and
 both pass, so nothing rests on the read-only pass.
 
-### Phase 5 — Page polish (batched, one commit each)
-- [ ] 5a Public pages: Home, Competitions(+Profile, Section), Clubs(+Profile),
+### Phase 5 — Page polish
+
+#### 5a — Colour tokens, applied globally (one commit) ✅
+
+Every raw Tailwind colour class in `src/` rewritten onto the theme tokens declared in
+`index.css`: **1001 occurrences across 51 files**, 0 remaining (verified by an independent
+grep for any `<prop>-<palette>-<shade>` pattern). This is what makes the theme variables appear
+in the built CSS — until now Tailwind v4 pruned them all as unused, because nothing referenced
+them.
+
+The app was carrying **four different blues** (`sky-*` 182 occurrences, `blue-*` 50, plus
+slate-blue) and **two neutral families** (`gray-*`, `slate-*` ~130) with six grey text levels.
+All of that now resolves to one blue ramp and three text weights.
+
+| From | To | Occurrences |
+| --- | --- | --- |
+| `sky-NNN`, `blue-NNN` | `primary-NNN` | ~232 |
+| `text-gray-900/800`, `text-slate-900/800` | `text-ink` | 145 |
+| `text-gray-700/600`, `text-slate-700/600` | `text-ink-muted` | 119 |
+| `text-gray-500/400/300`, `text-slate-500/400` | `text-ink-subtle` | 106 |
+| `bg-white` | `bg-surface` | 102 |
+| `bg-gray-50`, `bg-slate-50` | `bg-canvas` | 42 |
+| `bg-gray-100`, `bg-slate-100` | `bg-muted` (new token) | 22 |
+| `bg-gray-200`, `bg-slate-200` | `bg-border` | 11 |
+| `border-gray-200/100/50`, `border-slate-200/100` | `border-border` | 76 |
+| `border-gray-300`, `border-slate-300` | `border-border-strong` | 77 |
+| `ring-sky-500`, `ring-blue-500` | `ring-primary-500` | 39 |
+| `text-red-*`, `text-rose-*` | `text-danger` | 29 |
+| `bg-red-50`, `border-red-200` | `bg-danger-bg`, `border-danger-border` | 8 |
+| `bg-amber-*`, `text-amber-*`, `border-amber-*` | warning tokens | 12 |
+| `bg-emerald-*`, `bg-green-*`, `text-emerald-*` | success tokens | 6 |
+| `accent-blue-600` | `accent-primary-600` | 1 |
+| `bg-black/40` (modal scrim) | `bg-ink/40` | 2 |
+
+Two deliberate exceptions:
+
+- **`text-white` (35 occurrences) is kept.** It is Tailwind's own `--color-white` token, not a
+  hard-coded hex, and it is the correct foreground for primary and danger fills. Naming it
+  `on-primary` would be wrong wherever it sits on a red or green button.
+- **Opacity modifiers are preserved** (`bg-gray-50/70` → `bg-canvas/70`, `border-gray-200/60` →
+  `border-border/60`) rather than dropped, so the migration does not quietly change how
+  translucent any surface is.
+
+Three contrast fixes fall out of this for free: `text-gray-400` (2.5:1 on white, fails AA) and
+`text-sky-600` (4.10:1, fails AA) are both gone, and the amber/red/emerald text all move to
+tokens that were picked to clear 4.5:1.
+
+#### 5b–5e — per-area detail polish (batched, one commit each)
+
+- [ ] 5b Public pages: Home, Competitions(+Profile, Section), Clubs(+Profile),
       Associations(+Profile, List), Players(+Profile, Stats), Teams, Admin
-- [ ] 5b Manage pages: associations, clubs, competitions, players
-- [ ] 5c `register-team/` — unify off `slate`/`blue`/`rounded-2xl`/`shadow-md` and the
-      `←` `→` text glyphs onto the shared palette and lucide icons
-- [ ] 5d `match-results/` — scoresheet, rubber rows, status panel
+- [ ] 5c Manage pages: associations, clubs, competitions, players
+- [ ] 5d `register-team/` — shrink the oversized `rounded-2xl`/`shadow-md` and swap the
+      `←` `→` text glyphs for lucide icons
+- [ ] 5e `match-results/` — scoresheet, rubber rows, status panel
 
 ### Phase 6 — Responsive and accessibility sweep
 - [ ] Check 320 / 375 / 768 / 1024 / 1440px, no horizontal page scroll at any width
@@ -466,3 +514,20 @@ both pass, so nothing rests on the read-only pass.
   messages rendered inside cards, and deliberately left the error/not-found returns for
   Phase 5 so the pair can be converted together with a new `ErrorState`. The reasoning for
   both is in the Phase 4 section.
+- **Phase 5a was re-sequenced: the colour-token migration runs globally in one commit, rather
+  than as the first slice of each per-area batch as the approved plan had it.** Two reasons.
+  First, pages are composed of files from several folders — `competitions/SectionPage.tsx`
+  renders `matches/FixtureList.tsx` and `matches/LadderTable.tsx` — so an area-by-area split
+  would leave every page half-tokenised at each commit boundary, which is exactly the
+  inconsistency the pass exists to remove. Second, the transform is mechanical and uniform, so
+  a 51-file diff of nothing but colour-class renames is easier to review than five smaller
+  diffs that each mix renames with judgement calls. The per-area work (radii, shadows, spacing,
+  icon glyphs) still runs as batches 5b–5e, one commit each, as approved.
+- **`--color-muted` (#f3f4f6) was added to the palette in 5a.** The neutrals had `canvas`
+  (#f9fafb) and `border` (#e5e7eb) but nothing in between, and 22 chips, badges and inset panels
+  were reaching for `bg-gray-100`/`bg-slate-100` to fill that gap. Adding the token was the
+  alternative to mapping them all onto `canvas` and losing the contrast that makes a badge read
+  as a badge.
+- **`text-white` is the one raw colour class left in `src/`, deliberately.** See the 5a notes —
+  it is Tailwind's default `--color-white` token rather than a hex, and it is the correct
+  foreground on both primary and danger fills, so a semantic alias would be wrong half the time.

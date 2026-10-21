@@ -40,14 +40,14 @@ function ScoresheetForm({ form, initial, mode, teamNames, serverErrors, submitti
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4" noValidate>
-      <p className="text-sm text-gray-600">
+      <p className="text-sm text-ink-muted">
         {mode === 'player'
           ? 'The other team will be asked to confirm this result before it counts.'
           : 'This completes the match straight away, and replaces any result already saved.'}
       </p>
 
       {serverErrors && serverErrors.general.length > 0 && (
-        <ul className="rounded border border-red-200 bg-red-50 p-3 text-sm text-red-700 space-y-1" role="alert">
+        <ul className="rounded border border-danger-border bg-danger-bg p-3 text-sm text-danger space-y-1" role="alert">
           {serverErrors.general.map((error, i) => (
             <li key={i}>{error}</li>
           ))}
@@ -69,7 +69,7 @@ function ScoresheetForm({ form, initial, mode, teamNames, serverErrors, submitti
       ))}
 
       {mode === 'admin' && (
-        <label className="block text-sm text-gray-600">
+        <label className="block text-sm text-ink-muted">
           Note (optional)
           <textarea
             value={note}
@@ -77,20 +77,20 @@ function ScoresheetForm({ form, initial, mode, teamNames, serverErrors, submitti
             maxLength={500}
             rows={3}
             placeholder="Why is the result being entered or changed?"
-            className="mt-1 w-full rounded border border-gray-300 px-3 py-2 text-gray-900"
+            className="mt-1 w-full rounded border border-border-strong px-3 py-2 text-ink"
           />
         </label>
       )}
 
       {attempted && localErrors.size > 0 && (
-        <p className="text-sm text-red-600" role="alert">Fix the problems above before submitting.</p>
+        <p className="text-sm text-danger" role="alert">Fix the problems above before submitting.</p>
       )}
 
       <div className="flex justify-end">
         <button
           type="submit"
           disabled={submitting}
-          className="inline-flex items-center gap-1 rounded bg-sky-600 px-4 py-2 text-sm text-white hover:bg-sky-700 disabled:opacity-50"
+          className="inline-flex items-center gap-1 rounded bg-primary-600 px-4 py-2 text-sm text-white hover:bg-primary-700 disabled:opacity-50"
         >
           {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
           {mode === 'player' ? 'Submit result' : 'Save result'}

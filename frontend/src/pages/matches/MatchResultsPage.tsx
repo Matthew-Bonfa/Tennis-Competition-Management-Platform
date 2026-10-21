@@ -39,7 +39,7 @@ function MatchResultsPage() {
     if (notFound || !match) {
         return (
             <div className="max-w-3xl mx-auto px-4 py-12 text-center">
-                <p className="text-gray-600 mb-4">Match not found.</p>
+                <p className="text-ink-muted mb-4">Match not found.</p>
             </div>
         );
     }
@@ -69,55 +69,55 @@ function MatchResultsPage() {
         <div className="max-w-3xl mx-auto px-4 py-8">
             <Link
                 to={`/sections/${match.sectionId}`}
-                className="inline-flex items-center gap-1 text-sm text-gray-600 hover:text-sky-600 mb-6 transition-colors"
+                className="inline-flex items-center gap-1 text-sm text-ink-muted hover:text-primary-600 mb-6 transition-colors"
             >
                 <ArrowLeft className="h-4 w-4" /> Back to Fixtures
             </Link>
 
-            <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-                <div className="px-6 py-4 border-b border-gray-100">
-                    <h1 className="text-xl font-bold text-gray-900">
-                        <Link to={`/teams/${match.homeTeam.id}`} className="hover:underline hover:text-sky-600">
+            <div className="bg-surface border border-border rounded-lg overflow-hidden">
+                <div className="px-6 py-4 border-b border-border">
+                    <h1 className="text-xl font-bold text-ink">
+                        <Link to={`/teams/${match.homeTeam.id}`} className="hover:underline hover:text-primary-600">
                             {match.homeTeam.name}
                         </Link>
                         {' v '}
-                        <Link to={`/teams/${match.awayTeam.id}`} className="hover:underline hover:text-sky-600">
+                        <Link to={`/teams/${match.awayTeam.id}`} className="hover:underline hover:text-primary-600">
                             {match.awayTeam.name}
                         </Link>
                     </h1>
-                    <p className="text-sm text-gray-500">Round {match.roundNumber}</p>
+                    <p className="text-sm text-ink-subtle">Round {match.roundNumber}</p>
                 </div>
 
                 <div className="px-6 py-4">
                     <ResultStatusPanel match={match} onMatchChange={setMatch} />
                     {match.rubbers.length === 0 ? (
-                        <p className="text-sm text-gray-500">No result has been entered yet.</p>
+                        <p className="text-sm text-ink-subtle">No result has been entered yet.</p>
                     ) : (
                         <MatchDetail match={match} />
                     )}
                 </div>
 
                 {match.rubbers.length > 0 && (
-                    <div className="px-6 py-4 border-t border-gray-100 bg-gray-50">
+                    <div className="px-6 py-4 border-t border-border bg-canvas">
                         {match.matchStatus !== 'completed' && (
-                            <p className="text-center text-xs uppercase tracking-wide text-amber-700 mb-3">Provisional result</p>
+                            <p className="text-center text-xs uppercase tracking-wide text-warning mb-3">Provisional result</p>
                         )}
                         <div className="grid grid-cols-3 gap-y-2 text-center max-w-sm mx-auto">
-                            <span className={homeWonMatch ? 'font-bold text-gray-900' : 'text-gray-500'}>{match.homeTeam.name}</span>
+                            <span className={homeWonMatch ? 'font-bold text-ink' : 'text-ink-subtle'}>{match.homeTeam.name}</span>
                             <span></span>
-                            <span className={awayWonMatch ? 'font-bold text-gray-900' : 'text-gray-500'}>{match.awayTeam.name}</span>
+                            <span className={awayWonMatch ? 'font-bold text-ink' : 'text-ink-subtle'}>{match.awayTeam.name}</span>
 
-                            <span className="text-lg font-semibold text-gray-900">{homeRubbersWon}</span>
-                            <span className="text-xs uppercase tracking-wide text-gray-500 self-center">Rubbers</span>
-                            <span className="text-lg font-semibold text-gray-900">{awayRubbersWon}</span>
+                            <span className="text-lg font-semibold text-ink">{homeRubbersWon}</span>
+                            <span className="text-xs uppercase tracking-wide text-ink-subtle self-center">Rubbers</span>
+                            <span className="text-lg font-semibold text-ink">{awayRubbersWon}</span>
 
-                            <span className="text-lg font-semibold text-gray-900">{setsWon.home}</span>
-                            <span className="text-xs uppercase tracking-wide text-gray-500 self-center">Sets</span>
-                            <span className="text-lg font-semibold text-gray-900">{setsWon.away}</span>
+                            <span className="text-lg font-semibold text-ink">{setsWon.home}</span>
+                            <span className="text-xs uppercase tracking-wide text-ink-subtle self-center">Sets</span>
+                            <span className="text-lg font-semibold text-ink">{setsWon.away}</span>
 
-                            <span className="text-lg font-semibold text-gray-900">{gamesWon.home}</span>
-                            <span className="text-xs uppercase tracking-wide text-gray-500 self-center">Games</span>
-                            <span className="text-lg font-semibold text-gray-900">{gamesWon.away}</span>
+                            <span className="text-lg font-semibold text-ink">{gamesWon.home}</span>
+                            <span className="text-xs uppercase tracking-wide text-ink-subtle self-center">Games</span>
+                            <span className="text-lg font-semibold text-ink">{gamesWon.away}</span>
                         </div>
                     </div>
                 )}

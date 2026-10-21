@@ -69,25 +69,25 @@ function CompetitionsPage() {
   // ADDED: early-exit screens for the loading and error states, shown instead
   // of the main page while we're waiting or if the fetch failed
   if (loading) return <LoadingState />;
-  if (error) return <div className="text-center py-12 text-red-600">Error: {error}</div>;
+  if (error) return <div className="text-center py-12 text-danger">Error: {error}</div>;
 
   // UNCHANGED FROM HERE DOWN: this is all Rex's original JSX, untouched
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-gray-900 mb-6">Tennis Competitions</h1>
+      <h1 className="text-3xl font-bold text-ink mb-6">Tennis Competitions</h1>
 
       {/* Search Bar + Association Dropdown */}
       <div className="flex gap-4 mb-8">
         <div className="relative flex-grow">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Search className="h-5 w-5 text-gray-400" />
+            <Search className="h-5 w-5 text-ink-subtle" />
           </div>
           <input
             type="text"
             placeholder="Search competitions by name or association..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="block w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-sky-500"
+            className="block w-full pl-10 pr-4 py-3 border border-border-strong rounded-lg shadow-sm bg-surface text-ink focus:outline-none focus:ring-2 focus:ring-primary-500"
           />
         </div>
 
@@ -95,7 +95,7 @@ function CompetitionsPage() {
         <select
           value={selectedAssociationId}
           onChange={(e) => setSelectedAssociationId(e.target.value)}
-          className="border border-gray-300 rounded-lg shadow-sm bg-white text-gray-900 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sky-500"
+          className="border border-border-strong rounded-lg shadow-sm bg-surface text-ink px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
         >
           <option value="">All Associations</option>
           {associations.map(assoc => (
@@ -111,23 +111,23 @@ function CompetitionsPage() {
             <Link
               key={comp.id}
               to={`/competitions/${comp.id}`}
-              className="block bg-white border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between"
+              className="block bg-surface border border-border rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between"
             >
               <div>
                 <div className="flex items-center gap-2 mb-2">
-                  <Trophy className="h-5 w-5 text-sky-600 shrink-0" />
-                  <h3 className="text-xl font-semibold text-sky-800">{comp.name}</h3>
+                  <Trophy className="h-5 w-5 text-primary-600 shrink-0" />
+                  <h3 className="text-xl font-semibold text-primary-800">{comp.name}</h3>
                 </div>
                 {/* CHANGED: was comp.associationName */}
                 {comp.association?.name && (
-                  <p className="text-sm text-gray-600 flex items-center gap-1.5 mt-2">
-                    <Shield className="h-4 w-4 text-gray-400 shrink-0" />
+                  <p className="text-sm text-ink-muted flex items-center gap-1.5 mt-2">
+                    <Shield className="h-4 w-4 text-ink-subtle shrink-0" />
                     {comp.association.name}
                   </p>
                 )}
               </div>
 
-              <div className="mt-6 text-sky-600 text-sm font-medium flex items-center">
+              <div className="mt-6 text-primary-600 text-sm font-medium flex items-center">
                 View Competition Profile &rarr;
               </div>
             </Link>

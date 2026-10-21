@@ -45,14 +45,14 @@ function SelectCompetition() {
 
   if (!selectedSeason) {
     return (
-      <div className="max-w-2xl mx-auto my-10 p-8 bg-white rounded-2xl shadow-md border border-slate-100 font-sans text-slate-800">
+      <div className="max-w-2xl mx-auto my-10 p-8 bg-surface rounded-2xl shadow-md border border-border font-sans text-ink">
 
         {/* Header / Title */}
-        <div className="mb-7 pb-4 border-b border-slate-100">
-          <h2 className="text-2xl font-bold text-slate-900 mb-1">
+        <div className="mb-7 pb-4 border-b border-border">
+          <h2 className="text-2xl font-bold text-ink mb-1">
             Select Season & Association
           </h2>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-ink-subtle">
             Choose an association and season to begin team registration.
           </p>
         </div>
@@ -61,7 +61,7 @@ function SelectCompetition() {
 
           {/* Association Dropdown */}
           <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-            <label className="w-full sm:w-36 text-sm font-semibold text-slate-700">
+            <label className="w-full sm:w-36 text-sm font-semibold text-ink-muted">
               Association
             </label>
             <div className="flex-1">
@@ -71,7 +71,7 @@ function SelectCompetition() {
                    string id. The casts keep the existing runtime behaviour exactly. */
                 value={selectedAssociation as unknown as string}
                 onChange={(e) => setSelectedAssociation(e.target.value as unknown as NamedRef)}
-                className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white transition-all"
+                className="w-full px-3.5 py-2.5 rounded-lg border border-border-strong text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-surface transition-all"
               >
                 <option value="" disabled>--Select an association--</option>
                 {associations.map((assoc) => (
@@ -82,8 +82,8 @@ function SelectCompetition() {
           </div>
 
           {/* Season Selection Options (Single Column) */}
-          <div className="flex flex-col gap-3 mt-2 pt-5 border-t border-dashed border-slate-200">
-            <label className="block text-sm font-semibold text-slate-700 text-center sm:text-left">
+          <div className="flex flex-col gap-3 mt-2 pt-5 border-t border-dashed border-border">
+            <label className="block text-sm font-semibold text-ink-muted text-center sm:text-left">
               Register a team for the season
             </label>
             <div className="flex flex-col gap-3">
@@ -91,10 +91,10 @@ function SelectCompetition() {
                 <button 
                   key={s.id} 
                   onClick={() => setSelectedSeason(s)}
-                  className="w-full p-4 bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-500 text-slate-800 hover:text-blue-700 rounded-xl font-semibold text-sm transition-all shadow-sm flex items-center justify-between group"
+                  className="w-full p-4 bg-canvas hover:bg-primary-50 border border-border hover:border-primary-500 text-ink hover:text-primary-700 rounded-xl font-semibold text-sm transition-all shadow-sm flex items-center justify-between group"
                 >
                   <span>{s.name}</span>
-                  <span className="text-slate-400 group-hover:text-blue-600 transition-colors">→</span>
+                  <span className="text-ink-subtle group-hover:text-primary-600 transition-colors">→</span>
                 </button>
               ))}
             </div>
@@ -106,19 +106,19 @@ function SelectCompetition() {
     );
   } else {
     return (
-      <div className="max-w-2xl mx-auto my-10 p-8 bg-white rounded-2xl shadow-md border border-slate-100 font-sans text-slate-800">
+      <div className="max-w-2xl mx-auto my-10 p-8 bg-surface rounded-2xl shadow-md border border-border font-sans text-ink">
 
         {/* Header Bar with Back Button */}
-        <div className="mb-6 pb-4 border-b border-slate-100 flex items-center justify-between gap-4">
+        <div className="mb-6 pb-4 border-b border-border flex items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold text-slate-900">
+            <h2 className="text-2xl font-bold text-ink">
               {selectedSeason.name}
             </h2>
           </div>
           
           <button 
             onClick={() => setSelectedSeason(null)}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-medium border border-slate-200 transition-all shadow-sm"
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-muted hover:bg-border text-ink-muted rounded-lg text-xs font-medium border border-border transition-all shadow-sm"
           >
             <span>←</span> Change Season
           </button>

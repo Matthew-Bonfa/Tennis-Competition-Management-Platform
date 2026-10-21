@@ -32,7 +32,7 @@ function FixtureList({ sectionId, round }: FixtureListProps) {
     }
 
     if (error) {
-        return <p className="text-red-600 px-4">Failed to load fixtures.</p>;
+        return <p className="text-danger px-4">Failed to load fixtures.</p>;
     }
 
     return (

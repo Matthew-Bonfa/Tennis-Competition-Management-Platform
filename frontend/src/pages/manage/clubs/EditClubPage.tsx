@@ -100,18 +100,18 @@ function EditClubPage(){
       
       {/* 1. Heading OUTSIDE the bubble */}
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">
+        <h1 className="text-3xl font-bold text-ink">
           {startedNew ? "New Club" : "Edit Club"}
         </h1>
       </div>
 
       {/* 2. Wider Form Card Bubble (Fields & Button only) */}
-      <div className="bg-white p-8 rounded-xl shadow-lg border border-gray-100">
+      <div className="bg-surface p-8 rounded-xl shadow-lg border border-border">
         
         <div className="space-y-5">
           
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-4 sm:gap-4 items-center">
-            <label className="text-sm font-medium text-gray-700 sm:col-span-1 sm:text-right">
+            <label className="text-sm font-medium text-ink-muted sm:col-span-1 sm:text-right">
               Name
             </label>
             <div className="sm:col-span-3">
@@ -119,14 +119,14 @@ function EditClubPage(){
                 type="text" 
                 value={newClub.name || ""} 
                 onChange={e => setNewClub({...newClub, name: e.target.value})} 
-                className="w-full px-3.5 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800"
+                className="w-full px-3.5 py-2 border border-border-strong rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-ink"
                 placeholder="Enter club name"
               />
             </div>
           </div>
 
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-4 sm:gap-4 items-center">
-            <label className="text-sm font-medium text-gray-700 sm:col-span-1 sm:text-right">
+            <label className="text-sm font-medium text-ink-muted sm:col-span-1 sm:text-right">
               Address
             </label>
             <div className="sm:col-span-3">
@@ -134,7 +134,7 @@ function EditClubPage(){
                 type="text" 
                 value={newClub.address || ""} 
                 onChange={e => setNewClub({...newClub, address: e.target.value})} 
-                className="w-full px-3.5 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800"
+                className="w-full px-3.5 py-2 border border-border-strong rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-ink"
                 placeholder="Enter address"
               />
             </div>
@@ -143,10 +143,10 @@ function EditClubPage(){
         </div>
 
         {/* 3. Bottom Action Bar: Error Message (left) & Submit Button (right) */}
-        <div className="mt-8 pt-4 border-t border-gray-100 flex justify-between items-center">
+        <div className="mt-8 pt-4 border-t border-border flex justify-between items-center">
           <div>
             {errorMessage && (
-              <span className="text-sm font-medium text-red-600">
+              <span className="text-sm font-medium text-danger">
                 {errorMessage}
               </span>
             )}
@@ -154,7 +154,7 @@ function EditClubPage(){
 
           <button 
             onClick={submit}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-5 rounded-lg transition-colors shadow-sm cursor-pointer text-sm"
+            className="bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-5 rounded-lg transition-colors shadow-sm cursor-pointer text-sm"
           >
             Submit
           </button>

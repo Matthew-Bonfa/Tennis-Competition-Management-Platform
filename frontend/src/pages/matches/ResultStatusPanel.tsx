@@ -75,7 +75,7 @@ function ResultStatusPanel({ match, onMatchChange }: ResultStatusPanelProps) {
   const waitingOn = form?.enteredBySide === 'home' ? match.awayTeam.name : match.homeTeam.name;
 
   const linkClass =
-    'inline-flex items-center gap-1 rounded bg-sky-600 px-3 py-1.5 text-sm text-white hover:bg-sky-700';
+    'inline-flex items-center gap-1 rounded bg-primary-600 px-3 py-1.5 text-sm text-white hover:bg-primary-700';
 
   if (status === 'completed' && !isAdmin) {
     return null;
@@ -84,7 +84,7 @@ function ResultStatusPanel({ match, onMatchChange }: ResultStatusPanelProps) {
   return (
     <div className="space-y-3 mb-4">
       {status === 'awaiting_confirmation' && (
-        <div className="rounded border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
+        <div className="rounded border border-warning-border bg-warning-bg p-3 text-sm text-warning">
           <p className="font-semibold">Awaiting confirmation</p>
           <p className="mt-1">
             {form?.enteredBySide
@@ -95,7 +95,7 @@ function ResultStatusPanel({ match, onMatchChange }: ResultStatusPanelProps) {
       )}
 
       {status === 'disputed' && (
-        <div className="rounded border border-red-200 bg-red-50 p-3 text-sm text-red-800">
+        <div className="rounded border border-danger-border bg-danger-bg p-3 text-sm text-danger">
           <p className="font-semibold">Result disputed</p>
           {match.disputeReason && <p className="mt-1">Reason: {match.disputeReason}</p>}
           <p className="mt-1">The result needs to be entered again.</p>
@@ -108,7 +108,7 @@ function ResultStatusPanel({ match, onMatchChange }: ResultStatusPanelProps) {
             type="button"
             onClick={() => respond('confirm')}
             disabled={busy !== null}
-            className="inline-flex items-center gap-1 rounded bg-sky-600 px-3 py-1.5 text-sm text-white hover:bg-sky-700 disabled:opacity-50"
+            className="inline-flex items-center gap-1 rounded bg-primary-600 px-3 py-1.5 text-sm text-white hover:bg-primary-700 disabled:opacity-50"
           >
             {busy === 'confirm' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
             Confirm result
@@ -117,7 +117,7 @@ function ResultStatusPanel({ match, onMatchChange }: ResultStatusPanelProps) {
             type="button"
             onClick={() => setDisputing(true)}
             disabled={busy !== null}
-            className="inline-flex items-center gap-1 rounded border border-gray-300 px-3 py-1.5 text-sm text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+            className="inline-flex items-center gap-1 rounded border border-border-strong px-3 py-1.5 text-sm text-ink-muted hover:bg-canvas disabled:opacity-50"
           >
             <X className="h-4 w-4" />
             Dispute
@@ -126,15 +126,15 @@ function ResultStatusPanel({ match, onMatchChange }: ResultStatusPanelProps) {
       )}
 
       {canRespond && disputing && (
-        <div className="rounded border border-gray-200 bg-white p-3 space-y-2">
-          <label className="block text-sm text-gray-600">
+        <div className="rounded border border-border bg-surface p-3 space-y-2">
+          <label className="block text-sm text-ink-muted">
             Why do you dispute this result? You will enter the correct score next.
             <textarea
               value={reason}
               onChange={(e) => setReason(e.target.value)}
               maxLength={500}
               rows={3}
-              className="mt-1 w-full rounded border border-gray-300 px-3 py-2 text-gray-900"
+              className="mt-1 w-full rounded border border-border-strong px-3 py-2 text-ink"
             />
           </label>
           <div className="flex flex-wrap justify-end gap-2">
@@ -145,7 +145,7 @@ function ResultStatusPanel({ match, onMatchChange }: ResultStatusPanelProps) {
                 setError(null);
               }}
               disabled={busy !== null}
-              className="rounded border border-gray-300 px-3 py-1.5 text-sm text-gray-600 hover:bg-gray-50"
+              className="rounded border border-border-strong px-3 py-1.5 text-sm text-ink-muted hover:bg-canvas"
             >
               Cancel
             </button>
@@ -153,7 +153,7 @@ function ResultStatusPanel({ match, onMatchChange }: ResultStatusPanelProps) {
               type="button"
               onClick={() => respond('dispute')}
               disabled={busy !== null || reason.trim() === ''}
-              className="inline-flex items-center gap-1 rounded bg-sky-600 px-3 py-1.5 text-sm text-white hover:bg-sky-700 disabled:opacity-50"
+              className="inline-flex items-center gap-1 rounded bg-primary-600 px-3 py-1.5 text-sm text-white hover:bg-primary-700 disabled:opacity-50"
             >
               {busy === 'dispute' && <Loader2 className="h-4 w-4 animate-spin" />}
               Dispute and enter the correct score
@@ -162,7 +162,7 @@ function ResultStatusPanel({ match, onMatchChange }: ResultStatusPanelProps) {
         </div>
       )}
 
-      {error && <p className="text-sm text-red-600" role="alert">{error}</p>}
+      {error && <p className="text-sm text-danger" role="alert">{error}</p>}
 
       {canEnter && (
         <Link to={`/matches/${match.id}/enter`} className={linkClass}>

@@ -51,19 +51,19 @@ function PlayersPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-gray-900 mb-6">Players Database</h1>
+      <h1 className="text-3xl font-bold text-ink mb-6">Players Database</h1>
 
       {/* Search Bar */}
       <div className="relative mb-8">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <Search className="h-5 w-5 text-gray-400" />
+          <Search className="h-5 w-5 text-ink-subtle" />
         </div>
         <input
           type="text"
           placeholder="Search players by name or player code..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="block w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-sky-500"
+          className="block w-full pl-10 pr-4 py-3 border border-border-strong rounded-lg shadow-sm bg-surface text-ink focus:outline-none focus:ring-2 focus:ring-primary-500"
         />
       </div>
 
@@ -74,19 +74,19 @@ function PlayersPage() {
             <Link
               key={player.id}
               to={`/players/${player.id}`}
-              className="block bg-white border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow"
+              className="block bg-surface border border-border rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow"
             >
               <div className="flex items-center gap-2 mb-2">
-                <User className="h-5 w-5 text-sky-600 shrink-0" />
-                <h3 className="text-xl font-semibold text-sky-800">
+                <User className="h-5 w-5 text-primary-600 shrink-0" />
+                <h3 className="text-xl font-semibold text-primary-800">
                   {player.firstName} {player.lastName}
                 </h3>
               </div>
-              <p className="text-sm text-gray-600">{player.primaryClubName ?? 'No club recorded'}</p>
-              <div className="mt-3 text-xs bg-gray-100 text-gray-600 px-2.5 py-1 rounded inline-block">
+              <p className="text-sm text-ink-muted">{player.primaryClubName ?? 'No club recorded'}</p>
+              <div className="mt-3 text-xs bg-muted text-ink-muted px-2.5 py-1 rounded inline-block">
                 {player.personCode}
               </div>
-              <div className="mt-6 text-sky-600 text-sm font-medium flex items-center">
+              <div className="mt-6 text-primary-600 text-sm font-medium flex items-center">
                 View Player Profile &rarr;
               </div>
             </Link>

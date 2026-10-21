@@ -119,8 +119,8 @@ function CreateSectionPage() {
   if (!seasonId) {
     return (
       <div className="max-w-2xl mx-auto px-4 py-12 text-center">
-        <p className="text-gray-600 mb-4">Choose a season on the Manage Competition page first.</p>
-        <Link to={`/manage-competitions/${id}`} className="text-sky-600 hover:underline">
+        <p className="text-ink-muted mb-4">Choose a season on the Manage Competition page first.</p>
+        <Link to={`/manage-competitions/${id}`} className="text-primary-600 hover:underline">
           Back to Manage Competition
         </Link>
       </div>
@@ -132,50 +132,50 @@ function CreateSectionPage() {
       <div className="max-w-2xl mx-auto px-4 py-8">
         <Link
           to={`/manage-competitions/${id}?season=${seasonId}`}
-          className="inline-flex items-center gap-1 text-sm text-gray-600 hover:text-sky-600 mb-6 transition-colors"
+          className="inline-flex items-center gap-1 text-sm text-ink-muted hover:text-primary-600 mb-6 transition-colors"
         >
           <ArrowLeft className="h-4 w-4" /> Back to Manage Competition
         </Link>
 
-        <h1 className="text-3xl font-bold text-gray-900 mb-1">Create New Section</h1>
+        <h1 className="text-3xl font-bold text-ink mb-1">Create New Section</h1>
         {competition && (
-          <p className="text-gray-600 mb-6">
+          <p className="text-ink-muted mb-6">
             {competition.association?.name} &middot; {competition.name}
             {season && <> &middot; {season.name}</>}
           </p>
         )}
 
-        <form onSubmit={handleSubmit} className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm space-y-4">
+        <form onSubmit={handleSubmit} className="bg-surface border border-border rounded-lg p-6 shadow-sm space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Section name</label>
+            <label className="block text-sm font-medium text-ink-muted mb-1">Section name</label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              className="block w-full border border-gray-300 rounded-lg bg-white text-gray-900 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sky-500"
+              className="block w-full border border-border-strong rounded-lg bg-surface text-ink px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Grade (optional)</label>
+            <label className="block text-sm font-medium text-ink-muted mb-1">Grade (optional)</label>
             <input
               type="text"
               value={gradeLabel}
               onChange={(e) => setGradeLabel(e.target.value)}
               placeholder="e.g. A Grade"
-              className="block w-full border border-gray-300 rounded-lg bg-white text-gray-900 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sky-500"
+              className="block w-full border border-border-strong rounded-lg bg-surface text-ink px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Format</label>
+            <label className="block text-sm font-medium text-ink-muted mb-1">Format</label>
             <div className="flex gap-3">
               <select
                 value={formatId}
                 onChange={(e) => setFormatId(e.target.value)}
                 required
-                className="flex-1 min-w-0 border border-gray-300 rounded-lg bg-white text-gray-900 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                className="flex-1 min-w-0 border border-border-strong rounded-lg bg-surface text-ink px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
                 <option value="">Select a format...</option>
                 {formats.map(format => (
@@ -185,7 +185,7 @@ function CreateSectionPage() {
               <button
                 type="button"
                 onClick={openNewFormat}
-                className="shrink-0 border border-gray-300 bg-gray-100 text-gray-800 font-medium px-4 py-3 rounded-lg hover:bg-gray-200"
+                className="shrink-0 border border-border-strong bg-muted text-ink font-medium px-4 py-3 rounded-lg hover:bg-border"
               >
                 Create new format
               </button>
@@ -195,13 +195,13 @@ function CreateSectionPage() {
               type="button"
               onClick={openCopyOfSelected}
               disabled={!summary}
-              className="mt-3 w-full border border-gray-300 bg-gray-100 text-gray-800 font-medium px-4 py-3 rounded-lg hover:bg-gray-200 disabled:opacity-50 disabled:hover:bg-gray-100"
+              className="mt-3 w-full border border-border-strong bg-muted text-ink font-medium px-4 py-3 rounded-lg hover:bg-border disabled:opacity-50 disabled:hover:bg-muted"
             >
               Edit format (saves as a new format)
             </button>
 
             {summary && (
-              <div className="mt-3 rounded-lg bg-gray-50 border border-gray-200 p-3 text-sm text-gray-700 space-y-1">
+              <div className="mt-3 rounded-lg bg-canvas border border-border p-3 text-sm text-ink-muted space-y-1">
                 <p>
                   <span className="font-medium">Rubbers:</span>{' '}
                   {summary.rubbers?.length > 0
@@ -244,12 +244,12 @@ function CreateSectionPage() {
             )}
           </div>
 
-          {error && <p className="text-red-600 text-sm">{error}</p>}
+          {error && <p className="text-danger text-sm">{error}</p>}
 
           <button
             type="submit"
             disabled={saving || !name.trim() || !formatId}
-            className="bg-sky-600 text-white font-medium px-6 py-3 rounded-lg hover:bg-sky-700 disabled:opacity-50"
+            className="bg-primary-600 text-white font-medium px-6 py-3 rounded-lg hover:bg-primary-700 disabled:opacity-50"
           >
             {saving ? 'Saving...' : 'Save'}
           </button>
@@ -259,15 +259,15 @@ function CreateSectionPage() {
       {/* The format panel. It sits outside the section form above, because
           a form cannot be placed inside another form. */}
       {panelOpen && (
-        <div className="fixed inset-0 z-50 bg-black/40 overflow-y-auto p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-2xl mx-auto my-8 p-6">
+        <div className="fixed inset-0 z-50 bg-ink/40 overflow-y-auto p-4">
+          <div className="bg-surface rounded-lg shadow-xl max-w-2xl mx-auto my-8 p-6">
             <div className="flex items-start justify-between mb-4">
               <div>
-                <h2 className="text-xl font-bold text-gray-900">
+                <h2 className="text-xl font-bold text-ink">
                   {panelSource ? 'Edit format (saves as a new format)' : 'Create new format'}
                 </h2>
                 {panelSource && (
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-ink-muted">
                     Starting from &ldquo;{panelSource.name}&rdquo;. The original is not changed.
                   </p>
                 )}
@@ -276,7 +276,7 @@ function CreateSectionPage() {
                 type="button"
                 onClick={() => setPanelOpen(false)}
                 aria-label="Close"
-                className="text-gray-500 hover:text-gray-800"
+                className="text-ink-subtle hover:text-ink"
               >
                 <X className="h-5 w-5" />
               </button>

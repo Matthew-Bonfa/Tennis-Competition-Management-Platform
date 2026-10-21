@@ -47,13 +47,13 @@ function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-md space-y-6 bg-white p-8 rounded-lg shadow">
+    <div className="min-h-screen flex items-center justify-center bg-canvas px-4">
+      <div className="w-full max-w-md space-y-6 bg-surface p-8 rounded-lg shadow">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">
+          <h2 className="text-2xl font-bold text-ink">
             Sign in to your account
           </h2>
-          <p className="mt-1 text-sm text-gray-600">
+          <p className="mt-1 text-sm text-ink-muted">
             Enter your email and password to continue
           </p>
         </div>
@@ -61,7 +61,7 @@ function Login() {
         {error && (
           <div
             role="alert"
-            className="rounded border border-red-200 bg-red-50 p-3 text-sm text-red-700"
+            className="rounded border border-danger-border bg-danger-bg p-3 text-sm text-danger"
           >
             {error}
           </div>
@@ -71,7 +71,7 @@ function Login() {
           <div>
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-ink-muted"
             >
               Email address
             </label>
@@ -82,14 +82,14 @@ function Login() {
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 w-full rounded border border-gray-300 px-3 py-2"
+              className="mt-1 w-full rounded border border-border-strong px-3 py-2"
             />
           </div>
 
           <div>
             <label
               htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-ink-muted"
             >
               Password
             </label>
@@ -100,16 +100,16 @@ function Login() {
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="mt-1 w-full rounded border border-gray-300 px-3 py-2"
+              className="mt-1 w-full rounded border border-border-strong px-3 py-2"
             />
           </div>
 
           <div className="flex items-center justify-between text-sm">
-            <label className="flex items-center gap-2 text-gray-700">
+            <label className="flex items-center gap-2 text-ink-muted">
               <input id="remember" type="checkbox" />
               Remember me
             </label>
-            <Link to="/forgot-password" className="text-blue-600 hover:underline">
+            <Link to="/forgot-password" className="text-primary-600 hover:underline">
               Forgot password?
             </Link>
           </div>
@@ -117,15 +117,15 @@ function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded bg-blue-600 py-2 font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+            className="w-full rounded bg-primary-600 py-2 font-medium text-white hover:bg-primary-700 disabled:opacity-50"
           >
             {loading ? 'Signing in...' : 'Sign in'}
           </button>
         </form>
 
-        <p className="text-center text-sm text-gray-600">
+        <p className="text-center text-sm text-ink-muted">
           Don't have an account?{' '}
-          <Link to="/register" className="text-blue-600 hover:underline">
+          <Link to="/register" className="text-primary-600 hover:underline">
             Create an account
           </Link>
         </p>

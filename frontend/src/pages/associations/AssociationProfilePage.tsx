@@ -78,7 +78,7 @@ function AssociationProfile() {
   
 
   if (!association) {
-    return <div className="p-8 text-center text-gray-600">Association not found.</div>;
+    return <div className="p-8 text-center text-ink-muted">Association not found.</div>;
   }
 
 
@@ -87,35 +87,35 @@ function AssociationProfile() {
     {/* Back Link */}
     <Link 
       to="/associations" 
-      className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-500 hover:text-sky-600 mb-2 transition-colors"
+      className="inline-flex items-center gap-1.5 text-sm font-medium text-ink-subtle hover:text-primary-600 mb-2 transition-colors"
     >
       <ArrowLeft className="h-4 w-4" /> Back to Associations
     </Link>
 
     {/* Association Info Card */}
-    <div className="bg-white border border-gray-200/80 rounded-2xl p-6 shadow-sm">
+    <div className="bg-surface border border-border/80 rounded-2xl p-6 shadow-sm">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         
         {/* Left Side: Association Title */}
         <div className="space-y-1 max-w-md">
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-gray-900">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-ink">
             {association.name}
           </h1>
         </div>
 
         {/* Right Side: Contact Info Card */}
-        <div className="bg-gray-50/80 border border-gray-200/60 rounded-xl p-4 min-w-0 md:min-w-[280px]">
+        <div className="bg-canvas/80 border border-border/60 rounded-xl p-4 min-w-0 md:min-w-[280px]">
           {association.contactPerson ? (
-            <div className="space-y-1.5 text-sm text-gray-700">
-              <div className="flex items-center gap-2 font-medium text-gray-900 pb-1 border-b border-gray-200/50">
-                <User className="h-4 w-4 text-gray-400 shrink-0" />
+            <div className="space-y-1.5 text-sm text-ink-muted">
+              <div className="flex items-center gap-2 font-medium text-ink pb-1 border-b border-border/50">
+                <User className="h-4 w-4 text-ink-subtle shrink-0" />
                 <span>{association.contactPerson.firstName} {association.contactPerson.lastName}</span>
               </div>
 
               {association.contactPerson.phone && (
                 <div className="flex items-center gap-2 text-xs pt-1">
-                  <Phone className="h-3.5 w-3.5 text-gray-400 shrink-0" />
-                  <a href={`tel:${association.contactPerson.phone}`} className="text-sky-600 hover:underline">
+                  <Phone className="h-3.5 w-3.5 text-ink-subtle shrink-0" />
+                  <a href={`tel:${association.contactPerson.phone}`} className="text-primary-600 hover:underline">
                     {association.contactPerson.phone}
                   </a>
                 </div>
@@ -123,16 +123,16 @@ function AssociationProfile() {
 
               {association.contactPerson.email && (
                 <div className="flex items-center gap-2 text-xs">
-                  <Mail className="h-3.5 w-3.5 text-gray-400 shrink-0" />
-                  <a href={`mailto:${association.contactPerson.email}`} className="text-sky-600 hover:underline truncate">
+                  <Mail className="h-3.5 w-3.5 text-ink-subtle shrink-0" />
+                  <a href={`mailto:${association.contactPerson.email}`} className="text-primary-600 hover:underline truncate">
                     {association.contactPerson.email}
                   </a>
                 </div>
               )}
             </div>
           ) : (
-            <div className="flex items-center gap-2 text-xs text-gray-400 italic">
-              <User className="h-4 w-4 text-gray-300 shrink-0" />
+            <div className="flex items-center gap-2 text-xs text-ink-subtle italic">
+              <User className="h-4 w-4 text-ink-subtle shrink-0" />
               <span>No contact person assigned</span>
             </div>
           )}
@@ -145,13 +145,13 @@ function AssociationProfile() {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       
       {/* Clubs Box */}
-      <div className="bg-white border border-gray-200/80 rounded-2xl p-6 shadow-sm flex flex-col">
-        <div className="flex items-center gap-2.5 pb-4 mb-4 border-b border-gray-100">
-          <div className="p-2 bg-sky-50 text-sky-600 rounded-xl">
+      <div className="bg-surface border border-border/80 rounded-2xl p-6 shadow-sm flex flex-col">
+        <div className="flex items-center gap-2.5 pb-4 mb-4 border-b border-border">
+          <div className="p-2 bg-primary-50 text-primary-600 rounded-xl">
             <Shield className="h-5 w-5" />
           </div>
-          <h2 className="text-lg font-semibold text-gray-900">Clubs</h2>
-          <span className="ml-auto bg-gray-100 text-gray-600 text-xs font-semibold px-2.5 py-1 rounded-full">
+          <h2 className="text-lg font-semibold text-ink">Clubs</h2>
+          <span className="ml-auto bg-muted text-ink-muted text-xs font-semibold px-2.5 py-1 rounded-full">
             {clubs?.length || 0}
           </span>
         </div>
@@ -162,32 +162,32 @@ function AssociationProfile() {
               <Link 
                 key={club.id}
                 to={`/clubs/${club.id}`}
-                className="group flex items-center justify-between p-3.5 bg-gray-50/70 hover:bg-white border border-gray-200/60 hover:border-sky-300 rounded-xl shadow-xs hover:shadow-md transition-all duration-200"
+                className="group flex items-center justify-between p-3.5 bg-canvas/70 hover:bg-surface border border-border/60 hover:border-primary-300 rounded-xl shadow-xs hover:shadow-md transition-all duration-200"
               >
                 <div className="flex items-center gap-3">
-                  <span className="font-medium text-gray-800 group-hover:text-gray-900 text-sm">
+                  <span className="font-medium text-ink group-hover:text-ink text-sm">
                     {club.name}
                   </span>
                 </div>
-                <ChevronRight className="h-4 w-4 text-gray-400 group-hover:text-sky-600 group-hover:translate-x-0.5 transition-all" />
+                <ChevronRight className="h-4 w-4 text-ink-subtle group-hover:text-primary-600 group-hover:translate-x-0.5 transition-all" />
               </Link>
             ))
           ) : (
-            <div className="h-full flex flex-col items-center justify-center p-8 text-center border-2 border-dashed border-gray-100 rounded-xl">
-              <p className="text-sm text-gray-400 italic">No clubs registered yet</p>
+            <div className="h-full flex flex-col items-center justify-center p-8 text-center border-2 border-dashed border-border rounded-xl">
+              <p className="text-sm text-ink-subtle italic">No clubs registered yet</p>
             </div>
           )}
         </div>
       </div>
 
       {/* Competitions Box */}
-      <div className="bg-white border border-gray-200/80 rounded-2xl p-6 shadow-sm flex flex-col">
-        <div className="flex items-center gap-2.5 pb-4 mb-4 border-b border-gray-100">
-          <div className="p-2 bg-sky-50 text-sky-600 rounded-xl">
+      <div className="bg-surface border border-border/80 rounded-2xl p-6 shadow-sm flex flex-col">
+        <div className="flex items-center gap-2.5 pb-4 mb-4 border-b border-border">
+          <div className="p-2 bg-primary-50 text-primary-600 rounded-xl">
             <Trophy className="h-5 w-5" />
           </div>
-          <h2 className="text-lg font-semibold text-gray-900">Competitions</h2>
-          <span className="ml-auto bg-gray-100 text-gray-600 text-xs font-semibold px-2.5 py-1 rounded-full">
+          <h2 className="text-lg font-semibold text-ink">Competitions</h2>
+          <span className="ml-auto bg-muted text-ink-muted text-xs font-semibold px-2.5 py-1 rounded-full">
             {competitions?.length || 0}
           </span>
         </div>
@@ -198,19 +198,19 @@ function AssociationProfile() {
               <Link
                 key={comp.id}
                 to={`/competitions/${comp.id}`}
-                className="group flex items-center justify-between p-3.5 bg-gray-50/70 hover:bg-white border border-gray-200/60 hover:border-sky-300 rounded-xl shadow-xs hover:shadow-md transition-all duration-200"
+                className="group flex items-center justify-between p-3.5 bg-canvas/70 hover:bg-surface border border-border/60 hover:border-primary-300 rounded-xl shadow-xs hover:shadow-md transition-all duration-200"
               >
                 <div className="flex items-center gap-3">
-                  <span className="font-medium text-gray-800 group-hover:text-gray-900 text-sm">
+                  <span className="font-medium text-ink group-hover:text-ink text-sm">
                     {comp.name}
                   </span>
                 </div>
-                <ChevronRight className="h-4 w-4 text-gray-400 group-hover:text-sky-600 group-hover:translate-x-0.5 transition-all" />
+                <ChevronRight className="h-4 w-4 text-ink-subtle group-hover:text-primary-600 group-hover:translate-x-0.5 transition-all" />
               </Link>
             ))
           ) : (
-            <div className="h-full flex flex-col items-center justify-center p-8 text-center border-2 border-dashed border-gray-100 rounded-xl">
-              <p className="text-sm text-gray-400 italic">No competitions active</p>
+            <div className="h-full flex flex-col items-center justify-center p-8 text-center border-2 border-dashed border-border rounded-xl">
+              <p className="text-sm text-ink-subtle italic">No competitions active</p>
             </div>
           )}
         </div>

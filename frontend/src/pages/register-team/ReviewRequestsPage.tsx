@@ -63,7 +63,7 @@ function ReviewRequests() {
   }, []);
 
   return (
-    <div className="max-w-2xl mx-auto my-10 p-8 bg-white rounded-2xl shadow-md border border-slate-100 font-sans text-slate-800">
+    <div className="max-w-2xl mx-auto my-10 p-8 bg-surface rounded-2xl shadow-md border border-border font-sans text-ink">
 
       {/* Conditional Rendering: Show Details Component if selected, otherwise show List */}
       {selectedRequest ? (
@@ -74,19 +74,19 @@ function ReviewRequests() {
       ) : (
         <>
           {/* Header Bar with Back Button */}
-          <div className="mb-7 pb-4 border-b border-slate-100 flex items-center justify-between gap-4">
+          <div className="mb-7 pb-4 border-b border-border flex items-center justify-between gap-4">
             <div>
-              <h2 className="text-2xl font-bold text-slate-900">
+              <h2 className="text-2xl font-bold text-ink">
                 Review Registration Requests
               </h2>
-              <p className="text-sm text-slate-500 mt-0.5">
+              <p className="text-sm text-ink-subtle mt-0.5">
                 Manage pending team submissions for approval.
               </p>
             </div>
             
             <button 
               onClick={() => navigate('/manage-teams')}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-medium border border-slate-200 transition-all shadow-sm cursor-pointer shrink-0"
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-muted hover:bg-border text-ink-muted rounded-lg text-xs font-medium border border-border transition-all shadow-sm cursor-pointer shrink-0"
             >
               <span>←</span> Back
             </button>
@@ -94,11 +94,11 @@ function ReviewRequests() {
 
           {/* Loading State */}
           {loading ? (
-            <div className="text-center py-12 text-slate-400 text-sm animate-pulse">
+            <div className="text-center py-12 text-ink-subtle text-sm animate-pulse">
               Loading registration requests...
             </div>
           ) : futureSeasons.length === 0 ? (
-            <div className="text-center py-12 px-4 bg-slate-50 rounded-xl border border-dashed border-slate-200 text-slate-500 text-sm">
+            <div className="text-center py-12 px-4 bg-canvas rounded-xl border border-dashed border-border text-ink-subtle text-sm">
               No upcoming seasons found.
             </div>
           ) : (
@@ -112,18 +112,18 @@ function ReviewRequests() {
                 return (
                   <div key={season.id} className="flex flex-col gap-3">
                     {/* Season Section Title */}
-                    <div className="flex items-center justify-between pb-2 border-b border-slate-200">
-                      <h3 className="text-base font-bold text-slate-800">
+                    <div className="flex items-center justify-between pb-2 border-b border-border">
+                      <h3 className="text-base font-bold text-ink">
                         {headerTitle}
                       </h3>
-                      <span className="text-xs font-semibold text-slate-500 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200">
+                      <span className="text-xs font-semibold text-ink-subtle bg-muted px-2.5 py-0.5 rounded-full border border-border">
                         {seasonRequests.length} Pending
                       </span>
                     </div>
 
                     {/* Request Items */}
                     {seasonRequests.length === 0 ? (
-                      <p className="text-xs text-slate-400 italic py-2">
+                      <p className="text-xs text-ink-subtle italic py-2">
                         No pending registration requests for this season.
                       </p>
                     ) : (
@@ -132,20 +132,20 @@ function ReviewRequests() {
                           <button
                             key={req.id || req.name}
                             onClick={() => setSelectedRequest(req)}
-                            className="w-full p-4 bg-slate-50 hover:bg-blue-50/50 border border-slate-200 hover:border-blue-400 rounded-xl text-left flex items-center justify-between transition-all cursor-pointer group"
+                            className="w-full p-4 bg-canvas hover:bg-primary-50/50 border border-border hover:border-primary-400 rounded-xl text-left flex items-center justify-between transition-all cursor-pointer group"
                           >
                             <div>
-                              <h4 className="text-sm font-semibold text-slate-900 group-hover:text-blue-700 transition-colors">
+                              <h4 className="text-sm font-semibold text-ink group-hover:text-primary-700 transition-colors">
                                 {req.name || req.teamName || req.clubName || 'Untitled Request'}
                               </h4>
-                              <div className="flex items-center gap-2 mt-1 text-xs text-slate-500">
+                              <div className="flex items-center gap-2 mt-1 text-xs text-ink-subtle">
                                 {req.clubName && <span>Club: {req.clubName}</span>}
                                 {req.clubName && req.division && <span>•</span>}
                                 {req.division && <span>Division: {req.division}</span>}
                               </div>
                             </div>
 
-                            <span className="text-xs font-medium text-amber-700 bg-amber-50 px-2.5 py-1 rounded-md border border-amber-200/60 shrink-0 group-hover:bg-blue-100 group-hover:text-blue-800 group-hover:border-blue-200 transition-colors">
+                            <span className="text-xs font-medium text-warning bg-warning-bg px-2.5 py-1 rounded-md border border-warning-border/60 shrink-0 group-hover:bg-primary-100 group-hover:text-primary-800 group-hover:border-primary-200 transition-colors">
                               Pending Review →
                             </span>
                           </button>

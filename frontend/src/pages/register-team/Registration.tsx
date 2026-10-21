@@ -238,14 +238,14 @@ export function Registration({season, association}: {season: Season; association
   }
 
   return (
-    <div className="max-w-2xl mx-auto my-10 p-8 bg-white rounded-2xl shadow-md border border-slate-100 font-sans text-slate-800">
+    <div className="max-w-2xl mx-auto my-10 p-8 bg-surface rounded-2xl shadow-md border border-border font-sans text-ink">
 
       {/* Header / Title */}
-      <div className="mb-7 pb-4 border-b border-slate-100">
-        <h2 className="text-2xl font-bold text-slate-900 mb-1">
+      <div className="mb-7 pb-4 border-b border-border">
+        <h2 className="text-2xl font-bold text-ink mb-1">
           Team Registration
         </h2>
-        <p className="text-sm text-slate-500">
+        <p className="text-sm text-ink-subtle">
           Complete the details below to register your team.
         </p>
       </div>
@@ -254,7 +254,7 @@ export function Registration({season, association}: {season: Season; association
 
         {/* Club Selector */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-          <label className="w-full sm:w-36 text-sm font-semibold text-slate-700">
+          <label className="w-full sm:w-36 text-sm font-semibold text-ink-muted">
             Choose a club
           </label>
           <div className="relative flex-1">
@@ -263,16 +263,16 @@ export function Registration({season, association}: {season: Season; association
               placeholder="Search for a club..."
               value={searchTerm} 
               onChange={e => setSearchTerm(e.target.value)} 
-              className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              className="w-full px-3.5 py-2.5 rounded-lg border border-border-strong text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
             />
 
             {searchTerm && filteredClubs.length > 0 && (
-              <div className="absolute top-full left-0 right-0 bg-white border border-slate-200 rounded-lg shadow-lg max-h-44 overflow-y-auto z-10 mt-1">
+              <div className="absolute top-full left-0 right-0 bg-surface border border-border rounded-lg shadow-lg max-h-44 overflow-y-auto z-10 mt-1">
                 {filteredClubs.map(c => (
                   <button 
                     key={c.id} 
                     onClick={() => selectClub(c)}
-                    className="w-full px-3.5 py-2.5 text-left bg-transparent border-b border-slate-100 last:border-b-0 hover:bg-slate-50 text-sm text-slate-700 transition-colors"
+                    className="w-full px-3.5 py-2.5 text-left bg-transparent border-b border-border last:border-b-0 hover:bg-canvas text-sm text-ink-muted transition-colors"
                   >
                     {c.name}
                   </button>
@@ -284,7 +284,7 @@ export function Registration({season, association}: {season: Season; association
 
         {/* Team Name */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-          <label className="w-full sm:w-36 text-sm font-semibold text-slate-700">
+          <label className="w-full sm:w-36 text-sm font-semibold text-ink-muted">
             Team name:
           </label>
           <div className="flex-1">
@@ -292,21 +292,21 @@ export function Registration({season, association}: {season: Season; association
               placeholder="Enter team name"
               value={teamName} 
               onChange={(e) => setTeamName(e.target.value)} 
-              className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              className="w-full px-3.5 py-2.5 rounded-lg border border-border-strong text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
             />
           </div>
         </div>
 
         {/* Format Select */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-          <label className="w-full sm:w-36 text-sm font-semibold text-slate-700">
+          <label className="w-full sm:w-36 text-sm font-semibold text-ink-muted">
             Format
           </label>
           <div className="flex-1">
             <select 
               value={selectedFormat ? selectedFormat.id : ""} 
               onChange={(e) => setSelectedFormat(formats.find(f => f.id === e.target.value) ?? null)}
-              className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white transition-all"
+              className="w-full px-3.5 py-2.5 rounded-lg border border-border-strong text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-surface transition-all"
             >
               <option value="" disabled>--Select a format--</option>
               {formats.map(f => (
@@ -317,25 +317,25 @@ export function Registration({season, association}: {season: Season; association
         </div>
 
         {selectedFormat && (
-          <div className="flex flex-col gap-5 mt-2 pt-5 border-t border-dashed border-slate-200">
+          <div className="flex flex-col gap-5 mt-2 pt-5 border-t border-dashed border-border">
 
             {/* Players List */}
             <div className="flex flex-col gap-3">
 
               {/* Centered Select Players & Minimum Requirement Message */}
-              <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 text-center mb-1">
-                <h3 className="text-sm font-bold text-slate-800 mb-0.5">
+              <div className="bg-canvas p-3.5 rounded-xl border border-border text-center mb-1">
+                <h3 className="text-sm font-bold text-ink mb-0.5">
                   Select Players
                 </h3>
-                <p className="text-xs text-slate-500">
-                  Minimum required: <span className="font-semibold text-slate-700">{selectedFormat.minPlayers ?? selectedFormat.min ?? 1}</span> player(s)
+                <p className="text-xs text-ink-subtle">
+                  Minimum required: <span className="font-semibold text-ink-muted">{selectedFormat.minPlayers ?? selectedFormat.min ?? 1}</span> player(s)
                 </p>
               </div>
 
               <div className="flex flex-col gap-2.5">
                 {Array.from({ length: playerText.length }).map((_, index) => (
                   <div key={index} className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-                    <label className="w-full sm:w-36 text-sm font-semibold text-slate-700">
+                    <label className="w-full sm:w-36 text-sm font-semibold text-ink-muted">
                       Player {index + 1}
                     </label>
                     <div className="relative flex-1">
@@ -343,15 +343,15 @@ export function Registration({season, association}: {season: Season; association
                         placeholder={`Player ${index + 1} Name`}
                         value={playerText[index]} 
                         onChange={(e) => updatePlayerText(index, e.target.value)} 
-                        className="w-full px-3.5 py-2.5 rounded-lg border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                        className="w-full px-3.5 py-2.5 rounded-lg border border-border-strong text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
                       />
                       {updatedPlayer === index && playerResults.length > 0 && (
-                        <div className="absolute top-full left-0 right-0 bg-white border border-slate-200 rounded-lg shadow-lg max-h-36 overflow-y-auto z-10 mt-1">
+                        <div className="absolute top-full left-0 right-0 bg-surface border border-border rounded-lg shadow-lg max-h-36 overflow-y-auto z-10 mt-1">
                           {playerResults.map(p => (
                             <button 
                               key={p.id} 
                               onClick={() => selectPlayer(index, p)}
-                              className="w-full px-3 py-2 text-left bg-transparent border-b border-slate-100 last:border-b-0 hover:bg-slate-50 text-sm text-slate-700 transition-colors"
+                              className="w-full px-3 py-2 text-left bg-transparent border-b border-border last:border-b-0 hover:bg-canvas text-sm text-ink-muted transition-colors"
                             >
                               {p.firstName + " " + p.lastName}
                             </button>
@@ -367,7 +367,7 @@ export function Registration({season, association}: {season: Season; association
                 <div className="flex sm:pl-40">
                   <button 
                     onClick={() => setPlayerText([...playerText, ""])}
-                    className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 rounded-md font-medium text-sm transition-colors"
+                    className="px-4 py-2 bg-muted hover:bg-border text-ink-muted border border-border-strong rounded-md font-medium text-sm transition-colors"
                   >
                     + Add Player
                   </button>
@@ -377,7 +377,7 @@ export function Registration({season, association}: {season: Season; association
 
             {/* Team Gender */}
             <div className="flex flex-col gap-2">
-              <p className="text-sm font-semibold text-slate-700 text-center mb-1">
+              <p className="text-sm font-semibold text-ink-muted text-center mb-1">
                 What is this team's gender?
               </p>
               <div className="flex justify-center gap-4">
@@ -390,8 +390,8 @@ export function Registration({season, association}: {season: Season; association
                     key={option.id} 
                     className={`flex items-center gap-2 px-4 py-2 rounded-lg border cursor-pointer text-sm transition-all ${
                       gender === option.id 
-                        ? 'border-blue-600 bg-blue-50 font-semibold text-blue-700' 
-                        : 'border-slate-300 bg-white text-slate-700 hover:bg-slate-50'
+                        ? 'border-primary-600 bg-primary-50 font-semibold text-primary-700' 
+                        : 'border-border-strong bg-surface text-ink-muted hover:bg-canvas'
                     }`}
                   >
                     <input 
@@ -400,7 +400,7 @@ export function Registration({season, association}: {season: Season; association
                       value={option.id} 
                       onChange={() => setGender(option.id)} 
                       checked={gender === option.id}
-                      className="accent-blue-600"
+                      className="accent-primary-600"
                     />
                     {option.label}
                   </label>
@@ -409,22 +409,22 @@ export function Registration({season, association}: {season: Season; association
             </div>
 
             {/* Section Information & Comment */}
-            <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
-              <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 text-center">
+            <div className="bg-canvas p-4 rounded-lg border border-border">
+              <p className="text-xs font-semibold text-ink-subtle uppercase tracking-wider mb-2 text-center">
                 sections with this format
               </p>
               <div className="flex flex-wrap justify-center gap-2 mb-4">
                 {sections.filter(s => s.formatId === selectedFormat.id).map(s => (
                   <span 
                     key={s.id} 
-                    className="px-3 py-1 bg-white border border-slate-300 rounded-full text-xs text-slate-700 font-medium shadow-sm"
+                    className="px-3 py-1 bg-surface border border-border-strong rounded-full text-xs text-ink-muted font-medium shadow-sm"
                   >
                     {s.name}
                   </span>
                 ))}
               </div>
 
-              <label className="block text-sm font-semibold text-slate-700 mb-1.5 text-center">
+              <label className="block text-sm font-semibold text-ink-muted mb-1.5 text-center">
                 Please leave a comment about the team's ability and preferred section
               </label>
               <textarea 
@@ -432,20 +432,20 @@ export function Registration({season, association}: {season: Season; association
                 value={sectionComment} 
                 onChange={(e) => setSectionComment(e.target.value)} 
                 placeholder="Enter your comment here..."
-                className="w-full p-2.5 rounded-md border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-y bg-white"
+                className="w-full p-2.5 rounded-md border border-border-strong text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-y bg-surface"
               />
             </div>
 
             {/* Error & Submit */}
             <div className="mt-2">
               {errorMessage && (
-                <div className="text-red-600 text-sm font-medium mb-3 text-center">
+                <div className="text-danger text-sm font-medium mb-3 text-center">
                   {errorMessage}
                 </div>
               )}
               <button 
                 onClick={() => submit()}
-                className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-base font-semibold shadow-sm transition-colors"
+                className="w-full py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-lg text-base font-semibold shadow-sm transition-colors"
               >
                 Submit
               </button>

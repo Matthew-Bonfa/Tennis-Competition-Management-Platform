@@ -110,7 +110,7 @@ function ManageCompetitionPage() {
   }
 
   if (loading) return <LoadingState />;
-  if (loadError) return <div className="text-center py-12 text-red-600">Error: {loadError}</div>;
+  if (loadError) return <div className="text-center py-12 text-danger">Error: {loadError}</div>;
   if (!competition) return <div className="text-center py-12">Competition not found.</div>;
 
   const unchanged = name.trim() === competition.name;
@@ -119,51 +119,51 @@ function ManageCompetitionPage() {
     <div className="max-w-4xl mx-auto px-4 py-8">
       <Link
         to="/manage-competitions"
-        className="inline-flex items-center gap-1 text-sm text-gray-600 hover:text-sky-600 mb-6 transition-colors"
+        className="inline-flex items-center gap-1 text-sm text-ink-muted hover:text-primary-600 mb-6 transition-colors"
       >
         <ArrowLeft className="h-4 w-4" /> Back to Manage Competitions
       </Link>
 
-      <h1 className="text-3xl font-bold text-gray-900 mb-1">Manage Competition</h1>
+      <h1 className="text-3xl font-bold text-ink mb-1">Manage Competition</h1>
       {competition.association?.name && (
-        <p className="text-gray-600 mb-6">{competition.association.name}</p>
+        <p className="text-ink-muted mb-6">{competition.association.name}</p>
       )}
 
       {/* Competition name */}
-      <form onSubmit={handleSave} className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm space-y-4 mb-8">
+      <form onSubmit={handleSave} className="bg-surface border border-border rounded-lg p-6 shadow-sm space-y-4 mb-8">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Competition name</label>
+          <label className="block text-sm font-medium text-ink-muted mb-1">Competition name</label>
           <input
             type="text"
             value={name}
             onChange={(e) => { setName(e.target.value); setSaved(false); }}
             required
-            className="block w-full border border-gray-300 rounded-lg bg-white text-gray-900 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-sky-500"
+            className="block w-full border border-border-strong rounded-lg bg-surface text-ink px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
           />
         </div>
 
-        {saveError && <p className="text-red-600 text-sm">{saveError}</p>}
-        {saved && <p className="text-green-600 text-sm">Saved.</p>}
+        {saveError && <p className="text-danger text-sm">{saveError}</p>}
+        {saved && <p className="text-success text-sm">Saved.</p>}
 
         <button
           type="submit"
           disabled={saving || !name.trim() || unchanged}
-          className="bg-sky-600 text-white font-medium px-6 py-3 rounded-lg hover:bg-sky-700 disabled:opacity-50"
+          className="bg-primary-600 text-white font-medium px-6 py-3 rounded-lg hover:bg-primary-700 disabled:opacity-50"
         >
           {saving ? 'Saving...' : 'Save changes'}
         </button>
       </form>
 
       {/* Seasons and sections */}
-      <div className="bg-white border border-gray-200 rounded-lg p-6 shadow-sm">
+      <div className="bg-surface border border-border rounded-lg p-6 shadow-sm">
         {sortedSeasons.length === 0 ? (
           <div className="text-center py-6">
-            <p className="text-gray-600 mb-4">
+            <p className="text-ink-muted mb-4">
               This competition doesn't have any seasons yet. Please create a new season.
             </p>
             <Link
               to={`/manage-competitions/${id}/create-new-season`}
-              className="inline-block bg-sky-600 text-white font-medium px-4 py-2 rounded-lg hover:bg-sky-700"
+              className="inline-block bg-primary-600 text-white font-medium px-4 py-2 rounded-lg hover:bg-primary-700"
             >
               + Create new season
             </Link>
@@ -175,7 +175,7 @@ function ManageCompetitionPage() {
                 <select
                   value={selectedSeasonId ?? ''}
                   onChange={(e) => setSelectedSeasonId(Number(e.target.value))}
-                  className="border border-gray-300 rounded-lg text-sm px-3 py-2 bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                  className="border border-border-strong rounded-lg text-sm px-3 py-2 bg-surface text-ink focus:outline-none focus:ring-2 focus:ring-primary-500"
                 >
                   {sortedSeasons.map((season: any) => (
                     <option key={season.id} value={season.id}>{season.name}</option>
@@ -183,7 +183,7 @@ function ManageCompetitionPage() {
                 </select>
                 <Link
                   to={`/manage-competitions/${id}/seasons/${selectedSeasonId}`}
-                  className="text-sm text-gray-600 hover:text-sky-600"
+                  className="text-sm text-ink-muted hover:text-primary-600"
                 >
                   Edit season
                 </Link>
@@ -191,25 +191,25 @@ function ManageCompetitionPage() {
 
               <Link
                 to={`/manage-competitions/${id}/create-new-season`}
-                className="bg-sky-600 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-sky-700"
+                className="bg-primary-600 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-primary-700"
               >
                 + Create new season
               </Link>
             </div>
 
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-xl font-bold text-gray-900">Sections</h2>
+              <h2 className="text-xl font-bold text-ink">Sections</h2>
               <Link
                 to={`/manage-competitions/${id}/create-new-section?season=${selectedSeasonId}`}
-                className="bg-sky-600 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-sky-700"
+                className="bg-primary-600 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-primary-700"
               >
                 + Create new section
               </Link>
             </div>
 
-            {sectionsLoading && <p className="text-gray-500 text-sm">Loading sections...</p>}
+            {sectionsLoading && <p className="text-ink-subtle text-sm">Loading sections...</p>}
             {!sectionsLoading && sections.length === 0 && (
-              <p className="text-gray-500 text-sm">
+              <p className="text-ink-subtle text-sm">
                 The selected season doesn't have any sections. Try adding some.
               </p>
             )}
@@ -219,13 +219,13 @@ function ManageCompetitionPage() {
                   <li key={section.id} className="flex items-center justify-between">
                     <Link
                       to={`/sections/${section.id}`}
-                      className="text-sky-600 hover:underline text-sm font-medium"
+                      className="text-primary-600 hover:underline text-sm font-medium"
                     >
                       {section.name}
                     </Link>
                     <Link
                       to={`/manage-competitions/${id}/sections/${section.id}`}
-                      className="text-sm text-gray-600 hover:text-sky-600"
+                      className="text-sm text-ink-muted hover:text-primary-600"
                     >
                       Edit
                     </Link>

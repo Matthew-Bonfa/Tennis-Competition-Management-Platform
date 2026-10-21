@@ -5,22 +5,22 @@ function RegisterTeamPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="max-w-2xl mx-auto my-10 p-8 bg-white rounded-2xl shadow-md border border-slate-100 font-sans text-slate-800">
+    <div className="max-w-2xl mx-auto my-10 p-8 bg-surface rounded-2xl shadow-md border border-border font-sans text-ink">
 
       {/* Header Bar with Centered Text and Back Button */}
-      <div className="mb-7 pb-4 border-b border-slate-100 relative flex items-center justify-center">
+      <div className="mb-7 pb-4 border-b border-border relative flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-slate-900 mb-1">
+          <h2 className="text-2xl font-bold text-ink mb-1">
             Manage Teams
           </h2>
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-ink-subtle">
             Select an option below to proceed.
           </p>
         </div>
 
         <button 
           onClick={() => navigate('/admin')}
-          className="absolute right-0 flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-medium border border-slate-200 transition-all shadow-sm cursor-pointer"
+          className="absolute right-0 flex items-center gap-1.5 px-3 py-1.5 bg-muted hover:bg-border text-ink-muted rounded-lg text-xs font-medium border border-border transition-all shadow-sm cursor-pointer"
         >
           <span>←</span> Back
         </button>
@@ -31,17 +31,17 @@ function RegisterTeamPage() {
         {/* Option 1: Register a Team */}
         <button
           onClick={() => navigate('/manage-teams/register')}
-          className="w-full p-5 bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-500 text-left rounded-2xl transition-all shadow-sm flex items-center justify-between group cursor-pointer"
+          className="w-full p-5 bg-canvas hover:bg-primary-50 border border-border hover:border-primary-500 text-left rounded-2xl transition-all shadow-sm flex items-center justify-between group cursor-pointer"
         >
           <div>
-            <h3 className="text-base font-bold text-slate-900 group-hover:text-blue-700 transition-colors">
+            <h3 className="text-base font-bold text-ink group-hover:text-primary-700 transition-colors">
               Register a Team
             </h3>
-            <p className="text-xs text-slate-500 mt-0.5">
+            <p className="text-xs text-ink-subtle mt-0.5">
               Submit a new team registration for an upcoming season.
             </p>
           </div>
-          <span className="text-slate-400 group-hover:text-blue-600 font-semibold text-lg transition-colors ml-4">
+          <span className="text-ink-subtle group-hover:text-primary-600 font-semibold text-lg transition-colors ml-4">
             →
           </span>
         </button>
@@ -50,17 +50,17 @@ function RegisterTeamPage() {
         {isAuthenticated() && (isAdmin() || isClubAdmin()) && (
           <button
             onClick={() => navigate('/manage-teams/review')}
-            className="w-full p-5 bg-slate-50 hover:bg-blue-50 border border-slate-200 hover:border-blue-500 text-left rounded-2xl transition-all shadow-sm flex items-center justify-between group cursor-pointer"
+            className="w-full p-5 bg-canvas hover:bg-primary-50 border border-border hover:border-primary-500 text-left rounded-2xl transition-all shadow-sm flex items-center justify-between group cursor-pointer"
           >
             <div>
-              <h3 className="text-base font-bold text-slate-900 group-hover:text-blue-700 transition-colors">
+              <h3 className="text-base font-bold text-ink group-hover:text-primary-700 transition-colors">
                 Review Registration Requests
               </h3>
-              <p className="text-xs text-slate-500 mt-0.5">
+              <p className="text-xs text-ink-subtle mt-0.5">
                 View and manage pending team submissions to approve or deny them.
               </p>
             </div>
-            <span className="text-slate-400 group-hover:text-blue-600 font-semibold text-lg transition-colors ml-4">
+            <span className="text-ink-subtle group-hover:text-primary-600 font-semibold text-lg transition-colors ml-4">
               →
             </span>
           </button>

@@ -68,7 +68,7 @@ function SectionPage() {
 
     if (notFound) {
         return (
-            <div className="max-w-7xl mx-auto px-4 py-12 text-center text-gray-600">
+            <div className="max-w-7xl mx-auto px-4 py-12 text-center text-ink-muted">
                 Section not found.
             </div>
         );
@@ -77,16 +77,16 @@ function SectionPage() {
     return (
         <div className="max-w-5xl mx-auto">
             {/* Tab header */}
-            <div className="flex border-b border-gray-200">
+            <div className="flex border-b border-border">
                 <button
                     onClick={() => selectTab('matches')}
-                    className={`flex-1 py-6 text-2xl font-bold ${tab === 'matches' ? 'text-gray-900 bg-white' : 'text-gray-400 bg-gray-50'}`}
+                    className={`flex-1 py-6 text-2xl font-bold ${tab === 'matches' ? 'text-ink bg-surface' : 'text-ink-subtle bg-canvas'}`}
                 >
                     Matches
                 </button>
                 <button
                     onClick={() => selectTab('ladder')}
-                    className={`flex-1 py-6 text-2xl font-bold ${tab === 'ladder' ? 'text-gray-900 bg-white' : 'text-gray-400 bg-gray-50'}`}
+                    className={`flex-1 py-6 text-2xl font-bold ${tab === 'ladder' ? 'text-ink bg-surface' : 'text-ink-subtle bg-canvas'}`}
                 >
                     Ladder
                 </button>
@@ -106,7 +106,7 @@ function SectionPage() {
                         <a
                             href={ladderExportUrl(sectionId!)}
                             download
-                            className="text-sm font-semibold text-blue-600 hover:text-blue-800"
+                            className="text-sm font-semibold text-primary-600 hover:text-primary-800"
                         >
                             Export Ladder (CSV)
                         </a>

@@ -81,13 +81,13 @@ function ClubSearch({ clubs, value, onChange }: ClubSearchProps) {
   // Once a club is picked, show it as a chip that can be cleared to search again
   if (selected) {
     return (
-      <div className="mt-1 flex w-full items-center justify-between rounded border border-gray-300 bg-white px-3 py-1.5 text-gray-900">
+      <div className="mt-1 flex w-full items-center justify-between rounded border border-border-strong bg-surface px-3 py-1.5 text-ink">
         <span>{selected.name}</span>
         <button
           type="button"
           onClick={clear}
           aria-label="Change club"
-          className="text-gray-400 hover:text-gray-600"
+          className="text-ink-subtle hover:text-ink-muted"
         >
           <X className="h-4 w-4" />
         </button>
@@ -98,7 +98,7 @@ function ClubSearch({ clubs, value, onChange }: ClubSearchProps) {
   return (
     <div ref={containerRef} className="relative mt-1">
       <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-        <Search className="h-4 w-4 text-gray-400" />
+        <Search className="h-4 w-4 text-ink-subtle" />
       </div>
       <input
         ref={inputRef}
@@ -115,13 +115,13 @@ function ClubSearch({ clubs, value, onChange }: ClubSearchProps) {
         }}
         onFocus={() => setOpen(true)}
         onKeyDown={handleKeyDown}
-        className="w-full rounded border border-gray-300 py-1.5 pl-9 pr-3 text-gray-900"
+        className="w-full rounded border border-border-strong py-1.5 pl-9 pr-3 text-ink"
       />
 
       {open && (
         <ul
           role="listbox"
-          className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded border border-gray-200 bg-white py-1 shadow-md"
+          className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded border border-border bg-surface py-1 shadow-md"
         >
           {matches.length > 0 ? (
             matches.map((club, i) => (
@@ -135,13 +135,13 @@ function ClubSearch({ clubs, value, onChange }: ClubSearchProps) {
                   choose(club);
                 }}
                 onMouseEnter={() => setHighlighted(i)}
-                className={`cursor-pointer px-3 py-1.5 text-gray-900 ${i === highlighted ? 'bg-sky-50 text-sky-800' : ''}`}
+                className={`cursor-pointer px-3 py-1.5 text-ink ${i === highlighted ? 'bg-primary-50 text-primary-800' : ''}`}
               >
                 {club.name}
               </li>
             ))
           ) : (
-            <li className="px-3 py-1.5 text-gray-500">No clubs match "{query}"</li>
+            <li className="px-3 py-1.5 text-ink-subtle">No clubs match "{query}"</li>
           )}
         </ul>
       )}

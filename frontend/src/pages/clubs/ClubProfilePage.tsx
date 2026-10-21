@@ -41,8 +41,8 @@ function ClubProfile() {
   if (notFound || !club) {
     return (
       <div className="max-w-7xl mx-auto px-4 py-12 text-center">
-        <p className="text-gray-600 mb-4">Club not found.</p>
-        <Link to="/clubs" className="text-sky-600 hover:underline inline-flex items-center gap-1">
+        <p className="text-ink-muted mb-4">Club not found.</p>
+        <Link to="/clubs" className="text-primary-600 hover:underline inline-flex items-center gap-1">
           <ArrowLeft className="h-4 w-4" /> Back to Clubs Directory
         </Link>
       </div>
@@ -54,51 +54,51 @@ function ClubProfile() {
       {/* Back Button */}
       <Link
         to="/clubs"
-        className="inline-flex items-center gap-1 text-sm text-gray-600 hover:text-sky-600 mb-6 transition-colors"
+        className="inline-flex items-center gap-1 text-sm text-ink-muted hover:text-primary-600 mb-6 transition-colors"
       >
         <ArrowLeft className="h-4 w-4" /> Back to Clubs
       </Link>
 
       {/* Main Profile Card */}
-      <div className="bg-white border border-gray-200 rounded-lg p-8 shadow-sm">
-        <div className="relative text-center border-b border-gray-100 pb-6 mb-6">
-          <div className="bg-sky-50 text-sky-700 font-semibold px-4 py-2 rounded-full text-sm border border-sky-200 absolute top-0 right-0">
+      <div className="bg-surface border border-border rounded-lg p-8 shadow-sm">
+        <div className="relative text-center border-b border-border pb-6 mb-6">
+          <div className="bg-primary-50 text-primary-700 font-semibold px-4 py-2 rounded-full text-sm border border-primary-200 absolute top-0 right-0">
             {club.isFinancialMember ? 'Financial Member' : 'Non-Financial Member'}
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 pr-28 sm:pr-0">{club.name}</h1>
+          <h1 className="text-3xl font-bold text-ink pr-28 sm:pr-0">{club.name}</h1>
         </div>
 
         {/* Associations & Teams */}
         <div className="grid md:grid-cols-2 gap-6">
-          <div className="bg-gray-50 border border-gray-100 rounded-lg p-5">
-            <span className="text-xs uppercase tracking-wider text-gray-500 font-semibold block mb-1">
+          <div className="bg-canvas border border-border rounded-lg p-5">
+            <span className="text-xs uppercase tracking-wider text-ink-subtle font-semibold block mb-1">
               Associations
             </span>
             {club.associations.length > 0 ? (
               <ul>
                 {club.associations.map((a: any) => (
                   <li key={a.id}>
-                    <Link to={`/associations/${a.id}`} className="text-sky-700 hover:underline">
+                    <Link to={`/associations/${a.id}`} className="text-primary-700 hover:underline">
                       {a.name}
                     </Link>
                   </li>
                 ))}
               </ul>
             ) : (
-              <p className="text-gray-500">No associations</p>
+              <p className="text-ink-subtle">No associations</p>
             )}
           </div>
 
-          <div className="bg-gray-50 border border-gray-100 rounded-lg p-5">
-            <span className="text-xs uppercase tracking-wider text-gray-500 font-semibold block mb-1">
+          <div className="bg-canvas border border-border rounded-lg p-5">
+            <span className="text-xs uppercase tracking-wider text-ink-subtle font-semibold block mb-1">
               Teams
             </span>
             {club.teams.length > 0 ? (
               <ul>
                 {club.teams.map((t: any) => (
                   <li key={t.id} className="flex items-center gap-2">
-                    <Building2 className="h-4 w-4 text-sky-600" />
-                    <Link to={`/teams/${t.id}`} className="hover:underline hover:text-sky-600">
+                    <Building2 className="h-4 w-4 text-primary-600" />
+                    <Link to={`/teams/${t.id}`} className="hover:underline hover:text-primary-600">
                       {t.name}
                     </Link>
                     {' — '}{t.sectionName}
@@ -106,15 +106,15 @@ function ClubProfile() {
                 ))}
               </ul>
             ) : (
-              <p className="text-gray-500">No teams</p>
+              <p className="text-ink-subtle">No teams</p>
             )}
           </div>
         </div>
 
         {/* Officials & Contact */}
         <div className="grid md:grid-cols-2 gap-6 mt-6">
-          <div className="bg-gray-50 border border-gray-100 rounded-lg p-5">
-            <span className="text-xs uppercase tracking-wider text-gray-500 font-semibold block mb-1">
+          <div className="bg-canvas border border-border rounded-lg p-5">
+            <span className="text-xs uppercase tracking-wider text-ink-subtle font-semibold block mb-1">
               Officials
             </span>
             {club.officials.length > 0 ? (
@@ -126,20 +126,20 @@ function ClubProfile() {
                 ))}
               </ul>
             ) : (
-              <p className="text-gray-500">No officials</p>
+              <p className="text-ink-subtle">No officials</p>
             )}
           </div>
 
           {club.contactPerson && (
-            <div className="bg-gray-50 border border-gray-100 rounded-lg p-5 text-left">
-              <span className="text-xs uppercase tracking-wider text-gray-500 font-semibold block mb-1">
+            <div className="bg-canvas border border-border rounded-lg p-5 text-left">
+              <span className="text-xs uppercase tracking-wider text-ink-subtle font-semibold block mb-1">
                 Contact
               </span>
               <p>{club.contactPerson.firstName} {club.contactPerson.lastName}</p>
               {club.contactPerson.phone && (
                 <p>
                   Phone:{' '}
-                  <a href={`tel:${club.contactPerson.phone}`} className="text-sky-600 hover:underline">
+                  <a href={`tel:${club.contactPerson.phone}`} className="text-primary-600 hover:underline">
                     {club.contactPerson.phone}
                   </a>
                 </p>
@@ -147,7 +147,7 @@ function ClubProfile() {
               {club.contactPerson.email && (
                 <p>
                   Email:{' '}
-                  <a href={`mailto:${club.contactPerson.email}`} className="text-sky-600 hover:underline">
+                  <a href={`mailto:${club.contactPerson.email}`} className="text-primary-600 hover:underline">
                     {club.contactPerson.email}
                   </a>
                 </p>

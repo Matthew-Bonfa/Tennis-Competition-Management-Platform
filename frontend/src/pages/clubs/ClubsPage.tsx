@@ -35,19 +35,19 @@ function ClubsPage() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-gray-900 mb-6">Clubs Directory</h1>
+      <h1 className="text-3xl font-bold text-ink mb-6">Clubs Directory</h1>
 
       {/* Search Bar */}
       <div className="relative mb-8">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-          <Search className="h-5 w-5 text-gray-400" />
+          <Search className="h-5 w-5 text-ink-subtle" />
         </div>
         <input
           type="text"
           placeholder="Search clubs by name..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="block w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg shadow-sm bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-sky-500"
+          className="block w-full pl-10 pr-4 py-3 border border-border-strong rounded-lg shadow-sm bg-surface text-ink focus:outline-none focus:ring-2 focus:ring-primary-500"
         />
       </div>
 
@@ -59,19 +59,19 @@ function ClubsPage() {
               key={club.id}
               to={`/clubs/${club.id}`}
 
-              className="block bg-white border border-gray-200 rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between"
+              className="block bg-surface border border-border rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between"
             >
               <div>
-                <h3 className="text-xl font-semibold text-sky-800 mb-2 text-center">{club.name}</h3>
-                <p className="text-sm text-gray-600">
+                <h3 className="text-xl font-semibold text-primary-800 mb-2 text-center">{club.name}</h3>
+                <p className="text-sm text-ink-muted">
                   {club.isFinancialMember ? 'Financial Member' : 'Non-Financial Member'}
                 </p>
-                <div className="mt-3 text-xs bg-gray-100 text-gray-600 px-2.5 py-1 rounded inline-block">
+                <div className="mt-3 text-xs bg-muted text-ink-muted px-2.5 py-1 rounded inline-block">
                   {club.teamCount} {club.teamCount === 1 ? 'Team' : 'Teams'} · {club.memberCount} {club.memberCount === 1 ? 'Member' : 'Members'}
                 </div>
               </div>
 
-              <div className="mt-6 text-sky-600 text-sm font-medium flex items-center">
+              <div className="mt-6 text-primary-600 text-sm font-medium flex items-center">
                 View Club Profile &rarr;
               </div>
             </Link>
