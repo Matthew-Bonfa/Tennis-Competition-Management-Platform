@@ -20,6 +20,57 @@ async function main() {
       phone: '0400 000 001',
     }),
     db.orm.public.Person.create({
+      personCode: 'P401',
+      firstName: 'Rex',
+      lastName: 'Kelly',
+      dateOfBirth: Temporal.Instant.from('2001-03-15T00:00:00Z'),
+      utrId: 'UTR100001',
+      tennisAustraliaNumber: 'TA100001',
+      email: 'rex.kelly@example.com',
+      phone: '0400 200 001',
+    }),
+    db.orm.public.Person.create({
+      personCode: 'P411',
+      firstName: 'Zach',
+      lastName: 'Ranson',
+      dateOfBirth: Temporal.Instant.from('2001-03-15T00:00:00Z'),
+      utrId: 'UTR100001',
+      tennisAustraliaNumber: 'TA100001',
+      email: 'zach.ranson@example.com',
+      phone: '0400 230 001',
+    }),
+    db.orm.public.Person.create({
+      personCode: 'P414',
+      firstName: 'Matthew',
+      lastName: 'Bonfa',
+      dateOfBirth: Temporal.Instant.from('2001-03-15T00:00:00Z'),
+      utrId: 'UTR100001',
+      tennisAustraliaNumber: 'TA100001',
+      email: 'matthew.bonfa@example.com',
+      phone: '0400 230 301',
+    }),
+    db.orm.public.Person.create({
+      personCode: 'P415',
+      firstName: 'Ella',
+      lastName: 'Goodwin',
+      dateOfBirth: Temporal.Instant.from('2001-03-15T00:00:00Z'),
+      utrId: 'UTR100001',
+      tennisAustraliaNumber: 'TA100001',
+      email: 'ella.goodwin@example.com',
+      phone: '0400 230 341',
+    }),
+    db.orm.public.Person.create({
+      personCode: 'P417',
+      firstName: 'Lachlan',
+      lastName: 'Nieuwenhuizen',
+      dateOfBirth: Temporal.Instant.from('2001-03-15T00:00:00Z'),
+      utrId: 'UTR100001',
+      tennisAustraliaNumber: 'TA100001',
+      email: 'lachlan.nieuwenhuizen@example.com',
+      phone: '0400 232 341',
+    }),
+
+    db.orm.public.Person.create({
       personCode: 'P002',
       firstName: 'Daniel',
       lastName: 'Wilson',
@@ -143,42 +194,46 @@ async function main() {
   // =========================================================
   // ASSOCIATION & CLUBS
   // =========================================================
+  // Real association/club names and public venue addresses are used for
+  // context. All people, contact details, team names, fixtures and results
+  // are fictional.
   const association = await db.orm.public.Association.create({
-    name: 'Eastern Region Tennis Association',
+    name: 'Waverley and District Tennis Association Incorporated',
     contactPersonId: michael.id,
   });
 
-  const kilsyth = await db.orm.public.Club.create({
-    name: 'Kilsyth Tennis Club',
+  const glenWaverley = await db.orm.public.Club.create({
+    name: 'Glen Waverley Tennis Club',
     isFinancialMember: true,
-    address: 'Kilsyth VIC 3137', // placeholder sample data
+    address:
+      '3 Aquatic Place (Rear Monash Aquatic & Recreation Centre), Glen Waverley VIC 3150',
     contactPersonId: sophie.id,
   });
-  const ringwood = await db.orm.public.Club.create({
-    name: 'Ringwood Tennis Club',
+  const eastBurwood = await db.orm.public.Club.create({
+    name: 'East Burwood Tennis Club',
     isFinancialMember: true,
-    address: 'Ringwood VIC 3134', // placeholder sample data
+    address: '298–300 Burwood Highway, Burwood East VIC 3151',
     contactPersonId: emily.id,
   });
-  const croydon = await db.orm.public.Club.create({
-    name: 'Croydon Tennis Club',
+  const pinewood = await db.orm.public.Club.create({
+    name: 'Notting Hill Pinewood Tennis Club',
     isFinancialMember: true,
-    address: 'Croydon VIC 3136', // placeholder sample data
+    address: '1–9 Baker Avenue, Glen Waverley VIC 3150',
     contactPersonId: sarah.id,
   });
-  const lilydale = await db.orm.public.Club.create({
-    name: 'Lilydale Tennis Club',
+  const lumReserve = await db.orm.public.Club.create({
+    name: 'Lum Reserve Tennis Club',
     isFinancialMember: true,
-    address: 'Lilydale VIC 3140', // placeholder sample data
+    address: '231 Lum Road, Wheelers Hill VIC 3150',
     contactPersonId: michael.id,
   });
 
   await Promise.all(
     [
-      { associationId: association.id, clubId: kilsyth.id },
-      { associationId: association.id, clubId: ringwood.id },
-      { associationId: association.id, clubId: croydon.id },
-      { associationId: association.id, clubId: lilydale.id },
+      { associationId: association.id, clubId: glenWaverley.id },
+      { associationId: association.id, clubId: eastBurwood.id },
+      { associationId: association.id, clubId: pinewood.id },
+      { associationId: association.id, clubId: lumReserve.id },
     ].map((data) => db.orm.public.AssociationClub.create(data)),
   );
 
@@ -384,9 +439,18 @@ async function main() {
 
   // Rubber layout for each format: how many rubbers a match has, in score-sheet
   // order, and whether each is singles, doubles or mixed doubles.
-  const rubberLayout = (...types: Array<'singles' | 'doubles' | 'mixed_doubles'>) =>
+  const rubberLayout = (
+    ...types: Array<'singles' | 'doubles' | 'mixed_doubles'>
+  ) =>
     types.map((rubberType, index) => ({ rubberNumber: index + 1, rubberType }));
-  const threeSinglesThreeDoubles = rubberLayout('singles', 'singles', 'singles', 'doubles', 'doubles', 'doubles');
+  const threeSinglesThreeDoubles = rubberLayout(
+    'singles',
+    'singles',
+    'singles',
+    'doubles',
+    'doubles',
+    'doubles',
+  );
   const singlesSinglesDoubles = rubberLayout('singles', 'singles', 'doubles');
 
   await Promise.all(
@@ -399,12 +463,25 @@ async function main() {
       { format: singlesDoublesRubbersSun, rubbers: singlesSinglesDoubles },
       { format: greenBallSat, rubbers: threeSinglesThreeDoubles },
       { format: greenBallSun, rubbers: threeSinglesThreeDoubles },
-      { format: lSeries, rubbers: rubberLayout('doubles', 'doubles', 'doubles') },
+      {
+        format: lSeries,
+        rubbers: rubberLayout('doubles', 'doubles', 'doubles'),
+      },
       { format: gSeries, rubbers: threeSinglesThreeDoubles },
       { format: saturdayPennantFormat, rubbers: singlesSinglesDoubles },
-      { format: midweekMixedFormat, rubbers: rubberLayout('mixed_doubles', 'mixed_doubles', 'mixed_doubles', 'mixed_doubles') },
+      {
+        format: midweekMixedFormat,
+        rubbers: rubberLayout(
+          'mixed_doubles',
+          'mixed_doubles',
+          'mixed_doubles',
+          'mixed_doubles',
+        ),
+      },
     ].flatMap(({ format, rubbers }) =>
-      rubbers.map((rubber) => db.orm.public.FormatRubber.create({ formatId: format.id, ...rubber })),
+      rubbers.map((rubber) =>
+        db.orm.public.FormatRubber.create({ formatId: format.id, ...rubber }),
+      ),
     ),
   );
 
@@ -415,61 +492,61 @@ async function main() {
     [
       {
         personId: jack.id,
-        clubId: kilsyth.id,
+        clubId: glenWaverley.id,
         isPrimaryClub: true,
         isFinancialMember: true,
       },
       {
         personId: daniel.id,
-        clubId: kilsyth.id,
+        clubId: glenWaverley.id,
         isPrimaryClub: true,
         isFinancialMember: true,
       },
       {
         personId: oliver.id,
-        clubId: ringwood.id,
+        clubId: eastBurwood.id,
         isPrimaryClub: true,
         isFinancialMember: true,
       },
       {
         personId: noah.id,
-        clubId: ringwood.id,
+        clubId: eastBurwood.id,
         isPrimaryClub: true,
         isFinancialMember: true,
       },
       {
         personId: ethan.id,
-        clubId: croydon.id,
+        clubId: pinewood.id,
         isPrimaryClub: true,
         isFinancialMember: true,
       },
       {
         personId: liam.id,
-        clubId: croydon.id,
+        clubId: pinewood.id,
         isPrimaryClub: true,
         isFinancialMember: true,
       },
       {
         personId: henry.id,
-        clubId: lilydale.id,
+        clubId: lumReserve.id,
         isPrimaryClub: true,
         isFinancialMember: true,
       },
       {
         personId: thomas.id,
-        clubId: lilydale.id,
+        clubId: lumReserve.id,
         isPrimaryClub: true,
         isFinancialMember: true,
       },
       {
         personId: sophie.id,
-        clubId: kilsyth.id,
+        clubId: glenWaverley.id,
         isPrimaryClub: true,
         isFinancialMember: true,
       },
       {
         personId: emily.id,
-        clubId: ringwood.id,
+        clubId: eastBurwood.id,
         isPrimaryClub: true,
         isFinancialMember: true,
       },
@@ -483,17 +560,17 @@ async function main() {
         role: 'ASSOCIATION_ADMIN',
         associationId: association.id,
       },
-      { personId: sophie.id, role: 'CLUB_ADMIN', clubId: kilsyth.id },
-      { personId: emily.id, role: 'CLUB_ADMIN', clubId: ringwood.id },
-      { personId: sarah.id, role: 'CLUB_ADMIN', clubId: croydon.id },
-      { personId: jack.id, role: 'PLAYER', clubId: kilsyth.id },
-      { personId: daniel.id, role: 'PLAYER', clubId: kilsyth.id },
-      { personId: oliver.id, role: 'PLAYER', clubId: ringwood.id },
-      { personId: noah.id, role: 'PLAYER', clubId: ringwood.id },
-      { personId: ethan.id, role: 'PLAYER', clubId: croydon.id },
-      { personId: liam.id, role: 'PLAYER', clubId: croydon.id },
-      { personId: henry.id, role: 'PLAYER', clubId: lilydale.id },
-      { personId: thomas.id, role: 'PLAYER', clubId: lilydale.id },
+      { personId: sophie.id, role: 'CLUB_ADMIN', clubId: glenWaverley.id },
+      { personId: emily.id, role: 'CLUB_ADMIN', clubId: eastBurwood.id },
+      { personId: sarah.id, role: 'CLUB_ADMIN', clubId: pinewood.id },
+      { personId: jack.id, role: 'PLAYER', clubId: glenWaverley.id },
+      { personId: daniel.id, role: 'PLAYER', clubId: glenWaverley.id },
+      { personId: oliver.id, role: 'PLAYER', clubId: eastBurwood.id },
+      { personId: noah.id, role: 'PLAYER', clubId: eastBurwood.id },
+      { personId: ethan.id, role: 'PLAYER', clubId: pinewood.id },
+      { personId: liam.id, role: 'PLAYER', clubId: pinewood.id },
+      { personId: henry.id, role: 'PLAYER', clubId: lumReserve.id },
+      { personId: thomas.id, role: 'PLAYER', clubId: lumReserve.id },
     ].map((data) => db.orm.public.PersonRole.create(data)),
   );
 
@@ -558,70 +635,70 @@ async function main() {
   // =========================================================
   // TEAMS & PLAYERS
   // =========================================================
-  const kilsythTeam = await db.orm.public.Team.create({
-    clubId: kilsyth.id,
+  const glenWaverleyTeam = await db.orm.public.Team.create({
+    clubId: glenWaverley.id,
     sectionId: section.id,
-    name: 'Kilsyth A',
+    name: 'Glen Waverley A',
     teamGender: 'open',
   });
-  const ringwoodTeam = await db.orm.public.Team.create({
-    clubId: ringwood.id,
+  const eastBurwoodTeam = await db.orm.public.Team.create({
+    clubId: eastBurwood.id,
     sectionId: section.id,
-    name: 'Ringwood A',
+    name: 'East Burwood A',
     teamGender: 'open',
   });
-  const croydonTeam = await db.orm.public.Team.create({
-    clubId: croydon.id,
+  const pinewoodTeam = await db.orm.public.Team.create({
+    clubId: pinewood.id,
     sectionId: section.id,
-    name: 'Croydon A',
+    name: 'Notting Hill Pinewood A',
     teamGender: 'open',
   });
-  const lilydaleTeam = await db.orm.public.Team.create({
-    clubId: lilydale.id,
+  const lumReserveTeam = await db.orm.public.Team.create({
+    clubId: lumReserve.id,
     sectionId: section.id,
-    name: 'Lilydale A',
+    name: 'Lum Reserve A',
     teamGender: 'open',
   });
 
   await Promise.all(
     [
-      { teamId: kilsythTeam.id, personId: jack.id },
-      { teamId: kilsythTeam.id, personId: daniel.id },
-      { teamId: ringwoodTeam.id, personId: oliver.id },
-      { teamId: ringwoodTeam.id, personId: noah.id },
-      { teamId: croydonTeam.id, personId: ethan.id },
-      { teamId: croydonTeam.id, personId: liam.id },
-      { teamId: lilydaleTeam.id, personId: henry.id },
-      { teamId: lilydaleTeam.id, personId: thomas.id },
+      { teamId: glenWaverleyTeam.id, personId: jack.id },
+      { teamId: glenWaverleyTeam.id, personId: daniel.id },
+      { teamId: eastBurwoodTeam.id, personId: oliver.id },
+      { teamId: eastBurwoodTeam.id, personId: noah.id },
+      { teamId: pinewoodTeam.id, personId: ethan.id },
+      { teamId: pinewoodTeam.id, personId: liam.id },
+      { teamId: lumReserveTeam.id, personId: henry.id },
+      { teamId: lumReserveTeam.id, personId: thomas.id },
     ].map((data) => db.orm.public.TeamPlayer.create(data)),
   );
 
   // =========================================================
-  // MATCH 1: Kilsyth vs Ringwood
+  // MATCH 1: Glen Waverley vs East Burwood
   // =========================================================
   const match1 = await db.orm.public.Match.create({
     sectionId: section.id,
-    homeTeamId: kilsythTeam.id,
-    awayTeamId: ringwoodTeam.id,
+    homeTeamId: glenWaverleyTeam.id,
+    awayTeamId: eastBurwoodTeam.id,
     roundNumber: 1,
     matchDate: Temporal.Instant.from('2026-10-10T13:00:00Z'),
     matchStatus: 'completed',
     enteredByPersonId: sophie.id,
     confirmedByPersonId: emily.id,
-    winningTeamId: kilsythTeam.id,
+    winningTeamId: glenWaverleyTeam.id,
   });
 
   const rubber1 = await db.orm.public.Rubber.create({
     matchId: match1.id,
     rubberNumber: 1,
     rubberType: 'singles',
-    winningTeamId: kilsythTeam.id,
+    winningTeamId: glenWaverleyTeam.id,
     outcomeType: 'normal',
   });
   await Promise.all(
     [
-      { rubberId: rubber1.id, teamId: kilsythTeam.id, personId: jack.id },
-      { rubberId: rubber1.id, teamId: ringwoodTeam.id, personId: oliver.id },
+      { rubberId: rubber1.id, teamId: glenWaverleyTeam.id, personId: jack.id },
+      { rubberId: rubber1.id, teamId: eastBurwoodTeam.id, personId: oliver.id },
     ].map((data) => db.orm.public.RubberPlayer.create(data)),
   );
   await Promise.all(
@@ -635,13 +712,17 @@ async function main() {
     matchId: match1.id,
     rubberNumber: 2,
     rubberType: 'singles',
-    winningTeamId: ringwoodTeam.id,
+    winningTeamId: eastBurwoodTeam.id,
     outcomeType: 'normal',
   });
   await Promise.all(
     [
-      { rubberId: rubber2.id, teamId: kilsythTeam.id, personId: daniel.id },
-      { rubberId: rubber2.id, teamId: ringwoodTeam.id, personId: noah.id },
+      {
+        rubberId: rubber2.id,
+        teamId: glenWaverleyTeam.id,
+        personId: daniel.id,
+      },
+      { rubberId: rubber2.id, teamId: eastBurwoodTeam.id, personId: noah.id },
     ].map((data) => db.orm.public.RubberPlayer.create(data)),
   );
   await Promise.all(
@@ -655,15 +736,19 @@ async function main() {
     matchId: match1.id,
     rubberNumber: 3,
     rubberType: 'doubles',
-    winningTeamId: kilsythTeam.id,
+    winningTeamId: glenWaverleyTeam.id,
     outcomeType: 'normal',
   });
   await Promise.all(
     [
-      { rubberId: rubber3.id, teamId: kilsythTeam.id, personId: jack.id },
-      { rubberId: rubber3.id, teamId: kilsythTeam.id, personId: daniel.id },
-      { rubberId: rubber3.id, teamId: ringwoodTeam.id, personId: oliver.id },
-      { rubberId: rubber3.id, teamId: ringwoodTeam.id, personId: noah.id },
+      { rubberId: rubber3.id, teamId: glenWaverleyTeam.id, personId: jack.id },
+      {
+        rubberId: rubber3.id,
+        teamId: glenWaverleyTeam.id,
+        personId: daniel.id,
+      },
+      { rubberId: rubber3.id, teamId: eastBurwoodTeam.id, personId: oliver.id },
+      { rubberId: rubber3.id, teamId: eastBurwoodTeam.id, personId: noah.id },
     ].map((data) => db.orm.public.RubberPlayer.create(data)),
   );
   await Promise.all(
@@ -677,42 +762,42 @@ async function main() {
   // =========================================================
   // REMAINING SEASON FIXTURES
   // =========================================================
-  // Round 1's Kilsyth vs Ringwood fixture is already seeded above with a
-  // full scoreline. The rest below are plain scheduled fixtures spread
+  // Round 1's Glen Waverley vs East Burwood fixture is already seeded above
+  // with a full scoreline. The rest below are plain scheduled fixtures spread
   // across a few more rounds so there's something for the round selector
   // and ladder to page through beyond a single played match.
   await Promise.all(
     [
       // Round 1's other fixture
       {
-        homeTeamId: croydonTeam.id,
-        awayTeamId: lilydaleTeam.id,
+        homeTeamId: pinewoodTeam.id,
+        awayTeamId: lumReserveTeam.id,
         roundNumber: 1,
         matchDate: Temporal.Instant.from('2026-10-10T13:00:00Z'),
       },
       // Round 2
       {
-        homeTeamId: kilsythTeam.id,
-        awayTeamId: croydonTeam.id,
+        homeTeamId: glenWaverleyTeam.id,
+        awayTeamId: pinewoodTeam.id,
         roundNumber: 2,
         matchDate: Temporal.Instant.from('2026-10-17T13:00:00Z'),
       },
       {
-        homeTeamId: ringwoodTeam.id,
-        awayTeamId: lilydaleTeam.id,
+        homeTeamId: eastBurwoodTeam.id,
+        awayTeamId: lumReserveTeam.id,
         roundNumber: 2,
         matchDate: Temporal.Instant.from('2026-10-17T13:00:00Z'),
       },
       // Round 3
       {
-        homeTeamId: lilydaleTeam.id,
-        awayTeamId: kilsythTeam.id,
+        homeTeamId: lumReserveTeam.id,
+        awayTeamId: glenWaverleyTeam.id,
         roundNumber: 3,
         matchDate: Temporal.Instant.from('2026-10-24T13:00:00Z'),
       },
       {
-        homeTeamId: croydonTeam.id,
-        awayTeamId: ringwoodTeam.id,
+        homeTeamId: pinewoodTeam.id,
+        awayTeamId: eastBurwoodTeam.id,
         roundNumber: 3,
         matchDate: Temporal.Instant.from('2026-10-24T13:00:00Z'),
       },
@@ -758,16 +843,16 @@ async function main() {
     name: 'Division 1',
   });
 
-  const kilsythMidweekTeam = await db.orm.public.Team.create({
-    clubId: kilsyth.id,
+  const glenWaverleyMidweekTeam = await db.orm.public.Team.create({
+    clubId: glenWaverley.id,
     sectionId: midweekSection.id,
-    name: 'Kilsyth Midweek',
+    name: 'Glen Waverley Midweek',
     teamGender: 'open',
   });
-  const ringwoodMidweekTeam = await db.orm.public.Team.create({
-    clubId: ringwood.id,
+  const eastBurwoodMidweekTeam = await db.orm.public.Team.create({
+    clubId: eastBurwood.id,
     sectionId: midweekSection.id,
-    name: 'Ringwood Midweek',
+    name: 'East Burwood Midweek',
     teamGender: 'open',
   });
 
@@ -775,10 +860,10 @@ async function main() {
   // result can only be entered for it if each team has a pair to put on court.
   await Promise.all(
     [
-      { teamId: kilsythMidweekTeam.id, personId: jack.id },
-      { teamId: kilsythMidweekTeam.id, personId: daniel.id },
-      { teamId: ringwoodMidweekTeam.id, personId: oliver.id },
-      { teamId: ringwoodMidweekTeam.id, personId: noah.id },
+      { teamId: glenWaverleyMidweekTeam.id, personId: jack.id },
+      { teamId: glenWaverleyMidweekTeam.id, personId: daniel.id },
+      { teamId: eastBurwoodMidweekTeam.id, personId: oliver.id },
+      { teamId: eastBurwoodMidweekTeam.id, personId: noah.id },
     ].map((data) => db.orm.public.TeamPlayer.create(data)),
   );
 
@@ -786,8 +871,8 @@ async function main() {
   // player profile's "upcoming matches" row, not just the competitions list.
   await db.orm.public.Match.create({
     sectionId: midweekSection.id,
-    homeTeamId: kilsythMidweekTeam.id,
-    awayTeamId: ringwoodMidweekTeam.id,
+    homeTeamId: glenWaverleyMidweekTeam.id,
+    awayTeamId: eastBurwoodMidweekTeam.id,
     roundNumber: 1,
     matchDate: Temporal.Instant.from('2026-10-14T18:00:00Z'),
     matchStatus: 'scheduled',
