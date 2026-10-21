@@ -79,7 +79,7 @@ function EnterResultPage() {
 
   if (!isAuthenticated()) {
     return (
-      <div className="max-w-md mx-auto px-4 py-12">
+      <div className="max-w-md mx-auto px-4 py-12 sm:px-6 lg:px-8">
         <div className="space-y-4 bg-surface p-8 rounded-lg shadow-sm text-center">
           <h2 className="text-2xl font-bold text-ink">Please Sign In</h2>
           <p className="text-sm text-ink-muted">Sign in to enter a match result.</p>
@@ -106,7 +106,7 @@ function EnterResultPage() {
 
   if (state === 'notFound' || state === 'forbidden' || !form || !match) {
     return (
-      <div className="max-w-3xl mx-auto px-4 py-12 text-center">
+      <div className="max-w-3xl mx-auto px-4 py-12 sm:px-6 lg:px-8 text-center">
         <p className="text-ink-muted mb-4">
           {state === 'notFound'
             ? 'Match not found.'
@@ -124,7 +124,7 @@ function EnterResultPage() {
   const teamNames = { home: match.homeTeam.name, away: match.awayTeam.name };
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
+    <div className="max-w-3xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
       {backLink}
 
       <h1 className="text-xl font-bold text-ink">

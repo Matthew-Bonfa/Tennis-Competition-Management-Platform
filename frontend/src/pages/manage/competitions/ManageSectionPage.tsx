@@ -142,7 +142,7 @@ function ManageSectionPage() {
 
   return (
     <>
-      <div className="max-w-2xl mx-auto px-4 py-8">
+      <div className="max-w-2xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
         <Link
           to={`/manage-competitions/${id}?season=${section.seasonId}`}
           className="inline-flex items-center gap-1 text-sm text-ink-muted hover:text-primary-600 mb-6 transition-colors"

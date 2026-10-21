@@ -68,14 +68,14 @@ function SectionPage() {
 
     if (notFound) {
         return (
-            <div className="max-w-7xl mx-auto px-4 py-12 text-center text-ink-muted">
+            <div className="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8 text-center text-ink-muted">
                 Section not found.
             </div>
         );
     }
 
     return (
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-5xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
             {/* Tab header */}
             <div className="flex border-b border-border">
                 <button

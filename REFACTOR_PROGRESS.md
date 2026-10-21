@@ -4,13 +4,12 @@ Branch: `feature/frontend/refactor`
 Scope: visual + structural refactor of `frontend/` only. No functional, route, API, state or
 copy changes. Verification per phase: `npm run build` and `npm run lint` in `frontend/`.
 
-**Next step:** Phase 5c — public page polish (Home, Competitions, Clubs, Associations, Players,
-Teams, Admin). This is the per-page pass over spacing, typography and interactive states, now
-that colour (5a) and the radius/shadow scale (5b) are uniform across the app. Phases 0–4, 5a and
-5b are complete: the build is green, `src/` is restructured, the theme tokens are in place **and
-in use**, every radius and shadow now comes from a three-value scale, the header is responsive
-with a working Log in / Log out button, and loading and empty states render through shared
-components.
+**Next step:** Phase 5d — the `ErrorState` primitive, plus the 5 error and 3 not-found returns
+deliberately deferred from Phase 4b. Phases 0–4 and 5a–5c are complete: the build is green,
+`src/` is restructured, the theme tokens are in place **and in use**, every radius and shadow
+comes from a three-value scale, every page shell shares one container that lines up with the
+header, the header is responsive with a working Log in / Log out button, and loading and empty
+states render through shared components.
 
 > **Baseline finding (2026-10-20):** the frontend does **not** build at HEAD `8876186`.
 > `npm run build` (`tsc -b && vite build`) fails with **160 TypeScript errors across 13 files**,
@@ -473,13 +472,49 @@ left alone. Noting this for accuracy: the first inventory counted "13 bare `shad
 those were the `shadow` inside `transition-shadow` — only 3 were genuinely bare, on the three
 page-level centred cards in `App.tsx`, `LoginPage.tsx` and `EnterResultPage.tsx`.
 
-#### 5c–5f — per-area detail polish (batched, one commit each)
+#### 5c — One page container, applied globally (one commit) ✅
 
-- [ ] 5c Public pages: Home, Competitions(+Profile, Section), Clubs(+Profile),
+The Phase 3 notes flagged that the header used `px-4 sm:px-6 lg:px-8` while pages used a flat
+`px-4`, so from 640px up the header content sat 8–16px further in than the page content below
+it. The same survey turned up five different page-shell padding combinations — including
+`SectionPage`, whose shell was `max-w-5xl mx-auto` with no padding at all, so its content ran to
+the screen edge.
+
+38 page shells across 28 files now share one container: `max-w-* mx-auto px-4 py-8 sm:px-6
+lg:px-8`. Only the max-width stays per-page (narrow forms vs wide grids); the padding is
+uniform, and it matches the header exactly, so page content and the logo share a left edge at
+every breakpoint.
+
+| Shell was | Now |
+| --- | --- |
+| `px-4 py-8` (20 pages) | `px-4 py-8 sm:px-6 lg:px-8` |
+| `px-4 py-12` (HomePage, state shells) | `px-4 py-12 sm:px-6 lg:px-8` |
+| `mt-10 px-4` (ManageClubsPage, EditClubPage) | `px-4 py-8 sm:px-6 lg:px-8` |
+| `p-4 space-y-6` / `p-6 space-y-6` | `px-4 py-8 sm:px-6 lg:px-8 space-y-6` |
+| *(none)* — SectionPage | `px-4 py-8 sm:px-6 lg:px-8` |
+
+Two things this pass deliberately did **not** touch, both left for their own batches: the
+register-team cards (`my-10 p-8`) and the in-page modal panels (`my-8 p-6`), which are not page
+shells. The `my-` guard in the transform is what keeps those out.
+
+**One near-miss worth recording.** The rule that adds padding to a shell with none (`mx-auto"`
+at the end of the className) also matched a score-summary grid inside `MatchResultsPage` —
+`grid grid-cols-3 gap-y-2 text-center max-w-sm mx-auto`. Padding it would have added `px-4 py-8`
+to a small three-column score table. It was caught by reading the transform's own output rather
+than trusting the count, and reverted; the verification greps afterwards confirm every changed
+line is a `max-w-*` shell.
+
+#### Per-area detail polish (one commit each, unnumbered)
+
+The numbering is dropped here deliberately. This work is genuinely per-area — spacing,
+typography and interactive states inside each page — and it kept needing to be renumbered as
+cross-cutting passes (5a–5c) were found ahead of it. The areas:
+
+- [ ] Public pages: Home, Competitions(+Profile, Section), Clubs(+Profile),
       Associations(+Profile, List), Players(+Profile, Stats), Teams, Admin
-- [ ] 5d Manage pages: associations, clubs, competitions, players
-- [ ] 5e `register-team/` — swap the `←` `→` text glyphs for lucide icons
-- [ ] 5f `match-results/` — scoresheet, rubber rows, status panel
+- [ ] Manage pages: associations, clubs, competitions, players
+- [ ] `register-team/` — the `my-10 p-8` cards, and the `←` `→` text glyphs → lucide icons
+- [ ] `match-results/` — scoresheet, rubber rows, status panel
 
 ### Phase 6 — Responsive and accessibility sweep
 - [ ] Check 320 / 375 / 768 / 1024 / 1440px, no horizontal page scroll at any width
@@ -495,8 +530,15 @@ page-level centred cards in `App.tsx`, `LoginPage.tsx` and `EnterResultPage.tsx`
 
 ## Open questions / flagged items
 
-- **Dead links (not touched):** `Login.tsx` links to `/forgot-password` and `/register`;
-  `App.tsx` defines neither route. Pre-existing, left as-is.
+- **Dead links — one resolved, one found.** The earlier note that `Login.tsx` links to
+  `/forgot-password` and `/register` (neither of which `App.tsx` defines) no longer applies:
+  `LoginPage.tsx` imports only `useNavigate` and has no such links. Checking every static `to=`
+  target against the 32 routes in `App.tsx` turned up one other pre-existing mismatch instead.
+  `ManageClubsPage`'s "New Club" button is `<Link to="new-club">`, which resolves relative to
+  `/manage-clubs` and therefore matches `/manage-clubs/:id` with `id="new-club"` — it opens the
+  club edit page for a club that does not exist, and there is no create-club route. **Not
+  fixed:** that is a routing/behaviour bug, not a visual one, and out of scope here. Flagged so
+  a reviewer knows the refactor did not cause it.
 - **Log out is new behaviour.** The plan was "visual only", but there is no logout anywhere
   in the app today (`auth.ts` has no logout function), so a Log out button has to clear the
   three `localStorage` keys and navigate to `/login`. Flagged as the one behavioural addition.
@@ -579,3 +621,13 @@ page-level centred cards in `App.tsx`, `LoginPage.tsx` and `EnterResultPage.tsx`
   `--radius-card` would have restated `rounded-lg` and given reviewers a second vocabulary to
   learn. If the scale ever needs to change app-wide, Tailwind v4 lets `--radius-*` and
   `--shadow-*` be overridden in the same `@theme` block.
+- **Phase 5c is the third cross-cutting pass, and the numbering is dropped for what follows.**
+  The container is one decision applied to 38 shells, not fourteen per-page decisions, so it went
+  global like 5a and 5b. Rather than renumber the per-area batches a third time they are now
+  listed unnumbered: the sequence kept churning because each cross-cutting concern (colour,
+  radius/shadow, container) only became visible once the previous one was uniform.
+- **The page container is not a shared `<Page>` component.** A component is the DRY answer, but
+  the brief says page layouts and structure stay as they are, and wrapping 28 page shells in a
+  new element would be a structural change to every page — and each page's `max-w-*` differs
+  anyway. Repeating the same utility string is the smaller, more reviewable change, and it stays
+  a one-line edit per page if the scale ever moves.

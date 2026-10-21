@@ -32,7 +32,7 @@ function CreateAssociationPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
+    <div className="max-w-4xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
       {/* Centered Title outside the card */}
       <h1 className="text-3xl font-bold text-ink mb-8 text-center">
         Create New Association

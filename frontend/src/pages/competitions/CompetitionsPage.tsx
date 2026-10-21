@@ -73,7 +73,7 @@ function CompetitionsPage() {
 
   // UNCHANGED FROM HERE DOWN: this is all Rex's original JSX, untouched
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
       <h1 className="text-3xl font-bold text-ink mb-6">Tennis Competitions</h1>
 
       {/* Search Bar + Association Dropdown */}

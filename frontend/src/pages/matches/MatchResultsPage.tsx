@@ -38,7 +38,7 @@ function MatchResultsPage() {
 
     if (notFound || !match) {
         return (
-            <div className="max-w-3xl mx-auto px-4 py-12 text-center">
+            <div className="max-w-3xl mx-auto px-4 py-12 sm:px-6 lg:px-8 text-center">
                 <p className="text-ink-muted mb-4">Match not found.</p>
             </div>
         );
@@ -66,7 +66,7 @@ function MatchResultsPage() {
     );
 
     return (
-        <div className="max-w-3xl mx-auto px-4 py-8">
+        <div className="max-w-3xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
             <Link
                 to={`/sections/${match.sectionId}`}
                 className="inline-flex items-center gap-1 text-sm text-ink-muted hover:text-primary-600 mb-6 transition-colors"

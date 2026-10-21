@@ -101,7 +101,7 @@ function EditPlayerPage() {
 
   if (notFound || !player || !form) {
     return (
-      <div className="max-w-3xl mx-auto px-4 py-12 text-center">
+      <div className="max-w-3xl mx-auto px-4 py-12 sm:px-6 lg:px-8 text-center">
         <p className="text-ink-muted mb-4">Player not found.</p>
         <Link to="/manage-players" className="text-primary-600 hover:underline inline-flex items-center gap-1">
           <ArrowLeft className="h-4 w-4" /> Back to Manage Players
@@ -111,7 +111,7 @@ function EditPlayerPage() {
   }
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-8">
+    <div className="max-w-3xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
       <Link
         to="/manage-players"
         className="inline-flex items-center gap-1 text-sm text-ink-muted hover:text-primary-600 mb-6 transition-colors"

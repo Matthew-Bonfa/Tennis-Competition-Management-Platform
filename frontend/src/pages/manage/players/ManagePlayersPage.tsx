@@ -45,7 +45,7 @@ function ManagePlayersPage() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
       {/* Three columns so the title stays centred on the page, not just
           centred in the space the button leaves; stacks on small screens */}
       <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto_1fr] items-center gap-4 mb-6">

@@ -118,7 +118,7 @@ function CreateSectionPage() {
   // no season in the URL means we don't know where to put the section
   if (!seasonId) {
     return (
-      <div className="max-w-2xl mx-auto px-4 py-12 text-center">
+      <div className="max-w-2xl mx-auto px-4 py-12 sm:px-6 lg:px-8 text-center">
         <p className="text-ink-muted mb-4">Choose a season on the Manage Competition page first.</p>
         <Link to={`/manage-competitions/${id}`} className="text-primary-600 hover:underline">
           Back to Manage Competition
@@ -129,7 +129,7 @@ function CreateSectionPage() {
 
   return (
     <>
-      <div className="max-w-2xl mx-auto px-4 py-8">
+      <div className="max-w-2xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
         <Link
           to={`/manage-competitions/${id}?season=${seasonId}`}
           className="inline-flex items-center gap-1 text-sm text-ink-muted hover:text-primary-600 mb-6 transition-colors"
