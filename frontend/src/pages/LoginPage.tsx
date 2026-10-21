@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -109,9 +109,6 @@ function Login() {
               <input id="remember" type="checkbox" />
               Remember me
             </label>
-            <Link to="/forgot-password" className="text-primary-600 hover:underline">
-              Forgot password?
-            </Link>
           </div>
 
           <button
@@ -123,12 +120,6 @@ function Login() {
           </button>
         </form>
 
-        <p className="text-center text-sm text-ink-muted">
-          Don't have an account?{' '}
-          <Link to="/register" className="text-primary-600 hover:underline">
-            Create an account
-          </Link>
-        </p>
       </div>
     </div>
   );
