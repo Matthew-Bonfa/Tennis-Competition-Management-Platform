@@ -4,11 +4,9 @@ Branch: `feature/frontend/refactor`
 Scope: visual + structural refactor of `frontend/` only. No functional, route, API, state or
 copy changes. Verification per phase: `npm run build` and `npm run lint` in `frontend/`.
 
-**Next step:** the per-area batches are finished. What remains is Phase 6 (the responsive and
-accessibility sweep), then Phase 7 (the summary). One question is open before Phase 6 starts — see
-the `rounded-md` bullet in Open questions: four controls outside the finished areas are still on
-`rounded-md`, and 5b's radius rule says they should be, while the manage and register-team passes
-settled the opposite way.
+**Next step:** the per-area batches are finished, and the one question they left open is now
+closed. What remains is Phase 6 (the responsive and accessibility sweep), then Phase 7 (the
+summary). Phase 6 starts with the 320–1440px pass, then the touch-target audit.
 Phases 0–4, 5a–5d and the public-pages, manage-pages, register-team and matches passes are
 complete: the build is green, `src/` is restructured, the theme tokens are in place **and in use**,
 every radius and shadow comes from a three-value scale, every page shell shares one container that
@@ -774,19 +772,23 @@ and the 200% zoom pass.
   settle it against the real layout — the alternatives are a full-size chip, an icon-only button
   with an `aria-label`, or moving the chip below the title on narrow screens. Same batch, same
   question: both radio groups and `ClubSearch`'s option rows.
-- **Four controls outside the finished areas are still on `rounded-md`, and this is the one open
-  question.** Every area has now been through, and the app's control radius is `rounded-lg` by a
-  wide margin — 52 to 6 across inputs, 29 to 8 across buttons. What is left on `rounded-md`:
-  `LoginPage`'s two inputs and its submit button, and the identical sign-in button in `App.tsx`'s
-  admin gate. (Two others are `rounded-md` for good reason and stay: the header's nav link, which
-  is a nav item rather than a control, and `CreatePlayerPage`'s checkbox, which is `h-4 w-4`.)
-  **Why this is a question and not a fix:** 5b's note says controls are `rounded-md` and surfaces
-  `rounded-lg`, so those four *conform to the documented rule* — they were correct when their
-  areas were signed off. The manage and register-team passes then settled inputs on `rounded-lg`,
-  which is what the other 52 do. One of the two has to give: either those four move to
-  `rounded-lg` (four lines, two files), or 5b's note is right and the 52 are wrong, which would be
-  a much larger revert. Left as-is rather than decided unilaterally, because it reopens two areas
-  that are already ticked.
+- **The last four `rounded-md` controls are now on `rounded-lg` — resolved.** `LoginPage`'s two
+  inputs and its submit, plus the identical sign-in button in `App.tsx`'s admin gate, were the only
+  controls left on the old radius. They conformed to 5b's note, which said controls were
+  `rounded-md`, so they were correct when their areas were signed off — but the manage and
+  register-team passes settled inputs on `rounded-lg`, and the app is 52 to 6 that way. Moving four
+  lines beat reverting 52, and consistency is one of the brief's stated goals, so the two files
+  moved. `LoginPage`'s inputs also gained `bg-surface`, `text-ink` and the shared focus ring, none
+  of which they had: the missing focus ring was the one item here the brief actually mandates
+  (Step 5, visible focus styles). Their submit buttons went `py-2` → `py-3`, matching
+  `EnterResultPage`'s identical sign-in button. **Left alone:** the header's nav link, where
+  `rounded-md` is right because it is a nav item and not a control.
+- **Checkbox styling is one in four, so nothing changed.** `CreatePlayerPage`'s checkbox carries
+  `h-4 w-4 rounded-md border-border-strong`; `LoginPage`'s and `FormatForm`'s two carry no classes
+  at all. Styling a native checkbox with `border-*` and `rounded-*` is close to a no-op without
+  `appearance: none`, so the majority version is also the one that costs nothing, and an unstyled
+  checkbox is a browser default rather than drift. Noted for Phase 6's form audit instead of
+  changed here.
 - **CSS `@import` ordering warning at build — resolved.** The earlier note here said Vite warned
   that `@import` rules must precede all other rules, because the Google Fonts `@import` sat below
   `:root`. The Phase 2 stylesheet rewrite put it back at the top; the current build prints no
@@ -1014,3 +1016,23 @@ and the 200% zoom pass.
   not-found work was `MatchResultsPage` and `EnterResultPage`. Both already used the contained,
   `text-ink-muted` shape the manage pass settled on, so the matches batch only dropped a dead
   `mb-4`.
+- **The four stray controls were resolved toward the majority.** The matches pass ended with one
+  open question: `LoginPage`'s two inputs and its submit, and the identical button in `App.tsx`'s
+  admin gate, were still on `rounded-md` — which is what 5b's note says controls should be. It was
+  asked rather than decided, because it reopens two areas that were already ticked; the answer was
+  to take whichever is better, and consistency won. Four lines moved instead of fifty-two. This is
+  the second time the code and 5b's note disagreed and the code won — the matches batch itself was
+  the first.
+- **A missing focus ring is a defect, not a style preference.** `LoginPage`'s two inputs had no
+  focus treatment of any kind — no `focus:ring`, and not even the `focus:outline-none` that would
+  suppress the browser default. That is why this was not left as a pure radius question: whatever
+  happened to the radius, those two fields needed a visible focus state, and Step 5 of the brief
+  requires one.
+- **Not every inconsistency is drift.** Three things in these two files were checked and left
+  alone. The header's nav link stays `rounded-md`, which is right for a nav item rather than a
+  control. The sign-in card headings stay `text-2xl`, which is the card family shared by
+  `LoginPage`, `App.tsx` and `EnterResultPage`. And the checkboxes stay bare: one of the app's four
+  is styled (`CreatePlayerPage`, `h-4 w-4 rounded-md border-border-strong`) and three are not, so
+  "the convention" would have been the minority reading, and `border-*`/`rounded-*` on a native
+  checkbox does almost nothing without `appearance: none`. Recorded so a later pass does not "fix"
+  them toward the one.
