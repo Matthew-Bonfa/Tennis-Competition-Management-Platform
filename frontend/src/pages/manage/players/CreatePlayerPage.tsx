@@ -100,7 +100,7 @@ function CreatePlayerPage() {
       </Link>
 
       <form onSubmit={handleSubmit} className="bg-surface border border-border rounded-lg p-8 shadow-sm">
-        <h1 className="text-2xl font-bold text-ink mb-2">Add New Player</h1>
+        <h1 className="text-3xl font-bold text-ink mb-2">Add New Player</h1>
         <p className="text-sm text-ink-subtle mb-6">A player code is assigned automatically when the player is saved.</p>
 
         <div className="grid gap-4 sm:grid-cols-2">
@@ -111,7 +111,7 @@ function CreatePlayerPage() {
               value={form.firstName}
               onChange={(e) => setForm({ ...form, firstName: e.target.value })}
               required
-              className="mt-1 w-full rounded-md border border-border-strong px-3 py-1.5 text-ink"
+              className="mt-1 w-full rounded-lg border border-border-strong bg-surface px-4 py-3 text-ink focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
           </label>
           <label className="text-sm text-ink-muted">
@@ -121,7 +121,7 @@ function CreatePlayerPage() {
               value={form.lastName}
               onChange={(e) => setForm({ ...form, lastName: e.target.value })}
               required
-              className="mt-1 w-full rounded-md border border-border-strong px-3 py-1.5 text-ink"
+              className="mt-1 w-full rounded-lg border border-border-strong bg-surface px-4 py-3 text-ink focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
           </label>
           <div className="text-sm text-ink-muted">
@@ -147,7 +147,7 @@ function CreatePlayerPage() {
               type="date"
               value={form.dateOfBirth}
               onChange={(e) => setForm({ ...form, dateOfBirth: e.target.value })}
-              className="mt-1 w-full rounded-md border border-border-strong px-3 py-1.5 text-ink"
+              className="mt-1 w-full rounded-lg border border-border-strong bg-surface px-4 py-3 text-ink focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
           </label>
           <label className="text-sm text-ink-muted">
@@ -156,7 +156,7 @@ function CreatePlayerPage() {
               type="text"
               value={form.utrId}
               onChange={(e) => setForm({ ...form, utrId: e.target.value })}
-              className="mt-1 w-full rounded-md border border-border-strong px-3 py-1.5 text-ink"
+              className="mt-1 w-full rounded-lg border border-border-strong bg-surface px-4 py-3 text-ink focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
           </label>
           <label className="text-sm text-ink-muted">
@@ -165,7 +165,7 @@ function CreatePlayerPage() {
               type="text"
               value={form.tennisAustraliaNumber}
               onChange={(e) => setForm({ ...form, tennisAustraliaNumber: e.target.value })}
-              className="mt-1 w-full rounded-md border border-border-strong px-3 py-1.5 text-ink"
+              className="mt-1 w-full rounded-lg border border-border-strong bg-surface px-4 py-3 text-ink focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
           </label>
           <label className="text-sm text-ink-muted">
@@ -174,7 +174,7 @@ function CreatePlayerPage() {
               type="email"
               value={form.email}
               onChange={(e) => setForm({ ...form, email: e.target.value })}
-              className="mt-1 w-full rounded-md border border-border-strong px-3 py-1.5 text-ink"
+              className="mt-1 w-full rounded-lg border border-border-strong bg-surface px-4 py-3 text-ink focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
           </label>
           <label className="text-sm text-ink-muted">
@@ -183,7 +183,7 @@ function CreatePlayerPage() {
               type="text"
               value={form.phone}
               onChange={(e) => setForm({ ...form, phone: e.target.value })}
-              className="mt-1 w-full rounded-md border border-border-strong px-3 py-1.5 text-ink"
+              className="mt-1 w-full rounded-lg border border-border-strong bg-surface px-4 py-3 text-ink focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
           </label>
         </div>
@@ -193,14 +193,14 @@ function CreatePlayerPage() {
         <div className="flex items-center justify-end gap-2 mt-6">
           <Link
             to="/manage-players"
-            className="inline-flex items-center gap-1 rounded-md border border-border-strong px-3 py-1.5 text-sm text-ink-muted hover:bg-canvas"
+            className="inline-flex items-center gap-1.5 border border-border-strong bg-muted text-ink font-medium px-4 py-3 rounded-lg hover:bg-border"
           >
             Cancel
           </Link>
           <button
             type="submit"
             disabled={saving || !canSubmit}
-            className="inline-flex items-center gap-1 rounded-md bg-primary-600 px-3 py-1.5 text-sm text-white hover:bg-primary-700 disabled:opacity-50"
+            className="inline-flex items-center gap-1.5 bg-primary-600 text-white font-medium px-6 py-3 rounded-lg hover:bg-primary-700 disabled:opacity-50"
           >
             {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
             Add player

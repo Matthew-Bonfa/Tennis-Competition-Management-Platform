@@ -1,7 +1,7 @@
 // Admin-only player list
 
 import { useState, useEffect } from 'react'
-import { Search, User } from 'lucide-react'
+import { Search, User, Plus, ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 import fetchApi from '../../../lib/api'
@@ -53,9 +53,10 @@ function ManagePlayersPage() {
         <h1 className="text-3xl font-bold text-ink text-center">Manage Players</h1>
         <Link
           to="/manage-players/create-new-player"
-          className="justify-self-center sm:justify-self-end bg-primary-600 text-white font-medium px-4 py-2 rounded-lg hover:bg-primary-700"
+          className="inline-flex items-center justify-center gap-1.5 justify-self-center sm:justify-self-end bg-primary-600 text-white font-medium px-6 py-3 rounded-lg hover:bg-primary-700"
         >
-          + Add new player
+          <Plus className="h-4 w-4" />
+          Add new player
         </Link>
       </div>
 
@@ -69,7 +70,7 @@ function ManagePlayersPage() {
           placeholder="Search players by name or player code..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="block w-full pl-10 pr-4 py-3 border border-border-strong rounded-lg shadow-sm bg-surface text-ink focus:outline-none focus:ring-2 focus:ring-primary-500"
+          className="block w-full pl-10 pr-4 py-3 border border-border-strong rounded-lg bg-surface text-ink focus:outline-none focus:ring-2 focus:ring-primary-500"
         />
       </div>
 
@@ -92,8 +93,8 @@ function ManagePlayersPage() {
               <div className="mt-3 text-xs bg-muted text-ink-muted px-2.5 py-1 rounded-md inline-block">
                 {player.personCode}
               </div>
-              <div className="mt-6 text-primary-600 text-sm font-medium flex items-center">
-                Edit Player &rarr;
+              <div className="mt-6 text-primary-600 text-sm font-medium flex items-center gap-1">
+                Edit Player <ArrowRight className="h-4 w-4" />
               </div>
             </Link>
           ))}
