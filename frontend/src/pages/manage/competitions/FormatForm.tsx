@@ -3,6 +3,7 @@
 
 import { useState } from 'react';
 import type { FormEvent } from 'react';
+import { Plus } from 'lucide-react';
 import { postApi, ApiError } from '../../../lib/api';
 import {
   RUBBER_OPTIONS,
@@ -154,7 +155,7 @@ function problemWith(v: FormValues): string | null {
 }
 
 const inputClass =
-  'block w-full border border-border-strong rounded-lg bg-surface text-ink px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500';
+  'block w-full border border-border-strong rounded-lg bg-surface text-ink px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500';
 
 function NumberField({
   label,
@@ -310,9 +311,10 @@ function FormatForm({ initial = null, onSaved, onCancel }: FormatFormProps) {
         <button
           type="button"
           onClick={addRubber}
-          className="mt-2 text-sm font-medium text-primary-600 hover:underline"
+          className="mt-2 inline-flex items-center gap-1 text-sm font-medium text-primary-600 hover:underline"
         >
-          + Add rubber
+          <Plus className="h-4 w-4" />
+          Add rubber
         </button>
       </div>
 
@@ -440,14 +442,14 @@ function FormatForm({ initial = null, onSaved, onCancel }: FormatFormProps) {
         <button
           type="button"
           onClick={onCancel}
-          className="text-ink-muted border border-border-strong font-medium px-5 py-2 rounded-lg hover:bg-canvas"
+          className="border border-border-strong bg-muted text-ink font-medium px-4 py-3 rounded-lg hover:bg-border"
         >
           Cancel
         </button>
         <button
           type="submit"
           disabled={saving || !!problem || unchanged}
-          className="bg-primary-600 text-white font-medium px-5 py-2 rounded-lg hover:bg-primary-700 disabled:opacity-50"
+          className="bg-primary-600 text-white font-medium px-6 py-3 rounded-lg hover:bg-primary-700 disabled:opacity-50"
         >
           {saving ? 'Saving...' : initial ? 'Save as new format' : 'Save format'}
         </button>

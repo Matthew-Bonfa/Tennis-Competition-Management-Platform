@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import type { FormEvent } from 'react';
 import { useParams, useSearchParams, Link } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Plus } from 'lucide-react';
 import fetchApi, { ApiError } from '../../../lib/api';
 import LoadingState from '../../../components/ui/LoadingState';
 import ErrorState from '../../../components/ui/ErrorState';
@@ -112,7 +112,13 @@ function ManageCompetitionPage() {
 
   if (loading) return <LoadingState />;
   if (loadError) return <ErrorState>Error: {loadError}</ErrorState>;
-  if (!competition) return <div className="text-center py-12">Competition not found.</div>;
+  if (!competition) {
+    return (
+      <div className="max-w-4xl mx-auto px-4 py-12 sm:px-6 lg:px-8 text-center">
+        <p className="text-ink-muted">Competition not found.</p>
+      </div>
+    );
+  }
 
   const unchanged = name.trim() === competition.name;
 
@@ -164,9 +170,10 @@ function ManageCompetitionPage() {
             </p>
             <Link
               to={`/manage-competitions/${id}/create-new-season`}
-              className="inline-block bg-primary-600 text-white font-medium px-4 py-2 rounded-lg hover:bg-primary-700"
+              className="inline-flex items-center gap-1.5 bg-primary-600 text-white font-medium px-6 py-3 rounded-lg hover:bg-primary-700"
             >
-              + Create new season
+              <Plus className="h-4 w-4" />
+              Create new season
             </Link>
           </div>
         ) : (
@@ -176,7 +183,7 @@ function ManageCompetitionPage() {
                 <select
                   value={selectedSeasonId ?? ''}
                   onChange={(e) => setSelectedSeasonId(Number(e.target.value))}
-                  className="border border-border-strong rounded-lg text-sm px-3 py-2 bg-surface text-ink focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  className="border border-border-strong rounded-lg bg-surface text-ink px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
                 >
                   {sortedSeasons.map((season: any) => (
                     <option key={season.id} value={season.id}>{season.name}</option>
@@ -192,9 +199,10 @@ function ManageCompetitionPage() {
 
               <Link
                 to={`/manage-competitions/${id}/create-new-season`}
-                className="bg-primary-600 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-primary-700"
+                className="inline-flex items-center gap-1.5 bg-primary-600 text-white font-medium px-6 py-3 rounded-lg hover:bg-primary-700"
               >
-                + Create new season
+                <Plus className="h-4 w-4" />
+                Create new season
               </Link>
             </div>
 
@@ -202,9 +210,10 @@ function ManageCompetitionPage() {
               <h2 className="text-xl font-bold text-ink">Sections</h2>
               <Link
                 to={`/manage-competitions/${id}/create-new-section?season=${selectedSeasonId}`}
-                className="bg-primary-600 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-primary-700"
+                className="inline-flex items-center gap-1.5 bg-primary-600 text-white font-medium px-6 py-3 rounded-lg hover:bg-primary-700"
               >
-                + Create new section
+                <Plus className="h-4 w-4" />
+                Create new section
               </Link>
             </div>
 

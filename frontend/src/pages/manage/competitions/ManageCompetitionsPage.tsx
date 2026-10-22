@@ -3,6 +3,7 @@
 
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { Plus } from 'lucide-react';
 import fetchApi from '../../../lib/api';
 import LoadingState from '../../../components/ui/LoadingState';
 import EmptyState from '../../../components/ui/EmptyState';
@@ -34,9 +35,10 @@ function ManageCompetitionsPage() {
         <h1 className="text-3xl font-bold text-ink">Manage Competitions</h1>
         <Link
           to="/manage-competitions/create-new-competition"
-          className="bg-primary-600 text-white font-medium px-4 py-2 rounded-lg hover:bg-primary-700"
+          className="inline-flex items-center gap-1.5 bg-primary-600 text-white font-medium px-6 py-3 rounded-lg hover:bg-primary-700"
         >
-          + Create new competition
+          <Plus className="h-4 w-4" />
+          Create new competition
         </Link>
       </div>
 

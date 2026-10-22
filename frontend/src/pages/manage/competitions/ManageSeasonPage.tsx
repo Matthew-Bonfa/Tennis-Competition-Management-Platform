@@ -88,7 +88,13 @@ function ManageSeasonPage() {
 
   if (loading) return <LoadingState />;
   if (loadError) return <ErrorState>Error: {loadError}</ErrorState>;
-  if (!season) return <div className="text-center py-12">Season not found.</div>;
+  if (!season) {
+    return (
+      <div className="max-w-2xl mx-auto px-4 py-12 sm:px-6 lg:px-8 text-center">
+        <p className="text-ink-muted">Season not found.</p>
+      </div>
+    );
+  }
 
   const unchanged =
     name.trim() === season.name &&

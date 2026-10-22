@@ -133,7 +133,13 @@ function ManageSectionPage() {
 
   if (loading) return <LoadingState />;
   if (loadError) return <ErrorState>Error: {loadError}</ErrorState>;
-  if (!section) return <div className="text-center py-12">Section not found.</div>;
+  if (!section) {
+    return (
+      <div className="max-w-2xl mx-auto px-4 py-12 sm:px-6 lg:px-8 text-center">
+        <p className="text-ink-muted">Section not found.</p>
+      </div>
+    );
+  }
 
   const season = competition?.seasons?.find((s: any) => s.id === section.seasonId);
   const unchanged =
