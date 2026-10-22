@@ -4,13 +4,14 @@ Branch: `feature/frontend/refactor`
 Scope: visual + structural refactor of `frontend/` only. No functional, route, API, state or
 copy changes. Verification per phase: `npm run build` and `npm run lint` in `frontend/`.
 
-**Next step:** the next per-area batch — the manage pages (associations, clubs, competitions,
-players). Phases 0–4, 5a–5d and the public-pages pass are complete: the build is green, `src/`
-is restructured, the theme tokens are in place **and in use**, every radius and shadow comes from
-a three-value scale, every page shell shares one container that lines up with the header,
+**Next step:** the next per-area batch — `register-team/` (the `my-10 p-8` cards, the `←` `→` text
+glyphs → lucide icons, and the seven opacity modifiers on theme tokens that this area still has).
+Phases 0–4, 5a–5d and the public-pages and manage-pages passes are complete: the build is green,
+`src/` is restructured, the theme tokens are in place **and in use**, every radius and shadow comes
+from a three-value scale, every page shell shares one container that lines up with the header,
 loading/empty/error states render through shared components, the header is responsive with a
-working Log in / Log out button, and the public pages now share one title scale, one heading
-scale and one card hover.
+working Log in / Log out button, the public pages share one title scale, one heading scale and one
+card hover, and the manage pages now run on one input, one primary button and one secondary button.
 
 > **Baseline finding (2026-10-20):** the frontend does **not** build at HEAD `8876186`.
 > `npm run build` (`tsc -b && vite build`) fails with **160 TypeScript errors across 13 files**,
@@ -541,7 +542,7 @@ cross-cutting passes (5a–5c) were found ahead of it. The areas:
 
 - [x] Public pages: Home, Competitions(+Profile, Section), Clubs(+Profile),
       Associations(+Profile, List), Players(+Profile, Stats), Teams, Admin
-- [ ] Manage pages: associations, clubs, competitions, players
+- [x] Manage pages: associations, clubs, competitions, players — four commits, see below
 - [ ] `register-team/` — the `my-10 p-8` cards, and the `←` `→` text glyphs → lucide icons
 - [ ] `match-results/` — scoresheet, rubber rows, status panel
 
@@ -566,6 +567,42 @@ token opacity modifiers, `transition-all`, `duration-200` or a decorative transf
 pages not on the `text-3xl`/`text-xl` scale. Worth knowing for the remaining batches: that style
 came in with `47c4b11`, not with the original pages.
 
+##### Manage pages — four commits ✅
+
+Associations `f0d653b`, clubs `05be79c`, players `6b74bf6`, competitions `5f37872`. Split four ways
+rather than kept as one: seventeen files with genuinely per-page judgement is more than one
+reviewable diff, and the four areas needed visibly different amounts of work (clubs changed two
+files, competitions five).
+
+Unlike the public pages, this area's problem was not two competing styles but **four input
+vocabularies and five primary-button sizes**, none of which had been chosen — they were what each
+form happened to be written with:
+
+| What | Before | After |
+| --- | --- | --- |
+| Input | `block w-full border border-border-strong rounded-lg bg-surface text-ink px-4 py-3 focus:ring-2 focus:ring-primary-500` (13 uses, every form outside the player pages), a compact `mt-1 w-full rounded-md border border-border-strong px-3 py-1.5` (14 uses, both player forms plus `ClubSearch`), a `text-sm` variant, and a `px-3.5 py-2` variant | the canonical, everywhere |
+| Primary button | `bg-primary-600 text-white font-medium px-6 py-3 rounded-lg hover:bg-primary-700 disabled:opacity-50` (6 uses) plus `px-5 py-2`, `px-4 py-2` and `px-4 py-2 text-sm` variants | the canonical |
+| Secondary button | `border border-border-strong bg-muted text-ink font-medium px-4 py-3 rounded-lg hover:bg-border` in the section forms, and four other treatments elsewhere (bordered-transparent, `shadow-sm`, `text-ink-muted`) | the `bg-muted` one |
+| Page title | `text-3xl font-bold text-ink` (11 uses), `text-2xl` on both player forms | `text-3xl` |
+| Text `+` as an icon | `+ New Association`, `+ Add new player`, `+ Create new season` ×2, `+ Create new section`, `+ Create new competition`, `+ Add rubber` | lucide `Plus`, with the spacing on the flex parent's `gap-1.5` |
+| Card shadow | `shadow-sm`, except `shadow-md` on the `EditClubPage` form card | `shadow-sm` |
+| List rows | `transition-all` plus a `hover:border-primary-300` that only moved the border colour | `hover:shadow-md transition-shadow`, as the public lists do |
+
+Three things were deliberately left. The centred `h1` on `CreateAssociationPage` and
+`ManagePlayersPage` — both carry a comment saying the centring is intentional, and the players page
+uses a three-column grid so the title is centred on the *page* rather than in the space the button
+leaves. And `shadow-md` on the format panel, which is a dialog on a scrim rather than a card.
+
+The three bare not-found returns — `ManageCompetitionPage`, `ManageSeasonPage`,
+`ManageSectionPage` — were the worst of the five shapes 5d measured: an uncontained
+`<div className="text-center py-12">` with no colour class, so "X not found." rendered in
+full-strength body text directly under `<main>`. They now use the same container as their page and
+`text-ink-muted`, matching what `SectionPage` got in the public pass. The remaining not-found work
+is `MatchResultsPage` and `EnterResultPage`, both in bullets that are still open.
+
+Two flags for Phase 6 from this batch: `ManageAssociationsPage` returns `undefined` while loading,
+so the page is blank until the fetch resolves; and `ClubSearch`'s option rows are about 33px tall.
+
 ### Phase 6 — Responsive and accessibility sweep
 - [ ] Check 320 / 375 / 768 / 1024 / 1440px, no horizontal page scroll at any width
 - [ ] Check usable at 200% browser zoom
@@ -580,15 +617,16 @@ came in with `47c4b11`, not with the original pages.
 
 ## Open questions / flagged items
 
-- **Dead links — one resolved, one found.** The earlier note that `Login.tsx` links to
-  `/forgot-password` and `/register` (neither of which `App.tsx` defines) no longer applies:
+- **Dead links — resolved, and the earlier note here was wrong.** The older claim that `Login.tsx`
+  links to `/forgot-password` and `/register` (neither of which `App.tsx` defines) does not apply:
   `LoginPage.tsx` imports only `useNavigate` and has no such links. Checking every static `to=`
-  target against the 32 routes in `App.tsx` turned up one other pre-existing mismatch instead.
-  `ManageClubsPage`'s "New Club" button is `<Link to="new-club">`, which resolves relative to
-  `/manage-clubs` and therefore matches `/manage-clubs/:id` with `id="new-club"` — it opens the
-  club edit page for a club that does not exist, and there is no create-club route. **Not
-  fixed:** that is a routing/behaviour bug, not a visual one, and out of scope here. Flagged so
-  a reviewer knows the refactor did not cause it.
+  target against the 32 routes in `App.tsx` then flagged `ManageClubsPage`'s `<Link to="new-club">`,
+  which this file recorded as opening "the club edit page for a club that does not exist, and there
+  is no create-club route". **That was wrong, and is corrected here.** `EditClubPage.tsx:17` reads
+  `if (id === "new-club") { creatingNew = true; startedNew = true; }` — the relative link resolves
+  to `/manage-clubs/new-club`, matches `/manage-clubs/:id`, and the page switches to create mode.
+  The route *is* the create-club flow. No bug, no missing route, and nothing for a reviewer to
+  chase.
 - **Log out is new behaviour.** The plan was "visual only", but there is no logout anywhere
   in the app today (`auth.ts` has no logout function), so a Log out button has to clear the
   three `localStorage` keys and navigate to `/login`. Flagged as the one behavioural addition.
@@ -734,8 +772,35 @@ came in with `47c4b11`, not with the original pages.
   register-team glyphs only, but the same text arrow is used as a card's call to action on all
   four public surfaces, and `AssociationsList` already uses a lucide chevron for the same job. The
   words are unchanged; only the arrow stops being a text character.
-- **Opacity modifiers on theme tokens are not used anywhere now.** `border-border/80` and friends
-  appeared only in the two association files. The palette already has `border` and
-  `border-strong` for exactly this, and a half-opacity border is a third value nobody chose — it
-  was a side effect of writing `border-border/80` by habit. Plain tokens keep the palette the
-  only place a colour decision lives.
+- **Opacity modifiers on theme tokens are gone from the public and manage pages — but not from
+  `src/`.** `border-border/80` and friends appeared only in the two association files. The palette
+  already has `border` and `border-strong` for exactly this, and a half-opacity border is a third
+  value nobody chose — it was a side effect of writing `border-border/80` by habit. Plain tokens
+  keep the palette the only place a colour decision lives. **Corrected:** this entry originally said
+  "not used anywhere now", which was wrong. `register-team/` still has seven of them
+  (`bg-canvas/50` ×3, `border-border/80` ×3, `bg-primary-50/50`, `border-warning-border/60`), and
+  they belong to that area's own pass. Two `bg-ink/40` scrims also remain, deliberately.
+- **The manage batch is four commits, and the split is by area rather than by kind of change.** The
+  public pass could be one commit because its decisions were cross-cutting — the same two title
+  sizes, the same two link colours, the same hover rule on every page. The manage area has no such
+  uniformity: each form needed its own judgement about which of the four input vocabularies it
+  should land on, and two centred titles turned out to be deliberate rather than drift. Four diffs
+  a reviewer can hold in their head beat one diff of seventeen files.
+- **The four input vocabularies were resolved onto the largest one, not onto a new one.** The
+  canonical `px-4 py-3` input had 13 uses and every form outside the player pages; the compact
+  `px-3 py-1.5` one had 14 uses but only in two files. That is majority *plus context* rather than
+  raw count: the compact one was also the only input in the app with no background and no focus
+  ring, so it was the outlier on more than frequency.
+- **`text-sm` on an input or a select is treated as a defect, not a style choice.** A 14px form
+  control makes iOS Safari zoom the page when it takes focus, which the brief's mobile requirements
+  rule out. `text-sm` on a *button* or a link is fine and stays — the zoom behaviour applies only to
+  form controls. This is why the manage pass removes `text-sm` from inputs and selects but leaves it
+  on the buttons beside them.
+- **A dialog keeps `shadow-md`; a card does not.** The two format panels (`CreateSectionPage`,
+  `ManageSectionPage`) sit on a `bg-ink/40` scrim, so they need to lift further than a card on the
+  canvas; `ClubSearch`'s dropdown is the same case. The rule that fell out of 5b is one shadow step
+  per *elevation*, not one shadow for the whole app — the mistake the `EditClubPage` form card made
+  by using `shadow-md` while sitting flat on the canvas like every other card.
+- **A scrim keeps its opacity modifier, because there the transparency is the effect.** An opaque
+  overlay would hide the page it is meant to sit over. Called out because `bg-ink/40` looks like
+  exactly the thing the public pass removed.
