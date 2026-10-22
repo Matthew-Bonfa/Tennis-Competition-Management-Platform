@@ -158,7 +158,7 @@ function AssociationProfile() {
             <Shield className="h-5 w-5" />
           </div>
           <h2 className="text-xl font-bold text-ink">Clubs</h2>
-          <span className="ml-auto bg-muted text-ink-muted text-xs font-semibold px-2.5 py-1 rounded-md">
+          <span className="ml-auto bg-muted text-ink-muted text-xs font-semibold px-2.5 py-1 rounded-full">
             {clubs?.length || 0}
           </span>
         </div>
@@ -194,7 +194,7 @@ function AssociationProfile() {
             <Trophy className="h-5 w-5" />
           </div>
           <h2 className="text-xl font-bold text-ink">Competitions</h2>
-          <span className="ml-auto bg-muted text-ink-muted text-xs font-semibold px-2.5 py-1 rounded-md">
+          <span className="ml-auto bg-muted text-ink-muted text-xs font-semibold px-2.5 py-1 rounded-full">
             {competitions?.length || 0}
           </span>
         </div>
