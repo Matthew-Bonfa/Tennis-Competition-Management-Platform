@@ -1,4 +1,5 @@
 import {useState, useEffect} from 'react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { Registration } from './Registration';
 import fetchApi from '../../lib/api'
 import type { NamedRef, Season } from './types';
@@ -45,11 +46,11 @@ function SelectCompetition() {
 
   if (!selectedSeason) {
     return (
-      <div className="max-w-2xl mx-auto my-10 p-8 bg-surface rounded-lg shadow-md border border-border font-sans text-ink">
+      <div className="mx-4 my-8 max-w-2xl p-8 bg-surface border border-border rounded-lg shadow-sm sm:mx-auto">
 
         {/* Header / Title */}
         <div className="mb-7 pb-4 border-b border-border">
-          <h2 className="text-2xl font-bold text-ink mb-1">
+          <h2 className="text-3xl font-bold text-ink mb-1">
             Select Season & Association
           </h2>
           <p className="text-sm text-ink-subtle">
@@ -71,7 +72,7 @@ function SelectCompetition() {
                    string id. The casts keep the existing runtime behaviour exactly. */
                 value={selectedAssociation as unknown as string}
                 onChange={(e) => setSelectedAssociation(e.target.value as unknown as NamedRef)}
-                className="w-full px-3.5 py-2.5 rounded-lg border border-border-strong text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-surface transition-all"
+                className="block w-full border border-border-strong rounded-lg bg-surface text-ink px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
                 <option value="" disabled>--Select an association--</option>
                 {associations.map((assoc) => (
@@ -88,13 +89,13 @@ function SelectCompetition() {
             </label>
             <div className="flex flex-col gap-3">
               {seasons.map((s) => (
-                <button 
-                  key={s.id} 
+                <button
+                  key={s.id}
                   onClick={() => setSelectedSeason(s)}
-                  className="w-full p-4 bg-canvas hover:bg-primary-50 border border-border hover:border-primary-500 text-ink hover:text-primary-700 rounded-lg font-semibold text-sm transition-all shadow-sm flex items-center justify-between group"
+                  className="w-full p-4 bg-canvas hover:bg-surface border border-border text-ink rounded-lg font-medium transition-colors flex items-center justify-between group"
                 >
                   <span>{s.name}</span>
-                  <span className="text-ink-subtle group-hover:text-primary-600 transition-colors">→</span>
+                  <ArrowRight className="h-5 w-5 text-ink-subtle group-hover:text-primary-600 transition-colors shrink-0" />
                 </button>
               ))}
             </div>
@@ -106,21 +107,22 @@ function SelectCompetition() {
     );
   } else {
     return (
-      <div className="max-w-2xl mx-auto my-10 p-8 bg-surface rounded-lg shadow-md border border-border font-sans text-ink">
+      <div className="mx-4 my-8 max-w-2xl p-8 bg-surface border border-border rounded-lg shadow-sm sm:mx-auto">
 
         {/* Header Bar with Back Button */}
         <div className="mb-6 pb-4 border-b border-border flex items-center justify-between gap-4">
           <div>
-            <h2 className="text-2xl font-bold text-ink">
+            <h2 className="text-3xl font-bold text-ink">
               {selectedSeason.name}
             </h2>
           </div>
-          
-          <button 
+
+          <button
             onClick={() => setSelectedSeason(null)}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-muted hover:bg-border text-ink-muted rounded-lg text-xs font-medium border border-border transition-all shadow-sm"
+            className="inline-flex items-center gap-1.5 border border-border bg-muted text-ink-muted font-medium px-3 py-1.5 rounded-lg hover:bg-border transition-colors text-xs shrink-0"
           >
-            <span>←</span> Change Season
+            <ArrowLeft className="h-4 w-4" />
+            Change Season
           </button>
         </div>
 

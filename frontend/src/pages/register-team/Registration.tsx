@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Plus } from 'lucide-react';
 import fetchApi from '../../lib/api';
 import { postApi } from '../../lib/api';
 import type { NamedRef, Season, Section, Format, Player } from './types';
@@ -238,11 +239,11 @@ export function Registration({season, association}: {season: Season; association
   }
 
   return (
-    <div className="max-w-2xl mx-auto my-10 p-8 bg-surface rounded-lg shadow-md border border-border font-sans text-ink">
+    <div className="mx-4 my-8 max-w-2xl p-8 bg-surface border border-border rounded-lg shadow-sm sm:mx-auto">
 
       {/* Header / Title */}
       <div className="mb-7 pb-4 border-b border-border">
-        <h2 className="text-2xl font-bold text-ink mb-1">
+        <h2 className="text-3xl font-bold text-ink mb-1">
           Team Registration
         </h2>
         <p className="text-sm text-ink-subtle">
@@ -263,7 +264,7 @@ export function Registration({season, association}: {season: Season; association
               placeholder="Search for a club..."
               value={searchTerm} 
               onChange={e => setSearchTerm(e.target.value)} 
-              className="w-full px-3.5 py-2.5 rounded-lg border border-border-strong text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+              className="block w-full border border-border-strong rounded-lg bg-surface text-ink px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
 
             {searchTerm && filteredClubs.length > 0 && (
@@ -272,7 +273,7 @@ export function Registration({season, association}: {season: Season; association
                   <button 
                     key={c.id} 
                     onClick={() => selectClub(c)}
-                    className="w-full px-3.5 py-2.5 text-left bg-transparent border-b border-border last:border-b-0 hover:bg-canvas text-sm text-ink-muted transition-colors"
+                    className="w-full px-4 py-2.5 text-left bg-transparent border-b border-border last:border-b-0 hover:bg-canvas text-ink transition-colors"
                   >
                     {c.name}
                   </button>
@@ -292,7 +293,7 @@ export function Registration({season, association}: {season: Season; association
               placeholder="Enter team name"
               value={teamName} 
               onChange={(e) => setTeamName(e.target.value)} 
-              className="w-full px-3.5 py-2.5 rounded-lg border border-border-strong text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+              className="block w-full border border-border-strong rounded-lg bg-surface text-ink px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
           </div>
         </div>
@@ -306,7 +307,7 @@ export function Registration({season, association}: {season: Season; association
             <select 
               value={selectedFormat ? selectedFormat.id : ""} 
               onChange={(e) => setSelectedFormat(formats.find(f => f.id === e.target.value) ?? null)}
-              className="w-full px-3.5 py-2.5 rounded-lg border border-border-strong text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-surface transition-all"
+              className="block w-full border border-border-strong rounded-lg bg-surface text-ink px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
               <option value="" disabled>--Select a format--</option>
               {formats.map(f => (
@@ -343,7 +344,7 @@ export function Registration({season, association}: {season: Season; association
                         placeholder={`Player ${index + 1} Name`}
                         value={playerText[index]} 
                         onChange={(e) => updatePlayerText(index, e.target.value)} 
-                        className="w-full px-3.5 py-2.5 rounded-lg border border-border-strong text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                        className="block w-full border border-border-strong rounded-lg bg-surface text-ink px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
                       />
                       {updatedPlayer === index && playerResults.length > 0 && (
                         <div className="absolute top-full left-0 right-0 bg-surface border border-border rounded-lg shadow-md max-h-36 overflow-y-auto z-10 mt-1">
@@ -351,7 +352,7 @@ export function Registration({season, association}: {season: Season; association
                             <button 
                               key={p.id} 
                               onClick={() => selectPlayer(index, p)}
-                              className="w-full px-3 py-2 text-left bg-transparent border-b border-border last:border-b-0 hover:bg-canvas text-sm text-ink-muted transition-colors"
+                              className="w-full px-4 py-2 text-left bg-transparent border-b border-border last:border-b-0 hover:bg-canvas text-ink transition-colors"
                             >
                               {p.firstName + " " + p.lastName}
                             </button>
@@ -367,9 +368,10 @@ export function Registration({season, association}: {season: Season; association
                 <div className="flex sm:pl-40">
                   <button 
                     onClick={() => setPlayerText([...playerText, ""])}
-                    className="px-4 py-2 bg-muted hover:bg-border text-ink-muted border border-border-strong rounded-md font-medium text-sm transition-colors"
+                    className="inline-flex items-center gap-1 text-sm font-medium text-primary-600 hover:underline"
                   >
-                    + Add Player
+                    <Plus className="h-4 w-4" />
+                    Add Player
                   </button>
                 </div>
               )}
@@ -388,7 +390,7 @@ export function Registration({season, association}: {season: Season; association
                 ].map((option) => (
                   <label 
                     key={option.id} 
-                    className={`flex items-center gap-2 px-4 py-2 rounded-lg border cursor-pointer text-sm transition-all ${
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg border cursor-pointer text-sm transition-colors ${
                       gender === option.id 
                         ? 'border-primary-600 bg-primary-50 font-semibold text-primary-700' 
                         : 'border-border-strong bg-surface text-ink-muted hover:bg-canvas'
@@ -417,7 +419,7 @@ export function Registration({season, association}: {season: Season; association
                 {sections.filter(s => s.formatId === selectedFormat.id).map(s => (
                   <span 
                     key={s.id} 
-                    className="px-3 py-1 bg-surface border border-border-strong rounded-full text-xs text-ink-muted font-medium shadow-sm"
+                    className="px-3 py-1 bg-surface border border-border rounded-full text-xs text-ink-muted font-medium"
                   >
                     {s.name}
                   </span>
@@ -432,7 +434,7 @@ export function Registration({season, association}: {season: Season; association
                 value={sectionComment} 
                 onChange={(e) => setSectionComment(e.target.value)} 
                 placeholder="Enter your comment here..."
-                className="w-full p-2.5 rounded-md border border-border-strong text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent resize-y bg-surface"
+                className="w-full rounded-lg border border-border-strong bg-surface text-ink px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500 resize-y"
               />
             </div>
 
@@ -445,7 +447,7 @@ export function Registration({season, association}: {season: Season; association
               )}
               <button 
                 onClick={() => submit()}
-                className="w-full py-3 bg-primary-600 hover:bg-primary-700 text-white rounded-lg text-base font-semibold shadow-sm transition-colors"
+                className="w-full bg-primary-600 hover:bg-primary-700 text-white font-medium px-6 py-3 rounded-lg transition-colors"
               >
                 Submit
               </button>
