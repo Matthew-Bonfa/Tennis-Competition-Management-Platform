@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
+import { ArrowLeft } from 'lucide-react';
 import fetchApi from '../../lib/api';
 import { patchApi } from '../../lib/api';
+import LoadingState from '../../components/ui/LoadingState';
 import type { NamedRef, Player, Format, Section, TeamRequest } from './types';
 
 interface RequestDetailsProps {
@@ -73,11 +75,7 @@ function RequestDetails({ request, onBack }: RequestDetailsProps) {
   }
 
   if (!club){
-    return (
-      <div className="text-center py-12 text-ink-subtle text-sm animate-pulse">
-        Loading details...
-      </div>
-    );
+    return <LoadingState message="Loading details..." />;
   }
 
   return (
@@ -86,7 +84,7 @@ function RequestDetails({ request, onBack }: RequestDetailsProps) {
       {/* Sub-Header Bar with Back to List Button */}
       <div className="pb-4 border-b border-border flex items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-ink">
+          <h2 className="text-3xl font-bold text-ink">
             Registration Details
           </h2>
           <p className="text-sm text-ink-subtle mt-0.5">
@@ -94,11 +92,12 @@ function RequestDetails({ request, onBack }: RequestDetailsProps) {
           </p>
         </div>
 
-        <button 
+        <button
           onClick={onBack}
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-muted hover:bg-border text-ink-muted rounded-lg text-xs font-medium border border-border transition-all shadow-sm cursor-pointer shrink-0"
+          className="inline-flex items-center gap-1.5 border border-border bg-muted text-ink-muted font-medium px-3 py-1.5 rounded-lg hover:bg-border transition-colors text-xs shrink-0"
         >
-          <span>←</span> Back to List
+          <ArrowLeft className="h-4 w-4" />
+          Back to List
         </button>
       </div>
 
@@ -126,17 +125,17 @@ function RequestDetails({ request, onBack }: RequestDetailsProps) {
 
       {/* Key Attribute Grid (3 items: Club, Format, Gender) */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="p-4 bg-canvas/50 border border-border/80 rounded-lg">
+        <div className="p-4 bg-canvas border border-border rounded-lg">
           <p className="text-xs font-medium text-ink-subtle uppercase tracking-wider">Club</p>
           <p className="text-sm font-semibold text-ink mt-1">{club?.name || 'N/A'}</p>
         </div>
 
-        <div className="p-4 bg-canvas/50 border border-border/80 rounded-lg">
+        <div className="p-4 bg-canvas border border-border rounded-lg">
           <p className="text-xs font-medium text-ink-subtle uppercase tracking-wider">Format</p>
           <p className="text-sm font-semibold text-ink mt-1">{format?.name || 'N/A'}</p>
         </div>
 
-        <div className="p-4 bg-canvas/50 border border-border/80 rounded-lg">
+        <div className="p-4 bg-canvas border border-border rounded-lg">
           <p className="text-xs font-medium text-ink-subtle uppercase tracking-wider">Team Gender</p>
           <p className="text-sm font-semibold text-ink mt-1 uppercase">{request.teamGender || 'N/A'}</p>
         </div>
@@ -148,7 +147,7 @@ function RequestDetails({ request, onBack }: RequestDetailsProps) {
           <h4 className="text-sm font-bold text-ink">
             Registered Players
           </h4>
-          <span className="text-xs font-semibold text-ink-subtle bg-muted px-2 py-0.5 rounded-md border border-border">
+          <span className="text-xs font-semibold text-ink-subtle bg-muted px-2.5 py-1 rounded-full border border-border">
             {players.length} Total
           </span>
         </div>
@@ -181,7 +180,7 @@ function RequestDetails({ request, onBack }: RequestDetailsProps) {
 
       {/* Section Comment */}
       {request.sectionComment && (
-        <div className="flex flex-col gap-2 pt-2 border-t border-border pt-4">
+        <div className="flex flex-col gap-2 pt-4 border-t border-border">
           <h4 className="text-xs font-bold text-ink-subtle uppercase tracking-wider">Section Comment</h4>
           <div className="p-4 bg-canvas border border-border rounded-lg text-xs text-ink-muted whitespace-pre-line">
             {request.sectionComment}
@@ -199,7 +198,7 @@ function RequestDetails({ request, onBack }: RequestDetailsProps) {
             {sections.map((sec) => (
               <label 
                 key={sec.id}
-                className="flex items-center gap-3 p-3 bg-canvas hover:bg-muted border border-border rounded-lg cursor-pointer text-xs font-semibold text-ink transition-all"
+                className="flex items-center gap-3 p-3 bg-canvas hover:bg-muted border border-border rounded-lg cursor-pointer text-xs font-semibold text-ink transition-colors"
               >
                 <input 
                   type="radio" 
@@ -207,7 +206,7 @@ function RequestDetails({ request, onBack }: RequestDetailsProps) {
                   value={sec.id}
                   checked={selectedSectionId === sec.id}
                   onChange={() => setSelectedSectionId(sec.id)}
-                  className="w-4 h-4 text-primary-600 focus:ring-primary-500 border-border-strong"
+                  className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-border-strong"
                 />
                 <span>{sec.name}</span>
               </label>
@@ -223,20 +222,20 @@ function RequestDetails({ request, onBack }: RequestDetailsProps) {
           onClick={() => {
             approve();
           }}
-          className={`flex-1 py-2.5 rounded-lg font-semibold text-sm transition-all shadow-sm ${
-            !selectedSectionId 
-              ? 'bg-border text-ink-subtle cursor-not-allowed opacity-75' 
-              : 'bg-success hover:bg-success text-white cursor-pointer'
+          className={`flex-1 text-white font-medium px-6 py-3 rounded-lg transition-colors ${
+            !selectedSectionId
+              ? 'bg-border text-ink-subtle cursor-not-allowed'
+              : 'bg-success hover:opacity-90'
           }`}
         >
           Approve Request
         </button>
 
-        <button 
+        <button
           onClick={() => {
             deny();
           }}
-          className="flex-1 py-2.5 bg-danger hover:bg-danger text-white rounded-lg font-semibold text-sm transition-all shadow-sm cursor-pointer"
+          className="flex-1 bg-danger hover:opacity-90 text-white font-medium px-6 py-3 rounded-lg transition-colors"
         >
           Deny Request
         </button>

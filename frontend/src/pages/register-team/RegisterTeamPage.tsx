@@ -1,16 +1,17 @@
 import { useNavigate } from 'react-router-dom';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { isAdmin, isAuthenticated, isClubAdmin } from '../../lib/auth';
 
 function RegisterTeamPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="max-w-2xl mx-auto my-10 p-8 bg-surface rounded-lg shadow-md border border-border font-sans text-ink">
+    <div className="mx-4 my-8 max-w-2xl p-8 bg-surface border border-border rounded-lg shadow-sm sm:mx-auto">
 
       {/* Header Bar with Centered Text and Back Button */}
       <div className="mb-7 pb-4 border-b border-border relative flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-ink mb-1">
+          <h2 className="text-3xl font-bold text-ink mb-1">
             Manage Teams
           </h2>
           <p className="text-sm text-ink-subtle">
@@ -18,11 +19,12 @@ function RegisterTeamPage() {
           </p>
         </div>
 
-        <button 
+        <button
           onClick={() => navigate('/admin')}
-          className="absolute right-0 flex items-center gap-1.5 px-3 py-1.5 bg-muted hover:bg-border text-ink-muted rounded-lg text-xs font-medium border border-border transition-all shadow-sm cursor-pointer"
+          className="absolute right-0 inline-flex items-center gap-1.5 border border-border bg-muted text-ink-muted font-medium px-3 py-1.5 rounded-lg hover:bg-border transition-colors text-xs"
         >
-          <span>←</span> Back
+          <ArrowLeft className="h-4 w-4" />
+          Back
         </button>
       </div>
 
@@ -31,7 +33,7 @@ function RegisterTeamPage() {
         {/* Option 1: Register a Team */}
         <button
           onClick={() => navigate('/manage-teams/register')}
-          className="w-full p-5 bg-canvas hover:bg-primary-50 border border-border hover:border-primary-500 text-left rounded-lg transition-all shadow-sm flex items-center justify-between group cursor-pointer"
+          className="w-full p-5 bg-canvas hover:bg-surface border border-border text-left rounded-lg transition-colors flex items-center justify-between group"
         >
           <div>
             <h3 className="text-base font-bold text-ink group-hover:text-primary-700 transition-colors">
@@ -41,16 +43,14 @@ function RegisterTeamPage() {
               Submit a new team registration for an upcoming season.
             </p>
           </div>
-          <span className="text-ink-subtle group-hover:text-primary-600 font-semibold text-lg transition-colors ml-4">
-            →
-          </span>
+          <ArrowRight className="h-5 w-5 text-ink-subtle group-hover:text-primary-600 transition-colors ml-4 shrink-0" />
         </button>
 
         {/* Option 2: Review Requests (Only visible to authenticated Admins or Club Admins) */}
         {isAuthenticated() && (isAdmin() || isClubAdmin()) && (
           <button
             onClick={() => navigate('/manage-teams/review')}
-            className="w-full p-5 bg-canvas hover:bg-primary-50 border border-border hover:border-primary-500 text-left rounded-lg transition-all shadow-sm flex items-center justify-between group cursor-pointer"
+            className="w-full p-5 bg-canvas hover:bg-surface border border-border text-left rounded-lg transition-colors flex items-center justify-between group"
           >
             <div>
               <h3 className="text-base font-bold text-ink group-hover:text-primary-700 transition-colors">
@@ -60,9 +60,7 @@ function RegisterTeamPage() {
                 View and manage pending team submissions to approve or deny them.
               </p>
             </div>
-            <span className="text-ink-subtle group-hover:text-primary-600 font-semibold text-lg transition-colors ml-4">
-              →
-            </span>
+            <ArrowRight className="h-5 w-5 text-ink-subtle group-hover:text-primary-600 transition-colors ml-4 shrink-0" />
           </button>
         )}
 

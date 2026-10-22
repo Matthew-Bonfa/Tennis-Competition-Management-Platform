@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import fetchApi from '../../lib/api';
+import LoadingState from '../../components/ui/LoadingState';
 import RequestDetails from './RequestDetails';
 import type { NamedRef, Season, TeamRequest } from './types';
 
@@ -63,40 +65,39 @@ function ReviewRequests() {
   }, []);
 
   return (
-    <div className="max-w-2xl mx-auto my-10 p-8 bg-surface rounded-lg shadow-md border border-border font-sans text-ink">
+    <div className="mx-4 my-8 max-w-2xl p-8 bg-surface border border-border rounded-lg shadow-sm sm:mx-auto">
 
       {/* Conditional Rendering: Show Details Component if selected, otherwise show List */}
       {selectedRequest ? (
-        <RequestDetails 
-          request={selectedRequest} 
-          onBack={() => setSelectedRequest(null)} 
+        <RequestDetails
+          request={selectedRequest}
+          onBack={() => setSelectedRequest(null)}
         />
       ) : (
         <>
           {/* Header Bar with Back Button */}
           <div className="mb-7 pb-4 border-b border-border flex items-center justify-between gap-4">
             <div>
-              <h2 className="text-2xl font-bold text-ink">
+              <h2 className="text-3xl font-bold text-ink">
                 Review Registration Requests
               </h2>
               <p className="text-sm text-ink-subtle mt-0.5">
                 Manage pending team submissions for approval.
               </p>
             </div>
-            
-            <button 
+
+            <button
               onClick={() => navigate('/manage-teams')}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-muted hover:bg-border text-ink-muted rounded-lg text-xs font-medium border border-border transition-all shadow-sm cursor-pointer shrink-0"
+              className="inline-flex items-center gap-1.5 border border-border bg-muted text-ink-muted font-medium px-3 py-1.5 rounded-lg hover:bg-border transition-colors text-xs shrink-0"
             >
-              <span>←</span> Back
+              <ArrowLeft className="h-4 w-4" />
+              Back
             </button>
           </div>
 
           {/* Loading State */}
           {loading ? (
-            <div className="text-center py-12 text-ink-subtle text-sm animate-pulse">
-              Loading registration requests...
-            </div>
+            <LoadingState message="Loading registration requests..." />
           ) : futureSeasons.length === 0 ? (
             <div className="text-center py-12 px-4 bg-canvas rounded-lg border border-dashed border-border text-ink-subtle text-sm">
               No upcoming seasons found.
@@ -116,7 +117,7 @@ function ReviewRequests() {
                       <h3 className="text-base font-bold text-ink">
                         {headerTitle}
                       </h3>
-                      <span className="text-xs font-semibold text-ink-subtle bg-muted px-2.5 py-0.5 rounded-full border border-border">
+                      <span className="text-xs font-semibold text-ink-subtle bg-muted px-2.5 py-1 rounded-full border border-border">
                         {seasonRequests.length} Pending
                       </span>
                     </div>
@@ -132,7 +133,7 @@ function ReviewRequests() {
                           <button
                             key={req.id || req.name}
                             onClick={() => setSelectedRequest(req)}
-                            className="w-full p-4 bg-canvas hover:bg-primary-50/50 border border-border hover:border-primary-400 rounded-lg text-left flex items-center justify-between transition-all cursor-pointer group"
+                            className="w-full p-4 bg-canvas hover:bg-surface border border-border rounded-lg text-left flex items-center justify-between transition-colors group"
                           >
                             <div>
                               <h4 className="text-sm font-semibold text-ink group-hover:text-primary-700 transition-colors">
@@ -145,8 +146,8 @@ function ReviewRequests() {
                               </div>
                             </div>
 
-                            <span className="text-xs font-medium text-warning bg-warning-bg px-2.5 py-1 rounded-md border border-warning-border/60 shrink-0 group-hover:bg-primary-100 group-hover:text-primary-800 group-hover:border-primary-200 transition-colors">
-                              Pending Review →
+                            <span className="inline-flex items-center gap-1 text-xs font-medium text-warning bg-warning-bg px-2.5 py-1 rounded-full border border-warning-border shrink-0">
+                              Pending Review <ArrowRight className="h-3.5 w-3.5" />
                             </span>
                           </button>
                         ))}

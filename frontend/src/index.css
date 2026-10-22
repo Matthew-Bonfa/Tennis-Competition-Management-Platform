@@ -71,4 +71,11 @@
     outline: 2px solid var(--color-primary-600);
     outline-offset: 2px;
   }
+
+  /* Tailwind v4's preflight leaves buttons on the browser's default cursor, so every
+     button in the app showed an arrow instead of a hand. This one rule replaces the
+     twelve `cursor-pointer` utilities that were papering over it one button at a time. */
+  button:not(:disabled) {
+    cursor: pointer;
+  }
 }
