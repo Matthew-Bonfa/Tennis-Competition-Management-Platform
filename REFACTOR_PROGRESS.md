@@ -4,14 +4,15 @@ Branch: `feature/frontend/refactor`
 Scope: visual + structural refactor of `frontend/` only. No functional, route, API, state or
 copy changes. Verification per phase: `npm run build` and `npm run lint` in `frontend/`.
 
-**Next step:** the next per-area batch — `register-team/` (the `my-10 p-8` cards, the `←` `→` text
-glyphs → lucide icons, and the seven opacity modifiers on theme tokens that this area still has).
-Phases 0–4, 5a–5d and the public-pages and manage-pages passes are complete: the build is green,
-`src/` is restructured, the theme tokens are in place **and in use**, every radius and shadow comes
-from a three-value scale, every page shell shares one container that lines up with the header,
-loading/empty/error states render through shared components, the header is responsive with a
-working Log in / Log out button, the public pages share one title scale, one heading scale and one
-card hover, and the manage pages now run on one input, one primary button and one secondary button.
+**Next step:** the last per-area batch — `match-results/` (the scoresheet, the rubber rows and the
+status panel, plus the two remaining not-found returns on `MatchResultsPage` and `EnterResultPage`).
+Phases 0–4, 5a–5d and the public-pages, manage-pages and register-team passes are complete: the
+build is green, `src/` is restructured, the theme tokens are in place **and in use**, every radius
+and shadow comes from a three-value scale, every page shell shares one container that lines up with
+the header, loading/empty/error states render through shared components, the header is responsive
+with a working Log in / Log out button, the public pages share one title scale, one heading scale
+and one card hover, the manage pages run on one input, one primary button and one secondary button,
+and `register-team/` is on the same vocabulary with no opacity modifiers left in `src/`.
 
 > **Baseline finding (2026-10-20):** the frontend does **not** build at HEAD `8876186`.
 > `npm run build` (`tsc -b && vite build`) fails with **160 TypeScript errors across 13 files**,
@@ -543,7 +544,8 @@ cross-cutting passes (5a–5c) were found ahead of it. The areas:
 - [x] Public pages: Home, Competitions(+Profile, Section), Clubs(+Profile),
       Associations(+Profile, List), Players(+Profile, Stats), Teams, Admin
 - [x] Manage pages: associations, clubs, competitions, players — four commits, see below
-- [ ] `register-team/` — the `my-10 p-8` cards, and the `←` `→` text glyphs → lucide icons
+- [x] `register-team/` — the `my-10 p-8` cards, the `←` `→` text glyphs → lucide icons, and the
+      opacity modifiers — two commits, see below
 - [ ] `match-results/` — scoresheet, rubber rows, status panel
 
 ##### Public pages — one commit ✅
@@ -603,6 +605,66 @@ is `MatchResultsPage` and `EnterResultPage`, both in bullets that are still open
 Two flags for Phase 6 from this batch: `ManageAssociationsPage` returns `undefined` while loading,
 so the page is blank until the fetch resolves; and `ClubSearch`'s option rows are about 33px tall.
 
+##### `register-team/` — two commits ✅
+
+Hub and review flow `7c4869b`, registration form `fc8d411`. Split in two because the first commit
+carries the one stylesheet change in the batch (the button cursor rule), and that line is easier to
+review and to revert on its own than buried in a forty-line page diff.
+
+This area is not a route in the usual sense — `/manage-teams`, `/manage-teams/register` and
+`/manage-teams/review` are three states of one flow, and the four page files share one shell, one
+header and one back chip. It was also the last place in `src/` with `my-10 p-8` cards, text arrows
+and opacity modifiers.
+
+| What | Before | After |
+| --- | --- | --- |
+| Page shell | `max-w-2xl mx-auto my-10 p-8 bg-surface rounded-lg shadow-md border border-border font-sans text-ink` | `mx-4 my-8 max-w-2xl p-8 bg-surface border border-border rounded-lg shadow-sm sm:mx-auto` |
+| Page title | `text-2xl font-bold text-ink` on all four | `text-3xl font-bold text-ink` |
+| Input | `w-full px-3.5 py-2.5 rounded-lg border border-border-strong text-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all` | the canonical control class |
+| Secondary button | the compact back chip, `px-3 py-1.5 … text-xs`, and a bordered `+ Add Player` | the compact chip, restyled; `+ Add Player` becomes the `+ Add rubber` affordance from the manage pass |
+| Text `←` / `→` | `← Back`, `← Change Season`, `→` as a row's affordance | lucide `ArrowLeft` / `ArrowRight` |
+| In-card rows | `hover:bg-primary-50 hover:border-primary-500 hover:text-primary-700` plus `shadow-sm` | `bg-canvas hover:bg-surface border border-border transition-colors` |
+| Token opacity | `bg-canvas/50` ×3, `border-border/80` ×3, `bg-primary-50/50`, `border-warning-border/60` | plain tokens — the last seven in `src/` |
+| Loading state | a hand-rolled `<p>` with `animate-pulse` in both `ReviewRequestsPage` and `RequestDetails` | `LoadingState` — the only two `animate-pulse` in the app, now gone |
+
+**The one stylesheet change: `button:not(:disabled) { cursor: pointer }`.** Tailwind v4's preflight
+no longer sets it, so every button in the app was showing an arrow cursor. Twelve `cursor-pointer`
+utilities had grown up in this area papering over it one button at a time. One base rule replaces
+all twelve, and it is one line to revert if you would rather it did not exist. The two `<label>`s
+acting as rows (`RequestDetails`' section radios, `Registration`'s gender radios) keep their own
+`cursor-pointer`, because the base rule only reaches `button`.
+
+**The shell keeps its card, and gains phone gutters.** The brief freezes layout, so the page is not
+restructured into container + card. `mx-4 … sm:mx-auto` is the one addition: it is what the earlier
+AdminPage complaint asked for, and it stops the card touching the screen edge on a phone.
+
+**Three deliberate outliers were left.** The centred title on `RegisterTeamPage`, which is
+`relative` with an `absolute right-0` back button so the title stays centred on the page. The
+`shadow-md` on the two dropdown panels in `Registration` and on the format panel in
+`ManageSectionPage`, which float above the form rather than sitting on the canvas. And the
+`cursor-pointer` on the two `<label>` rows, for the reason above.
+
+**The header back chips stay compact on purpose.** They are `absolute right-0` (or `shrink-0` in a
+`justify-between` header) beside a centred title, so at 320px a 44px-tall chip would crowd the
+heading. The 44px touch target is deferred to Phase 6, which owns that audit and can judge it
+against the real layout.
+
+**Two dead hovers were fixed rather than normalised.** `RequestDetails`' approve and deny buttons
+carried `hover:bg-success` / `hover:bg-danger` on top of a base `bg-success` / `bg-danger` — a
+no-op, since the hover value was the same as the resting one. The background now sits entirely
+inside the disabled/enabled ternary and the hover is `hover:opacity-90`, so precedence is
+deterministic rather than dependent on stylesheet order. A duplicate `pt-2 pt-4` on the same
+element also went.
+
+**Two pre-existing functional bugs are preserved**, both with in-code comments and both out of
+scope: `updatePlayerText` searches on `playerText[updatedPlayer!]`, which still holds the previous
+index; and `SelectCompetitionPage`'s association select is seeded with an object while reading and
+writing a string id.
+
+Flags for Phase 6 from this batch: the sub-44px controls (the four header back chips, both radio
+groups, and `ClubSearch`'s option rows); and the two loading states converted here, which were the
+last `animate-pulse` in `src/` — the app has none left.
+
 ### Phase 6 — Responsive and accessibility sweep
 - [ ] Check 320 / 375 / 768 / 1024 / 1440px, no horizontal page scroll at any width
 - [ ] Check usable at 200% browser zoom
@@ -655,6 +717,12 @@ so the page is blank until the fetch resolves; and `ClubSearch`'s option rows ar
   keep clear of it — so on a narrow screen the title is centred inside a box that is not the
   card. Left for Phase 6, where the 320px pass can judge it against the real layout instead of
   guessing.
+- **The register-team back chips are under 44px, deliberately for now.** All four are `px-3 py-1.5`
+  with `text-xs`, which lands around 30px tall. They sit beside a centred or `justify-between`
+  title and would crowd it at 320px if grown to 44px. Phase 6 owns the touch-target audit and can
+  settle it against the real layout — the alternatives are a full-size chip, an icon-only button
+  with an `aria-label`, or moving the chip below the title on narrow screens. Same batch, same
+  question: both radio groups and `ClubSearch`'s option rows.
 - **CSS `@import` ordering warning at build — resolved.** The earlier note here said Vite warned
   that `@import` rules must precede all other rules, because the Google Fonts `@import` sat below
   `:root`. The Phase 2 stylesheet rewrite put it back at the top; the current build prints no
@@ -780,6 +848,12 @@ so the page is blank until the fetch resolves; and `ClubSearch`'s option rows ar
   "not used anywhere now", which was wrong. `register-team/` still has seven of them
   (`bg-canvas/50` ×3, `border-border/80` ×3, `bg-primary-50/50`, `border-warning-border/60`), and
   they belong to that area's own pass. Two `bg-ink/40` scrims also remain, deliberately.
+  **Now resolved:** that pass is done, and `src/` has no opacity modifier on a theme token left.
+  There were eight occurrences, not seven, across two files: `bg-canvas/50` + `border-border/80`
+  on three inset panels in `RequestDetails`, and `bg-primary-50/50` plus `border-warning-border/60`
+  in `ReviewRequestsPage`'s request row. None of them needed a new palette value — `canvas` and
+  `border` already exist for exactly those jobs. The two `bg-ink/40` scrims stay, for the reason in
+  the entry below.
 - **The manage batch is four commits, and the split is by area rather than by kind of change.** The
   public pass could be one commit because its decisions were cross-cutting — the same two title
   sizes, the same two link colours, the same hover rule on every page. The manage area has no such
@@ -804,3 +878,43 @@ so the page is blank until the fetch resolves; and `ClubSearch`'s option rows ar
 - **A scrim keeps its opacity modifier, because there the transparency is the effect.** An opaque
   overlay would hide the page it is meant to sit over. Called out because `bg-ink/40` looks like
   exactly the thing the public pass removed.
+- **The button cursor is fixed in the stylesheet, not per button.** Tailwind v4's preflight dropped
+  v3's `button { cursor: pointer }`, so every button in the app showed an arrow. Twelve
+  `cursor-pointer` utilities had accumulated in `register-team/` as a workaround. One
+  `button:not(:disabled) { cursor: pointer }` in `@layer base` replaces all twelve and fixes the
+  buttons elsewhere that nobody had noticed. It is the only stylesheet change in the batch, and one
+  line to revert. `<label>`s acting as rows keep their own `cursor-pointer`, since the selector
+  cannot reach them.
+- **The register-team shells keep their card and gain phone gutters.** The brief freezes layout, so
+  the pages are not restructured into container + card. `mx-4 my-8 … sm:mx-auto` is the one
+  addition — it is what the earlier AdminPage request asked for, and it stops the card touching the
+  screen edge on a phone. `shadow-md` → `shadow-sm` because the card sits on the canvas; `my-10` →
+  `my-8` to match the rest of the app; `font-sans` and `text-ink` dropped as already set on `body`.
+- **`rounded-full` is a pill beside a heading; `rounded-md` is a tag under a title.** Both shapes
+  are in use and both are deliberate. A count or status pill at the end of a heading row
+  (`ml-auto`, `justify-between`) is `rounded-full` — the register-team chips, the `FixtureCard`
+  score chip, the three `bg-primary-50` badges. An inline metadata tag sitting *under* a card title
+  (`ClubsPage`, `PlayersPage`, `ManagePlayersPage`, `PlayerProfilePage`) is `rounded-md`. The two
+  association count pills were the only ones on the wrong side of that line, moved to `rounded-md`
+  in the public pass and put back in `2b299ca`.
+- **The compact back chip is a deliberate third button size.** `px-3 py-1.5 text-xs` with the
+  secondary colours, used for the four header back buttons in `register-team/`. It is smaller than
+  the secondary button because it sits beside a title rather than in a form's action row, and
+  growing it would crowd the heading at 320px. Phase 6 owns whether it stays (see the open
+  question above).
+- **`+ Add <thing>` is a text link, not a bordered button.** `FormatForm`'s `+ Add rubber` and
+  `Registration`'s `+ Add Player` both add another row to a form, and both now render as
+  `inline-flex items-center gap-1 text-sm font-medium text-primary-600 hover:underline` with a
+  lucide `Plus`. Two affordances doing the same job now look like each other, and the `+` stops
+  being a text character.
+- **A dead hover is fixed, not normalised.** `RequestDetails`' approve and deny buttons had
+  `hover:bg-success` on a base `bg-success` — the same value, so the hover did nothing. Both now
+  put the whole background inside the enabled/disabled ternary and hover with `hover:opacity-90`.
+  Worth stating because the tempting fix — leaving the base background and adding a conditional one
+  — does not work: Tailwind resolves conflicting utilities by stylesheet order, not by the order
+  they appear in the class attribute, so the result would depend on which utility Tailwind happened
+  to emit last.
+- **A dropdown panel is the third thing that keeps `shadow-md`.** The two search panels in
+  `Registration` (club and player) float above the form, like the format dialog and `ClubSearch`'s
+  listbox. Their option rows also lose `text-sm` and `text-ink-muted`: a listbox row is a choice to
+  read, not a disabled control, and `px-4` lines the row text up with the input text above it.
