@@ -4,15 +4,19 @@ Branch: `feature/frontend/refactor`
 Scope: visual + structural refactor of `frontend/` only. No functional, route, API, state or
 copy changes. Verification per phase: `npm run build` and `npm run lint` in `frontend/`.
 
-**Next step:** the last per-area batch — `match-results/` (the scoresheet, the rubber rows and the
-status panel, plus the two remaining not-found returns on `MatchResultsPage` and `EnterResultPage`).
-Phases 0–4, 5a–5d and the public-pages, manage-pages and register-team passes are complete: the
-build is green, `src/` is restructured, the theme tokens are in place **and in use**, every radius
-and shadow comes from a three-value scale, every page shell shares one container that lines up with
-the header, loading/empty/error states render through shared components, the header is responsive
-with a working Log in / Log out button, the public pages share one title scale, one heading scale
-and one card hover, the manage pages run on one input, one primary button and one secondary button,
-and `register-team/` is on the same vocabulary with no opacity modifiers left in `src/`.
+**Next step:** the per-area batches are finished. What remains is Phase 6 (the responsive and
+accessibility sweep), then Phase 7 (the summary). One question is open before Phase 6 starts — see
+the `rounded-md` bullet in Open questions: four controls outside the finished areas are still on
+`rounded-md`, and 5b's radius rule says they should be, while the manage and register-team passes
+settled the opposite way.
+Phases 0–4, 5a–5d and the public-pages, manage-pages, register-team and matches passes are
+complete: the build is green, `src/` is restructured, the theme tokens are in place **and in use**,
+every radius and shadow comes from a three-value scale, every page shell shares one container that
+lines up with the header, loading/empty/error states render through shared components, the header is
+responsive with a working Log in / Log out button, the public pages share one title scale, one
+heading scale and one card hover, the manage pages run on one input, one primary button and one
+secondary button, and `register-team/` and the matches pages are on the same vocabulary with no
+opacity modifiers and no sub-16px form controls left in `src/`.
 
 > **Baseline finding (2026-10-20):** the frontend does **not** build at HEAD `8876186`.
 > `npm run build` (`tsc -b && vite build`) fails with **160 TypeScript errors across 13 files**,
@@ -546,7 +550,8 @@ cross-cutting passes (5a–5c) were found ahead of it. The areas:
 - [x] Manage pages: associations, clubs, competitions, players — four commits, see below
 - [x] `register-team/` — the `my-10 p-8` cards, the `←` `→` text glyphs → lucide icons, and the
       opacity modifiers — two commits, see below
-- [ ] `match-results/` — scoresheet, rubber rows, status panel
+- [x] `matches/` — the scoresheet, the rubber rows and the status panel — one commit, see below.
+      (Called `match-results/` in the original plan; the folder has always been `pages/matches/`.)
 
 ##### Public pages — one commit ✅
 
@@ -665,6 +670,52 @@ Flags for Phase 6 from this batch: the sub-44px controls (the four header back c
 groups, and `ClubSearch`'s option rows); and the two loading states converted here, which were the
 last `animate-pulse` in `src/` — the app has none left.
 
+##### `matches/` — one commit ✅
+
+One commit, `c92b429`, seven files. The folder is `pages/matches/`; the plan called it
+`match-results/`, which was never a path in the tree.
+
+The smallest batch of the four, because 5a and 5b had already done the cross-cutting work here: no
+raw colour classes, no opacity modifiers, no `transition-all`, no `focus:border-transparent`, no
+text arrows, and no `text-sm` outside a control. The area's real problem was narrower and more
+specific — it had grown its own compact control vocabulary, and never got the focus treatment the
+rest of the app uses.
+
+| What | Before | After |
+| --- | --- | --- |
+| Input / select / textarea | `rounded-md border border-border-strong` with no background and no focus style (`RubberRow`'s `inputClass` and `tiebreakClass`, three textareas) | `rounded-lg border border-border-strong bg-surface … focus:outline-none focus:ring-2 focus:ring-primary-500`, with the compact padding kept |
+| `text-sm` / `text-xs` on a control | on every input and select in `RubberRow` — the last sub-16px form controls in the app | removed; the tiebreak boxes stay `w-12`, which still fits a two-digit score at 16px |
+| Primary button | `rounded-md bg-primary-600 … text-sm text-white`, with no `font-medium` anywhere in the area | `rounded-lg`, `font-medium`; compact `px-3 py-1.5` for the inline status actions, `px-6 py-3` for the scoresheet's own submit |
+| Secondary button | `rounded-md border border-border-strong … text-ink-muted hover:bg-canvas` | `rounded-lg border border-border-strong bg-muted … text-ink hover:bg-border` — the canonical secondary colours |
+| Page title | `text-xl font-bold text-ink` on both `MatchResultsPage` and `EnterResultPage` | `text-3xl`, matching the other 26 pages |
+
+Two strays in the same folder went with it: `FixtureCard`'s "Enter result" link, which is the same
+compact primary button as the status panel's, and `ExportFixturesControl`'s "Confirm Export" — the
+only primary button in the app on `font-semibold` rather than `font-medium` (28 to 1).
+
+**The area's controls were on `rounded-md` and that was the documented rule, which is the
+interesting part.** 5b's note says the three-value scale is "`rounded-md` (6px) for controls
+(inputs, buttons, chips), `rounded-lg` (8px) for surfaces". But 5b reached that by collapsing bare
+`rounded` (4px) *up* to `rounded-md` — it did not set the control radius deliberately. The manage
+and register-team passes then standardised inputs on `rounded-lg`, and the app is now 52 to 6 for
+inputs and 29 to 8 for buttons. So the batch follows the code, and 5b's note is corrected below.
+
+**Kept deliberately:** `rounded-md` on the four inline warning and danger banners, which is the
+app's banner treatment and which this area is the reference for; `text-2xl` on `EnterResultPage`'s
+sign-in card heading, which mirrors `LoginPage`'s and `App.tsx`'s identical cards; the
+`animate-spin` spinners, which report progress rather than decorate; and `font-semibold` on
+headings, which ten other headings use.
+
+**One stale note corrected.** The manage-pages section said "the remaining not-found work is
+`MatchResultsPage` and `EnterResultPage`". Both were already in the shape the manage pass settled
+on — a contained `max-w-3xl … text-center` wrapper with `text-ink-muted` — so there was nothing to
+do but drop a dead `mb-4` from `MatchResultsPage` (nothing followed the `<p>`). The five-shape
+not-found survey in 5d counted these two among the fixed, not the outstanding.
+
+Flags for Phase 6 from this batch: the compact buttons in `ResultStatusPanel` are `px-3 py-1.5`,
+about 32px tall, and the tiebreak inputs are `w-12` — both worth checking against the 44px target
+and the 200% zoom pass.
+
 ### Phase 6 — Responsive and accessibility sweep
 - [ ] Check 320 / 375 / 768 / 1024 / 1440px, no horizontal page scroll at any width
 - [ ] Check usable at 200% browser zoom
@@ -723,6 +774,19 @@ last `animate-pulse` in `src/` — the app has none left.
   settle it against the real layout — the alternatives are a full-size chip, an icon-only button
   with an `aria-label`, or moving the chip below the title on narrow screens. Same batch, same
   question: both radio groups and `ClubSearch`'s option rows.
+- **Four controls outside the finished areas are still on `rounded-md`, and this is the one open
+  question.** Every area has now been through, and the app's control radius is `rounded-lg` by a
+  wide margin — 52 to 6 across inputs, 29 to 8 across buttons. What is left on `rounded-md`:
+  `LoginPage`'s two inputs and its submit button, and the identical sign-in button in `App.tsx`'s
+  admin gate. (Two others are `rounded-md` for good reason and stay: the header's nav link, which
+  is a nav item rather than a control, and `CreatePlayerPage`'s checkbox, which is `h-4 w-4`.)
+  **Why this is a question and not a fix:** 5b's note says controls are `rounded-md` and surfaces
+  `rounded-lg`, so those four *conform to the documented rule* — they were correct when their
+  areas were signed off. The manage and register-team passes then settled inputs on `rounded-lg`,
+  which is what the other 52 do. One of the two has to give: either those four move to
+  `rounded-lg` (four lines, two files), or 5b's note is right and the 52 are wrong, which would be
+  a much larger revert. Left as-is rather than decided unilaterally, because it reopens two areas
+  that are already ticked.
 - **CSS `@import` ordering warning at build — resolved.** The earlier note here said Vite warned
   that `@import` rules must precede all other rules, because the Google Fonts `@import` sat below
   `:root`. The Phase 2 stylesheet rewrite put it back at the top; the current build prints no
@@ -918,3 +982,35 @@ last `animate-pulse` in `src/` — the app has none left.
   `Registration` (club and player) float above the form, like the format dialog and `ClubSearch`'s
   listbox. Their option rows also lose `text-sm` and `text-ink-muted`: a listbox row is a choice to
   read, not a disabled control, and `px-4` lines the row text up with the input text above it.
+- **5b's radius note is corrected: controls are `rounded-lg`, not `rounded-md`.** The 5b entry above
+  reads "`rounded-md` (6px) for controls (inputs, buttons, chips), `rounded-lg` (8px) for
+  surfaces". That was a description of what the 5b transform produced, not a decision it made — it
+  collapsed bare `rounded` (4px) up to `rounded-md` and left everything else where it was, so the
+  app went into the per-area passes with a mix. The manage and register-team passes standardised
+  form controls on `rounded-lg`, and the current counts are 52 to 6 for inputs and 29 to 8 for
+  buttons. The matches batch followed the code rather than the note. Four controls still on
+  `rounded-md` are listed in Open questions.
+- **`rounded-md` stays for inline banners, and the matches area is the reference for them.**
+  `rounded-md border border-danger-border bg-danger-bg p-3 text-sm text-danger` and its warning
+  twin appear in `LoginPage`, `EnterResultPage`, `ResultStatusPanel`, `ScoresheetForm` and the
+  dispute panel. They are messages inside a form rather than surfaces or controls, they already
+  agree with each other across five files, and the manage pass deliberately left them alone. Noted
+  because a radius sweep that went by majority alone would have moved them to `rounded-lg`.
+- **A compact button is a size, not a fourth vocabulary.** The inline actions in
+  `ResultStatusPanel` (Confirm, Dispute, Cancel, Dispute and enter) and `FixtureCard`'s "Enter
+  result" keep `px-3 py-1.5 text-sm` because they sit in a status row or a card corner rather than
+  in a form's action row. Everything else about them — `rounded-lg`, `font-medium`, the primary and
+  secondary colours, `disabled:opacity-50` — is the shared vocabulary. The alternative was a
+  `px-6 py-3` button inside a one-line status strip, which would have set the row's height on its
+  own. The 44px target question for these is in Phase 6.
+- **The scoresheet's submit is a form action and takes the full-size primary button.** It is the
+  one button in the area that ends a form, so it is `px-6 py-3 rounded-lg font-medium` like the
+  other form submits in the app, not the compact size used around it.
+- **The last two `text-sm` form controls are gone.** `RubberRow`'s `inputClass` and
+  `tiebreakClass` were the only sub-16px inputs left after the manage and register-team passes,
+  and they were the reason the rule exists: a control under 16px makes iOS Safari zoom the viewport
+  when it takes focus. The tiebreak boxes keep `w-12`; a two-digit score still fits at 16px.
+- **A pre-existing not-found claim is corrected.** The manage-pages section said the remaining
+  not-found work was `MatchResultsPage` and `EnterResultPage`. Both already used the contained,
+  `text-ink-muted` shape the manage pass settled on, so the matches batch only dropped a dead
+  `mb-4`.
