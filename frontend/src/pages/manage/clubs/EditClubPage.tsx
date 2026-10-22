@@ -106,7 +106,7 @@ function EditClubPage(){
       </div>
 
       {/* 2. Wider Form Card Bubble (Fields & Button only) */}
-      <div className="bg-surface p-8 rounded-lg shadow-md border border-border">
+      <div className="bg-surface border border-border rounded-lg p-8 shadow-sm">
         
         <div className="space-y-5">
           
@@ -119,7 +119,7 @@ function EditClubPage(){
                 type="text" 
                 value={newClub.name || ""} 
                 onChange={e => setNewClub({...newClub, name: e.target.value})} 
-                className="w-full px-3.5 py-2 border border-border-strong rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-ink"
+                className="block w-full border border-border-strong rounded-lg bg-surface text-ink px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
                 placeholder="Enter club name"
               />
             </div>
@@ -134,7 +134,7 @@ function EditClubPage(){
                 type="text" 
                 value={newClub.address || ""} 
                 onChange={e => setNewClub({...newClub, address: e.target.value})} 
-                className="w-full px-3.5 py-2 border border-border-strong rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-ink"
+                className="block w-full border border-border-strong rounded-lg bg-surface text-ink px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
                 placeholder="Enter address"
               />
             </div>
@@ -154,7 +154,7 @@ function EditClubPage(){
 
           <button 
             onClick={submit}
-            className="bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-5 rounded-lg transition-colors shadow-sm cursor-pointer text-sm"
+            className="bg-primary-600 text-white font-medium px-6 py-3 rounded-lg hover:bg-primary-700"
           >
             Submit
           </button>
