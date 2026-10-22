@@ -60,7 +60,7 @@ function ExportFixturesControl({ sectionId }: ExportFixturesControlProps) {
                 href={fixturesExportUrl(sectionId, selectedTeamId || null)}
                 download
                 onClick={() => setExpanded(false)}
-                className="rounded-lg bg-primary-600 px-4 py-2 text-sm font-semibold text-white hover:bg-primary-700"
+                className="rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700"
             >
                 Confirm Export
             </a>

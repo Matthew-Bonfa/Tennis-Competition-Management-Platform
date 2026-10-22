@@ -75,7 +75,7 @@ function ResultStatusPanel({ match, onMatchChange }: ResultStatusPanelProps) {
   const waitingOn = form?.enteredBySide === 'home' ? match.awayTeam.name : match.homeTeam.name;
 
   const linkClass =
-    'inline-flex items-center gap-1 rounded-md bg-primary-600 px-3 py-1.5 text-sm text-white hover:bg-primary-700';
+    'inline-flex items-center gap-1 rounded-lg bg-primary-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-primary-700';
 
   if (status === 'completed' && !isAdmin) {
     return null;
@@ -108,7 +108,7 @@ function ResultStatusPanel({ match, onMatchChange }: ResultStatusPanelProps) {
             type="button"
             onClick={() => respond('confirm')}
             disabled={busy !== null}
-            className="inline-flex items-center gap-1 rounded-md bg-primary-600 px-3 py-1.5 text-sm text-white hover:bg-primary-700 disabled:opacity-50"
+            className="inline-flex items-center gap-1 rounded-lg bg-primary-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-primary-700 disabled:opacity-50"
           >
             {busy === 'confirm' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
             Confirm result
@@ -117,7 +117,7 @@ function ResultStatusPanel({ match, onMatchChange }: ResultStatusPanelProps) {
             type="button"
             onClick={() => setDisputing(true)}
             disabled={busy !== null}
-            className="inline-flex items-center gap-1 rounded-md border border-border-strong px-3 py-1.5 text-sm text-ink-muted hover:bg-canvas disabled:opacity-50"
+            className="inline-flex items-center gap-1 rounded-lg border border-border-strong bg-muted px-3 py-1.5 text-sm font-medium text-ink hover:bg-border disabled:opacity-50"
           >
             <X className="h-4 w-4" />
             Dispute
@@ -126,7 +126,7 @@ function ResultStatusPanel({ match, onMatchChange }: ResultStatusPanelProps) {
       )}
 
       {canRespond && disputing && (
-        <div className="rounded-md border border-border bg-surface p-3 space-y-2">
+        <div className="rounded-lg border border-border bg-surface p-3 space-y-2">
           <label className="block text-sm text-ink-muted">
             Why do you dispute this result? You will enter the correct score next.
             <textarea
@@ -134,7 +134,7 @@ function ResultStatusPanel({ match, onMatchChange }: ResultStatusPanelProps) {
               onChange={(e) => setReason(e.target.value)}
               maxLength={500}
               rows={3}
-              className="mt-1 w-full rounded-md border border-border-strong px-3 py-2 text-ink"
+              className="mt-1 w-full rounded-lg border border-border-strong bg-surface px-3 py-2 text-ink focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
           </label>
           <div className="flex flex-wrap justify-end gap-2">
@@ -145,7 +145,7 @@ function ResultStatusPanel({ match, onMatchChange }: ResultStatusPanelProps) {
                 setError(null);
               }}
               disabled={busy !== null}
-              className="rounded-md border border-border-strong px-3 py-1.5 text-sm text-ink-muted hover:bg-canvas"
+              className="rounded-lg border border-border-strong bg-muted px-3 py-1.5 text-sm font-medium text-ink hover:bg-border"
             >
               Cancel
             </button>
@@ -153,7 +153,7 @@ function ResultStatusPanel({ match, onMatchChange }: ResultStatusPanelProps) {
               type="button"
               onClick={() => respond('dispute')}
               disabled={busy !== null || reason.trim() === ''}
-              className="inline-flex items-center gap-1 rounded-md bg-primary-600 px-3 py-1.5 text-sm text-white hover:bg-primary-700 disabled:opacity-50"
+              className="inline-flex items-center gap-1 rounded-lg bg-primary-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-primary-700 disabled:opacity-50"
             >
               {busy === 'dispute' && <Loader2 className="h-4 w-4 animate-spin" />}
               Dispute and enter the correct score

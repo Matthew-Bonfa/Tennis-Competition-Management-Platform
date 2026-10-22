@@ -39,7 +39,7 @@ function MatchResultsPage() {
     if (notFound || !match) {
         return (
             <div className="max-w-3xl mx-auto px-4 py-12 sm:px-6 lg:px-8 text-center">
-                <p className="text-ink-muted mb-4">Match not found.</p>
+                <p className="text-ink-muted">Match not found.</p>
             </div>
         );
     }
@@ -76,7 +76,7 @@ function MatchResultsPage() {
 
             <div className="bg-surface border border-border rounded-lg overflow-hidden">
                 <div className="px-6 py-4 border-b border-border">
-                    <h1 className="text-xl font-bold text-ink">
+                    <h1 className="text-3xl font-bold text-ink">
                         <Link to={`/teams/${match.homeTeam.id}`} className="hover:underline hover:text-primary-600">
                             {match.homeTeam.name}
                         </Link>
