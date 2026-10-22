@@ -50,7 +50,7 @@ function CreateAssociationPage() {
               maxLength={200} 
               placeholder="Enter association name"
               onChange={(e) => setName(e.target.value)} 
-              className="block w-full px-4 py-3 border border-border-strong rounded-lg shadow-sm bg-surface text-ink focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+              className="block w-full border border-border-strong rounded-lg bg-surface text-ink px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
           </div>
 
@@ -63,7 +63,7 @@ function CreateAssociationPage() {
               <input 
                 type="text" 
                 placeholder="e.g. contact@example.com or Person ID"
-                className="block w-full px-4 py-3 border border-border-strong rounded-lg shadow-sm bg-surface text-ink focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+                className="block w-full border border-border-strong rounded-lg bg-surface text-ink px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
               />
               <span className="block mt-1.5 text-xs text-ink-subtle">
                 WIP: enter email address or person ID
@@ -76,7 +76,7 @@ function CreateAssociationPage() {
         <div className="flex items-center gap-3 pt-2">
           <button 
             onClick={() => postAssociation()} 
-            className="px-5 py-2.5 bg-primary-600 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-primary-700 transition-colors"
+            className="bg-primary-600 text-white font-medium px-6 py-3 rounded-lg hover:bg-primary-700"
           >
             Create
           </button>

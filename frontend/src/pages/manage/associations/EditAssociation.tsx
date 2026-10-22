@@ -36,17 +36,17 @@ export function EditAssociation({association}: {association: Association}) {
 
   return (
     <div className="w-full bg-surface border border-border rounded-lg p-8 shadow-sm">
-      <h2 className="text-2xl font-bold text-ink mb-6">Edit Association</h2>
+      <h2 className="text-xl font-bold text-ink mb-6">Edit Association</h2>
 
       <div className="flex items-center whitespace-nowrap gap-4 mb-6">
-        <label className="block text-left text-sm font-medium text-ink-muted mb-2">
+        <label className="text-sm font-medium text-ink-muted">
           Association Name
         </label>
-        <input 
-          type="text" 
-          value={name} 
-          onChange={(e) => { setName(e.target.value); setMsg(""); }} 
-          className="block w-full px-4 py-3 border border-border-strong rounded-lg shadow-sm bg-surface text-ink focus:outline-none focus:ring-2 focus:ring-primary-500"
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => { setName(e.target.value); setMsg(""); }}
+          className="block w-full border border-border-strong rounded-lg bg-surface text-ink px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
           placeholder="Enter association name"
         />
       </div>
@@ -61,14 +61,14 @@ export function EditAssociation({association}: {association: Association}) {
         <button 
           onClick={updateAssociation} 
           disabled={!isChanged} 
-          className="px-5 py-2.5 bg-primary-600 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-primary-700 disabled:bg-border disabled:text-ink-subtle disabled:shadow-none disabled:cursor-not-allowed transition-colors"
+          className="bg-primary-600 text-white font-medium px-6 py-3 rounded-lg hover:bg-primary-700 disabled:opacity-50"
         >
           Save
         </button>
 
-        <button 
+        <button
           onClick={() => { setName(association.name || ""); setMsg(""); }}
-          className="px-5 py-2.5 bg-surface border border-border-strong text-ink-muted text-sm font-medium rounded-lg shadow-sm hover:bg-canvas transition-colors"
+          className="border border-border-strong bg-muted text-ink font-medium px-4 py-3 rounded-lg hover:bg-border"
         >
           Cancel
         </button>

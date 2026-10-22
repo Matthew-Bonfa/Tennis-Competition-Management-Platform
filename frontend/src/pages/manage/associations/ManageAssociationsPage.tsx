@@ -1,5 +1,6 @@
 import {Link} from 'react-router-dom';
 import {useState, useEffect} from 'react'
+import {Plus} from 'lucide-react'
 
 import {EditAssociation, type Association} from './EditAssociation'
 import fetchApi from '../../../lib/api.ts'
@@ -47,7 +48,7 @@ function ManageAssociationsPage() {
             id="association-select"
             value={selectedAssociationId}
             onChange={(e) => setSelectedAssociationId(e.target.value)}
-            className="block w-full border border-border-strong rounded-lg shadow-sm bg-surface text-ink px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+            className="block w-full border border-border-strong rounded-lg bg-surface text-ink px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
           >
             {associations.map(assoc => (
               <option key={assoc.id} value={assoc.id}>{assoc.name}</option>
@@ -57,9 +58,10 @@ function ManageAssociationsPage() {
 
         <Link 
           to="/manage-associations/create-new-association"
-          className="inline-flex items-center justify-center px-4 py-3 bg-primary-600 text-white text-sm font-medium rounded-lg shadow-sm hover:bg-primary-700 transition-colors shrink-0"
+          className="inline-flex items-center justify-center gap-1.5 bg-primary-600 text-white font-medium px-6 py-3 rounded-lg hover:bg-primary-700 shrink-0"
         >
-          + New Association
+          <Plus className="h-4 w-4" />
+          New Association
         </Link>
       </div>
 
