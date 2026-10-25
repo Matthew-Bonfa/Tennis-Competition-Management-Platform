@@ -4,10 +4,10 @@ Branch: `feature/frontend/refactor`
 Scope: visual + structural refactor of `frontend/` only. No functional, route, API, state or
 copy changes. Verification per phase: `npm run build` and `npm run lint` in `frontend/`.
 
-**Next step:** Phase 6 has one unit left: the 200% zoom pass. Done and committed are the
-heading-level fixes, the 320px audit, the 44px touch-target sweep and the label/accessible-name
-pass; the `ManageAssociationsPage` loading question (Open questions) is the other judgement call
-outstanding. Then Phase 7 (the summary).
+**Next step:** Phase 6 is complete — the heading-level fixes, the 320px audit, the 44px
+touch-target sweep, the label/accessible-name pass and the 200% zoom pass are done and
+committed. What remains is the `ManageAssociationsPage` loading question (Open questions),
+then Phase 7 (the summary).
 Phases 0–4, 5a–5d and the public-pages, manage-pages, register-team and matches passes are
 complete: the build is green, `src/` is restructured, the theme tokens are in place **and in use**,
 every radius and shadow comes from a three-value scale, every page shell shares one container that
@@ -722,7 +722,7 @@ class combinations plus arithmetic against the 320px viewport, not browser scree
 layouts are simple enough that the sums are conclusive.
 
 - [x] Check 320 / 375 / 768 / 1024 / 1440px, no horizontal page scroll at any width
-- [ ] Check usable at 200% browser zoom
+- [x] Check usable at 200% browser zoom
 - [x] Inputs ≥16px on mobile; touch targets ≥44px; labels on all fields; semantic HTML
 - [x] Build + lint + commit
 
@@ -778,7 +778,24 @@ is where absolute belongs; `whitespace-nowrap` appears only on table headers tha
 page is cramped but not overflowing — `EditAssociation`'s horizontal label row — recorded and
 left, since it does not scroll.
 
-- [ ] **200% zoom pass** — the remaining unit: fixed heights and `min-h-screen` traps.
+#### 200% zoom pass — `b2eaf4b` ✅
+
+Zoom scales text and layout together, so relative fits are unchanged; what zoom *does* change is
+the viewport height, which makes fixed heights the trap. A sweep of every height in `src` found
+one: `App.tsx`'s admin gate used `h-screen` with flex centering, and a card taller than the
+viewport inside a fixed-height centred box spills above the box's top edge, where the page
+cannot scroll to it. It is `min-h-screen` now, matching `LoginPage`'s identical layout.
+Everything else was checked and is safe by construction: `min-h-screen` wrappers grow; the
+`max-h-44`/`max-h-36` dropdown panels scroll inside themselves; the three `overflow-hidden`
+cards have no height set, so they grow with their content and the property is only clipping
+child backgrounds to the rounded corners; the header logo keeps its aspect ratio (`w-auto`);
+and `PlayerStats`' segmented control — the one `inline-flex` without wrap — bottoms out at
+~210px of buttons against a 288px content box at 320px, so it cannot clip. Truncation sites
+(`AssociationsList` titles, `MatchDetail` player names) are deliberate card patterns with
+`min-w-0`, and zoom does not change their relative fit.
+
+**Phase 6 is complete.** What remains is Phase 7 (the summary), and the one judgement call in
+Open questions (`ManageAssociationsPage`'s missing loading render).
 
 ### Phase 7 — Summary
 - [ ] Summarise changes, list any CSS that could not be removed and why, flag uncertainties
