@@ -60,7 +60,7 @@ export default function App() {
                 isAuthenticated() && isAdmin() ? (
                   <AdminPage />
                 ) : (
-                  <div className="flex items-center justify-center h-screen bg-canvas px-4">
+                  <div className="flex items-center justify-center min-h-screen bg-canvas px-4">
                     <div className="w-full max-w-md space-y-6 bg-surface p-8 rounded-lg shadow-sm">
                       <h2 className="text-2xl font-bold text-ink">
                         {isAuthenticated() ? 'Access Denied' : 'Please Sign In'}
