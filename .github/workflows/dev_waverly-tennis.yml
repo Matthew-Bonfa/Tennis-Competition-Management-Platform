@@ -26,7 +26,7 @@ jobs:
       # 1. Install dependencies, generate Prisma client, and build NestJS
       - name: Install dependencies and build
         run: |
-          npm install
+          npm install --ignore-scripts
           npx prisma generate
           npm run build
         working-directory: backend # Remove this line if your code is at the repository root
