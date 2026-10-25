@@ -17,9 +17,9 @@ const RUBBER_TYPE_LABELS = {
   mixed_doubles: 'Mixed doubles',
 };
 
-const inputClass = 'rounded-lg border border-border-strong bg-surface px-2 py-1.5 text-ink focus:outline-none focus:ring-2 focus:ring-primary-500';
+const inputClass = 'min-h-11 rounded-lg border border-border-strong bg-surface px-2 py-1.5 text-ink focus:outline-none focus:ring-2 focus:ring-primary-500';
 const scoreClass = `${inputClass} w-16 text-center`;
-const tiebreakClass = 'rounded-lg border border-border-strong bg-surface px-1 py-1 text-ink w-12 text-center focus:outline-none focus:ring-2 focus:ring-primary-500';
+const tiebreakClass = 'min-h-11 rounded-lg border border-border-strong bg-surface px-1 py-1 text-ink w-12 text-center focus:outline-none focus:ring-2 focus:ring-primary-500';
 
 function RubberRow({ draft, form, teamNames, errors, onChange }: RubberRowProps) {
   function setPlayer(side: 'home' | 'away', slot: number, personId: string) {

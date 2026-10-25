@@ -87,7 +87,7 @@ function ClubSearch({ clubs, value, onChange }: ClubSearchProps) {
           type="button"
           onClick={clear}
           aria-label="Change club"
-          className="text-ink-subtle hover:text-ink-muted"
+          className="flex h-11 w-11 items-center justify-center text-ink-subtle hover:text-ink-muted"
         >
           <X className="h-4 w-4" />
         </button>
@@ -135,7 +135,7 @@ function ClubSearch({ clubs, value, onChange }: ClubSearchProps) {
                   choose(club);
                 }}
                 onMouseEnter={() => setHighlighted(i)}
-                className={`cursor-pointer px-4 py-2 text-ink ${i === highlighted ? 'bg-primary-50 text-primary-800' : ''}`}
+                className={`flex min-h-11 cursor-pointer items-center px-4 py-2 text-ink ${i === highlighted ? 'bg-primary-50 text-primary-800' : ''}`}
               >
                 {club.name}
               </li>

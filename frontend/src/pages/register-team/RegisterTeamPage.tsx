@@ -8,9 +8,9 @@ function RegisterTeamPage() {
   return (
     <div className="mx-4 my-8 max-w-2xl p-8 bg-surface border border-border rounded-lg shadow-sm sm:mx-auto">
 
-      {/* Header Bar with Centered Text and Back Button */}
-      <div className="mb-7 pb-4 border-b border-border relative flex items-center justify-center">
-        <div className="text-center">
+      {/* Header Bar with Back Button */}
+      <div className="mb-7 pb-4 border-b border-border flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+        <div>
           <h2 className="text-3xl font-bold text-ink mb-1">
             Manage Teams
           </h2>
@@ -21,7 +21,7 @@ function RegisterTeamPage() {
 
         <button
           onClick={() => navigate('/admin')}
-          className="absolute right-0 inline-flex items-center gap-1.5 border border-border bg-muted text-ink-muted font-medium px-3 py-1.5 rounded-lg hover:bg-border transition-colors text-xs"
+          className="inline-flex min-h-11 shrink-0 items-center gap-1.5 border border-border bg-muted text-ink-muted font-medium px-3 py-1.5 rounded-lg hover:bg-border transition-colors text-sm"
         >
           <ArrowLeft className="h-4 w-4" />
           Back

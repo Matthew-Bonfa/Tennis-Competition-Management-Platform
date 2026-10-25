@@ -191,7 +191,7 @@ function ManageCompetitionPage() {
                 </select>
                 <Link
                   to={`/manage-competitions/${id}/seasons/${selectedSeasonId}`}
-                  className="text-sm text-ink-muted hover:text-primary-600"
+                  className="inline-flex min-h-11 items-center text-sm text-ink-muted hover:text-primary-600"
                 >
                   Edit season
                 </Link>
@@ -235,7 +235,7 @@ function ManageCompetitionPage() {
                     </Link>
                     <Link
                       to={`/manage-competitions/${id}/sections/${section.id}`}
-                      className="text-sm text-ink-muted hover:text-primary-600"
+                      className="inline-flex min-h-11 items-center text-sm text-ink-muted hover:text-primary-600"
                     >
                       Edit
                     </Link>

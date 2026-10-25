@@ -301,7 +301,7 @@ function FormatForm({ initial = null, onSaved, onCancel }: FormatFormProps) {
                 type="button"
                 onClick={() => removeRubber(index)}
                 disabled={values.rubbers.length === 1}
-                className="text-sm text-danger hover:underline disabled:opacity-40 disabled:no-underline shrink-0"
+                className="inline-flex min-h-11 shrink-0 items-center text-sm text-danger hover:underline disabled:opacity-40 disabled:no-underline"
               >
                 Remove
               </button>
@@ -311,7 +311,7 @@ function FormatForm({ initial = null, onSaved, onCancel }: FormatFormProps) {
         <button
           type="button"
           onClick={addRubber}
-          className="mt-2 inline-flex items-center gap-1 text-sm font-medium text-primary-600 hover:underline"
+          className="mt-2 inline-flex min-h-11 items-center gap-1 text-sm font-medium text-primary-600 hover:underline"
         >
           <Plus className="h-4 w-4" />
           Add rubber

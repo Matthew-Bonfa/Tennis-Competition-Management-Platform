@@ -163,7 +163,7 @@ function CompetitionProfile() {
               <select
                 value={selectedSeasonId ?? ''}
                 onChange={(e) => setSelectedSeasonId(Number(e.target.value))}
-                className="border border-border-strong rounded-lg text-sm px-3 py-1.5 bg-surface text-ink focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="border border-border-strong rounded-lg min-h-11 px-3 py-1.5 bg-surface text-ink focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
                 {competition.seasons.map((season: any) => (
                   <option key={season.id} value={season.id}>{season.name}</option>

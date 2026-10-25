@@ -273,7 +273,7 @@ export function Registration({season, association}: {season: Season; association
                   <button 
                     key={c.id} 
                     onClick={() => selectClub(c)}
-                    className="w-full px-4 py-2.5 text-left bg-transparent border-b border-border last:border-b-0 hover:bg-canvas text-ink transition-colors"
+                    className="flex min-h-11 items-center w-full px-4 py-2.5 text-left bg-transparent border-b border-border last:border-b-0 hover:bg-canvas text-ink transition-colors"
                   >
                     {c.name}
                   </button>
@@ -352,7 +352,7 @@ export function Registration({season, association}: {season: Season; association
                             <button 
                               key={p.id} 
                               onClick={() => selectPlayer(index, p)}
-                              className="w-full px-4 py-2 text-left bg-transparent border-b border-border last:border-b-0 hover:bg-canvas text-ink transition-colors"
+                              className="flex min-h-11 items-center w-full px-4 py-2 text-left bg-transparent border-b border-border last:border-b-0 hover:bg-canvas text-ink transition-colors"
                             >
                               {p.firstName + " " + p.lastName}
                             </button>
@@ -368,7 +368,7 @@ export function Registration({season, association}: {season: Season; association
                 <div className="flex sm:pl-40">
                   <button 
                     onClick={() => setPlayerText([...playerText, ""])}
-                    className="inline-flex items-center gap-1 text-sm font-medium text-primary-600 hover:underline"
+                    className="inline-flex min-h-11 items-center gap-1 text-sm font-medium text-primary-600 hover:underline"
                   >
                     <Plus className="h-4 w-4" />
                     Add Player
@@ -390,7 +390,7 @@ export function Registration({season, association}: {season: Season; association
                 ].map((option) => (
                   <label 
                     key={option.id} 
-                    className={`flex items-center gap-2 px-4 py-2 rounded-lg border cursor-pointer text-sm transition-colors ${
+                    className={`flex min-h-11 items-center gap-2 px-4 py-2 rounded-lg border cursor-pointer text-sm transition-colors ${
                       gender === option.id 
                         ? 'border-primary-600 bg-primary-50 font-semibold text-primary-700' 
                         : 'border-border-strong bg-surface text-ink-muted hover:bg-canvas'

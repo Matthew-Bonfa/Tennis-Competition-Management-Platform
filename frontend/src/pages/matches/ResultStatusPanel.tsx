@@ -75,7 +75,7 @@ function ResultStatusPanel({ match, onMatchChange }: ResultStatusPanelProps) {
   const waitingOn = form?.enteredBySide === 'home' ? match.awayTeam.name : match.homeTeam.name;
 
   const linkClass =
-    'inline-flex items-center gap-1 rounded-lg bg-primary-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-primary-700';
+    'inline-flex min-h-11 items-center gap-1 rounded-lg bg-primary-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-primary-700';
 
   if (status === 'completed' && !isAdmin) {
     return null;
@@ -108,7 +108,7 @@ function ResultStatusPanel({ match, onMatchChange }: ResultStatusPanelProps) {
             type="button"
             onClick={() => respond('confirm')}
             disabled={busy !== null}
-            className="inline-flex items-center gap-1 rounded-lg bg-primary-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-primary-700 disabled:opacity-50"
+            className="inline-flex min-h-11 items-center gap-1 rounded-lg bg-primary-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-primary-700 disabled:opacity-50"
           >
             {busy === 'confirm' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
             Confirm result
@@ -117,7 +117,7 @@ function ResultStatusPanel({ match, onMatchChange }: ResultStatusPanelProps) {
             type="button"
             onClick={() => setDisputing(true)}
             disabled={busy !== null}
-            className="inline-flex items-center gap-1 rounded-lg border border-border-strong bg-muted px-3 py-1.5 text-sm font-medium text-ink hover:bg-border disabled:opacity-50"
+            className="inline-flex min-h-11 items-center gap-1 rounded-lg border border-border-strong bg-muted px-3 py-1.5 text-sm font-medium text-ink hover:bg-border disabled:opacity-50"
           >
             <X className="h-4 w-4" />
             Dispute
@@ -145,7 +145,7 @@ function ResultStatusPanel({ match, onMatchChange }: ResultStatusPanelProps) {
                 setError(null);
               }}
               disabled={busy !== null}
-              className="rounded-lg border border-border-strong bg-muted px-3 py-1.5 text-sm font-medium text-ink hover:bg-border"
+              className="inline-flex min-h-11 items-center rounded-lg border border-border-strong bg-muted px-3 py-1.5 text-sm font-medium text-ink hover:bg-border"
             >
               Cancel
             </button>
@@ -153,7 +153,7 @@ function ResultStatusPanel({ match, onMatchChange }: ResultStatusPanelProps) {
               type="button"
               onClick={() => respond('dispute')}
               disabled={busy !== null || reason.trim() === ''}
-              className="inline-flex items-center gap-1 rounded-lg bg-primary-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-primary-700 disabled:opacity-50"
+              className="inline-flex min-h-11 items-center gap-1 rounded-lg bg-primary-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-primary-700 disabled:opacity-50"
             >
               {busy === 'dispute' && <Loader2 className="h-4 w-4 animate-spin" />}
               Dispute and enter the correct score

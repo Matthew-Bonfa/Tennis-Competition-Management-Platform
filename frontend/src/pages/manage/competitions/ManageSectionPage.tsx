@@ -295,7 +295,7 @@ function ManageSectionPage() {
                 type="button"
                 onClick={() => setPanelOpen(false)}
                 aria-label="Close"
-                className="text-ink-subtle hover:text-ink"
+                className="flex h-11 w-11 items-center justify-center text-ink-subtle hover:text-ink"
               >
                 <X className="h-5 w-5" />
               </button>

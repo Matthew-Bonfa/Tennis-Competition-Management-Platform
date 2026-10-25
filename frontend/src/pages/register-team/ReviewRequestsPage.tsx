@@ -76,7 +76,7 @@ function ReviewRequests() {
       ) : (
         <>
           {/* Header Bar with Back Button */}
-          <div className="mb-7 pb-4 border-b border-border flex items-center justify-between gap-4">
+          <div className="mb-7 pb-4 border-b border-border flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
             <div>
               <h2 className="text-3xl font-bold text-ink">
                 Review Registration Requests
@@ -88,7 +88,7 @@ function ReviewRequests() {
 
             <button
               onClick={() => navigate('/manage-teams')}
-              className="inline-flex items-center gap-1.5 border border-border bg-muted text-ink-muted font-medium px-3 py-1.5 rounded-lg hover:bg-border transition-colors text-xs shrink-0"
+              className="inline-flex min-h-11 items-center gap-1.5 border border-border bg-muted text-ink-muted font-medium px-3 py-1.5 rounded-lg hover:bg-border transition-colors text-sm shrink-0"
             >
               <ArrowLeft className="h-4 w-4" />
               Back

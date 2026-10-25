@@ -40,7 +40,7 @@ function PlayerStats({ record }: PlayerStatsProps) {
         <select
           value={year}
           onChange={(e) => setYear(e.target.value === 'all' ? 'all' : Number(e.target.value))}
-          className="border border-border-strong rounded-lg text-sm px-3 py-1.5 bg-surface text-ink focus:outline-none focus:ring-2 focus:ring-primary-500"
+          className="border border-border-strong rounded-lg min-h-11 px-3 py-1.5 bg-surface text-ink focus:outline-none focus:ring-2 focus:ring-primary-500"
         >
           <option value="all">All years</option>
           {record.years.map((y) => (
@@ -56,7 +56,7 @@ function PlayerStats({ record }: PlayerStatsProps) {
           <div className="inline-flex rounded-lg border border-border-strong overflow-hidden text-sm">
             <button
               onClick={() => setMatchType('all')}
-              className={`px-3 py-1.5 font-medium ${matchType === 'all' ? 'bg-primary-600 text-white' : 'bg-surface text-ink-muted hover:bg-canvas'}`}
+              className={`min-h-11 px-3 py-1.5 font-medium ${matchType === 'all' ? 'bg-primary-600 text-white' : 'bg-surface text-ink-muted hover:bg-canvas'}`}
             >
               All
             </button>
@@ -64,7 +64,7 @@ function PlayerStats({ record }: PlayerStatsProps) {
               <button
                 key={type}
                 onClick={() => setMatchType(type)}
-                className={`px-3 py-1.5 font-medium border-l border-border-strong ${matchType === type ? 'bg-primary-600 text-white' : 'bg-surface text-ink-muted hover:bg-canvas'}`}
+                className={`min-h-11 px-3 py-1.5 font-medium border-l border-border-strong ${matchType === type ? 'bg-primary-600 text-white' : 'bg-surface text-ink-muted hover:bg-canvas'}`}
               >
                 {RUBBER_TYPE_LABELS[type]}
               </button>

@@ -106,7 +106,7 @@ function SectionPage() {
                         <a
                             href={ladderExportUrl(sectionId!)}
                             download
-                            className="text-sm font-semibold text-primary-600 hover:text-primary-800"
+                            className="inline-flex min-h-11 items-center text-sm font-semibold text-primary-600 hover:text-primary-800"
                         >
                             Export Ladder (CSV)
                         </a>

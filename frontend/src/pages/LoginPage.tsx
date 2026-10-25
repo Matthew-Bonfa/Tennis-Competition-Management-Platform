@@ -105,7 +105,7 @@ function Login() {
           </div>
 
           <div className="flex items-center justify-between text-sm">
-            <label className="flex items-center gap-2 text-ink-muted">
+            <label className="flex min-h-11 items-center gap-2 text-ink-muted">
               <input id="remember" type="checkbox" />
               Remember me
             </label>
