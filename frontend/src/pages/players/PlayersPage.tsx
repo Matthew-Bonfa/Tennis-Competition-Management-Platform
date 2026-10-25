@@ -60,6 +60,7 @@ function PlayersPage() {
         </div>
         <input
           type="text"
+          aria-label="Search players by name or player code"
           placeholder="Search players by name or player code..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}

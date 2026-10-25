@@ -161,6 +161,7 @@ function CompetitionProfile() {
             </h2>
             {competition.seasons?.length > 0 && (
               <select
+                aria-label="Season"
                 value={selectedSeasonId ?? ''}
                 onChange={(e) => setSelectedSeasonId(Number(e.target.value))}
                 className="border border-border-strong rounded-lg min-h-11 px-3 py-1.5 bg-surface text-ink focus:outline-none focus:ring-2 focus:ring-primary-500"

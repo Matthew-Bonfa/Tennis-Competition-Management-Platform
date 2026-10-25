@@ -139,8 +139,9 @@ function ManageCompetitionPage() {
       {/* Competition name */}
       <form onSubmit={handleSave} className="bg-surface border border-border rounded-lg p-6 shadow-sm space-y-4 mb-8">
         <div>
-          <label className="block text-sm font-medium text-ink-muted mb-1">Competition name</label>
+          <label htmlFor="competition-name" className="block text-sm font-medium text-ink-muted mb-1">Competition name</label>
           <input
+            id="competition-name"
             type="text"
             value={name}
             onChange={(e) => { setName(e.target.value); setSaved(false); }}
@@ -181,6 +182,7 @@ function ManageCompetitionPage() {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
                 <select
+                  aria-label="Season"
                   value={selectedSeasonId ?? ''}
                   onChange={(e) => setSelectedSeasonId(Number(e.target.value))}
                   className="border border-border-strong rounded-lg bg-surface text-ink px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"

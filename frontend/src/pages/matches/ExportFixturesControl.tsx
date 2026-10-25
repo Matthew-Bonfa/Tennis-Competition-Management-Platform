@@ -46,6 +46,7 @@ function ExportFixturesControl({ sectionId }: ExportFixturesControlProps) {
     return (
         <div className="flex items-center gap-3 px-4 pb-8">
             <select
+                aria-label="Team"
                 value={selectedTeamId}
                 onChange={(e) => setSelectedTeamId(e.target.value)}
                 className="border border-border-strong rounded-lg shadow-sm bg-surface text-ink min-h-11 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"

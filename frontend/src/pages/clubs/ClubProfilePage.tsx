@@ -61,11 +61,11 @@ function ClubProfile() {
 
       {/* Main Profile Card */}
       <div className="bg-surface border border-border rounded-lg p-8 shadow-sm">
-        <div className="relative text-center border-b border-border pb-6 mb-6">
-          <div className="bg-primary-50 text-primary-700 font-semibold px-4 py-2 rounded-full text-sm border border-primary-200 absolute top-0 right-0">
+        <div className="text-center border-b border-border pb-6 mb-6">
+          <h1 className="text-3xl font-bold text-ink">{club.name}</h1>
+          <div className="inline-flex mt-3 bg-primary-50 text-primary-700 font-semibold px-4 py-2 rounded-full text-sm border border-primary-200">
             {club.isFinancialMember ? 'Financial Member' : 'Non-Financial Member'}
           </div>
-          <h1 className="text-3xl font-bold text-ink pr-28 sm:pr-0">{club.name}</h1>
         </div>
 
         {/* Associations & Teams */}

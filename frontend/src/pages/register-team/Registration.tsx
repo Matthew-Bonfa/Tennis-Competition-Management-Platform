@@ -255,12 +255,13 @@ export function Registration({season, association}: {season: Season; association
 
         {/* Club Selector */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-          <label className="w-full sm:w-36 text-sm font-semibold text-ink-muted">
+          <label htmlFor="club-search" className="w-full sm:w-36 text-sm font-semibold text-ink-muted">
             Choose a club
           </label>
           <div className="relative flex-1">
-            <input 
-              type="text" 
+            <input
+              id="club-search"
+              type="text"
               placeholder="Search for a club..."
               value={searchTerm} 
               onChange={e => setSearchTerm(e.target.value)} 
@@ -285,11 +286,12 @@ export function Registration({season, association}: {season: Season; association
 
         {/* Team Name */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-          <label className="w-full sm:w-36 text-sm font-semibold text-ink-muted">
+          <label htmlFor="team-name" className="w-full sm:w-36 text-sm font-semibold text-ink-muted">
             Team name:
           </label>
           <div className="flex-1">
-            <input 
+            <input
+              id="team-name"
               placeholder="Enter team name"
               value={teamName} 
               onChange={(e) => setTeamName(e.target.value)} 
@@ -300,11 +302,12 @@ export function Registration({season, association}: {season: Season; association
 
         {/* Format Select */}
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-          <label className="w-full sm:w-36 text-sm font-semibold text-ink-muted">
+          <label htmlFor="team-format" className="w-full sm:w-36 text-sm font-semibold text-ink-muted">
             Format
           </label>
           <div className="flex-1">
-            <select 
+            <select
+              id="team-format"
               value={selectedFormat ? selectedFormat.id : ""} 
               onChange={(e) => setSelectedFormat(formats.find(f => f.id === e.target.value) ?? null)}
               className="block w-full border border-border-strong rounded-lg bg-surface text-ink px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
@@ -336,11 +339,12 @@ export function Registration({season, association}: {season: Season; association
               <div className="flex flex-col gap-2.5">
                 {Array.from({ length: playerText.length }).map((_, index) => (
                   <div key={index} className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-                    <label className="w-full sm:w-36 text-sm font-semibold text-ink-muted">
+                    <label htmlFor={`player-${index}`} className="w-full sm:w-36 text-sm font-semibold text-ink-muted">
                       Player {index + 1}
                     </label>
                     <div className="relative flex-1">
-                      <input 
+                      <input
+                        id={`player-${index}`}
                         placeholder={`Player ${index + 1} Name`}
                         value={playerText[index]} 
                         onChange={(e) => updatePlayerText(index, e.target.value)} 
@@ -382,7 +386,7 @@ export function Registration({season, association}: {season: Season; association
               <p className="text-sm font-semibold text-ink-muted text-center mb-1">
                 What is this team's gender?
               </p>
-              <div className="flex justify-center gap-4">
+              <div role="radiogroup" aria-label="Team gender" className="flex justify-center gap-4">
                 {[
                   { id: 'boys', label: "Men's" },
                   { id: 'open', label: 'Mixed' },
@@ -426,10 +430,11 @@ export function Registration({season, association}: {season: Season; association
                 ))}
               </div>
 
-              <label className="block text-sm font-semibold text-ink-muted mb-1.5 text-center">
+              <label htmlFor="section-comment" className="block text-sm font-semibold text-ink-muted mb-1.5 text-center">
                 Please leave a comment about the team's ability and preferred section
               </label>
-              <textarea 
+              <textarea
+                id="section-comment"
                 rows={3}
                 value={sectionComment} 
                 onChange={(e) => setSectionComment(e.target.value)} 

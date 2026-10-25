@@ -85,6 +85,7 @@ function CompetitionsPage() {
           </div>
           <input
             type="text"
+            aria-label="Search competitions by name or association"
             placeholder="Search competitions by name or association..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -94,6 +95,7 @@ function CompetitionsPage() {
 
         {/* ADDED: association dropdown, per the Figma wireframe */}
         <select
+          aria-label="Filter by association"
           value={selectedAssociationId}
           onChange={(e) => setSelectedAssociationId(e.target.value)}
           className="border border-border-strong rounded-lg bg-surface text-ink px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"

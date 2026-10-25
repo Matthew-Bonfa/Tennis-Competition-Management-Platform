@@ -62,7 +62,7 @@ function SelectCompetition() {
 
           {/* Association Dropdown */}
           <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-            <label className="w-full sm:w-36 text-sm font-semibold text-ink-muted">
+            <label htmlFor="registration-association" className="w-full sm:w-36 text-sm font-semibold text-ink-muted">
               Association
             </label>
             <div className="flex-1">
@@ -70,6 +70,7 @@ function SelectCompetition() {
                 /* Pre-existing mismatch (NOT fixed here): the state is seeded with an
                    association object from the API, but the select reads/writes a plain
                    string id. The casts keep the existing runtime behaviour exactly. */
+                id="registration-association"
                 value={selectedAssociation as unknown as string}
                 onChange={(e) => setSelectedAssociation(e.target.value as unknown as NamedRef)}
                 className="block w-full border border-border-strong rounded-lg bg-surface text-ink px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"

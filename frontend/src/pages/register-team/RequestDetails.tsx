@@ -198,7 +198,7 @@ function RequestDetails({ request, onBack }: RequestDetailsProps) {
             {sections.map((sec) => (
               <label 
                 key={sec.id}
-                className="flex items-center gap-3 p-3 bg-canvas hover:bg-muted border border-border rounded-lg cursor-pointer text-xs font-semibold text-ink transition-colors"
+                className="flex min-h-11 items-center gap-3 p-3 bg-canvas hover:bg-muted border border-border rounded-lg cursor-pointer text-xs font-semibold text-ink transition-colors"
               >
                 <input 
                   type="radio" 

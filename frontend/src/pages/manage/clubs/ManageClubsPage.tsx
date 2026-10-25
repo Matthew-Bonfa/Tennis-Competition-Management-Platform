@@ -49,6 +49,7 @@ function ManageClubsPage(){
         </span>
         <input
           type="text"
+          aria-label="Search clubs"
           value={searchTerm || ''}
           onChange={(e) => setSearchTerm(e.target.value)}
           placeholder="Search clubs..."

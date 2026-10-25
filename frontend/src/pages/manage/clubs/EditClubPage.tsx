@@ -111,12 +111,13 @@ function EditClubPage(){
         <div className="space-y-5">
           
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-4 sm:gap-4 items-center">
-            <label className="text-sm font-medium text-ink-muted sm:col-span-1 sm:text-right">
+            <label htmlFor="club-name" className="text-sm font-medium text-ink-muted sm:col-span-1 sm:text-right">
               Name
             </label>
             <div className="sm:col-span-3">
-              <input 
-                type="text" 
+              <input
+                id="club-name"
+                type="text"
                 value={newClub.name || ""} 
                 onChange={e => setNewClub({...newClub, name: e.target.value})} 
                 className="block w-full border border-border-strong rounded-lg bg-surface text-ink px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
@@ -126,12 +127,13 @@ function EditClubPage(){
           </div>
 
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-4 sm:gap-4 items-center">
-            <label className="text-sm font-medium text-ink-muted sm:col-span-1 sm:text-right">
+            <label htmlFor="club-address" className="text-sm font-medium text-ink-muted sm:col-span-1 sm:text-right">
               Address
             </label>
             <div className="sm:col-span-3">
-              <input 
-                type="text" 
+              <input
+                id="club-address"
+                type="text"
                 value={newClub.address || ""} 
                 onChange={e => setNewClub({...newClub, address: e.target.value})} 
                 className="block w-full border border-border-strong rounded-lg bg-surface text-ink px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"

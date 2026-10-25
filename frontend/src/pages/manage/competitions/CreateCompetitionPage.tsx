@@ -51,8 +51,9 @@ function CreateCompetitionPage() {
 
       <form onSubmit={handleSubmit} className="bg-surface border border-border rounded-lg p-6 shadow-sm space-y-4">
         <div>
-          <label className="block text-sm font-medium text-ink-muted mb-1">Association</label>
+          <label htmlFor="competition-association" className="block text-sm font-medium text-ink-muted mb-1">Association</label>
           <select
+            id="competition-association"
             value={associationId}
             onChange={(e) => setAssociationId(e.target.value)}
             required
@@ -66,8 +67,9 @@ function CreateCompetitionPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-ink-muted mb-1">Competition name</label>
+          <label htmlFor="competition-name" className="block text-sm font-medium text-ink-muted mb-1">Competition name</label>
           <input
+            id="competition-name"
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}

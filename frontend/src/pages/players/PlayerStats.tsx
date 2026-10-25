@@ -38,6 +38,7 @@ function PlayerStats({ record }: PlayerStatsProps) {
       {/* Filter row: year dropdown + match type segmented control */}
       <div className="flex flex-wrap items-center justify-center gap-3 mb-6">
         <select
+          aria-label="Year"
           value={year}
           onChange={(e) => setYear(e.target.value === 'all' ? 'all' : Number(e.target.value))}
           className="border border-border-strong rounded-lg min-h-11 px-3 py-1.5 bg-surface text-ink focus:outline-none focus:ring-2 focus:ring-primary-500"

@@ -72,8 +72,9 @@ function CreateSeasonPage() {
 
       <form onSubmit={handleSubmit} className="bg-surface border border-border rounded-lg p-6 shadow-sm space-y-4">
         <div>
-          <label className="block text-sm font-medium text-ink-muted mb-1">Season name</label>
+          <label htmlFor="season-name" className="block text-sm font-medium text-ink-muted mb-1">Season name</label>
           <input
+            id="season-name"
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -84,8 +85,9 @@ function CreateSeasonPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-ink-muted mb-1">Start date</label>
+          <label htmlFor="season-start" className="block text-sm font-medium text-ink-muted mb-1">Start date</label>
           <input
+            id="season-start"
             type="date"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
@@ -95,8 +97,9 @@ function CreateSeasonPage() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-ink-muted mb-1">End date</label>
+          <label htmlFor="season-end" className="block text-sm font-medium text-ink-muted mb-1">End date</label>
           <input
+            id="season-end"
             type="date"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}

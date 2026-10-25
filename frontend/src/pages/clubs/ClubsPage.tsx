@@ -44,6 +44,7 @@ function ClubsPage() {
         </div>
         <input
           type="text"
+          aria-label="Search clubs by name"
           placeholder="Search clubs by name..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}

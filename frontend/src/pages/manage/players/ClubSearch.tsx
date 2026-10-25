@@ -104,6 +104,7 @@ function ClubSearch({ clubs, value, onChange }: ClubSearchProps) {
         ref={inputRef}
         type="text"
         role="combobox"
+        aria-label="Search clubs"
         aria-expanded={open}
         aria-autocomplete="list"
         placeholder="Search clubs..."

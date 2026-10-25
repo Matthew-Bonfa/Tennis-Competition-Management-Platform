@@ -39,10 +39,11 @@ export function EditAssociation({association}: {association: Association}) {
       <h2 className="text-xl font-bold text-ink mb-6">Edit Association</h2>
 
       <div className="flex items-center whitespace-nowrap gap-4 mb-6">
-        <label className="text-sm font-medium text-ink-muted">
+        <label htmlFor="association-name" className="text-sm font-medium text-ink-muted">
           Association Name
         </label>
         <input
+          id="association-name"
           type="text"
           value={name}
           onChange={(e) => { setName(e.target.value); setMsg(""); }}

@@ -1,7 +1,7 @@
 // file created by Ella Goodwin
 // AI was used in writing this file (Claude)
 
-import { useState } from 'react';
+import { useState, useId } from 'react';
 import type { FormEvent } from 'react';
 import { Plus } from 'lucide-react';
 import { postApi, ApiError } from '../../../lib/api';
@@ -168,13 +168,14 @@ function NumberField({
   onChange: (value: string) => void;
   optional?: boolean;
 }) {
+  const id = useId();
   return (
     <div>
-      <label className="block text-sm font-medium text-ink-muted mb-1">
+      <label htmlFor={id} className="block text-sm font-medium text-ink-muted mb-1">
         {label}
         {optional && <span className="text-ink-subtle"> (optional)</span>}
       </label>
-      <input
+      <input id={id}
         type="number"
         min={0}
         step={1}
@@ -287,6 +288,7 @@ function FormatForm({ initial = null, onSaved, onCancel }: FormatFormProps) {
                 Rubber {index + 1}
               </span>
               <select
+                aria-label={`Rubber ${index + 1} type`}
                 value={type}
                 onChange={(e) => changeRubber(index, e.target.value)}
                 className={`${inputClass} flex-1 min-w-0`}
@@ -398,8 +400,9 @@ function FormatForm({ initial = null, onSaved, onCancel }: FormatFormProps) {
             onChange={(v) => setField('pointsPerMatchWin', v)}
           />
           <div>
-            <label className="block text-sm font-medium text-ink-muted mb-1">Forfeit scoreline</label>
+            <label htmlFor="forfeit-scoreline" className="block text-sm font-medium text-ink-muted mb-1">Forfeit scoreline</label>
             <input
+              id="forfeit-scoreline"
               type="text"
               value={values.forfeitScoreline}
               onChange={(e) => setField('forfeitScoreline', e.target.value)}
@@ -407,8 +410,9 @@ function FormatForm({ initial = null, onSaved, onCancel }: FormatFormProps) {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-ink-muted mb-1">Winner decided by</label>
+            <label htmlFor="winner-determined-by" className="block text-sm font-medium text-ink-muted mb-1">Winner decided by</label>
             <select
+              id="winner-determined-by"
               value={values.winnerDeterminedBy}
               onChange={(e) => setField('winnerDeterminedBy', e.target.value)}
               className={inputClass}

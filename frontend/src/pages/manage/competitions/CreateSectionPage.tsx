@@ -147,8 +147,9 @@ function CreateSectionPage() {
 
         <form onSubmit={handleSubmit} className="bg-surface border border-border rounded-lg p-6 shadow-sm space-y-4">
           <div>
-            <label className="block text-sm font-medium text-ink-muted mb-1">Section name</label>
+            <label htmlFor="section-name" className="block text-sm font-medium text-ink-muted mb-1">Section name</label>
             <input
+              id="section-name"
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -158,8 +159,9 @@ function CreateSectionPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-ink-muted mb-1">Grade (optional)</label>
+            <label htmlFor="section-grade" className="block text-sm font-medium text-ink-muted mb-1">Grade (optional)</label>
             <input
+              id="section-grade"
               type="text"
               value={gradeLabel}
               onChange={(e) => setGradeLabel(e.target.value)}
@@ -169,9 +171,10 @@ function CreateSectionPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-ink-muted mb-1">Format</label>
+            <label htmlFor="section-format" className="block text-sm font-medium text-ink-muted mb-1">Format</label>
             <div className="flex gap-3">
               <select
+                id="section-format"
                 value={formatId}
                 onChange={(e) => setFormatId(e.target.value)}
                 required

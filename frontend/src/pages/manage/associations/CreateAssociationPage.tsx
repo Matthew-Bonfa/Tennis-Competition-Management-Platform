@@ -42,11 +42,12 @@ function CreateAssociationPage() {
         <div className="space-y-6 mb-8">
           {/* Association Name Row */}
           <div className="flex items-center gap-4">
-            <label className="w-36 shrink-0 text-right text-sm font-medium text-ink-muted whitespace-nowrap leading-none">
+            <label htmlFor="association-name" className="w-36 shrink-0 text-right text-sm font-medium text-ink-muted whitespace-nowrap leading-none">
               Association Name
             </label>
-            <input 
-              type="text" 
+            <input
+              id="association-name"
+              type="text"
               maxLength={200} 
               placeholder="Enter association name"
               onChange={(e) => setName(e.target.value)} 
@@ -56,12 +57,13 @@ function CreateAssociationPage() {
 
           {/* Contact Row */}
           <div className="flex items-start gap-4">
-            <label className="w-36 shrink-0 text-right text-sm font-medium text-ink-muted whitespace-nowrap pt-3 leading-none">
+            <label htmlFor="association-contact" className="w-36 shrink-0 text-right text-sm font-medium text-ink-muted whitespace-nowrap pt-3 leading-none">
               Contact
             </label>
             <div className="w-full">
-              <input 
-                type="text" 
+              <input
+                id="association-contact"
+                type="text"
                 placeholder="e.g. contact@example.com or Person ID"
                 className="block w-full border border-border-strong rounded-lg bg-surface text-ink px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
               />
