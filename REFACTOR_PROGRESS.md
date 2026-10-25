@@ -4,9 +4,10 @@ Branch: `feature/frontend/refactor`
 Scope: visual + structural refactor of `frontend/` only. No functional, route, API, state or
 copy changes. Verification per phase: `npm run build` and `npm run lint` in `frontend/`.
 
-**Next step:** the per-area batches are finished, and the one question they left open is now
-closed. What remains is Phase 6 (the responsive and accessibility sweep), then Phase 7 (the
-summary). Phase 6 starts with the 320–1440px pass, then the touch-target audit.
+**Next step:** Phase 6 has one unit left: the 200% zoom pass. Done and committed are the
+heading-level fixes, the 320px audit, the 44px touch-target sweep and the label/accessible-name
+pass; the `ManageAssociationsPage` loading question (Open questions) is the other judgement call
+outstanding. Then Phase 7 (the summary).
 Phases 0–4, 5a–5d and the public-pages, manage-pages, register-team and matches passes are
 complete: the build is green, `src/` is restructured, the theme tokens are in place **and in use**,
 every radius and shadow comes from a three-value scale, every page shell shares one container that
@@ -715,10 +716,69 @@ about 32px tall, and the tiebreak inputs are `w-12` — both worth checking agai
 and the 200% zoom pass.
 
 ### Phase 6 — Responsive and accessibility sweep
-- [ ] Check 320 / 375 / 768 / 1024 / 1440px, no horizontal page scroll at any width
+
+Four units done, one to go (the 200% zoom pass). Everything below is a static audit of the
+class combinations plus arithmetic against the 320px viewport, not browser screenshots; the
+layouts are simple enough that the sums are conclusive.
+
+- [x] Check 320 / 375 / 768 / 1024 / 1440px, no horizontal page scroll at any width
 - [ ] Check usable at 200% browser zoom
-- [ ] Inputs ≥16px on mobile; touch targets ≥44px; labels on all fields; semantic HTML
-- [ ] Build + lint + commit
+- [x] Inputs ≥16px on mobile; touch targets ≥44px; labels on all fields; semantic HTML
+- [x] Build + lint + commit
+
+#### Heading levels — `3bcd870` ✅
+
+Four grid pages, not three: `ManagePlayersPage` had the same `h1` → `h3` skip as the public
+grids. All four card titles are now `<h2>`; the class did not change, so nothing moved.
+
+#### 44px touch targets — `7c289c0` ✅
+
+The brief's 44px beat the compact sizes the earlier passes had left open, with layout allowed
+to move where it made the result better. Three families of growth, by what the control is:
+
+- **boxed, chip, listbox and row controls** get `min-h-11` (chips also `text-xs` → `text-sm`);
+- **icon-only buttons** — the two `X` close buttons, `ClubSearch`'s clear button, the round
+  selectors — grow invisibly to `h-11 w-11`;
+- **bare text actions** — Add Player, Edit season, Export Ladder, the `ResultStatusPanel` row —
+  get `inline-flex min-h-11 items-center`: transparent growth that only moves the line height.
+
+Where growth would have collided, the layout moved instead. `RegisterTeamPage` was proven by
+arithmetic: at 320px the title ended ~197px into a 224px content box while the
+`absolute right-0` chip started ~143px in — no chip size fixes that. Its header now uses the
+same `flex flex-wrap items-center justify-between` shape as its three siblings, which is what
+let every chip grow; the siblings got the same flex-wrap header for the same reason.
+Deliberately left sub-44px: mid-sentence content links (`tel:`/`mailto:`, team names in fixture
+rows) and the fixture row itself, which is one full-row `Link` already 64px+ tall.
+
+#### Labels and accessible names — `7f6a949` ✅
+
+Counting controls against labels per file found the headline: only `LoginPage` and
+`ManageAssociationsPage` used `htmlFor`, so every other form's sibling labels associated
+nothing — a screen reader announced the fields with no name. Fixed by shape:
+
+- **visible sibling label** → `id`/`htmlFor` pair (the season, section, competition,
+  association and club forms);
+- **no visible label** (search inputs, year/season/team selects, the club combobox) →
+  `aria-label`;
+- **generated fields** (`FormatForm`'s NumberField) → `useId`;
+- **the team gender radios** → `role="radiogroup" aria-label="Team gender"`.
+
+The 39 wrapping labels were already associated and untouched (`CreatePlayerPage`,
+`EditPlayerPage`, `ResultStatusPanel`, `RequestDetails` among them). `RequestDetails`' section
+radios did not get a `radiogroup`: the visible `<h4>` names the group and same-`name` radios
+already group natively. The same commit moved `ClubProfilePage`'s badge in-flow (Open
+questions) and gave `RequestDetails`' section radio rows `min-h-11` — the last member of the
+row family.
+
+#### What the 320px audit found
+
+Both tables sit in `overflow-x-auto` (`LadderTable` sets `min-w-[40rem]`, so it scrolls inside
+its box, not the page); every remaining `absolute` is an input icon or a dropdown panel, which
+is where absolute belongs; `whitespace-nowrap` appears only on table headers that fit. One
+page is cramped but not overflowing — `EditAssociation`'s horizontal label row — recorded and
+left, since it does not scroll.
+
+- [ ] **200% zoom pass** — the remaining unit: fixed heights and `min-h-screen` traps.
 
 ### Phase 7 — Summary
 - [ ] Summarise changes, list any CSS that could not be removed and why, flag uncertainties
@@ -757,21 +817,19 @@ and the 200% zoom pass.
   flag is a state-logic change, which the brief rules out. The not-found return itself *was*
   fixed — it had no container and no back link, so the message sat flush against the viewport
   edge inside a bare `p-8`; it now matches the other four profile pages.
-- **The three grid pages skip a heading level.** `CompetitionsPage`, `ClubsPage` and
-  `PlayersPage` go `h1` → `h3` with nothing between, because their card titles are `h3`. Those
-  should be `h2`. Left for Phase 6, which owns semantic HTML — it is a tag change with no visual
-  effect, so it belongs with the rest of the a11y sweep rather than here.
-- **`ClubProfilePage`'s member badge is positioned against its own title.** The badge is
-  `absolute top-0 right-0` inside a `text-center` block, and the `h1` carries `pr-28 sm:pr-0` to
-  keep clear of it — so on a narrow screen the title is centred inside a box that is not the
-  card. Left for Phase 6, where the 320px pass can judge it against the real layout instead of
-  guessing.
-- **The register-team back chips are under 44px, deliberately for now.** All four are `px-3 py-1.5`
-  with `text-xs`, which lands around 30px tall. They sit beside a centred or `justify-between`
-  title and would crowd it at 320px if grown to 44px. Phase 6 owns the touch-target audit and can
-  settle it against the real layout — the alternatives are a full-size chip, an icon-only button
-  with an `aria-label`, or moving the chip below the title on narrow screens. Same batch, same
-  question: both radio groups and `ClubSearch`'s option rows.
+- **The grid pages' heading skip — resolved in Phase 6 (`3bcd870`).** It was four pages, not
+  three: `ManagePlayersPage` had the same `h1` → `h3` skip as the public grids. All four card
+  titles are `<h2>` now; the class did not change, so nothing moved by a pixel.
+- **`ClubProfilePage`'s member badge — resolved in Phase 6 (`7f6a949`).** The badge moved
+  in-flow under the centred title (`inline-flex mt-3`), and the `pr-28 sm:pr-0` hack on the `h1`
+  is gone. It was the family outlier — no other profile page pins a badge absolutely — and the
+  in-flow move is what the badge-less profile pages already do with their metadata.
+- **The register-team back chips are 44px now — resolved in Phase 6 (`7c289c0`).** The headers
+  became `flex flex-wrap items-center justify-between gap-x-4 gap-y-2`, so a grown chip wraps
+  under the title instead of crowding it, and the chips are `inline-flex min-h-11 … text-sm`.
+  The same restructure retired `RegisterTeamPage`'s `absolute right-0` chip, which overlapped
+  its own title at 320px. The radio rows and `ClubSearch`'s option rows grew with `min-h-11` in
+  the same commit.
 - **The last four `rounded-md` controls are now on `rounded-lg` — resolved.** `LoginPage`'s two
   inputs and its submit, plus the identical sign-in button in `App.tsx`'s admin gate, were the only
   controls left on the old radius. They conformed to 5b's note, which said controls were
@@ -787,8 +845,13 @@ and the 200% zoom pass.
   `h-4 w-4 rounded-md border-border-strong`; `LoginPage`'s and `FormatForm`'s two carry no classes
   at all. Styling a native checkbox with `border-*` and `rounded-*` is close to a no-op without
   `appearance: none`, so the majority version is also the one that costs nothing, and an unstyled
-  checkbox is a browser default rather than drift. Noted for Phase 6's form audit instead of
-  changed here.
+  checkbox is a browser default rather than drift. **Resolved in Phase 6:** the form audit kept
+  them bare, for exactly this reason — recorded in the decisions log so a later pass does not
+  "fix" them toward the one.
+- **`ManageAssociationsPage` returns `undefined` while loading, so the page is blank until the
+  fetch resolves.** Every other manage page renders `LoadingState` in that window. Adding a
+  `loading` flag is a state-logic change, which the brief rules out, so this is flagged for a
+  judgement call rather than smuggled into the a11y commits.
 - **CSS `@import` ordering warning at build — resolved.** The earlier note here said Vite warned
   that `@import` rules must precede all other rules, because the Google Fonts `@import` sat below
   `:root`. The Phase 2 stylesheet rewrite put it back at the top; the current build prints no
@@ -1036,3 +1099,31 @@ and the 200% zoom pass.
   "the convention" would have been the minority reading, and `border-*`/`rounded-*` on a native
   checkbox does almost nothing without `appearance: none`. Recorded so a later pass does not "fix"
   them toward the one.
+- **44px beats compact: the third button size loses its exemption.** The earlier decision kept
+  the compact chip and the `px-3 py-1.5` inline actions on the grounds that growing them would
+  crowd a header or a status row. Phase 6's mandate was the brief's 44px target, with layout free
+  to move where it improves usability — and every one of those spots turned out to have a layout
+  fix available: the headers got `flex-wrap`, and the status-row actions grew transparently via
+  `inline-flex min-h-11 items-center`, which only changes their line height. The compact
+  *padding* stays (`px-3 py-1.5` inside `min-h-11`); what the controls lost is the right to be
+  shorter than 44px.
+- **Touch-target growth is chosen by what the control is, in three families.** Boxed, chip,
+  listbox and row controls grow with `min-h-11`. Icon-only buttons grow invisibly to `h-11
+  w-11`. Bare text actions grow transparently with `inline-flex min-h-11`. And two things are
+  deliberately left sub-44px: mid-sentence content links (a `tel:` inside a paragraph, a team
+  name inside a fixture row) and the fixture row itself, which is one full-width `Link` already
+  64px+ tall and the largest target on the page.
+- **A sibling `<label>` associates nothing.** The label audit's headline finding: only
+  `LoginPage` and `ManageAssociationsPage` used `htmlFor`, so every other form's labels were
+  pure decoration beside their inputs and a screen reader announced the fields with no name.
+  The fix went per shape — `id`/`htmlFor` for sibling labels, `aria-label` where no visible
+  label exists, `useId` for generated fields, `role="radiogroup" aria-label` for the gender
+  radios — and the 39 wrapping labels were already associated and untouched. `RequestDetails`'
+  section radios did not get a `radiogroup`: the visible `<h4>` names the group, and
+  same-`name` radios already group natively for assistive tech.
+- **`RegisterTeamPage`'s header restructure is the one layout change the touch-target pass
+  needed, and arithmetic decided it.** At 320px the title ended ~197px into a 224px content box
+  while the `absolute right-0` chip started ~143px in — an overlap no chip size could fix. The
+  page now uses the same flex-wrap header as its three siblings, which is also the consistency
+  argument on its own. `ClubProfilePage`'s absolutely-positioned badge was the same kind of
+  outlier and moved in-flow in the same unit.
