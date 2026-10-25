@@ -117,7 +117,7 @@ function CompetitionsPage() {
               <div>
                 <div className="flex items-center gap-2 mb-2">
                   <Trophy className="h-5 w-5 text-primary-600 shrink-0" />
-                  <h3 className="text-xl font-semibold text-primary-800">{comp.name}</h3>
+                  <h2 className="text-xl font-semibold text-primary-800">{comp.name}</h2>
                 </div>
                 {/* CHANGED: was comp.associationName */}
                 {comp.association?.name && (

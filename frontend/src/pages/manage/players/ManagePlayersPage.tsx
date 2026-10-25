@@ -85,9 +85,9 @@ function ManagePlayersPage() {
             >
               <div className="flex items-center gap-2 mb-2">
                 <User className="h-5 w-5 text-primary-600 shrink-0" />
-                <h3 className="text-xl font-semibold text-primary-800">
+                <h2 className="text-xl font-semibold text-primary-800">
                   {player.firstName} {player.lastName}
-                </h3>
+                </h2>
               </div>
               <p className="text-sm text-ink-muted">{player.primaryClubName ?? 'No club recorded'}</p>
               <div className="mt-3 text-xs bg-muted text-ink-muted px-2.5 py-1 rounded-md inline-block">
