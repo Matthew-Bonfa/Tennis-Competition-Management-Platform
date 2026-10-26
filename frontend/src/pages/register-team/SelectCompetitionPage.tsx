@@ -7,7 +7,12 @@ import type { NamedRef, Season } from './types';
 function SelectCompetition() {
 
   const [associations, setAssociations] = useState<NamedRef[]>([]);
-  const [selectedAssociation, setSelectedAssociation] = useState<NamedRef | undefined>();
+  const [selectedAssociationId, setSelectedAssociationId] = useState<string>();
+  // Derived during render rather than via state + effect: the select owns the
+  // plain id (a dev-side bug fix carried over in the merge — the select used to
+  // read/write the whole association object through casts), and the object it
+  // names is looked up from it.
+  const selectedAssociation = associations.find((assoc) => assoc.id === selectedAssociationId);
 
   const [seasons, setSeasons] = useState<Season[]>([]);
   const [selectedSeason, setSelectedSeason] = useState<Season | null>(null);
@@ -16,19 +21,19 @@ function SelectCompetition() {
     async function fetchAssociations(){
       let data = await fetchApi("/associations");
       setAssociations(data);
-      setSelectedAssociation(data[0]);
+      setSelectedAssociationId(data[0]?.id ?? '');
     }
     fetchAssociations();
   }, []);
 
-  useEffect(() => {    
+  useEffect(() => {
     async function fetchFutureSeasons(){
       if (!selectedAssociation){
         return;
       }
       let competitions = await fetchApi("/competitions?associationId=" + selectedAssociation.id);
       let futureSeasons: Season[] = [];
-      let now = new Date("2026-06-15T00:00:00Z");
+      let now = new Date();
       for (let i = 0; i < competitions.length; i++){
         let seasons = await fetchApi("/seasons?competitionId=" + competitions[i].id);
         for (let j = 0; j < seasons.length; j++){
@@ -67,12 +72,9 @@ function SelectCompetition() {
             </label>
             <div className="flex-1">
               <select
-                /* Pre-existing mismatch (NOT fixed here): the state is seeded with an
-                   association object from the API, but the select reads/writes a plain
-                   string id. The casts keep the existing runtime behaviour exactly. */
                 id="registration-association"
-                value={selectedAssociation as unknown as string}
-                onChange={(e) => setSelectedAssociation(e.target.value as unknown as NamedRef)}
+                value={selectedAssociationId ?? ''}
+                onChange={(e) => setSelectedAssociationId(e.target.value)}
                 className="block w-full border border-border-strong rounded-lg bg-surface text-ink px-4 py-3 focus:outline-none focus:ring-2 focus:ring-primary-500"
               >
                 <option value="" disabled>--Select an association--</option>

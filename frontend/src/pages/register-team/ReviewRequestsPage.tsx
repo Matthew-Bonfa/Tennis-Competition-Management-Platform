@@ -22,7 +22,9 @@ function ReviewRequests() {
       try {
         setLoading(true);
         let seasons: Season[] = await fetchApi('/seasons');
-        let now = new Date('2026-06-15T00:00:00Z');
+        // (The hardcoded 2026-06-15 date this replaced is a dev-side bug fix
+        // carried over in the merge — a fixed past date shows no future seasons.)
+        let now = new Date();
         
         seasons = seasons.filter(s => new Date(s.startDate) > now);
         setFutureSeasons(seasons);

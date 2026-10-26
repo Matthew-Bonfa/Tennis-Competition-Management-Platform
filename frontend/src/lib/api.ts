@@ -1,4 +1,4 @@
-export const baseURL: string = "http://localhost:3000/api";
+export const baseURL: string = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
 export class ApiError extends Error {
   status: number;

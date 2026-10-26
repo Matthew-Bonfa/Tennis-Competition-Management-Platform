@@ -64,15 +64,31 @@ export class ClubsService {
   }
 
 
-  async createClub(club: {name: string, isFinancialMember: boolean}){
+  async createClub(club: {name: string, address?: string, contactPersonId?: string, roles: [{personId: string, role: string}]}){
     if (!club.name || club.name.trim().length === 0){
       throw new BadRequestException("Club name field is required");
     }
-    const response = await this.prisma.client.orm.public.Club.create(club);
+    const response = await this.prisma.client.orm.public.Club.create({
+      name: club.name,
+      address: club.address,
+      contactPersonId: club.contactPersonId,
+      isFinancialMember: false,
+    });
+
+    if (club.roles){
+      for (let i = 0; i < club.roles.length; i++){
+        await this.prisma.client.orm.public.PersonRole.create({
+          clubId: response.id,
+          personId: club.roles[i].personId, 
+          role: club.roles[i].role,
+        });
+      }
+    }
+
     return response;
   }
 
-  async updateDetails(id: string, club: {name?: string, address?: string, contactPersonId?: string, roles?: [{roleId?: number, personId: string, role: string}]}){
+  async updateDetails(id: string, club: {name?: string, address?: string, contactPersonId?: string, roles?: [{personId: string, role: string}]}){
     // roles exist within PersonRole so need to be handled separately
     const {roles, ...details} = club;
 
@@ -81,22 +97,21 @@ export class ClubsService {
       throw new NotFoundException("Club with id " + id + " not found");
     }
 
+    // delete all the roles every time, so each update needs to specify all roles (so they can be added back afterwards)
+    await this.prisma.client.orm.public.PersonRole.where({clubId: id}).deleteAll();
+
+
     if (roles){
       for (let i = 0; i < roles.length; i++){
-        if (!roles[i].roleId){
-          await this.prisma.client.orm.public.PersonRole.create({clubId: id, personId: roles[i].personId, role: roles[i].role});
-        } else {
-          const response = await this.prisma.client.orm.public.PersonRole
-            .where({id: roles[i].roleId})
-            .update({clubId: id, personId: roles[i].personId, role: roles[i].role});
-          if (!response){
-            throw new NotFoundException("PersonRole doesn't contain id " + roles[i].roleId);
-          }
-        }
+        await this.prisma.client.orm.public.PersonRole.create({
+          personId: roles[i].personId, 
+          role: roles[i].role, 
+          clubId: id
+        });
       }
     }
 
-    return this.findOneClub(id);
+    return await this.findOneClub(id);
   }
 
 }
