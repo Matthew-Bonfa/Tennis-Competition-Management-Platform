@@ -23,6 +23,15 @@ jobs:
         with:
           node-version: '22.x'
 
+      # 1. Install dependencies, generate Prisma client, compile NestJS, and drop devDependencies
+      - name: Build backend application
+        run: |
+          npm install --ignore-scripts
+          cd backend && npx prisma generate && cd ..
+          npm run build --workspace=backend
+          npm prune --omit=dev
+
+      # 2. Upload the pre-built application ready for execution
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
