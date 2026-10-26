@@ -4,8 +4,8 @@ import request from 'supertest';
 import { describe, beforeAll, afterAll, it, expect } from 'vitest';
 import { AppModule } from '../src/app.module.js';
 
-// Result entry runs against the Midweek Mixed Doubles fixture: Kilsyth Midweek
-// (home, with Jack) v Ringwood Midweek (away, with Oliver). Section 1's
+// Result entry runs against the Midweek Mixed Doubles fixture: Glen Waverley Midweek
+// (home, with Jack) v East Burwood Midweek (away, with Oliver). Section 1's
 // fixtures are left alone because other suites read them.
 //
 // These tests change the database, and later tests rely on earlier ones, so
@@ -99,8 +99,8 @@ describe('Match result entry (e2e)', () => {
     // Find the Midweek fixture by its teams rather than hard-coding ids,
     // since ids depend on seed order.
     const teams = (await request(app.getHttpServer()).get('/api/teams').set('Authorization', `Bearer ${adminToken}`)).body;
-    const kilsythMidweek = teams.find((t: any) => t.name === 'Kilsyth Midweek');
-    const ringwoodMidweek = teams.find((t: any) => t.name === 'Ringwood Midweek');
+    const kilsythMidweek = teams.find((t: any) => t.name === 'Glen Waverley Midweek');
+    const ringwoodMidweek = teams.find((t: any) => t.name === 'East Burwood Midweek');
     expect(kilsythMidweek).toBeDefined();
     expect(ringwoodMidweek).toBeDefined();
 

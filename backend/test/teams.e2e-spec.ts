@@ -65,13 +65,13 @@ describe('Teams Feature (e2e)', () => {
     exampleTeam = response.body[0];
   });
 
-  it('GET /api/teams/1 -> should return the Kilsyth A team with its roster', async () => {
+  it('GET /api/teams/1 -> should return the Glen Waverley A team with its roster', async () => {
     const response = await request(app.getHttpServer())
       .get('/api/teams/1')
       .expect(200);
 
       // Verify the specific record
-    expect(response.body.name).toBe('Kilsyth A');
+    expect(response.body.name).toBe('Glen Waverley A');
 
     // Verify the deeply nested player roster from our database join
     expect(response.body).toHaveProperty('players');
