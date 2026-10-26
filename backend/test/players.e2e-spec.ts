@@ -252,7 +252,7 @@ describe('Players Feature (e2e)', () => {
     const runTag = Date.now();
 
     beforeAll(async () => {
-      // Sophie is a CLUB_ADMIN of Kilsyth only
+      // Sophie is a CLUB_ADMIN of Glen Waverley only
       const clubLogin = await request(app.getHttpServer())
         .post('/api/auth/login')
         .send({ email: 'club@tennis.com', password: 'password123' })
@@ -260,8 +260,8 @@ describe('Players Feature (e2e)', () => {
       clubToken = clubLogin.body.access_token;
 
       const clubs = await prisma.client.orm.public.Club.select('id', 'name').all();
-      kilsythId = clubs.find((c: any) => c.name === 'Kilsyth Tennis Club')!.id;
-      ringwoodId = clubs.find((c: any) => c.name === 'Ringwood Tennis Club')!.id;
+      kilsythId = clubs.find((c: any) => c.name === 'Glen Waverley Tennis Club')!.id;
+      ringwoodId = clubs.find((c: any) => c.name === 'East Burwood Tennis Club')!.id;
     });
 
     afterAll(async () => {
@@ -295,7 +295,7 @@ describe('Players Feature (e2e)', () => {
           tennisAustraliaNumber: `TA-${runTag}`,
           utrId: null,
           phone: null,
-          primaryClubName: 'Kilsyth Tennis Club',
+          primaryClubName: 'Glen Waverley Tennis Club',
           competitions: [],
         }),
       );

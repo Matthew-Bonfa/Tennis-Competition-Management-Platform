@@ -3,47 +3,47 @@
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import AssociationProfile from './AssociationProfile'
-import AssociationsPage from './AssociationsPage'
-import ClubProfile from './ClubProfile'
-import ClubsPage from './ClubsPage'
-import AdminPage from './AdminPage'
-import CompetitionProfile from './CompetitionProfile'
-import CompetitionsPage from './CompetitionsPage'
-import Home from './Home'
-import PlayerProfile from './PlayerProfile'
-import PlayersPage from './PlayersPage'
-import Ribbon from './Ribbon'
-import SectionPage from './SectionPage'
-import MatchResultsPage from './MatchResultsPage'
-import EnterResultPage from './match-results/EnterResultPage'
-import TeamProfile from './TeamProfile'
-import ManageAssociationsPage from './manage-associations/ManageAssociationsPage';
-import CreateAssociationPage from './manage-associations/CreateAssociationPage';
-import ManageCompetitionsPage from './manage-competitions/ManageCompetitionsPage';
-import CreateCompetitionPage from './manage-competitions/CreateCompetitionPage';
-import ManageCompetitionPage from './manage-competitions/ManageCompetitionPage';
-import CreateSeasonPage from './manage-competitions/CreateSeasonPage';
-import CreateSectionPage from './manage-competitions/CreateSectionPage';
-import ManageSectionPage from './manage-competitions/ManageSectionPage';
-import ManageSeasonPage from './manage-competitions/ManageSeasonPage';
-import ManagePlayersPage from './manage-players/ManagePlayersPage';
-import EditPlayerPage from './manage-players/EditPlayerPage';
-import CreatePlayerPage from './manage-players/CreatePlayerPage';
-import Login from './Login';
-import ManageClubsPage from './manage-clubs/ManageClubsPage';
-import EditClubPage from './manage-clubs/EditClubPage';
-import { isAdmin, isAuthenticated } from './auth';
-import RegisterTeamPage from './register-team/RegisterTeamPage';
-import SelectCompetition from './register-team/SelectCompetition';
-import ReviewRequests from './register-team/ReviewRequests';
+import AssociationProfile from './pages/associations/AssociationProfilePage'
+import AssociationsPage from './pages/associations/AssociationsPage'
+import ClubProfile from './pages/clubs/ClubProfilePage'
+import ClubsPage from './pages/clubs/ClubsPage'
+import AdminPage from './pages/AdminPage'
+import CompetitionProfile from './pages/competitions/CompetitionProfilePage'
+import CompetitionsPage from './pages/competitions/CompetitionsPage'
+import Home from './pages/HomePage'
+import PlayerProfile from './pages/players/PlayerProfilePage'
+import PlayersPage from './pages/players/PlayersPage'
+import Header from './components/layout/Header'
+import SectionPage from './pages/competitions/SectionPage'
+import MatchResultsPage from './pages/matches/MatchResultsPage'
+import EnterResultPage from './pages/matches/EnterResultPage'
+import TeamProfile from './pages/teams/TeamProfilePage'
+import ManageAssociationsPage from './pages/manage/associations/ManageAssociationsPage';
+import CreateAssociationPage from './pages/manage/associations/CreateAssociationPage';
+import ManageCompetitionsPage from './pages/manage/competitions/ManageCompetitionsPage';
+import CreateCompetitionPage from './pages/manage/competitions/CreateCompetitionPage';
+import ManageCompetitionPage from './pages/manage/competitions/ManageCompetitionPage';
+import CreateSeasonPage from './pages/manage/competitions/CreateSeasonPage';
+import CreateSectionPage from './pages/manage/competitions/CreateSectionPage';
+import ManageSectionPage from './pages/manage/competitions/ManageSectionPage';
+import ManageSeasonPage from './pages/manage/competitions/ManageSeasonPage';
+import ManagePlayersPage from './pages/manage/players/ManagePlayersPage';
+import EditPlayerPage from './pages/manage/players/EditPlayerPage';
+import CreatePlayerPage from './pages/manage/players/CreatePlayerPage';
+import Login from './pages/LoginPage';
+import ManageClubsPage from './pages/manage/clubs/ManageClubsPage';
+import EditClubPage from './pages/manage/clubs/EditClubPage';
+import { isAdmin, isAuthenticated } from './lib/auth';
+import RegisterTeamPage from './pages/register-team/RegisterTeamPage';
+import SelectCompetition from './pages/register-team/SelectCompetitionPage';
+import ReviewRequests from './pages/register-team/ReviewRequestsPage';
 
 // --- MAIN APP ROUTING ---
 export default function App() {
   return (
     <BrowserRouter>
-      <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
-        <Ribbon />
+      <div className="min-h-screen bg-canvas flex flex-col font-sans">
+        <Header />
         <main className="flex-grow">
           <Routes>
             <Route path="/" element={<Home />} />
@@ -60,12 +60,12 @@ export default function App() {
                 isAuthenticated() && isAdmin() ? (
                   <AdminPage />
                 ) : (
-                  <div className="flex items-center justify-center h-screen bg-gray-50 px-4">
-                    <div className="w-full max-w-md space-y-6 bg-white p-8 rounded-lg shadow">
-                      <h2 className="text-2xl font-bold text-gray-900">
+                  <div className="flex items-center justify-center min-h-screen bg-canvas px-4">
+                    <div className="w-full max-w-md space-y-6 bg-surface p-8 rounded-lg shadow-sm">
+                      <h2 className="text-2xl font-bold text-ink">
                         {isAuthenticated() ? 'Access Denied' : 'Please Sign In'}
                       </h2>
-                      <p className="mt-1 text-sm text-gray-600">
+                      <p className="mt-1 text-sm text-ink-muted">
                         {isAuthenticated()
                           ? 'You do not have permission to access the admin page.'
                           : 'Please sign in to access the admin page.'}
@@ -74,7 +74,7 @@ export default function App() {
                         <div className="mt-6">
                           <button
                             onClick={() => window.location.href = '/login'}
-                            className="w-full rounded bg-blue-600 py-2 font-medium text-white hover:bg-blue-700"
+                            className="w-full rounded-lg bg-primary-600 py-3 font-medium text-white hover:bg-primary-700"
                           >
                             Sign In
                           </button>

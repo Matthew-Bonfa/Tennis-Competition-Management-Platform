@@ -1,0 +1,78 @@
+import { useState, useEffect } from 'react';
+import fetchApi from '../../lib/api'
+import { fixturesExportUrl } from '../../lib/exportLinks'
+
+interface Team {
+    teamId: number;
+    teamName: string;
+}
+
+interface ExportFixturesControlProps {
+    sectionId: string;
+}
+
+// Sits below the match list on the Matches tab. Starts as a single button;
+// clicking it reveals a team picker (plus "All Teams") and a confirm link
+// that downloads the whole season's fixtures (not just the currently
+// viewed round) for whichever team was chosen.
+function ExportFixturesControl({ sectionId }: ExportFixturesControlProps) {
+    const [teams, setTeams] = useState<Team[]>([]);
+    const [expanded, setExpanded] = useState(false);
+    // '' is the "All Teams" option.
+    const [selectedTeamId, setSelectedTeamId] = useState('');
+
+    useEffect(() => {
+        fetchApi(`/sections/${sectionId}/ladder`)
+            .then(setTeams)
+            .catch(() => {
+                // If the team list fails to load, the picker just offers
+                // "All Teams" - the export itself still works.
+            });
+    }, [sectionId]);
+
+    if (!expanded) {
+        return (
+            <div className="px-4 pb-8">
+                <button
+                    onClick={() => setExpanded(true)}
+                    className="inline-flex min-h-11 items-center text-sm font-semibold text-primary-600 hover:text-primary-800"
+                >
+                    Export Season Fixtures (CSV)
+                </button>
+            </div>
+        );
+    }
+
+    return (
+        <div className="flex items-center gap-3 px-4 pb-8">
+            <select
+                aria-label="Team"
+                value={selectedTeamId}
+                onChange={(e) => setSelectedTeamId(e.target.value)}
+                className="border border-border-strong rounded-lg shadow-sm bg-surface text-ink min-h-11 px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+            >
+                <option value="">All Teams</option>
+                {teams.map((team) => (
+                    <option key={team.teamId} value={team.teamId}>{team.teamName}</option>
+                ))}
+            </select>
+            {}
+            <a
+                href={fixturesExportUrl(sectionId, selectedTeamId || null)}
+                download
+                onClick={() => setExpanded(false)}
+                className="inline-flex min-h-11 items-center rounded-lg bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700"
+            >
+                Confirm Export
+            </a>
+            <button
+                onClick={() => setExpanded(false)}
+                className="inline-flex min-h-11 items-center text-sm font-semibold text-ink-subtle hover:text-ink-muted"
+            >
+                Cancel
+            </button>
+        </div>
+    );
+}
+
+export default ExportFixturesControl;

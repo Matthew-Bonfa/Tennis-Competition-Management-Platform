@@ -131,8 +131,8 @@ describe('Sections Feature (e2e)', () => {
       // Borrow a real season, format, club and player off the seeded data, so
       // the throwaway section is built out of rows that are valid already.
       const teams = (await request(app.getHttpServer()).get('/api/teams').expect(200)).body;
-      const kilsyth = teams.find((team: any) => team.name === 'Kilsyth A');
-      const ringwood = teams.find((team: any) => team.name === 'Ringwood A');
+      const kilsyth = teams.find((team: any) => team.name === 'Glen Waverley A');
+      const ringwood = teams.find((team: any) => team.name === 'East Burwood A');
       expect(kilsyth).toBeDefined();
       expect(ringwood).toBeDefined();
 
@@ -273,7 +273,7 @@ describe('Sections Feature (e2e)', () => {
 
       // Section 1 is the seeded section this file's ladder tests read.
       expect(await orm.Section.where({ id: 1 }).first()).not.toBeNull();
-      expect(await orm.Team.where({ name: 'Kilsyth A' }).first()).not.toBeNull();
+      expect(await orm.Team.where({ name: 'Glen Waverley A' }).first()).not.toBeNull();
       expect((await orm.Match.where({ sectionId: 1 }).all()).length).toBeGreaterThan(0);
 
       await request(app.getHttpServer()).get('/api/sections/1/ladder').expect(200);

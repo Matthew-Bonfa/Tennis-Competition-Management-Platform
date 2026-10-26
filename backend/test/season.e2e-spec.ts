@@ -598,7 +598,7 @@ describe('Seasons Feature (e2e)', () => {
         (await orm.Section.where({ seasonId: seededSeason.id }).all()).length,
       ).toBeGreaterThan(0);
       expect(
-        await orm.Team.where({ name: 'Kilsyth A' }).first(),
+        await orm.Team.where({ name: 'Glen Waverley A' }).first(),
       ).not.toBeNull();
       await request(app.getHttpServer())
         .get('/api/sections/1/ladder')
