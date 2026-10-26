@@ -9,6 +9,7 @@ import { Search, Trophy, Shield, ArrowRight } from 'lucide-react';
 import LoadingState from '../../components/ui/LoadingState';
 import EmptyState from '../../components/ui/EmptyState';
 import ErrorState from '../../components/ui/ErrorState';
+import fetchApi from '../../lib/api';
 
 // REMOVED: mock-data imports (ASSOCIATIONS, ALL_COMPETITIONS) — no longer needed,
 // we're pulling real data from the backend instead
@@ -33,8 +34,7 @@ function CompetitionsPage() {
   // Separate from the competitions fetch below since it only needs to run once
   // and doesn't depend on anything changing.
   useEffect(() => {
-    fetch('http://localhost:3000/api/associations')
-      .then(response => response.json())
+    fetchApi('/associations')
       .then(data => setAssociations(data))
       .catch(err => console.error('Failed to load associations:', err));
   }, []);
@@ -45,17 +45,19 @@ function CompetitionsPage() {
   // findAll(associationId?) already knows how to filter by.
   useEffect(() => {
     setLoading(true);
-    const url = selectedAssociationId
-      ? `http://localhost:3000/api/competitions?associationId=${selectedAssociationId}`
-      : 'http://localhost:3000/api/competitions';
-    fetch(url)
-      .then(response => response.json())
+
+    // Construct the relative endpoint instead of the absolute localhost URL
+    const endpoint = selectedAssociationId
+      ? `/competitions?associationId=${selectedAssociationId}`
+      : '/competitions';
+
+    fetchApi(endpoint)
       .then(data => {
         setCompetitions(data);
         setLoading(false);
       })
       .catch(err => {
-        setError(err.message);
+        setError(err.message || 'Failed to load competitions');
         setLoading(false);
       });
   }, [selectedAssociationId]);
