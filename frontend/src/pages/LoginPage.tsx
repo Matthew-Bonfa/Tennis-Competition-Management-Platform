@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { postApi } from '../lib/api';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -20,19 +21,8 @@ function Login() {
     }
 
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Invalid email or password');
-      }
-
-      const data = await response.json();
+      // Use the centralized API utility to handle the base URL, headers, and JSON parsing
+      const data: any = await postApi('/auth/login', { email, password });
 
       localStorage.setItem('access_token', data.access_token);
       localStorage.setItem('personId', data.personId);
