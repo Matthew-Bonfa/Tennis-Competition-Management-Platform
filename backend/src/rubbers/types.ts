@@ -1,0 +1,30 @@
+export interface RubberFormat {
+    setsToWin: number;
+    gamesPerSet: number;
+    tiebreakAtGames: number | null;
+    finalSetMatchTiebreak: boolean;
+}
+
+export interface SetScore {
+    setNumber: number;
+    homeGames: number;
+    awayGames: number;
+    isMatchTiebreak: boolean;
+    homeTiebreakPoints: number | null;
+    awayTiebreakPoints: number | null;
+    isComplete?: boolean;
+}
+
+export interface RubberScore {
+    homeSetsWon: number;
+    awaySetsWon: number;
+    homeGamesWon: number;
+    awayGamesWon: number;
+}
+
+export interface ValidationResult {
+    isValid: boolean;
+    errors: string[];
+}
+
+export type OutcomeType = 'normal' | 'retired' | 'walkover' | 'incomplete' | 'not_played';

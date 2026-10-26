@@ -1,0 +1,940 @@
+import { db } from './db.js';
+import { Temporal } from '@js-temporal/polyfill';
+import bcrypt from 'bcrypt';
+
+async function main() {
+  console.log('Starting database seed...');
+
+  // =========================================================
+  // PEOPLE
+  // =========================================================
+  const people = await Promise.all([
+    db.orm.public.Person.create({
+      personCode: 'P001',
+      firstName: 'Jack',
+      lastName: 'Thompson',
+      dateOfBirth: Temporal.Instant.from('2001-03-15T00:00:00Z'),
+      utrId: 'UTR100001',
+      tennisAustraliaNumber: 'TA100001',
+      email: 'jack.thompson@example.com',
+      phone: '0400 000 001',
+    }),
+    db.orm.public.Person.create({
+      personCode: 'P401',
+      firstName: 'Rex',
+      lastName: 'Kelly',
+      dateOfBirth: Temporal.Instant.from('2001-03-15T00:00:00Z'),
+      utrId: 'UTR100001',
+      tennisAustraliaNumber: 'TA100001',
+      email: 'rex.kelly@example.com',
+      phone: '0400 200 001',
+    }),
+    db.orm.public.Person.create({
+      personCode: 'P411',
+      firstName: 'Zach',
+      lastName: 'Ranson',
+      dateOfBirth: Temporal.Instant.from('2001-03-15T00:00:00Z'),
+      utrId: 'UTR100001',
+      tennisAustraliaNumber: 'TA100001',
+      email: 'zach.ranson@example.com',
+      phone: '0400 230 001',
+    }),
+    db.orm.public.Person.create({
+      personCode: 'P414',
+      firstName: 'Matthew',
+      lastName: 'Bonfa',
+      dateOfBirth: Temporal.Instant.from('2001-03-15T00:00:00Z'),
+      utrId: 'UTR100001',
+      tennisAustraliaNumber: 'TA100001',
+      email: 'matthew.bonfa@example.com',
+      phone: '0400 230 301',
+    }),
+    db.orm.public.Person.create({
+      personCode: 'P415',
+      firstName: 'Ella',
+      lastName: 'Goodwin',
+      dateOfBirth: Temporal.Instant.from('2001-03-15T00:00:00Z'),
+      utrId: 'UTR100001',
+      tennisAustraliaNumber: 'TA100001',
+      email: 'ella.goodwin@example.com',
+      phone: '0400 230 341',
+    }),
+    db.orm.public.Person.create({
+      personCode: 'P417',
+      firstName: 'Lachlan',
+      lastName: 'Nieuwenhuizen',
+      dateOfBirth: Temporal.Instant.from('2001-03-15T00:00:00Z'),
+      utrId: 'UTR100001',
+      tennisAustraliaNumber: 'TA100001',
+      email: 'lachlan.nieuwenhuizen@example.com',
+      phone: '0400 232 341',
+    }),
+
+    db.orm.public.Person.create({
+      personCode: 'P002',
+      firstName: 'Daniel',
+      lastName: 'Wilson',
+      dateOfBirth: Temporal.Instant.from('1999-07-21T00:00:00Z'),
+      utrId: 'UTR100002',
+      tennisAustraliaNumber: 'TA100002',
+      email: 'daniel.wilson@example.com',
+      phone: '0400 000 002',
+    }),
+    db.orm.public.Person.create({
+      personCode: 'P003',
+      firstName: 'Oliver',
+      lastName: 'Smith',
+      dateOfBirth: Temporal.Instant.from('2002-11-04T00:00:00Z'),
+      utrId: 'UTR100003',
+      tennisAustraliaNumber: 'TA100003',
+      email: 'oliver.smith@example.com',
+      phone: '0400 000 003',
+    }),
+    db.orm.public.Person.create({
+      personCode: 'P004',
+      firstName: 'Noah',
+      lastName: 'Brown',
+      dateOfBirth: Temporal.Instant.from('2000-06-18T00:00:00Z'),
+      utrId: 'UTR100004',
+      tennisAustraliaNumber: 'TA100004',
+      email: 'noah.brown@example.com',
+      phone: '0400 000 004',
+    }),
+    db.orm.public.Person.create({
+      personCode: 'P005',
+      firstName: 'Ethan',
+      lastName: 'Taylor',
+      dateOfBirth: Temporal.Instant.from('2003-02-10T00:00:00Z'),
+      utrId: 'UTR100005',
+      tennisAustraliaNumber: 'TA100005',
+      email: 'ethan.taylor@example.com',
+      phone: '0400 000 005',
+    }),
+    db.orm.public.Person.create({
+      personCode: 'P006',
+      firstName: 'Liam',
+      lastName: 'Anderson',
+      dateOfBirth: Temporal.Instant.from('1998-09-27T00:00:00Z'),
+      utrId: 'UTR100006',
+      tennisAustraliaNumber: 'TA100006',
+      email: 'liam.anderson@example.com',
+      phone: '0400 000 006',
+    }),
+    db.orm.public.Person.create({
+      personCode: 'P007',
+      firstName: 'Henry',
+      lastName: 'Martin',
+      dateOfBirth: Temporal.Instant.from('2001-12-01T00:00:00Z'),
+      utrId: 'UTR100007',
+      tennisAustraliaNumber: 'TA100007',
+      email: 'henry.martin@example.com',
+      phone: '0400 000 007',
+    }),
+    db.orm.public.Person.create({
+      personCode: 'P008',
+      firstName: 'Thomas',
+      lastName: 'Clark',
+      dateOfBirth: Temporal.Instant.from('2002-05-13T00:00:00Z'),
+      utrId: 'UTR100008',
+      tennisAustraliaNumber: 'TA100008',
+      email: 'thomas.clark@example.com',
+      phone: '0400 000 008',
+    }),
+    db.orm.public.Person.create({
+      personCode: 'P009',
+      firstName: 'Sophie',
+      lastName: 'Williams',
+      dateOfBirth: Temporal.Instant.from('1995-04-12T00:00:00Z'),
+      tennisAustraliaNumber: 'TA100009',
+      email: 'sophie.williams@example.com',
+      phone: '0400 000 009',
+    }),
+    db.orm.public.Person.create({
+      personCode: 'P010',
+      firstName: 'Emily',
+      lastName: 'Davis',
+      dateOfBirth: Temporal.Instant.from('1993-08-29T00:00:00Z'),
+      tennisAustraliaNumber: 'TA100010',
+      email: 'emily.davis@example.com',
+      phone: '0400 000 010',
+    }),
+    db.orm.public.Person.create({
+      personCode: 'P011',
+      firstName: 'Michael',
+      lastName: 'Evans',
+      dateOfBirth: Temporal.Instant.from('1985-01-19T00:00:00Z'),
+      email: 'michael.evans@example.com',
+      phone: '0400 000 011',
+    }),
+    db.orm.public.Person.create({
+      personCode: 'P012',
+      firstName: 'Sarah',
+      lastName: 'Johnson',
+      dateOfBirth: Temporal.Instant.from('1988-10-07T00:00:00Z'),
+      email: 'sarah.johnson@example.com',
+      phone: '0400 000 012',
+    }),
+  ]);
+
+  const [
+    jack,
+    daniel,
+    oliver,
+    noah,
+    ethan,
+    liam,
+    henry,
+    thomas,
+    sophie,
+    emily,
+    michael,
+    sarah,
+  ] = people;
+
+  // =========================================================
+  // ASSOCIATION & CLUBS
+  // =========================================================
+  // Real association/club names and public venue addresses are used for
+  // context. All people, contact details, team names, fixtures and results
+  // are fictional.
+  const association = await db.orm.public.Association.create({
+    name: 'Waverley and District Tennis Association Incorporated',
+    contactPersonId: michael.id,
+  });
+
+  const glenWaverley = await db.orm.public.Club.create({
+    name: 'Glen Waverley Tennis Club',
+    isFinancialMember: true,
+    address:
+      '3 Aquatic Place (Rear Monash Aquatic & Recreation Centre), Glen Waverley VIC 3150',
+    contactPersonId: sophie.id,
+  });
+  const eastBurwood = await db.orm.public.Club.create({
+    name: 'East Burwood Tennis Club',
+    isFinancialMember: true,
+    address: '298–300 Burwood Highway, Burwood East VIC 3151',
+    contactPersonId: emily.id,
+  });
+  const pinewood = await db.orm.public.Club.create({
+    name: 'Notting Hill Pinewood Tennis Club',
+    isFinancialMember: true,
+    address: '1–9 Baker Avenue, Glen Waverley VIC 3150',
+    contactPersonId: sarah.id,
+  });
+  const lumReserve = await db.orm.public.Club.create({
+    name: 'Lum Reserve Tennis Club',
+    isFinancialMember: true,
+    address: '231 Lum Road, Wheelers Hill VIC 3150',
+    contactPersonId: michael.id,
+  });
+
+  await Promise.all(
+    [
+      { associationId: association.id, clubId: glenWaverley.id },
+      { associationId: association.id, clubId: eastBurwood.id },
+      { associationId: association.id, clubId: pinewood.id },
+      { associationId: association.id, clubId: lumReserve.id },
+    ].map((data) => db.orm.public.AssociationClub.create(data)),
+  );
+
+  // =========================================================
+  // FORMATS
+  // =========================================================
+  // Two groups here:
+  //
+  // 1. The six formats from Waverley's format spreadsheet. Per the day-split
+  //    decision, any row whose "Team Members" column varies by day (Junior
+  //    Triples, President's Cup, Singles/Doubles Rubbers, Green Ball Series)
+  //    becomes two Format rows, one per day, each with a single clean
+  //    genderEligibility set. L Series and G Series have no day split in the
+  //    source sheet, so they're one row each.
+  //
+  //    President's Cup and Singles/Doubles Rubbers are seeded as separate,
+  //    currently byte-for-byte identical formats — the sheet listed them
+  //    separately and Delyth confirmed it was an unfinished draft, so
+  //    whatever distinguishes them just hasn't landed in a column yet. Don't
+  //    collapse these into one record.
+  //
+  //    L Series' two age brackets ("12 and under" / "10 and under") aren't
+  //    modelled as two Formats — that's grading, which belongs on
+  //    Section.gradeLabel once real seasons use this format, not on the
+  //    format definition itself.
+  //
+  // 2. Two "legacy" adult formats that didn't come from the spreadsheet at
+  //    all — they just describe the scoring shape the pre-existing seed
+  //    match/rubber data below was already written against (best-of-three
+  //    senior sets), so that data keeps making sense once Section stops
+  //    carrying its own scoring fields.
+  const [
+    juniorTriplesSat,
+    juniorTriplesSun,
+    presidentsCupSat,
+    presidentsCupSun,
+    singlesDoublesRubbersSat,
+    singlesDoublesRubbersSun,
+    greenBallSat,
+    greenBallSun,
+    lSeries,
+    gSeries,
+    saturdayPennantFormat,
+    midweekMixedFormat,
+  ] = await Promise.all([
+    db.orm.public.Format.create({
+      name: 'Junior Triples — Saturday',
+      minPlayers: 3,
+      maxPlayers: 5,
+      setsToWin: 1,
+      gamesPerSet: 6,
+      tiebreakAtGames: 6,
+      winnerDeterminedBy: 'sets_then_games',
+      minCourts: 1,
+    }),
+    db.orm.public.Format.create({
+      name: 'Junior Triples — Sunday',
+      minPlayers: 3,
+      maxPlayers: 5,
+      setsToWin: 1,
+      gamesPerSet: 6,
+      tiebreakAtGames: 6,
+      winnerDeterminedBy: 'sets_then_games',
+      minCourts: 1,
+    }),
+    db.orm.public.Format.create({
+      name: "President's Cup — Saturday",
+      minPlayers: 2,
+      maxPlayers: 4,
+      setsToWin: 2,
+      gamesPerSet: 6,
+      tiebreakAtGames: 6,
+      finalSetMatchTiebreak: true,
+      winnerDeterminedBy: 'rubbers_then_sets',
+      minCourts: 1,
+    }),
+    db.orm.public.Format.create({
+      name: "President's Cup — Sunday",
+      minPlayers: 2,
+      maxPlayers: 4,
+      setsToWin: 2,
+      gamesPerSet: 6,
+      tiebreakAtGames: 6,
+      finalSetMatchTiebreak: true,
+      winnerDeterminedBy: 'rubbers_then_sets',
+      minCourts: 1,
+    }),
+    // Byte-for-byte the same as President's Cup on every structured column —
+    // see the note above. Seeded separately on purpose.
+    db.orm.public.Format.create({
+      name: 'Singles/Doubles Rubbers — Saturday',
+      minPlayers: 2,
+      maxPlayers: 4,
+      setsToWin: 2,
+      gamesPerSet: 6,
+      tiebreakAtGames: 6,
+      finalSetMatchTiebreak: true,
+      winnerDeterminedBy: 'rubbers_then_sets',
+      minCourts: 1,
+    }),
+    db.orm.public.Format.create({
+      name: 'Singles/Doubles Rubbers — Sunday',
+      minPlayers: 2,
+      maxPlayers: 4,
+      setsToWin: 2,
+      gamesPerSet: 6,
+      tiebreakAtGames: 6,
+      finalSetMatchTiebreak: true,
+      winnerDeterminedBy: 'rubbers_then_sets',
+      minCourts: 1,
+    }),
+    db.orm.public.Format.create({
+      name: 'Green Ball Series — Saturday',
+      minPlayers: 3,
+      maxPlayers: 5,
+      setsToWin: 1,
+      gamesPerSet: 6,
+      tiebreakAtGames: null, // "No tiebreaks are played in this competition"
+      winnerDeterminedBy: 'sets_then_games',
+      minCourts: 1,
+    }),
+    db.orm.public.Format.create({
+      name: 'Green Ball Series — Sunday',
+      minPlayers: 3,
+      maxPlayers: 5,
+      setsToWin: 1,
+      gamesPerSet: 6,
+      tiebreakAtGames: null,
+      winnerDeterminedBy: 'sets_then_games',
+      minCourts: 1,
+    }),
+    db.orm.public.Format.create({
+      name: 'L Series',
+      minPlayers: 3,
+      maxPlayers: 5,
+      setsToWin: 1,
+      gamesPerSet: 8, // "finished when 8 games have been played"
+      tiebreakAtGames: null, // sudden-death deuce instead, not a tiebreak
+      winnerDeterminedBy: 'sets_then_games',
+      minCourts: 1,
+    }),
+    db.orm.public.Format.create({
+      name: 'G Series',
+      minPlayers: 3,
+      maxPlayers: 4,
+      minAge: 12,
+      maxAge: 22,
+      setsToWin: 1,
+      gamesPerSet: 6,
+      tiebreakAtGames: 6,
+      winnerDeterminedBy: 'ladder_position',
+      minCourts: 2,
+    }),
+    // --- Legacy adult formats, not from the spreadsheet (see note above) ---
+    db.orm.public.Format.create({
+      name: 'Saturday Pennant — Singles/Doubles',
+      minPlayers: 6,
+      maxPlayers: 8,
+      setsToWin: 2,
+      gamesPerSet: 6,
+      tiebreakAtGames: 6,
+      winnerDeterminedBy: 'sets_then_games',
+      minCourts: 3,
+    }),
+    db.orm.public.Format.create({
+      name: 'Midweek Mixed Doubles',
+      minPlayers: 4,
+      maxPlayers: 6,
+      setsToWin: 2,
+      gamesPerSet: 6,
+      tiebreakAtGames: 6,
+      winnerDeterminedBy: 'sets_then_games',
+      minCourts: 2,
+    }),
+  ]);
+
+  await Promise.all(
+    [
+      { formatId: juniorTriplesSat.id, gender: 'boys' as const },
+      { formatId: juniorTriplesSat.id, gender: 'girls' as const },
+      { formatId: juniorTriplesSat.id, gender: 'open' as const },
+      { formatId: juniorTriplesSun.id, gender: 'girls' as const },
+      { formatId: juniorTriplesSun.id, gender: 'open' as const },
+      { formatId: presidentsCupSat.id, gender: 'boys' as const },
+      { formatId: presidentsCupSat.id, gender: 'open' as const },
+      { formatId: presidentsCupSun.id, gender: 'girls' as const },
+      { formatId: presidentsCupSun.id, gender: 'open' as const },
+      { formatId: singlesDoublesRubbersSat.id, gender: 'boys' as const },
+      { formatId: singlesDoublesRubbersSat.id, gender: 'open' as const },
+      { formatId: singlesDoublesRubbersSun.id, gender: 'girls' as const },
+      { formatId: singlesDoublesRubbersSun.id, gender: 'open' as const },
+      { formatId: greenBallSat.id, gender: 'boys' as const },
+      { formatId: greenBallSat.id, gender: 'open' as const },
+      { formatId: greenBallSun.id, gender: 'open' as const },
+      { formatId: lSeries.id, gender: 'boys' as const },
+      { formatId: lSeries.id, gender: 'girls' as const },
+      { formatId: lSeries.id, gender: 'open' as const },
+      { formatId: gSeries.id, gender: 'girls' as const },
+      { formatId: saturdayPennantFormat.id, gender: 'open' as const },
+      { formatId: midweekMixedFormat.id, gender: 'open' as const },
+    ].map((data) => db.orm.public.FormatTeamGender.create(data)),
+  );
+
+  // Rubber layout for each format: how many rubbers a match has, in score-sheet
+  // order, and whether each is singles, doubles or mixed doubles.
+  const rubberLayout = (
+    ...types: Array<'singles' | 'doubles' | 'mixed_doubles'>
+  ) =>
+    types.map((rubberType, index) => ({ rubberNumber: index + 1, rubberType }));
+  const threeSinglesThreeDoubles = rubberLayout(
+    'singles',
+    'singles',
+    'singles',
+    'doubles',
+    'doubles',
+    'doubles',
+  );
+  const singlesSinglesDoubles = rubberLayout('singles', 'singles', 'doubles');
+
+  await Promise.all(
+    [
+      { format: juniorTriplesSat, rubbers: threeSinglesThreeDoubles },
+      { format: juniorTriplesSun, rubbers: threeSinglesThreeDoubles },
+      { format: presidentsCupSat, rubbers: singlesSinglesDoubles },
+      { format: presidentsCupSun, rubbers: singlesSinglesDoubles },
+      { format: singlesDoublesRubbersSat, rubbers: singlesSinglesDoubles },
+      { format: singlesDoublesRubbersSun, rubbers: singlesSinglesDoubles },
+      { format: greenBallSat, rubbers: threeSinglesThreeDoubles },
+      { format: greenBallSun, rubbers: threeSinglesThreeDoubles },
+      {
+        format: lSeries,
+        rubbers: rubberLayout('doubles', 'doubles', 'doubles'),
+      },
+      { format: gSeries, rubbers: threeSinglesThreeDoubles },
+      { format: saturdayPennantFormat, rubbers: singlesSinglesDoubles },
+      {
+        format: midweekMixedFormat,
+        rubbers: rubberLayout(
+          'mixed_doubles',
+          'mixed_doubles',
+          'mixed_doubles',
+          'mixed_doubles',
+        ),
+      },
+    ].flatMap(({ format, rubbers }) =>
+      rubbers.map((rubber) =>
+        db.orm.public.FormatRubber.create({ formatId: format.id, ...rubber }),
+      ),
+    ),
+  );
+
+  // =========================================================
+  // CLUB MEMBERSHIPS & ROLES
+  // =========================================================
+  await Promise.all(
+    [
+      {
+        personId: jack.id,
+        clubId: glenWaverley.id,
+        isPrimaryClub: true,
+        isFinancialMember: true,
+      },
+      {
+        personId: daniel.id,
+        clubId: glenWaverley.id,
+        isPrimaryClub: true,
+        isFinancialMember: true,
+      },
+      {
+        personId: oliver.id,
+        clubId: eastBurwood.id,
+        isPrimaryClub: true,
+        isFinancialMember: true,
+      },
+      {
+        personId: noah.id,
+        clubId: eastBurwood.id,
+        isPrimaryClub: true,
+        isFinancialMember: true,
+      },
+      {
+        personId: ethan.id,
+        clubId: pinewood.id,
+        isPrimaryClub: true,
+        isFinancialMember: true,
+      },
+      {
+        personId: liam.id,
+        clubId: pinewood.id,
+        isPrimaryClub: true,
+        isFinancialMember: true,
+      },
+      {
+        personId: henry.id,
+        clubId: lumReserve.id,
+        isPrimaryClub: true,
+        isFinancialMember: true,
+      },
+      {
+        personId: thomas.id,
+        clubId: lumReserve.id,
+        isPrimaryClub: true,
+        isFinancialMember: true,
+      },
+      {
+        personId: sophie.id,
+        clubId: glenWaverley.id,
+        isPrimaryClub: true,
+        isFinancialMember: true,
+      },
+      {
+        personId: emily.id,
+        clubId: eastBurwood.id,
+        isPrimaryClub: true,
+        isFinancialMember: true,
+      },
+    ].map((data) => db.orm.public.ClubMembership.create(data)),
+  );
+
+  await Promise.all(
+    [
+      {
+        personId: michael.id,
+        role: 'ASSOCIATION_ADMIN',
+        associationId: association.id,
+      },
+      { personId: sophie.id, role: 'CLUB_ADMIN', clubId: glenWaverley.id },
+      { personId: emily.id, role: 'CLUB_ADMIN', clubId: eastBurwood.id },
+      { personId: sarah.id, role: 'CLUB_ADMIN', clubId: pinewood.id },
+      { personId: jack.id, role: 'PLAYER', clubId: glenWaverley.id },
+      { personId: daniel.id, role: 'PLAYER', clubId: glenWaverley.id },
+      { personId: oliver.id, role: 'PLAYER', clubId: eastBurwood.id },
+      { personId: noah.id, role: 'PLAYER', clubId: eastBurwood.id },
+      { personId: ethan.id, role: 'PLAYER', clubId: pinewood.id },
+      { personId: liam.id, role: 'PLAYER', clubId: pinewood.id },
+      { personId: henry.id, role: 'PLAYER', clubId: lumReserve.id },
+      { personId: thomas.id, role: 'PLAYER', clubId: lumReserve.id },
+    ].map((data) => db.orm.public.PersonRole.create(data)),
+  );
+
+  // =========================================================
+  // ACCOUNTS (FOR RBAC TESTING)
+  // =========================================================
+  // Hash the mock password exactly as our auth service will expect
+  const passwordHash = await bcrypt.hash('password123', 10);
+
+  await Promise.all([
+    // Michael is an ASSOCIATION_ADMIN
+    db.orm.public.Account.create({
+      personId: michael.id,
+      email: 'admin@tennis.com',
+      passwordHash,
+    }),
+    // Sophie is a CLUB_ADMIN
+    db.orm.public.Account.create({
+      personId: sophie.id,
+      email: 'club@tennis.com',
+      passwordHash,
+    }),
+    // Jack is just a PLAYER (volunteer/public access level)
+    db.orm.public.Account.create({
+      personId: jack.id,
+      email: 'volunteer@tennis.com',
+      passwordHash,
+    }),
+    // Oliver is a PLAYER on the opposing side to Jack in the Midweek Fixture
+    db.orm.public.Account.create({
+      personId: oliver.id,
+      email: 'ringwood.player@tennis.com',
+      passwordHash,
+    }),
+  ]);
+
+  // =========================================================
+  // COMPETITION, SEASON & SECTION
+  // =========================================================
+  const competition = await db.orm.public.Competition.create({
+    associationId: association.id,
+    name: 'Saturday Open Pennant',
+    dayOfWeek: 'saturday',
+    startTime: '13:00',
+  });
+  await db.orm.public.CompetitionFormat.create({
+    competitionId: competition.id,
+    formatId: saturdayPennantFormat.id,
+  });
+  const season = await db.orm.public.Season.create({
+    competitionId: competition.id,
+    name: 'Summer 2026/27',
+    startDate: Temporal.Instant.from('2026-10-03T00:00:00Z'),
+    endDate: Temporal.Instant.from('2027-03-20T00:00:00Z'),
+  });
+  const section = await db.orm.public.Section.create({
+    seasonId: season.id,
+    formatId: saturdayPennantFormat.id,
+    name: 'Section 1',
+  });
+
+  // =========================================================
+  // TEAMS & PLAYERS
+  // =========================================================
+  const glenWaverleyTeam = await db.orm.public.Team.create({
+    clubId: glenWaverley.id,
+    sectionId: section.id,
+    name: 'Glen Waverley A',
+    teamGender: 'open',
+  });
+  const eastBurwoodTeam = await db.orm.public.Team.create({
+    clubId: eastBurwood.id,
+    sectionId: section.id,
+    name: 'East Burwood A',
+    teamGender: 'open',
+  });
+  const pinewoodTeam = await db.orm.public.Team.create({
+    clubId: pinewood.id,
+    sectionId: section.id,
+    name: 'Notting Hill Pinewood A',
+    teamGender: 'open',
+  });
+  const lumReserveTeam = await db.orm.public.Team.create({
+    clubId: lumReserve.id,
+    sectionId: section.id,
+    name: 'Lum Reserve A',
+    teamGender: 'open',
+  });
+
+  await Promise.all(
+    [
+      { teamId: glenWaverleyTeam.id, personId: jack.id },
+      { teamId: glenWaverleyTeam.id, personId: daniel.id },
+      { teamId: eastBurwoodTeam.id, personId: oliver.id },
+      { teamId: eastBurwoodTeam.id, personId: noah.id },
+      { teamId: pinewoodTeam.id, personId: ethan.id },
+      { teamId: pinewoodTeam.id, personId: liam.id },
+      { teamId: lumReserveTeam.id, personId: henry.id },
+      { teamId: lumReserveTeam.id, personId: thomas.id },
+    ].map((data) => db.orm.public.TeamPlayer.create(data)),
+  );
+
+  // =========================================================
+  // MATCH 1: Glen Waverley vs East Burwood
+  // =========================================================
+  const match1 = await db.orm.public.Match.create({
+    sectionId: section.id,
+    homeTeamId: glenWaverleyTeam.id,
+    awayTeamId: eastBurwoodTeam.id,
+    roundNumber: 1,
+    matchDate: Temporal.Instant.from('2026-10-10T13:00:00Z'),
+    matchStatus: 'completed',
+    enteredByPersonId: sophie.id,
+    confirmedByPersonId: emily.id,
+    winningTeamId: glenWaverleyTeam.id,
+  });
+
+  const rubber1 = await db.orm.public.Rubber.create({
+    matchId: match1.id,
+    rubberNumber: 1,
+    rubberType: 'singles',
+    winningTeamId: glenWaverleyTeam.id,
+    outcomeType: 'normal',
+  });
+  await Promise.all(
+    [
+      { rubberId: rubber1.id, teamId: glenWaverleyTeam.id, personId: jack.id },
+      { rubberId: rubber1.id, teamId: eastBurwoodTeam.id, personId: oliver.id },
+    ].map((data) => db.orm.public.RubberPlayer.create(data)),
+  );
+  await Promise.all(
+    [
+      { rubberId: rubber1.id, setNumber: 1, homeGames: 6, awayGames: 4 },
+      { rubberId: rubber1.id, setNumber: 2, homeGames: 6, awayGames: 3 },
+    ].map((data) => db.orm.public.RubberSet.create(data)),
+  );
+
+  const rubber2 = await db.orm.public.Rubber.create({
+    matchId: match1.id,
+    rubberNumber: 2,
+    rubberType: 'singles',
+    winningTeamId: eastBurwoodTeam.id,
+    outcomeType: 'normal',
+  });
+  await Promise.all(
+    [
+      {
+        rubberId: rubber2.id,
+        teamId: glenWaverleyTeam.id,
+        personId: daniel.id,
+      },
+      { rubberId: rubber2.id, teamId: eastBurwoodTeam.id, personId: noah.id },
+    ].map((data) => db.orm.public.RubberPlayer.create(data)),
+  );
+  await Promise.all(
+    [
+      { rubberId: rubber2.id, setNumber: 1, homeGames: 3, awayGames: 6 },
+      { rubberId: rubber2.id, setNumber: 2, homeGames: 5, awayGames: 7 },
+    ].map((data) => db.orm.public.RubberSet.create(data)),
+  );
+
+  const rubber3 = await db.orm.public.Rubber.create({
+    matchId: match1.id,
+    rubberNumber: 3,
+    rubberType: 'doubles',
+    winningTeamId: glenWaverleyTeam.id,
+    outcomeType: 'normal',
+  });
+  await Promise.all(
+    [
+      { rubberId: rubber3.id, teamId: glenWaverleyTeam.id, personId: jack.id },
+      {
+        rubberId: rubber3.id,
+        teamId: glenWaverleyTeam.id,
+        personId: daniel.id,
+      },
+      { rubberId: rubber3.id, teamId: eastBurwoodTeam.id, personId: oliver.id },
+      { rubberId: rubber3.id, teamId: eastBurwoodTeam.id, personId: noah.id },
+    ].map((data) => db.orm.public.RubberPlayer.create(data)),
+  );
+  await Promise.all(
+    [
+      { rubberId: rubber3.id, setNumber: 1, homeGames: 6, awayGames: 2 },
+      { rubberId: rubber3.id, setNumber: 2, homeGames: 4, awayGames: 6 },
+      { rubberId: rubber3.id, setNumber: 3, homeGames: 6, awayGames: 4 },
+    ].map((data) => db.orm.public.RubberSet.create(data)),
+  );
+
+  // =========================================================
+  // REMAINING SEASON FIXTURES
+  // =========================================================
+  // Round 1's Glen Waverley vs East Burwood fixture is already seeded above
+  // with a full scoreline. The rest below are plain scheduled fixtures spread
+  // across a few more rounds so there's something for the round selector
+  // and ladder to page through beyond a single played match.
+  await Promise.all(
+    [
+      // Round 1's other fixture
+      {
+        homeTeamId: pinewoodTeam.id,
+        awayTeamId: lumReserveTeam.id,
+        roundNumber: 1,
+        matchDate: Temporal.Instant.from('2026-10-10T13:00:00Z'),
+      },
+      // Round 2
+      {
+        homeTeamId: glenWaverleyTeam.id,
+        awayTeamId: pinewoodTeam.id,
+        roundNumber: 2,
+        matchDate: Temporal.Instant.from('2026-10-17T13:00:00Z'),
+      },
+      {
+        homeTeamId: eastBurwoodTeam.id,
+        awayTeamId: lumReserveTeam.id,
+        roundNumber: 2,
+        matchDate: Temporal.Instant.from('2026-10-17T13:00:00Z'),
+      },
+      // Round 3
+      {
+        homeTeamId: lumReserveTeam.id,
+        awayTeamId: glenWaverleyTeam.id,
+        roundNumber: 3,
+        matchDate: Temporal.Instant.from('2026-10-24T13:00:00Z'),
+      },
+      {
+        homeTeamId: pinewoodTeam.id,
+        awayTeamId: eastBurwoodTeam.id,
+        roundNumber: 3,
+        matchDate: Temporal.Instant.from('2026-10-24T13:00:00Z'),
+      },
+    ].map((data) =>
+      db.orm.public.Match.create({
+        sectionId: section.id,
+        homeTeamId: data.homeTeamId,
+        awayTeamId: data.awayTeamId,
+        roundNumber: data.roundNumber,
+        matchDate: data.matchDate,
+        matchStatus: 'scheduled',
+      }),
+    ),
+  );
+
+  // =========================================================
+  // SECOND COMPETITION
+  // =========================================================
+  // A separate competition in the same association, with its own season,
+  // section and teams — Jack and Oliver each get a second team membership
+  // here on top of their Saturday Open Pennant team above, so there's a
+  // player in the seed data who belongs to more than one competition
+  // (exercises the "multiple competitions" case on the player profile).
+  const midweekCompetition = await db.orm.public.Competition.create({
+    associationId: association.id,
+    name: 'Midweek Mixed Doubles',
+    dayOfWeek: 'wednesday',
+    startTime: '18:00',
+  });
+  await db.orm.public.CompetitionFormat.create({
+    competitionId: midweekCompetition.id,
+    formatId: midweekMixedFormat.id,
+  });
+  const midweekSeason = await db.orm.public.Season.create({
+    competitionId: midweekCompetition.id,
+    name: 'Spring 2026',
+    startDate: Temporal.Instant.from('2026-09-01T00:00:00Z'),
+    endDate: Temporal.Instant.from('2026-12-15T00:00:00Z'),
+  });
+  const midweekSection = await db.orm.public.Section.create({
+    seasonId: midweekSeason.id,
+    formatId: midweekMixedFormat.id,
+    name: 'Division 1',
+  });
+
+  const glenWaverleyMidweekTeam = await db.orm.public.Team.create({
+    clubId: glenWaverley.id,
+    sectionId: midweekSection.id,
+    name: 'Glen Waverley Midweek',
+    teamGender: 'open',
+  });
+  const eastBurwoodMidweekTeam = await db.orm.public.Team.create({
+    clubId: eastBurwood.id,
+    sectionId: midweekSection.id,
+    name: 'East Burwood Midweek',
+    teamGender: 'open',
+  });
+
+  // Two players a side: every rubber in this format is mixed doubles, so a
+  // result can only be entered for it if each team has a pair to put on court.
+  await Promise.all(
+    [
+      { teamId: glenWaverleyMidweekTeam.id, personId: jack.id },
+      { teamId: glenWaverleyMidweekTeam.id, personId: daniel.id },
+      { teamId: eastBurwoodMidweekTeam.id, personId: oliver.id },
+      { teamId: eastBurwoodMidweekTeam.id, personId: noah.id },
+    ].map((data) => db.orm.public.TeamPlayer.create(data)),
+  );
+
+  // A scheduled fixture so this second competition also shows up in the
+  // player profile's "upcoming matches" row, not just the competitions list.
+  await db.orm.public.Match.create({
+    sectionId: midweekSection.id,
+    homeTeamId: glenWaverleyMidweekTeam.id,
+    awayTeamId: eastBurwoodMidweekTeam.id,
+    roundNumber: 1,
+    matchDate: Temporal.Instant.from('2026-10-14T18:00:00Z'),
+    matchStatus: 'scheduled',
+  });
+
+  // =========================================================
+  // JUNIOR COMPETITIONS (format catalog only — no fixtures)
+  // =========================================================
+  // These two exist to give the junior/L/G formats above somewhere real to
+  // be offered from (CompetitionFormat), matching the meeting notes' named
+  // competitions. No seasons/sections/teams/matches are seeded under them —
+  // this is deliberately just enough to exercise "a competition offers
+  // these formats", not a full second set of fixture data.
+  const saturdayMorningJuniors = await db.orm.public.Competition.create({
+    associationId: association.id,
+    name: 'Saturday Morning Juniors',
+    dayOfWeek: 'saturday',
+  });
+  await Promise.all(
+    [
+      juniorTriplesSat.id,
+      presidentsCupSat.id,
+      singlesDoublesRubbersSat.id,
+      greenBallSat.id,
+    ].map((formatId) =>
+      db.orm.public.CompetitionFormat.create({
+        competitionId: saturdayMorningJuniors.id,
+        formatId,
+      }),
+    ),
+  );
+
+  const sundayMorningJuniors = await db.orm.public.Competition.create({
+    associationId: association.id,
+    name: 'Sunday Morning Juniors',
+    dayOfWeek: 'sunday',
+  });
+  await Promise.all(
+    [
+      juniorTriplesSun.id,
+      presidentsCupSun.id,
+      singlesDoublesRubbersSun.id,
+      greenBallSun.id,
+      lSeries.id,
+      gSeries.id,
+    ].map((formatId) =>
+      db.orm.public.CompetitionFormat.create({
+        competitionId: sundayMorningJuniors.id,
+        formatId,
+      }),
+    ),
+  );
+
+  console.log('Database seeded successfully.');
+}
+
+main()
+  .catch((error) => {
+    console.error('Seed failed:');
+    console.error(error);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await db.runtime().close();
+  });

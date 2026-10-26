@@ -1,0 +1,121 @@
+import { summariseRubber } from './summarise-rubber.js';
+import type { OutcomeType, SetScore, RubberFormat, ValidationResult } from './types.js';
+
+function isLegalTiebreakScore(winnerPoints: number, loserPoints: number): boolean {
+    if (winnerPoints === 7) {
+        return loserPoints <= 5;
+    }
+    if (winnerPoints > 7) {
+        return winnerPoints - loserPoints === 2;
+    }
+    return false;
+}
+
+// A match tiebreak is first to 10, won by 2, and is stored as a 1-0 set with
+// the points kept in the tiebreak fields
+function isLegalMatchTiebreak(set: SetScore): boolean {
+    const home = set.homeTiebreakPoints;
+    const away = set.awayTiebreakPoints;
+    if (home == null || away == null || home === away) {
+        return false;
+    }
+
+    const winnerPoints = Math.max(home, away);
+    const loserPoints = Math.min(home, away);
+    const legalPoints = winnerPoints === 10 ? loserPoints <= 8 : winnerPoints > 10 && winnerPoints - loserPoints === 2;
+
+    const homeWon = home > away;
+    const gamesMatch = homeWon
+        ? set.homeGames === 1 && set.awayGames === 0
+        : set.homeGames === 0 && set.awayGames === 1;
+
+    return legalPoints && gamesMatch;
+}
+
+function isLegalSetScore(format: RubberFormat, set: SetScore): boolean {
+    if (set.homeGames === format.gamesPerSet && set.awayGames < format.gamesPerSet - 1) {
+        return true;
+    }
+    if (set.awayGames === format.gamesPerSet && set.homeGames < format.gamesPerSet - 1) {
+        return true;
+    }
+
+    if (set.homeGames === format.gamesPerSet + 1 && set.awayGames === set.homeGames - 2) {
+        return true;
+    }
+    if (set.awayGames === format.gamesPerSet + 1 && set.homeGames === set.awayGames - 2) {
+        return true;
+    }
+
+    if (format.tiebreakAtGames !== null && set.homeTiebreakPoints != null && set.awayTiebreakPoints != null && set.homeGames === format.tiebreakAtGames + 1 && set.awayGames === format.tiebreakAtGames && isLegalTiebreakScore(set.homeTiebreakPoints, set.awayTiebreakPoints)) {
+        return true;
+    }
+    if (format.tiebreakAtGames !== null && set.awayTiebreakPoints != null && set.homeTiebreakPoints != null && set.awayGames === format.tiebreakAtGames + 1 && set.homeGames === format.tiebreakAtGames && isLegalTiebreakScore(set.awayTiebreakPoints, set.homeTiebreakPoints)) {
+        return true;
+    }
+
+    return false;
+}
+
+export function validateRubber(format: RubberFormat, sets: SetScore[], outcome: OutcomeType): ValidationResult {
+    const errors: string[] = [];
+
+    // The rubber never started, so there's nothing to score.
+    if (outcome === 'walkover' || outcome === 'not_played') {
+        return sets.length === 0
+            ? { isValid: true, errors: [] }
+            : { isValid: false, errors: [`A ${outcome} rubber has no sets`] };
+    }
+
+    // Play stopped part-way: the last set is the unfinished one, and any
+    // completed sets before it must still be legal scores.
+    if (outcome === 'retired' || outcome === 'incomplete') {
+        const last = sets.at(-1);
+        if (!last || last.isComplete !== false) {
+            errors.push('The last set of a retired or incomplete rubber must be marked incomplete');
+        }
+        for (const set of sets.slice(0, -1)) {
+            if (!isLegalSetScore(format, set)) {
+                errors.push(`Illegal set score: ${set.homeGames}-${set.awayGames}`);
+            }
+        }
+        return { isValid: errors.length === 0, errors };
+    }
+
+    if (sets.length > format.setsToWin * 2 - 1) {
+        errors.push('Too many sets');
+        return { isValid: false, errors };
+    }
+
+    if (sets.length < format.setsToWin) {
+        errors.push('Not enough sets');
+        return { isValid: false, errors };
+    }
+
+    for (let i=0; i < sets.length; i++) {
+        const set = sets[i];
+        const priorSets = sets.slice(0, i);
+        const priorScore = summariseRubber(priorSets);
+
+        if (priorScore.homeSetsWon >= format.setsToWin || priorScore.awaySetsWon >= format.setsToWin) {
+            errors.push(`Set ${set.setNumber} played after match was already won`);
+        }
+
+        const isDecidingSet = i === format.setsToWin * 2 - 2;
+        if (set.isMatchTiebreak) {
+            if (!format.finalSetMatchTiebreak) {
+                errors.push(`Set ${set.setNumber}: this format does not use a match tiebreak`);
+            } else if (!isDecidingSet) {
+                errors.push(`Set ${set.setNumber}: only the deciding set can be a match tiebreak`);
+            } else if (!isLegalMatchTiebreak(set)) {
+                errors.push(`Illegal match tiebreak score: ${set.homeTiebreakPoints}-${set.awayTiebreakPoints}`);
+            }
+        } else if (format.finalSetMatchTiebreak && isDecidingSet) {
+            errors.push(`Set ${set.setNumber}: the deciding set must be a match tiebreak`);
+        } else if (!isLegalSetScore(format, set)) {
+            errors.push(`Illegal set score: ${set.homeGames}-${set.awayGames}`);
+        }
+    }
+
+    return { isValid: errors.length === 0, errors };
+}
