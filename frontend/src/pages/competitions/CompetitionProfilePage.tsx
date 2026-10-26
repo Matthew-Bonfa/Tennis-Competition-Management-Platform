@@ -7,6 +7,7 @@ import { useParams, Link } from 'react-router-dom';
 import { Trophy, Shield, ArrowLeft, Calendar, Tag, ArrowRight } from 'lucide-react';
 import LoadingState from '../../components/ui/LoadingState';
 import ErrorState from '../../components/ui/ErrorState';
+import fetchApi from '../../lib/api';
 
 // the backend stores the day as lowercase text, e.g. "saturday"
 function formatDay(day: string | null | undefined) {
@@ -31,14 +32,13 @@ function CompetitionProfile() {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`http://localhost:3000/api/competitions/${id}`)
-      .then(response => response.json())
+    fetchApi(`/competitions/${id}`)
       .then(data => {
         setCompetition(data);
         setLoading(false);
       })
       .catch(err => {
-        setError(err.message);
+        setError(err.message || 'Failed to load competition details');
         setLoading(false);
       });
   }, [id]);
@@ -56,8 +56,7 @@ function CompetitionProfile() {
   useEffect(() => {
     if (selectedSeasonId === null) return;
     setSectionsLoading(true);
-    fetch(`http://localhost:3000/api/sections?seasonId=${selectedSeasonId}`)
-      .then(response => response.json())
+    fetchApi(`/sections?seasonId=${selectedSeasonId}`)
       .then(data => {
         setSections(data);
         setSectionsLoading(false);
@@ -85,8 +84,8 @@ function CompetitionProfile() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
       {/* Back Link */}
-      <Link 
-        to="/competitions" 
+      <Link
+        to="/competitions"
         className="inline-flex items-center gap-1 text-sm text-ink-muted hover:text-primary-600 mb-6 transition-colors"
       >
         <ArrowLeft className="h-4 w-4" /> Back to Competitions
@@ -107,7 +106,7 @@ function CompetitionProfile() {
               </p>
             )}
           </div>
-          
+
           <span className="self-start md:self-center bg-primary-50 text-primary-700 font-semibold px-4 py-2 rounded-full text-sm border border-primary-200">
             Active Competition
           </span>
@@ -144,7 +143,7 @@ function CompetitionProfile() {
             </div>
           </div>
           {competition.association?.id && (
-            <Link 
+            <Link
               to={`/associations/${competition.association.id}`}
               className="inline-flex items-center gap-1 text-sm font-medium text-primary-600 hover:underline mt-4"
             >
