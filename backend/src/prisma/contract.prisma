@@ -36,6 +36,23 @@ model Account {
   person       Person   @relation(fields: [personId], references: [id])
 }
 
+// Single-use tokens for the email-verified account flows. An "invite" token
+// is created by an admin (who picks an existing person, an email and roles)
+// and lets that person set a password for a new account. A "password_reset"
+// token lets an existing account holder set a new password. Only the SHA-256
+// hash of the emailed token is stored.
+model AccountToken {
+  id          String    @id @default(uuid())
+  tokenHash   String    @unique
+  type        String    // "invite" | "password_reset"
+  email       String
+  personId    String?
+  rolesJson   String?   // invite only: [{role, clubId?, associationId?}]
+  expiresAt   DateTime
+  usedAt      DateTime?
+  createdAt   DateTime  @default(now())
+}
+
 model Association {
   id              String     @id @default(uuid())
   name            String

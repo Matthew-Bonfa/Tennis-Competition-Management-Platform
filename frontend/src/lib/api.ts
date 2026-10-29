@@ -5,7 +5,16 @@ export class ApiError extends Error {
   body: unknown;
 
   constructor(status: number, body: unknown) {
-    super(`Request failed with status ${status}`);
+    // Surface the backend's own message (e.g. "An account already exists for
+    // that email") instead of a generic status line. Validation failures come
+    // back as an array of messages, so join those.
+    const message =
+      body && typeof body === 'object' && 'message' in body
+        ? Array.isArray((body as any).message)
+          ? (body as any).message.join('; ')
+          : String((body as any).message)
+        : `Request failed with status ${status}`;
+    super(message);
     this.status = status;
     this.body = body;
   }
