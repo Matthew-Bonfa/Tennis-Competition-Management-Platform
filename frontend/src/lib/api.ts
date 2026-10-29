@@ -28,8 +28,10 @@ async function fetchApi(endpoint: string, options: RequestInit = {}) {
     headers,
   });
 
-  // Global Auth Handling: Kick user to login if token is expired/invalid
-  if (response.status === 401) {
+  // Global Auth Handling: Kick user to login if token is expired/invalid.
+  // The login call itself is exempt: its 401 just means bad credentials, and the
+  // redirect would reload the page, wipe the inline error and clear the session.
+  if (response.status === 401 && endpoint !== '/auth/login') {
     localStorage.removeItem("access_token");
     localStorage.removeItem("personId");
     localStorage.removeItem("roles");
