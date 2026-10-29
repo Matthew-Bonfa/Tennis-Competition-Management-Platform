@@ -88,7 +88,7 @@ export class ClubsService {
     return response;
   }
 
-  async updateDetails(id: string, club: {name?: string, address?: string, contactPersonId?: string, roles?: [{personId: string, role: string}]}){
+  async updateDetails(id: string, club: {name?: string, address?: string, contactPersonId?: string | null, roles?: [{personId: string, role: string}]}){
     // roles exist within PersonRole so need to be handled separately
     const {roles, ...details} = club;
 

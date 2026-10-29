@@ -31,7 +31,7 @@ export class AssociationsController {
 
   @Roles('ASSOCIATION_ADMIN')
   @Put(':id')
-  async updateAssociation(@Param('id') id: string, @Body() body: {name: string, contactPersonId?: string, roles?: [{personId: string, role: string}]}){
+  async updateAssociation(@Param('id') id: string, @Body() body: {name: string, contactPersonId?: string | null, roles?: [{personId: string, role: string}]}){
     const updatedAssociation = await this.associationsService.updateAssociation(id, body);
     return updatedAssociation;
   }

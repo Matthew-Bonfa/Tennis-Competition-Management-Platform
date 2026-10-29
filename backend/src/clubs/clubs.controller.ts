@@ -29,7 +29,7 @@ export class ClubsController {
 
   @Roles("ASSOCIATION_ADMIN", "CLUB_ADMIN")
   @Patch(':id')
-  updateDetails(@Param('id') id: string, @Body() club: {name?: string, address?: string, contactPersonId?: string, roles?: [{personId: string, role: string}]}) {
+  updateDetails(@Param('id') id: string, @Body() club: {name?: string, address?: string, contactPersonId?: string | null, roles?: [{personId: string, role: string}]}) {
     return this.clubsService.updateDetails(id, club);
   }
 
