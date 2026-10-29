@@ -22,6 +22,14 @@ export const WINNER_RULE_OPTIONS = [
   { value: 'ladder_position', label: 'Highest team on the ladder' },
 ] as const;
 
+// PersonRole.role values as stored by the API. Unknown roles fall back to the
+// raw value rather than hiding it.
+export const ROLE_OPTIONS = [
+  { value: 'CLUB_ADMIN', label: 'Club Admin' },
+  { value: 'PLAYER', label: 'Player' },
+  { value: 'ASSOCIATION_ADMIN', label: 'Association Admin' },
+] as const;
+
 function labelFor(options: readonly { value: string; label: string }[], value: string) {
   return options.find((option) => option.value === value)?.label ?? value;
 }
@@ -29,6 +37,7 @@ function labelFor(options: readonly { value: string; label: string }[], value: s
 export const rubberLabel = (value: string) => labelFor(RUBBER_OPTIONS, value);
 export const genderLabel = (value: string) => labelFor(GENDER_OPTIONS, value);
 export const winnerRuleLabel = (value: string) => labelFor(WINNER_RULE_OPTIONS, value);
+export const roleLabel = (value: string) => labelFor(ROLE_OPTIONS, value);
 
 // ['singles', 'singles', 'doubles'] -> "Single, Single, Double"
 // This is only a preview: the backend generates the name that gets saved,
