@@ -7,6 +7,7 @@ import { useParams, Link } from 'react-router-dom';
 import { Building2, ArrowLeft } from 'lucide-react';
 
 import fetchApi, { ApiError } from '../../lib/api'
+import { roleLabel } from '../../lib/formatName'
 import LoadingState from '../../components/ui/LoadingState';
 
 function ClubProfile() {
@@ -121,7 +122,7 @@ function ClubProfile() {
               <ul>
                 {club.officials.map((o: any) => (
                   <li key={o.personId}>
-                    {o.firstName} {o.lastName} — {o.role}
+                    {o.firstName} {o.lastName} — {roleLabel(o.role)}
                   </li>
                 ))}
               </ul>

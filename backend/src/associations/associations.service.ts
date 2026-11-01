@@ -18,7 +18,7 @@ export class AssociationsService {
       id: id,
     })
       .include('contactPerson', (p) => p.select('id', 'firstName', 'lastName', 'email', 'phone'))
-      .include('roles')    // , (r) => r.include('person', (p) => p.select('id', 'firstName', 'lastName', 'email', 'phone'))
+      .include('roles', (r) => r.include('person', (p) => p.select('id', 'firstName', 'lastName')))
       .first();
 
     if (!response) {
@@ -49,7 +49,7 @@ export class AssociationsService {
 
   }
 
-  async updateAssociation(id: string, data: {name: string, contactPersonId?: string, roles?: [{personId: string, role: string}]}){
+  async updateAssociation(id: string, data: {name: string, contactPersonId?: string | null, roles?: [{personId: string, role: string}]}){
     // if this id doesn't exist, getAssociation will throw the 404 for us
     await this.getAssociation(id);
 
