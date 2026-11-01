@@ -153,6 +153,11 @@ function EditClubPage(){
       return;
     }
 
+    if (contactPerson && contactEmail.trim() === "" && contactPhone.trim() === ""){
+      setErrorMessage("Contact person must have an email or phone number");
+      return;
+    }
+
     const body = {
       name: name.trim(),
       address: address.trim(),
