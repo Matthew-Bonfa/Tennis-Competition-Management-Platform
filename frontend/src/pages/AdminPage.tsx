@@ -25,6 +25,10 @@ function AdminPage() {
           className="block bg-surface border border-border rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
           Manage Associations
         </Link>
+        <Link to="/manage-accounts"
+          className="block bg-surface border border-border rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
+          Create Accounts
+        </Link>
       </div>
     </div>
   );

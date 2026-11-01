@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service.js';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma/prisma.service.js';
+import { MailerService } from '../mail/mailer.service.js';
 import { UnauthorizedException } from '@nestjs/common';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import * as bcrypt from 'bcrypt';
@@ -42,6 +43,8 @@ describe('AuthService', () => {
         AuthService,
         { provide: PrismaService, useValue: mockPrismaService },
         { provide: JwtService, useValue: mockJwtService },
+        // Login never emails; the invite/reset tests cover the mailer's use
+        { provide: MailerService, useValue: { sendInviteEmail: vi.fn(), sendResetEmail: vi.fn() } },
       ],
     }).compile();
 

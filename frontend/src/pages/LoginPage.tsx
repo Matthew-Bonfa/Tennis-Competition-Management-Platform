@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate, Link } from 'react-router-dom';
 import { postApi } from '../lib/api';
 import { isAuthenticated } from '../lib/auth';
 
@@ -105,6 +105,9 @@ function Login() {
               <input id="remember" type="checkbox" />
               Remember me
             </label>
+            <Link to="/forgot-password" className="text-primary-600 hover:text-primary-700">
+              Forgot password?
+            </Link>
           </div>
 
           <button

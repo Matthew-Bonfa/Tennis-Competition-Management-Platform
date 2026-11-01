@@ -8,6 +8,10 @@
       "model": "Account",
       "namespace": "public"
     },
+    "accountToken": {
+      "model": "AccountToken",
+      "namespace": "public"
+    },
     "association": {
       "model": "Association",
       "namespace": "public"
@@ -346,6 +350,107 @@
               },
               "namespaceId": "public",
               "table": "account"
+            }
+          },
+          "AccountToken": {
+            "fields": {
+              "createdAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              },
+              "email": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "expiresAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "personId": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "rolesJson": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "tokenHash": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "type": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "usedAt": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {},
+            "storage": {
+              "fields": {
+                "createdAt": {
+                  "column": "createdAt"
+                },
+                "email": {
+                  "column": "email"
+                },
+                "expiresAt": {
+                  "column": "expiresAt"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "personId": {
+                  "column": "personId"
+                },
+                "rolesJson": {
+                  "column": "rolesJson"
+                },
+                "tokenHash": {
+                  "column": "tokenHash"
+                },
+                "type": {
+                  "column": "type"
+                },
+                "usedAt": {
+                  "column": "usedAt"
+                }
+              },
+              "namespaceId": "public",
+              "table": "accountToken"
             }
           },
           "Association": {
@@ -3232,6 +3337,73 @@
                 }
               ]
             },
+            "accountToken": {
+              "columns": {
+                "createdAt": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "email": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "expiresAt": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "personId": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "rolesJson": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "tokenHash": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "type": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "usedAt": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "nativeType": "timestamptz",
+                  "nullable": true
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "tokenHash"
+                  ]
+                }
+              ]
+            },
             "association": {
               "columns": {
                 "contactPersonId": {
@@ -5528,10 +5700,10 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "877ed903f404b2883aee05d34d802d622e7cdbaca629caacc19e5ba8cba91443"
+    "storageHash": "8dc3de077107725a65d0119316742dd1eee8a25f9e44884cdb4fbe0f1630ac6e"
   },
   "execution": {
-    "executionHash": "23c544f7811d1f93c37e2e0065437fc55cf818cee6b23fa79cd811116f204776",
+    "executionHash": "b102e78a7387966f8e6ea04422ce0f98cac26281da9b9c1989b64e5505327290",
     "mutations": {
       "defaults": [
         {
@@ -5543,6 +5715,17 @@
             "column": "id",
             "namespace": "public",
             "table": "account"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "uuidv4",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "id",
+            "namespace": "public",
+            "table": "accountToken"
           }
         },
         {
