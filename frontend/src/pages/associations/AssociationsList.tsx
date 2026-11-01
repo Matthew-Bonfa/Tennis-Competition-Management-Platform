@@ -21,8 +21,6 @@ function AssociationsList(){
         async function fetchAssociations(){
             let data = await fetchApi("/associations");
 
-            console.log(data);
-
             setAssociations(data);
             setLoading(false);
             
