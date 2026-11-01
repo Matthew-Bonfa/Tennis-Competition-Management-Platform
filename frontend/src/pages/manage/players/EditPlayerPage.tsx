@@ -49,12 +49,16 @@ function toForm(player: PlayerDetail): EditForm {
   };
 }
 
+
+
+
 function EditPlayerPage() {
   const { id } = useParams();
   const navigate = useNavigate();
 
   const [player, setPlayer] = useState<PlayerDetail | null>(null);
   const [form, setForm] = useState<EditForm | null>(null);
+  const [originalForm, setOriginalForm] = useState<EditForm | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -67,6 +71,7 @@ function EditPlayerPage() {
         setPlayer(data);
         // reduce the object to only the required keys
         setForm(toForm(data));
+        setOriginalForm(toForm(data));
       } catch (err) {
         if (err instanceof ApiError && err.status === 404) {
           setNotFound(true);
@@ -81,12 +86,24 @@ function EditPlayerPage() {
     fetchPlayer();
   }, [id]);
 
+
+  function changesOnly(currentForm: EditForm){
+    currentForm = toForm(currentForm);
+    const payload = {};
+    for (const key in originalForm){
+      if (originalForm[key] !== currentForm[key]){
+        payload[key] = currentForm[key];
+      }
+    }
+    return payload;
+  }
+
   async function handleSave() {
     setSaving(true);
     setError(null);
     try {
       setForm(toForm(form)); // clean the fields in case of failure
-      const updated = await patchApi('/players/' + id, toForm(form)); // send a cleaned version of form
+      const updated = await patchApi('/players/' + id, changesOnly(form)); // only send changed fields
       setPlayer(updated);
       navigate('/manage-players');
     } catch (err) {
