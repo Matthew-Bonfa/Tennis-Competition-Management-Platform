@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { postApi } from '../lib/api';
+import { isAuthenticated } from '../lib/auth';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -8,6 +9,11 @@ function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  // Already signed in? Skip the form instead of showing it again.
+  if (isAuthenticated()) {
+    return <Navigate to="/" replace />;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
