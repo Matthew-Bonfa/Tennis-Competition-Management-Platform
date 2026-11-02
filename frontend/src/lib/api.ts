@@ -115,3 +115,8 @@ export async function putApi(endpoint: string, data: unknown, options: RequestIn
     });
 }
 
+// A 204 response has no body to parse; fetchApi already returns null for it
+export async function deleteApi(endpoint: string, options: RequestInit = {}) {
+    return fetchApi(endpoint, { ...options, method: "DELETE" });
+}
+

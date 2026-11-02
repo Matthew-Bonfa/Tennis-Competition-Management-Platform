@@ -3,11 +3,13 @@
 
 import { useState, useEffect } from 'react';
 import type { FormEvent } from 'react';
-import { useParams, useSearchParams, Link } from 'react-router-dom';
+import { useParams, useSearchParams, Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Plus } from 'lucide-react';
-import fetchApi, { ApiError } from '../../../lib/api';
+import fetchApi, { deleteApi, ApiError } from '../../../lib/api';
+import { isAdmin } from '../../../lib/auth';
 import LoadingState from '../../../components/ui/LoadingState';
 import ErrorState from '../../../components/ui/ErrorState';
+import ConfirmDeleteDialog from '../../../components/ui/ConfirmDeleteDialog';
 
 // local helper: fetchApi accepts any method, so PATCH doesn't need a shared helper
 function patchApi(endpoint: string, data: unknown) {
@@ -21,6 +23,7 @@ function patchApi(endpoint: string, data: unknown) {
 function ManageCompetitionPage() {
   const { id } = useParams();
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   const [competition, setCompetition] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -36,6 +39,9 @@ function ManageCompetitionPage() {
   const [selectedSeasonId, setSelectedSeasonId] = useState<number | null>(null);
   const [sections, setSections] = useState<any[]>([]);
   const [sectionsLoading, setSectionsLoading] = useState(false);
+
+  // hard-deleting the whole competition
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
   // seasons sorted by start date, most recent first (ISO date text sorts correctly as text)
   const sortedSeasons: any[] = competition?.seasons
@@ -248,6 +254,41 @@ function ManageCompetitionPage() {
           </>
         )}
       </div>
+
+      {/* Danger zone — association admins only, and the dialog makes a
+          deliberate act out of a hard delete */}
+      {isAdmin() && (
+        <div className="mt-8 bg-surface border border-danger-border rounded-lg p-6 shadow-sm">
+          <h2 className="text-lg font-bold text-danger">Danger zone</h2>
+          <p className="mt-1 text-sm text-ink-muted">
+            Deleting a competition removes it for good, with every season inside it.
+          </p>
+          <button
+            type="button"
+            onClick={() => setDeleteOpen(true)}
+            className="mt-4 min-h-11 rounded-lg border border-danger-border bg-danger-bg px-4 text-sm font-medium text-danger transition-colors duration-150 hover:bg-danger/10"
+          >
+            Delete competition
+          </button>
+        </div>
+      )}
+
+      {deleteOpen && (
+        <ConfirmDeleteDialog
+          title="Delete competition"
+          entityName={competition.name}
+          consequences={[
+            `The competition "${competition.name}"`,
+            `Every season of it (${sortedSeasons.length})`,
+            'All sections, teams, fixtures and match results inside those seasons',
+          ]}
+          onDelete={async () => {
+            await deleteApi(`/competitions/${id}`);
+            navigate('/manage-competitions');
+          }}
+          onClose={() => setDeleteOpen(false)}
+        />
+      )}
     </div>
   );
 }

@@ -1,20 +1,24 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Users, ListOrdered } from 'lucide-react';
 
-import fetchApi, { ApiError } from '../../lib/api'
+import fetchApi, { deleteApi } from '../../lib/api'
+import { isAdmin, isClubAdmin, isAuthenticated } from '../../lib/auth';
 import LadderTable from '../matches/LadderTable'
 import TeamRecordCard from './TeamRecordCard'
 import UpcomingMatches from '../matches/UpcomingMatches'
 import type { TeamDetail, TeamRecord } from '../../lib/teamRecord'
 import LoadingState from '../../components/ui/LoadingState';
+import ConfirmDeleteDialog from '../../components/ui/ConfirmDeleteDialog';
 
 function TeamProfile() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [team, setTeam] = useState<TeamDetail | null>(null);
   const [record, setRecord] = useState<TeamRecord | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
   useEffect(() => {
     async function fetchTeam() {
@@ -118,6 +122,41 @@ function TeamProfile() {
         </h2>
         <LadderTable sectionId={String(team.sectionId)} highlightTeamId={team.id} />
       </div>
+
+      {/* Danger zone — admins only. The delete takes every match the team
+          played with it, so it stays behind the type-the-name dialog. */}
+      {isAuthenticated() && (isAdmin() || isClubAdmin()) && (
+        <div className="max-w-2xl mx-auto mt-8 bg-surface border border-danger-border rounded-lg p-6 shadow-sm">
+          <h2 className="text-lg font-bold text-danger">Danger zone</h2>
+          <p className="mt-1 text-sm text-ink-muted">
+            Deleting a team removes it for good, with every match it played.
+          </p>
+          <button
+            type="button"
+            onClick={() => setDeleteOpen(true)}
+            className="mt-4 min-h-11 rounded-lg border border-danger-border bg-danger-bg px-4 text-sm font-medium text-danger transition-colors duration-150 hover:bg-danger/10"
+          >
+            Delete team
+          </button>
+        </div>
+      )}
+
+      {deleteOpen && team && (
+        <ConfirmDeleteDialog
+          title="Delete team"
+          entityName={team.name}
+          consequences={[
+            `The team "${team.name}" (${team.clubName})`,
+            'Its player list',
+            `Every fixture and match result it played in ${team.sectionName}`,
+          ]}
+          onDelete={async () => {
+            await deleteApi(`/teams/${team.id}`);
+            navigate(`/sections/${team.sectionId}`);
+          }}
+          onClose={() => setDeleteOpen(false)}
+        />
+      )}
     </div>
   );
 }

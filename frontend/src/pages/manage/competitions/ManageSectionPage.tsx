@@ -5,11 +5,13 @@ import { useState, useEffect } from 'react';
 import type { FormEvent } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, X } from 'lucide-react';
-import fetchApi, { ApiError } from '../../../lib/api';
+import fetchApi, { deleteApi, ApiError } from '../../../lib/api';
+import { isAdmin } from '../../../lib/auth';
 import FormatForm from './FormatForm';
 import { rubberLabel, genderLabel, winnerRuleLabel } from '../../../lib/formatName';
 import LoadingState from '../../../components/ui/LoadingState';
 import ErrorState from '../../../components/ui/ErrorState';
+import ConfirmDeleteDialog from '../../../components/ui/ConfirmDeleteDialog';
 
 // local helper: fetchApi accepts any method, so PATCH doesn't need a shared helper
 function patchApi(endpoint: string, data: unknown) {
@@ -43,6 +45,10 @@ function ManageSectionPage() {
   // (nothing means a brand new format)
   const [panelOpen, setPanelOpen] = useState(false);
   const [panelSource, setPanelSource] = useState<any>(null);
+
+  // hard-deleting the section, and deleting an unused format
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  const [formatDeleteOpen, setFormatDeleteOpen] = useState(false);
 
   // load the section, its competition and the list of formats together
   useEffect(() => {
@@ -104,6 +110,16 @@ function ManageSectionPage() {
     setFormatId(created.id);
     setSelectedFormat(created);
     setPanelOpen(false);
+  }
+
+  // an unused format was deleted: drop it from the dropdown and clear the choice.
+  // The backend refuses (409) if a section, competition or team request uses it;
+  // ConfirmDeleteDialog shows that message instead of closing.
+  async function handleFormatDeleted() {
+    await deleteApi(`/formats/${formatId}`);
+    setFormats(current => current.filter(f => f.id !== formatId));
+    setFormatId('');
+    setSelectedFormat(null);
   }
 
   async function handleSubmit(e: FormEvent) {
@@ -262,6 +278,15 @@ function ManageSectionPage() {
                   <span className="font-medium">Winner decided by:</span>{' '}
                   {winnerRuleLabel(summary.winnerDeterminedBy)}
                 </p>
+                {isAdmin() && (
+                  <button
+                    type="button"
+                    onClick={() => setFormatDeleteOpen(true)}
+                    className="mt-2 min-h-11 rounded-lg border border-danger-border bg-danger-bg px-4 text-sm font-medium text-danger transition-colors duration-150 hover:bg-danger/10"
+                  >
+                    Delete this format
+                  </button>
+                )}
               </div>
             )}
           </div>
@@ -276,7 +301,54 @@ function ManageSectionPage() {
             {saving ? 'Saving...' : 'Save changes'}
           </button>
         </form>
+
+        {/* Danger zone — association admins only */}
+        {isAdmin() && (
+          <div className="mt-8 bg-surface border border-danger-border rounded-lg p-6 shadow-sm">
+            <h2 className="text-lg font-bold text-danger">Danger zone</h2>
+            <p className="mt-1 text-sm text-ink-muted">
+              Deleting a section removes it for good, with everything played in it.
+            </p>
+            <button
+              type="button"
+              onClick={() => setDeleteOpen(true)}
+              className="mt-4 min-h-11 rounded-lg border border-danger-border bg-danger-bg px-4 text-sm font-medium text-danger transition-colors duration-150 hover:bg-danger/10"
+            >
+              Delete section
+            </button>
+          </div>
+        )}
       </div>
+
+      {deleteOpen && section && (
+        <ConfirmDeleteDialog
+          title="Delete section"
+          entityName={section.name}
+          consequences={[
+            `The section "${section.name}"`,
+            'All of its teams and their player lists',
+            'Every fixture and match result in it',
+          ]}
+          onDelete={async () => {
+            await deleteApi(`/sections/${sectionId}`);
+            navigate(`/manage-competitions/${id}?season=${section.seasonId}`);
+          }}
+          onClose={() => setDeleteOpen(false)}
+        />
+      )}
+
+      {formatDeleteOpen && summary && (
+        <ConfirmDeleteDialog
+          title="Delete format"
+          entityName={summary.name}
+          consequences={[
+            `The format "${summary.name}"`,
+            'Nothing else — a format in use by any section, competition or team request cannot be deleted',
+          ]}
+          onDelete={handleFormatDeleted}
+          onClose={() => setFormatDeleteOpen(false)}
+        />
+      )}
 
       {/* The format panel. It sits outside the section form above, because
           a form cannot be placed inside another form. */}

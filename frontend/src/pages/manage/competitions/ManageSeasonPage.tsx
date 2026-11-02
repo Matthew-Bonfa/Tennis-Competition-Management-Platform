@@ -5,9 +5,11 @@ import { useState, useEffect } from 'react';
 import type { FormEvent } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
-import fetchApi, { ApiError } from '../../../lib/api';
+import fetchApi, { deleteApi, ApiError } from '../../../lib/api';
+import { isAdmin } from '../../../lib/auth';
 import LoadingState from '../../../components/ui/LoadingState';
 import ErrorState from '../../../components/ui/ErrorState';
+import ConfirmDeleteDialog from '../../../components/ui/ConfirmDeleteDialog';
 
 // local helper: fetchApi accepts any method, so PATCH doesn't need a shared helper
 function patchApi(endpoint: string, data: unknown) {
@@ -37,6 +39,9 @@ function ManageSeasonPage() {
   const [endDate, setEndDate] = useState('');
   const [saving, setSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
+
+  // hard-deleting the season
+  const [deleteOpen, setDeleteOpen] = useState(false);
 
   // the competition's data already includes its seasons, so one request covers both
   useEffect(() => {
@@ -167,6 +172,40 @@ function ManageSeasonPage() {
           {saving ? 'Saving...' : 'Save changes'}
         </button>
       </form>
+
+      {/* Danger zone — association admins only */}
+      {isAdmin() && (
+        <div className="mt-8 bg-surface border border-danger-border rounded-lg p-6 shadow-sm">
+          <h2 className="text-lg font-bold text-danger">Danger zone</h2>
+          <p className="mt-1 text-sm text-ink-muted">
+            Deleting a season removes it for good, with everything played in it.
+          </p>
+          <button
+            type="button"
+            onClick={() => setDeleteOpen(true)}
+            className="mt-4 min-h-11 rounded-lg border border-danger-border bg-danger-bg px-4 text-sm font-medium text-danger transition-colors duration-150 hover:bg-danger/10"
+          >
+            Delete season
+          </button>
+        </div>
+      )}
+
+      {deleteOpen && season && (
+        <ConfirmDeleteDialog
+          title="Delete season"
+          entityName={season.name}
+          consequences={[
+            `The season "${season.name}"`,
+            'All of its sections',
+            'Every team, fixture and match result in those sections',
+          ]}
+          onDelete={async () => {
+            await deleteApi(`/seasons/${seasonId}`);
+            navigate(`/manage-competitions/${id}`);
+          }}
+          onClose={() => setDeleteOpen(false)}
+        />
+      )}
     </div>
   );
 }

@@ -205,8 +205,54 @@ export class TeamsService {
     return `This action updates a #${id} team`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} team`;
+  // Hard delete: the team, its players and every match it played (with the
+  // results inside those matches). Cascades down only — the section, ladder
+  // and other teams stay, with this team's fixtures simply gone.
+  async remove(id: number) {
+    return this.prisma.client.transaction(async (tx) => {
+      const team = await tx.orm.public.Team.where({ id }).first();
+      if (!team) {
+        throw new NotFoundException(`Team ${id} not found`);
+      }
+
+      // Every match this team played, home or away, then the rows hanging
+      // off those matches — deepest first, mirroring sections.service.remove
+      const homeMatches = await tx.orm.public.Match.where({ homeTeamId: id }).select('id').all();
+      const awayMatches = await tx.orm.public.Match.where({ awayTeamId: id }).select('id').all();
+      const matchIds = [...new Set([...homeMatches, ...awayMatches].map((m) => m.id))];
+
+      const rubbers = matchIds.length
+        ? await tx.orm.public.Rubber.where((rubber) => rubber.matchId.in(matchIds))
+            .select('id')
+            .all()
+        : [];
+      const rubberIds = rubbers.map((rubber) => rubber.id);
+
+      if (rubberIds.length) {
+        await tx.orm.public.RubberSet.where((set) => set.rubberId.in(rubberIds)).deleteAndCount();
+        await tx.orm.public.RubberPlayer.where((player) => player.rubberId.in(rubberIds)).deleteAndCount();
+        await tx.orm.public.Rubber.where((rubber) => rubber.id.in(rubberIds)).deleteAndCount();
+      }
+
+      if (matchIds.length) {
+        // The audit trail hangs off the match, not off the rubber, so it has to
+        // go before the match it describes
+        await tx.orm.public.MatchResultEvent.where((event) => event.matchId.in(matchIds)).deleteAndCount();
+        await tx.orm.public.Match.where((match) => match.id.in(matchIds)).deleteAndCount();
+      }
+
+      await tx.orm.public.TeamPlayer.where((player) => player.teamId.eq(id)).deleteAndCount();
+      // Team requests keep their history; they just lose the pointer to this team
+      await tx.orm.public.TeamRequest.where((request) => request.teamId.eq(id)).updateAll({ teamId: null });
+      const teamsDeleted = await tx.orm.public.Team.where((t) => t.id.eq(id)).deleteAndCount();
+
+      return {
+        id,
+        name: team.name,
+        matchesDeleted: matchIds.length,
+        teamsDeleted,
+      };
+    });
   }
 }
 
