@@ -106,7 +106,11 @@ describe('Associations Feature (e2e)', () => {
       .get("/api/players")
       .set('AUTHORIZATION', `Bearer ${adminToken}`)
       .expect(200);
-    const people = getPeople.body;
+
+    // The suites share one database and run in parallel: the auth spec's
+    // throwaway persons ("e2e-...", lastName "Account...") sort first and
+    // get deleted mid-run, so they must never become contact persons here
+    const people = getPeople.body.filter((p: any) => !p.personCode.startsWith('e2e-'));
 
     expect(people).toBeDefined();
     expect(people.length).toBeGreaterThan(1);

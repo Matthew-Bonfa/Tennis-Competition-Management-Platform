@@ -1,20 +1,27 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Users, ListOrdered } from 'lucide-react';
 
-import fetchApi, { ApiError } from '../../lib/api'
+import fetchApi, { ApiError, deleteApi } from '../../lib/api'
+import { isAdmin, isClubAdmin, isAuthenticated } from '../../lib/auth';
 import LadderTable from '../matches/LadderTable'
 import TeamRecordCard from './TeamRecordCard'
 import UpcomingMatches from '../matches/UpcomingMatches'
 import type { TeamDetail, TeamRecord } from '../../lib/teamRecord'
 import LoadingState from '../../components/ui/LoadingState';
+import ConfirmDeleteDialog from '../../components/ui/ConfirmDeleteDialog';
 
 function TeamProfile() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [team, setTeam] = useState<TeamDetail | null>(null);
   const [record, setRecord] = useState<TeamRecord | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [deleteOpen, setDeleteOpen] = useState(false);
+  // Two-step roster removal: first click arms the row, second click deletes
+  const [removeArmed, setRemoveArmed] = useState<string | null>(null);
+  const [removing, setRemoving] = useState(false);
 
   useEffect(() => {
     async function fetchTeam() {
@@ -42,6 +49,21 @@ function TeamProfile() {
     () => (team ? [{ teamId: team.id, teamName: team.name }] : []),
     [team],
   );
+
+  const canManageRoster = isAuthenticated() && (isAdmin() || isClubAdmin());
+
+  async function handleRemovePlayer(personId: string) {
+    if (!team) return;
+    setRemoving(true);
+    try {
+      await deleteApi(`/teams/${team.id}/players/${personId}`);
+      // Re-fetch so the roster (and the ladder link above it) stay truthful
+      setTeam(await fetchApi('/teams/' + team.id));
+      setRemoveArmed(null);
+    } finally {
+      setRemoving(false);
+    }
+  }
 
   if (loading) {
     return <LoadingState />;
@@ -94,10 +116,41 @@ function TeamProfile() {
           {team.players.length > 0 ? (
             <ul className="space-y-2">
               {team.players.map((player) => (
-                <li key={player.personId}>
+                <li key={player.personId} className="flex items-center justify-between gap-2">
                   <Link to={`/players/${player.personId}`} className="text-primary-600 hover:underline font-medium">
                     {player.firstName} {player.lastName}
                   </Link>
+                  {canManageRoster && (
+                    removeArmed === player.personId ? (
+                      <span className="flex items-center gap-1 shrink-0">
+                        <button
+                          type="button"
+                          disabled={removing}
+                          onClick={() => handleRemovePlayer(player.personId)}
+                          className="min-h-11 rounded-lg bg-danger px-3 text-sm font-medium text-white transition-colors duration-150 hover:bg-danger/90 disabled:opacity-50"
+                        >
+                          Confirm remove
+                        </button>
+                        <button
+                          type="button"
+                          disabled={removing}
+                          onClick={() => setRemoveArmed(null)}
+                          className="min-h-11 rounded-lg px-2 text-sm text-ink-muted transition-colors duration-150 hover:text-ink disabled:opacity-50"
+                        >
+                          Cancel
+                        </button>
+                      </span>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setRemoveArmed(player.personId)}
+                        aria-label={`Remove ${player.firstName} ${player.lastName} from the team`}
+                        className="min-h-11 shrink-0 rounded-lg px-2 text-sm text-ink-muted transition-colors duration-150 hover:text-danger"
+                      >
+                        Remove
+                      </button>
+                    )
+                  )}
                 </li>
               ))}
             </ul>
@@ -118,6 +171,41 @@ function TeamProfile() {
         </h2>
         <LadderTable sectionId={String(team.sectionId)} highlightTeamId={team.id} />
       </div>
+
+      {/* Danger zone — admins only. The delete takes every match the team
+          played with it, so it stays behind the type-the-name dialog. */}
+      {isAuthenticated() && (isAdmin() || isClubAdmin()) && (
+        <div className="max-w-2xl mx-auto mt-8 bg-surface border border-danger-border rounded-lg p-6 shadow-sm">
+          <h2 className="text-lg font-bold text-danger">Danger zone</h2>
+          <p className="mt-1 text-sm text-ink-muted">
+            Deleting a team removes it for good, with every match it played.
+          </p>
+          <button
+            type="button"
+            onClick={() => setDeleteOpen(true)}
+            className="mt-4 min-h-11 rounded-lg border border-danger-border bg-danger-bg px-4 text-sm font-medium text-danger transition-colors duration-150 hover:bg-danger/10"
+          >
+            Delete team
+          </button>
+        </div>
+      )}
+
+      {deleteOpen && team && (
+        <ConfirmDeleteDialog
+          title="Delete team"
+          entityName={team.name}
+          consequences={[
+            `The team "${team.name}" (${team.clubName})`,
+            'Its player list',
+            `Every fixture and match result it played in ${team.sectionName}`,
+          ]}
+          onDelete={async () => {
+            await deleteApi(`/teams/${team.id}`);
+            navigate(`/sections/${team.sectionId}`);
+          }}
+          onClose={() => setDeleteOpen(false)}
+        />
+      )}
     </div>
   );
 }

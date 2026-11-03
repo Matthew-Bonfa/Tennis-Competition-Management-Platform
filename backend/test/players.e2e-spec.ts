@@ -267,6 +267,8 @@ describe('Players Feature (e2e)', () => {
     afterAll(async () => {
       const orm = prisma.client.orm.public;
       for (const id of createdIds) {
+        // createPlayer now also grants a PLAYER role alongside the membership
+        await orm.PersonRole.where({ personId: id }).delete();
         await orm.ClubMembership.where({ personId: id }).delete();
         await orm.Person.where({ id }).delete();
       }
