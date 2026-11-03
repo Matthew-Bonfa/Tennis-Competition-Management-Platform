@@ -155,12 +155,16 @@ export class PlayersService {
     // Memberships are not a Person column — they're upserted into
     // ClubMembership below, so keep them out of the identity update.
     const { memberships, ...personFields } = dto;
-    const data = toPersonUpdate(personFields);
 
-    const updated = await this.prisma.client.orm.public.Person.where({ id }).select('id').update(data);
-
-    if (!updated) {
-      throw new NotFoundException(`Player ${id} not found`);
+    // A save can legitimately change only memberships (e.g. ticking the
+    // financial flag): an empty identity diff means no Person UPDATE at
+    // all — findOnePlayer at the end still 404s unknown players.
+    if (Object.keys(personFields).length > 0) {
+      const data = toPersonUpdate(personFields);
+      const updated = await this.prisma.client.orm.public.Person.where({ id }).select('id').update(data);
+      if (!updated) {
+        throw new NotFoundException(`Player ${id} not found`);
+      }
     }
 
     // Memberships are kept in step with the list the form sends: each club

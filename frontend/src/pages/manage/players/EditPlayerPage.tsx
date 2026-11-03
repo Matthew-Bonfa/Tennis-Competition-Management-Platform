@@ -140,6 +140,7 @@ function EditPlayerPage() {
   function removeMembership(clubId: string) {
     setMemberships((rows) => rows.filter((m) => m.clubId !== clubId));
     setRemoveArmed(null);
+  }
 
   function changesOnly(currentForm: EditForm){
     currentForm = toForm(currentForm);
@@ -157,15 +158,14 @@ function EditPlayerPage() {
     setError(null);
     try {
       const updated = await patchApi('/players/' + id, {
-        ...form,
+        // Only the fields the user actually changed
+        ...changesOnly(form),
         // The full desired list; the backend upserts each row
         memberships: memberships.map((m) => ({
           clubId: m.clubId,
           isFinancialMember: m.isFinancialMember,
         })),
       });
-      setForm(toForm(form)); // clean the fields in case of failure
-      const updated = await patchApi('/players/' + id, changesOnly(form)); // only send changed fields
       setPlayer(updated);
       navigate('/manage-players');
     } catch (err) {

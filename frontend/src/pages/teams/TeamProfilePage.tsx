@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Users, ListOrdered } from 'lucide-react';
 
-import fetchApi, { deleteApi } from '../../lib/api'
+import fetchApi, { ApiError, deleteApi } from '../../lib/api'
 import { isAdmin, isClubAdmin, isAuthenticated } from '../../lib/auth';
 import LadderTable from '../matches/LadderTable'
 import TeamRecordCard from './TeamRecordCard'
