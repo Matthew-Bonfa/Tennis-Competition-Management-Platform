@@ -43,17 +43,25 @@ interface EditForm {
   phone: string | null;
 }
 
+/*
+  Reduce the object to these keys
+  Also trim whitespace, and replace with null if it was all just whitespace
+  Note that the component fields below all display '' in case of null
+*/
 function toForm(player: PlayerDetail): EditForm {
   return {
-    firstName: player.firstName,
-    lastName: player.lastName,
-    dateOfBirth: player.dateOfBirth?.slice(0, 10) ?? '',
-    utrId: player.utrId ?? '',
-    tennisAustraliaNumber: player.tennisAustraliaNumber ?? '',
-    email: player.email ?? '',
-    phone: player.phone ?? '',
+    firstName: player.firstName?.trim() || null,
+    lastName: player.lastName?.trim() || null,
+    dateOfBirth: player.dateOfBirth?.slice(0, 10),
+    utrId: player.utrId?.trim() || null,
+    tennisAustraliaNumber: player.tennisAustraliaNumber?.trim() ?? null,
+    email: player.email?.trim() || null,
+    phone: player.phone?.trim() || null,
   };
 }
+
+
+
 
 function EditPlayerPage() {
   const { id } = useParams();
@@ -67,6 +75,7 @@ function EditPlayerPage() {
   // Two-step membership removal: first click arms the row, second click
   // takes it out of the list — the delete itself happens on Save
   const [removeArmed, setRemoveArmed] = useState<string | null>(null);
+  const [originalForm, setOriginalForm] = useState<EditForm | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -81,6 +90,7 @@ function EditPlayerPage() {
           fetchApi('/clubs'),
         ]);
         setPlayer(data);
+        // reduce the object to only the required keys
         setForm(toForm(data));
         setMemberships(
           (data.clubs ?? []).map((c: PlayerDetail['clubs'][number]) => ({
@@ -92,6 +102,7 @@ function EditPlayerPage() {
           })),
         );
         setAllClubs(clubs);
+        setOriginalForm(toForm(data));
       } catch (err) {
         if (err instanceof ApiError && err.status === 404) {
           setNotFound(true);
@@ -129,6 +140,16 @@ function EditPlayerPage() {
   function removeMembership(clubId: string) {
     setMemberships((rows) => rows.filter((m) => m.clubId !== clubId));
     setRemoveArmed(null);
+
+  function changesOnly(currentForm: EditForm){
+    currentForm = toForm(currentForm);
+    const payload = {};
+    for (const key in originalForm){
+      if (originalForm[key] !== currentForm[key]){
+        payload[key] = currentForm[key];
+      }
+    }
+    return payload;
   }
 
   async function handleSave() {
@@ -143,8 +164,9 @@ function EditPlayerPage() {
           isFinancialMember: m.isFinancialMember,
         })),
       });
+      setForm(toForm(form)); // clean the fields in case of failure
+      const updated = await patchApi('/players/' + id, changesOnly(form)); // only send changed fields
       setPlayer(updated);
-      setForm(toForm(updated));
       navigate('/manage-players');
     } catch (err) {
       if (err instanceof ApiError) {
@@ -192,7 +214,7 @@ function EditPlayerPage() {
             First name
             <input
               type="text"
-              value={form.firstName}
+              value={form.firstName ?? ''}
               onChange={(e) => setForm({ ...form, firstName: e.target.value })}
               className="mt-1 w-full rounded-lg border border-border-strong bg-surface px-4 py-3 text-ink focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
@@ -201,7 +223,7 @@ function EditPlayerPage() {
             Last name
             <input
               type="text"
-              value={form.lastName}
+              value={form.lastName ?? ''}
               onChange={(e) => setForm({ ...form, lastName: e.target.value })}
               className="mt-1 w-full rounded-lg border border-border-strong bg-surface px-4 py-3 text-ink focus:outline-none focus:ring-2 focus:ring-primary-500"
             />

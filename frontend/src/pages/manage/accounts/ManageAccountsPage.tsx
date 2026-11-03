@@ -198,7 +198,7 @@ function ManageAccountsPage() {
                     aria-label="Association"
                     value={row.associationId}
                     onChange={(e) => updateRow(index, { associationId: e.target.value })}
-                    className="flex-1 rounded-lg border border-border-strong bg-surface px-3 py-2 text-ink focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="flex-1 min-w-0 truncate rounded-lg border border-border-strong bg-surface px-3 py-2 text-ink focus:outline-none focus:ring-2 focus:ring-primary-500"
                   >
                     <option value="">Select an association...</option>
                     {associations.map((a) => (
@@ -212,7 +212,7 @@ function ManageAccountsPage() {
                     aria-label="Club"
                     value={row.clubId}
                     onChange={(e) => updateRow(index, { clubId: e.target.value })}
-                    className="flex-1 rounded-lg border border-border-strong bg-surface px-3 py-2 text-ink focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="flex-1 min-w-0 truncate rounded-lg border border-border-strong bg-surface px-3 py-2 text-ink focus:outline-none focus:ring-2 focus:ring-primary-500"
                   >
                     <option value="">Select a club...</option>
                     {clubs.map((c) => (

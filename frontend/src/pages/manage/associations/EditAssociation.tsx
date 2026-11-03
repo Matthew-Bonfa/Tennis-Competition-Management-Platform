@@ -174,6 +174,13 @@ export function EditAssociation({ association }: { association: Association }) {
       return;
     }
 
+    if (contactPerson && contactEmail.trim() === "" && contactPhone === ""){
+      setMsg("Contact person must have an email or phone");
+      return;
+    }
+
+
+
     // The API replaces all association roles on every update, so always send
     // the full list — omitting it would wipe the existing officials.
     const data = {
