@@ -31,12 +31,87 @@ import ManagePlayersPage from './pages/manage/players/ManagePlayersPage';
 import EditPlayerPage from './pages/manage/players/EditPlayerPage';
 import CreatePlayerPage from './pages/manage/players/CreatePlayerPage';
 import Login from './pages/LoginPage';
+import AcceptInvitePage from './pages/AcceptInvitePage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
+import ManageAccountsPage from './pages/manage/accounts/ManageAccountsPage';
 import ManageClubsPage from './pages/manage/clubs/ManageClubsPage';
 import EditClubPage from './pages/manage/clubs/EditClubPage';
-import { isAdmin, isAuthenticated } from './lib/auth';
+import { isAdmin, isClubAdmin, isAuthenticated } from './lib/auth';
 import RegisterTeamPage from './pages/register-team/RegisterTeamPage';
 import SelectCompetition from './pages/register-team/SelectCompetitionPage';
 import ReviewRequests from './pages/register-team/ReviewRequestsPage';
+
+/* The admin guard must be a component so it runs when the route renders. Inline in
+   element={} it is evaluated once at page load (App never re-renders on navigation),
+   which kept showing "Please Sign In" after logging in within the same session. */
+function AdminRoute() {
+  if (isAuthenticated() && isAdmin()) {
+    return <AdminPage />;
+  }
+
+  const signedIn = isAuthenticated();
+
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-canvas px-4">
+      <div className="w-full max-w-md space-y-6 bg-surface p-8 rounded-lg shadow-sm">
+        <h2 className="text-2xl font-bold text-ink">
+          {signedIn ? 'Access Denied' : 'Please Sign In'}
+        </h2>
+        <p className="mt-1 text-sm text-ink-muted">
+          {signedIn
+            ? 'You do not have permission to access the admin page.'
+            : 'Please sign in to access the admin page.'}
+        </p>
+        {!signedIn && (
+          <div className="mt-6">
+            <button
+              onClick={() => window.location.href = '/login'}
+              className="w-full rounded-lg bg-primary-600 py-3 font-medium text-white hover:bg-primary-700"
+            >
+              Sign In
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* Same guard pattern as AdminRoute, but club admins also manage accounts (for
+   their own clubs only — the backend enforces that scoping). */
+function AccountsRoute() {
+  if (isAuthenticated() && (isAdmin() || isClubAdmin())) {
+    return <ManageAccountsPage />;
+  }
+
+  const signedIn = isAuthenticated();
+
+  return (
+    <div className="flex items-center justify-center min-h-screen bg-canvas px-4">
+      <div className="w-full max-w-md space-y-6 bg-surface p-8 rounded-lg shadow-sm">
+        <h2 className="text-2xl font-bold text-ink">
+          {signedIn ? 'Access Denied' : 'Please Sign In'}
+        </h2>
+        <p className="mt-1 text-sm text-ink-muted">
+          {signedIn
+            ? 'You do not have permission to manage accounts.'
+            : 'Please sign in to manage accounts.'}
+        </p>
+        {!signedIn && (
+          <div className="mt-6">
+            <button
+              onClick={() => window.location.href = '/login'}
+              className="w-full rounded-lg bg-primary-600 py-3 font-medium text-white hover:bg-primary-700"
+            >
+              Sign In
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
 
 // --- MAIN APP ROUTING ---
 export default function App() {
@@ -53,38 +128,9 @@ export default function App() {
             <Route path="/competitions" element={<CompetitionsPage />} />
             <Route path="/players" element={<PlayersPage />} />
 
-            { /* The admin route is now protected properly */}
-            <Route
-              path="/admin"
-              element={[
-                isAuthenticated() && isAdmin() ? (
-                  <AdminPage />
-                ) : (
-                  <div className="flex items-center justify-center min-h-screen bg-canvas px-4">
-                    <div className="w-full max-w-md space-y-6 bg-surface p-8 rounded-lg shadow-sm">
-                      <h2 className="text-2xl font-bold text-ink">
-                        {isAuthenticated() ? 'Access Denied' : 'Please Sign In'}
-                      </h2>
-                      <p className="mt-1 text-sm text-ink-muted">
-                        {isAuthenticated()
-                          ? 'You do not have permission to access the admin page.'
-                          : 'Please sign in to access the admin page.'}
-                      </p>
-                      {!isAuthenticated() && (
-                        <div className="mt-6">
-                          <button
-                            onClick={() => window.location.href = '/login'}
-                            className="w-full rounded-lg bg-primary-600 py-3 font-medium text-white hover:bg-primary-700"
-                          >
-                            Sign In
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )
-              ]}
-            />
+            { /* The admin route is now protected properly. AdminRoute re-checks auth
+                 on every render, so an in-session login/logout is reflected. */}
+            <Route path="/admin" element={<AdminRoute />} />
 
             <Route path="/clubs/:id" element={<ClubProfile />} />
             <Route path="/competitions/:id" element={<CompetitionProfile />} />
@@ -111,6 +157,13 @@ export default function App() {
 
             <Route path="/manage-clubs" element={<ManageClubsPage />} />
             <Route path="/manage-clubs/:id" element={<EditClubPage />} />
+
+            <Route path="/manage-accounts" element={<AccountsRoute />} />
+
+            {/* Public account flows opened from the emailed links */}
+            <Route path="/accept-invite" element={<AcceptInvitePage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
 
 
             <Route path="/manage-teams" element={<RegisterTeamPage />} />

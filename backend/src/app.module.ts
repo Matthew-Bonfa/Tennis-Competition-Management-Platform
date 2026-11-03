@@ -13,6 +13,7 @@ import { AssociationsModule } from './associations/associations.module.js';
 import { ClubsModule } from './clubs/clubs.module.js';
 import { PlayersModule } from './players/players.module.js';
 import { AuthModule } from './auth/auth.module.js';
+import { MailModule } from './mail/mail.module.js';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard.js';
 import { RolesGuard } from './auth/guards/roles.guard.js';
@@ -32,6 +33,7 @@ import { FormatsModule } from './formats/formats.module.js';
     ClubsModule,
     PlayersModule,
     AuthModule,
+    MailModule,
     FormatsModule,
   ],
   controllers: [AppController],

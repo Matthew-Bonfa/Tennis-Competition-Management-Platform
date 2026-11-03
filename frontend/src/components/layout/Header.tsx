@@ -18,9 +18,10 @@ interface NavItem {
 function navItems(): NavItem[] {
   const items: NavItem[] = [{ to: '/competitions', label: 'Competitions' }];
 
-  /* Players button only shows if user is admin or club admin */
+  /* Players and Accounts buttons only show if user is admin or club admin */
   if (isAuthenticated() && (isClubAdmin() || isAdmin())) {
     items.push({ to: '/players', label: 'Players' });
+    items.push({ to: '/manage-accounts', label: 'Accounts' });
   }
 
   items.push({ to: '/associations', label: 'Associations' });

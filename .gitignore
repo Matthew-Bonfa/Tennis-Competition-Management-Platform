@@ -6,3 +6,5 @@ backend/*.tsbuildinfo
 *.tsbuildinfo
 
 .claude/
+
+.DS_Store

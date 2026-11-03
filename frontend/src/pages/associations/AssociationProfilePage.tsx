@@ -69,7 +69,6 @@ function AssociationProfile() {
     const associationId = association.id;
     async function fetchCompetitions(){
       let data = await fetchApi("/competitions?associationId=" + associationId);
-      console.log(data);
       setCompetitions(data);
     }
     fetchCompetitions();

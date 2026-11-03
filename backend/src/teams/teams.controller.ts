@@ -82,6 +82,14 @@ export class TeamsController {
     return this.teamsService.update(id, updateTeamDto);
   }
 
+  // DELETE /teams/:id/players/:personId
+  // Takes one player off the roster; their played results stay.
+  @Roles('ASSOCIATION_ADMIN', 'CLUB_ADMIN')
+  @Delete(':id/players/:personId')
+  removePlayer(@Param('id', ParseIntPipe) id: number, @Param('personId') personId: string) {
+    return this.teamsService.removePlayer(id, personId);
+  }
+
   @Roles('ASSOCIATION_ADMIN', 'CLUB_ADMIN')
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {

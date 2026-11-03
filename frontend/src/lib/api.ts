@@ -5,7 +5,16 @@ export class ApiError extends Error {
   body: unknown;
 
   constructor(status: number, body: unknown) {
-    super(`Request failed with status ${status}`);
+    // Surface the backend's own message (e.g. "An account already exists for
+    // that email") instead of a generic status line. Validation failures come
+    // back as an array of messages, so join those.
+    const message =
+      body && typeof body === 'object' && 'message' in body
+        ? Array.isArray((body as any).message)
+          ? (body as any).message.join('; ')
+          : String((body as any).message)
+        : `Request failed with status ${status}`;
+    super(message);
     this.status = status;
     this.body = body;
   }
@@ -28,8 +37,10 @@ async function fetchApi(endpoint: string, options: RequestInit = {}) {
     headers,
   });
 
-  // Global Auth Handling: Kick user to login if token is expired/invalid
-  if (response.status === 401) {
+  // Global Auth Handling: Kick user to login if token is expired/invalid.
+  // The login call itself is exempt: its 401 just means bad credentials, and the
+  // redirect would reload the page, wipe the inline error and clear the session.
+  if (response.status === 401 && endpoint !== '/auth/login') {
     localStorage.removeItem("access_token");
     localStorage.removeItem("personId");
     localStorage.removeItem("roles");
@@ -102,5 +113,10 @@ export async function putApi(endpoint: string, data: unknown, options: RequestIn
         headers,
         body: JSON.stringify(data),
     });
+}
+
+// A 204 response has no body to parse; fetchApi already returns null for it
+export async function deleteApi(endpoint: string, options: RequestInit = {}) {
+    return fetchApi(endpoint, { ...options, method: "DELETE" });
 }
 

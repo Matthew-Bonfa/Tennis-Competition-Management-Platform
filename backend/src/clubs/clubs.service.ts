@@ -79,18 +79,28 @@ export class ClubsService {
       for (let i = 0; i < club.roles.length; i++){
         await this.prisma.client.orm.public.PersonRole.create({
           clubId: response.id,
-          personId: club.roles[i].personId, 
+          personId: club.roles[i].personId,
           role: club.roles[i].role,
         });
       }
+      // A brand-new club has no members yet, so every player named here
+      // needs a membership created for them
+      await this.syncPlayerMemberships(response.id, [], club.roles);
     }
 
     return response;
   }
 
-  async updateDetails(id: string, club: {name?: string, address?: string, contactPersonId?: string, roles?: [{personId: string, role: string}]}){
+  async updateDetails(id: string, club: {name?: string, address?: string, contactPersonId?: string | null, roles?: [{personId: string, role: string}]}){
     // roles exist within PersonRole so need to be handled separately
     const {roles, ...details} = club;
+
+    // Who is currently a player here, captured before the wipe below, so we
+    // can tell who was actually removed and take their membership with them
+    const previousPlayers = await this.prisma.client.orm.public.PersonRole
+      .where({ clubId: id, role: 'PLAYER' })
+      .select('personId')
+      .all();
 
     const updateDetails = await this.prisma.client.orm.public.Club.where({id}).update(details);
     if (!updateDetails){
@@ -104,14 +114,72 @@ export class ClubsService {
     if (roles){
       for (let i = 0; i < roles.length; i++){
         await this.prisma.client.orm.public.PersonRole.create({
-          personId: roles[i].personId, 
-          role: roles[i].role, 
+          personId: roles[i].personId,
+          role: roles[i].role,
           clubId: id
         });
       }
     }
 
+    await this.syncPlayerMemberships(id, previousPlayers.map((p: any) => p.personId), roles);
+
     return await this.findOneClub(id);
+  }
+
+  // "In this club" is recorded in two tables: a PLAYER PersonRole (what the
+  // club edit/profile pages manage) and a ClubMembership row (what the
+  // player profile and edit-player pages show). This keeps them in step —
+  // removing a player from the club deletes their membership, adding one
+  // grants it. Other roles (admin etc.) never touch memberships.
+  private async syncPlayerMemberships(clubId: string, previousPlayerIds: string[], roles: [{personId: string, role: string}] | undefined) {
+    const currentPlayerIds = new Set(
+      (roles ?? []).filter((r) => r.role === 'PLAYER').map((r) => r.personId),
+    );
+
+    for (const personId of previousPlayerIds) {
+      if (currentPlayerIds.has(personId)) continue;
+
+      const membership = await this.prisma.client.orm.public.ClubMembership
+        .where((m) => m.personId.eq(personId))
+        .where((m) => m.clubId.eq(clubId))
+        .first();
+      if (!membership) continue;
+
+      await this.prisma.client.orm.public.ClubMembership.where({ id: membership.id }).deleteAll();
+
+      // If the club was their primary, primary moves to one of the clubs
+      // they still belong to, so they never show up without a club
+      if (membership.isPrimaryClub) {
+        const remaining = await this.prisma.client.orm.public.ClubMembership
+          .where((m) => m.personId.eq(personId))
+          .all();
+        const next = remaining.find((m) => m.id !== membership.id && !m.isPrimaryClub);
+        if (next) {
+          await this.prisma.client.orm.public.ClubMembership.where({ id: next.id }).update({ isPrimaryClub: true });
+        }
+      }
+    }
+
+    for (const personId of currentPlayerIds) {
+      if (previousPlayerIds.includes(personId)) continue;
+
+      const existing = await this.prisma.client.orm.public.ClubMembership
+        .where((m) => m.personId.eq(personId))
+        .where((m) => m.clubId.eq(clubId))
+        .first();
+      if (existing) continue;
+
+      const anyMembership = await this.prisma.client.orm.public.ClubMembership
+        .where({ personId })
+        .select('id')
+        .first();
+      await this.prisma.client.orm.public.ClubMembership.create({
+        personId,
+        clubId,
+        isPrimaryClub: !anyMembership,
+        isFinancialMember: false,
+      });
+    }
   }
 
 }
