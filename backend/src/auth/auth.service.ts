@@ -163,6 +163,29 @@ export class AuthService {
           clubId: role.clubId,
           associationId: role.associationId,
         });
+
+        // A player invited to a club is a member of it: the club edit page
+        // writes a membership for its players, so the invite flow does too
+        if (role.role === 'PLAYER' && role.clubId) {
+          const clubId = role.clubId;
+          const personId = row.personId!;
+          const existing = await tx.orm.public.ClubMembership
+            .where((m) => m.personId.eq(personId))
+            .where((m) => m.clubId.eq(clubId))
+            .first();
+          if (!existing) {
+            const anyMembership = await tx.orm.public.ClubMembership
+              .where({ personId })
+              .select('id')
+              .first();
+            await tx.orm.public.ClubMembership.create({
+              personId,
+              clubId,
+              isPrimaryClub: !anyMembership,
+              isFinancialMember: false,
+            });
+          }
+        }
       }
 
       await tx.orm.public.AccountToken.where({ id: row.id }).update({ usedAt: toInstant(new Date()) });

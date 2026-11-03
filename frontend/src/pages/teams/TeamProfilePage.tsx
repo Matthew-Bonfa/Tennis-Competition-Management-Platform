@@ -19,6 +19,9 @@ function TeamProfile() {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  // Two-step roster removal: first click arms the row, second click deletes
+  const [removeArmed, setRemoveArmed] = useState<string | null>(null);
+  const [removing, setRemoving] = useState(false);
 
   useEffect(() => {
     async function fetchTeam() {
@@ -46,6 +49,21 @@ function TeamProfile() {
     () => (team ? [{ teamId: team.id, teamName: team.name }] : []),
     [team],
   );
+
+  const canManageRoster = isAuthenticated() && (isAdmin() || isClubAdmin());
+
+  async function handleRemovePlayer(personId: string) {
+    if (!team) return;
+    setRemoving(true);
+    try {
+      await deleteApi(`/teams/${team.id}/players/${personId}`);
+      // Re-fetch so the roster (and the ladder link above it) stay truthful
+      setTeam(await fetchApi('/teams/' + team.id));
+      setRemoveArmed(null);
+    } finally {
+      setRemoving(false);
+    }
+  }
 
   if (loading) {
     return <LoadingState />;
@@ -98,10 +116,41 @@ function TeamProfile() {
           {team.players.length > 0 ? (
             <ul className="space-y-2">
               {team.players.map((player) => (
-                <li key={player.personId}>
+                <li key={player.personId} className="flex items-center justify-between gap-2">
                   <Link to={`/players/${player.personId}`} className="text-primary-600 hover:underline font-medium">
                     {player.firstName} {player.lastName}
                   </Link>
+                  {canManageRoster && (
+                    removeArmed === player.personId ? (
+                      <span className="flex items-center gap-1 shrink-0">
+                        <button
+                          type="button"
+                          disabled={removing}
+                          onClick={() => handleRemovePlayer(player.personId)}
+                          className="min-h-11 rounded-lg bg-danger px-3 text-sm font-medium text-white transition-colors duration-150 hover:bg-danger/90 disabled:opacity-50"
+                        >
+                          Confirm remove
+                        </button>
+                        <button
+                          type="button"
+                          disabled={removing}
+                          onClick={() => setRemoveArmed(null)}
+                          className="min-h-11 rounded-lg px-2 text-sm text-ink-muted transition-colors duration-150 hover:text-ink disabled:opacity-50"
+                        >
+                          Cancel
+                        </button>
+                      </span>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => setRemoveArmed(player.personId)}
+                        aria-label={`Remove ${player.firstName} ${player.lastName} from the team`}
+                        className="min-h-11 shrink-0 rounded-lg px-2 text-sm text-ink-muted transition-colors duration-150 hover:text-danger"
+                      >
+                        Remove
+                      </button>
+                    )
+                  )}
                 </li>
               ))}
             </ul>

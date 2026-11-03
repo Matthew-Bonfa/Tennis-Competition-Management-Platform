@@ -201,6 +201,26 @@ export class TeamsService {
     };
   }
 
+  // Removes one player from a team's roster. Their played matches and
+  // rubbers are history, not roster, so they stay (cascades down, never up).
+  async removePlayer(id: number, personId: string) {
+    const team = await this.prisma.client.orm.public.Team.where({ id }).select('id').first();
+    if (!team) {
+      throw new NotFoundException(`Team with ID ${id} not found`);
+    }
+
+    const playersDeleted = await this.prisma.client.orm.public.TeamPlayer
+      .where((player) => player.teamId.eq(id))
+      .where((player) => player.personId.eq(personId))
+      .deleteAndCount();
+
+    if (playersDeleted === 0) {
+      throw new NotFoundException(`Player ${personId} is not on team ${id}`);
+    }
+
+    return { teamId: id, personId, playersDeleted };
+  }
+
   update(id: number, _updateTeamDto: UpdateTeamDto) {
     return `This action updates a #${id} team`;
   }

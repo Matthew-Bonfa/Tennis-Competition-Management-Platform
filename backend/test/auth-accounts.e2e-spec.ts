@@ -44,6 +44,8 @@ describe('Auth Account Flows (e2e)', () => {
     for (const person of persons) {
       await prisma.client.orm.public.Account.where({ personId: person.id }).deleteAll();
       await prisma.client.orm.public.PersonRole.where({ personId: person.id }).deleteAll();
+      // accepted PLAYER invites now grant a membership alongside the role
+      await prisma.client.orm.public.ClubMembership.where({ personId: person.id }).deleteAll();
       await prisma.client.orm.public.Person.where({ id: person.id }).deleteAll();
     }
     for (const club of clubs) {

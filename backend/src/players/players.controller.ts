@@ -67,11 +67,12 @@ export class PlayersController {
 
   // PATCH /players/:id
   // Partial edit of a player's identity fields (name, date of birth, UTR
-  // id, Tennis Australia number, email, phone). Returns the updated
-  // profile in the same shape as GET /players/:id.
+  // id, Tennis Australia number, email, phone), plus optionally the club
+  // memberships with their financial flags. Returns the updated profile in
+  // the same shape as GET /players/:id.
   @Roles('ASSOCIATION_ADMIN', 'CLUB_ADMIN')
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePlayerDto: UpdatePlayerDto) {
-    return this.playersService.updatePlayer(id, updatePlayerDto);
+  update(@Param('id') id: string, @Body() updatePlayerDto: UpdatePlayerDto, @Req() req: { user: RequestUser }) {
+    return this.playersService.updatePlayer(id, updatePlayerDto, req.user);
   }
 }

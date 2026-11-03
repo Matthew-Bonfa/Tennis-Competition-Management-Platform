@@ -151,13 +151,108 @@ export class PlayersService {
   }
 
   // edit form
-  async updatePlayer(id: string, dto: UpdatePlayerDto): Promise<PlayerDetail> {
-    const data = toPersonUpdate(dto);
+  async updatePlayer(id: string, dto: UpdatePlayerDto, user: RequestUser): Promise<PlayerDetail> {
+    // Memberships are not a Person column — they're upserted into
+    // ClubMembership below, so keep them out of the identity update.
+    const { memberships, ...personFields } = dto;
+    const data = toPersonUpdate(personFields);
 
     const updated = await this.prisma.client.orm.public.Person.where({ id }).select('id').update(data);
 
     if (!updated) {
       throw new NotFoundException(`Player ${id} not found`);
+    }
+
+    // Memberships are kept in step with the list the form sends: each club
+    // in the list is upserted, and a membership at a club the list no longer
+    // names is deleted. Every touched club (added or removed) goes behind
+    // the same club-admin check the rest of the service uses, so a club
+    // admin can never touch a club they don't run.
+    if (memberships) {
+      const listedClubIds = new Set<string>();
+      for (const membership of memberships) {
+        const club = await this.prisma.client.orm.public.Club
+          .where({ id: membership.clubId })
+          .select('id')
+          .first();
+        if (!club) {
+          throw new NotFoundException(`Club ${membership.clubId} not found`);
+        }
+        await this.assertCanManageClub(user, membership.clubId);
+        listedClubIds.add(membership.clubId);
+
+        const existing = await this.prisma.client.orm.public.ClubMembership
+          .where((row) => row.personId.eq(id))
+          .where((row) => row.clubId.eq(membership.clubId))
+          .first();
+
+        if (existing) {
+          if (existing.isFinancialMember !== membership.isFinancialMember) {
+            await this.prisma.client.orm.public.ClubMembership
+              .where({ id: existing.id })
+              .update({ isFinancialMember: membership.isFinancialMember });
+          }
+          // Also heals memberships that predate the role sync
+          await this.ensurePlayerRole(id, membership.clubId);
+        } else {
+          // A first-ever membership becomes the primary club, so the player
+          // always shows up under a club
+          const anyMembership = await this.prisma.client.orm.public.ClubMembership
+            .where({ personId: id })
+            .select('id')
+            .first();
+          await this.prisma.client.orm.public.ClubMembership.create({
+            personId: id,
+            clubId: membership.clubId,
+            isPrimaryClub: !anyMembership,
+            isFinancialMember: membership.isFinancialMember,
+          });
+
+          // Joining a club as a member makes them a player there too, so
+          // the club pages see them as well
+          await this.ensurePlayerRole(id, membership.clubId);
+        }
+      }
+
+      // Removals: clubs the list no longer names. A club admin silently
+      // skips clubs they don't run rather than failing the whole save.
+      const current = await this.prisma.client.orm.public.ClubMembership
+        .where((row) => row.personId.eq(id))
+        .all();
+      for (const membership of current) {
+        if (listedClubIds.has(membership.clubId)) continue;
+        try {
+          await this.assertCanManageClub(user, membership.clubId);
+        } catch {
+          continue;
+        }
+
+        await this.prisma.client.orm.public.ClubMembership
+          .where({ id: membership.id })
+          .deleteAll();
+
+        // Leaving a club also ends their player role there, so the club
+        // pages stop listing them too
+        await this.prisma.client.orm.public.PersonRole
+          .where((role) => role.personId.eq(id))
+          .where((role) => role.role.eq('PLAYER'))
+          .where((role) => role.clubId.eq(membership.clubId))
+          .deleteAll();
+
+        // If the removed club was their primary, primary moves to one of
+        // the clubs they still belong to
+        if (membership.isPrimaryClub) {
+          const remaining = await this.prisma.client.orm.public.ClubMembership
+            .where((row) => row.personId.eq(id))
+            .all();
+          const next = remaining.find((row) => row.id !== membership.id && !row.isPrimaryClub);
+          if (next) {
+            await this.prisma.client.orm.public.ClubMembership
+              .where({ id: next.id })
+              .update({ isPrimaryClub: true });
+          }
+        }
+      }
     }
 
     return this.findOnePlayer(id);
@@ -214,11 +309,35 @@ export class PlayersService {
         isFinancialMember: dto.isFinancialMember ?? false,
       });
 
+      // Membership implies the player role, so the club pages list them too
+      await tx.orm.public.PersonRole.create({
+        personId: person.id,
+        role: 'PLAYER',
+        clubId: dto.clubId,
+      });
+
       return person;
     });
 
     // read it back after the transaction has committed
     return this.findOnePlayer(created.id);
+  }
+
+  // Club membership and the PLAYER role are two views of the same fact, so
+  // a membership created here grants the role too (if they don't have it).
+  private async ensurePlayerRole(personId: string, clubId: string) {
+    const existing = await this.prisma.client.orm.public.PersonRole
+      .where((role) => role.personId.eq(personId))
+      .where((role) => role.role.eq('PLAYER'))
+      .where((role) => role.clubId.eq(clubId))
+      .first();
+    if (!existing) {
+      await this.prisma.client.orm.public.PersonRole.create({
+        personId,
+        role: 'PLAYER',
+        clubId,
+      });
+    }
   }
 
   // The JWT only says someone is a club admin, not of which club. An
