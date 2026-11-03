@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams, Link } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
 
 import fetchApi, { ApiError } from '../../lib/api'
 import RoundSelector from '../matches/RoundSelector'
@@ -19,6 +20,11 @@ function SectionPage() {
     const [rounds, setRounds] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const [notFound, setNotFound] = useState(false);
+
+    const [sectionName, setSectionName] = useState("");
+    const [competitionName, setCompetitionName] = useState("");
+    const [competitionId, setCompetitionId] = useState("");
+
 
     useEffect(() => {
         async function fetchRounds() {
@@ -45,6 +51,21 @@ function SectionPage() {
         }
         fetchRounds();
     }, [sectionId]);
+
+
+    useEffect(() => {
+        async function fetchSection(){
+            let sectionData = await fetchApi("/sections/" + sectionId);
+            let seasonData = await fetchApi("/seasons/" + sectionData.seasonId);
+            let competitionData = await fetchApi("/competitions/" + seasonData.competitionId);
+
+            setSectionName(sectionData.name);
+            setCompetitionName(competitionData.name + " " + seasonData.name);
+            setCompetitionId(competitionData.id);
+        }
+        fetchSection();
+
+    }, []);
 
     function buildParams(nextTab: string, nextRound: string | null) {
         const params: Record<string, string> = { tab: nextTab };
@@ -76,7 +97,15 @@ function SectionPage() {
 
     return (
         <div className="max-w-5xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+            <Link
+                to={competitionId === "" ? "/competitions/" : "/competitions/" + competitionId}
+                className="inline-flex items-center gap-1 text-sm text-ink-muted hover:text-primary-600 mb-6 transition-colors"
+            >
+                <ArrowLeft className="h-4 w-4" /> Back to {competitionName}
+            </Link>
+
             {/* Tab header */}
+            <h1 className="text-3xl font-bold text-ink mb-6">{sectionName} &middot; {competitionName} </h1>
             <div className="flex border-b border-border">
                 <button
                     onClick={() => selectTab('matches')}

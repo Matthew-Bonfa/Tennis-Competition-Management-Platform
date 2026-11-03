@@ -77,7 +77,7 @@ function TeamProfile() {
           <Link to={`/clubs/${team.clubId}`} className="text-primary-600 hover:underline">{team.clubName}</Link>
           {' · '}
           <Link to={`/sections/${team.sectionId}`} className="text-primary-600 hover:underline">
-            {team.competitionName} &middot; {team.sectionName}
+            {team.competitionName} &middot; {team.seasonName} &middot; {team.sectionName}
           </Link>
         </p>
       </div>
